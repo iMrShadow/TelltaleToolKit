@@ -1,0 +1,34 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelltaleToolKit", "src\TelltaleToolKit\TelltaleToolKit.csproj", "{EC6A31E6-B376-9C7C-6073-767360625EE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "samples\Example\Example.csproj", "{58A4C704-B01A-46F2-A544-7A3804FD986A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionDatabaseCreator", "samples\VersionDatabaseCreator\VersionDatabaseCreator.csproj", "{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC6A31E6-B376-9C7C-6073-767360625EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC6A31E6-B376-9C7C-6073-767360625EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC6A31E6-B376-9C7C-6073-767360625EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC6A31E6-B376-9C7C-6073-767360625EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58A4C704-B01A-46F2-A544-7A3804FD986A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58A4C704-B01A-46F2-A544-7A3804FD986A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58A4C704-B01A-46F2-A544-7A3804FD986A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90AF78DA-D500-456D-B8A0-D143B608834A}
+	EndGlobalSection
+EndGlobal

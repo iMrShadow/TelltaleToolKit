@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TelltaleToolKit.Example</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="XCompression">
+            <HintPath>..\..\..\Downloads\XCompression-master\bin\Debug\XCompression.dll</HintPath>
+        </Reference>
+        <Reference Include="XMemCompress">
+            <HintPath>..\..\..\Downloads\XMemCompress-master\bin\Debug\net6.0\XMemCompress.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="xcompress32.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>

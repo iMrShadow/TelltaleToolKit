@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <LangVersion>12</LangVersion>
+    <RootNamespace>TelltaleToolKit</RootNamespace>
+    <Version>0.1.0</Version>
+    <Title>TelltaleToolKit</Title>
+    <Authors>Ivan Panayotov</Authors>
+    <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageTags>Telltale</PackageTags>
+    <Description>TelltaleToolKit is a .NET library for parsing, editing, and managing Telltale Tool assets and file formats. It provides APIs for reading and writing game data, supports common Telltale engine formats, and aims to simplify modding and content extraction workflows for developers and enthusiasts.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Base36" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Oodle.NET" Version="2.1.0" />
+    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
+    <PackageReference Include="SubstreamSharp" Version="1.0.3" />
+  </ItemGroup>
+
+</Project>

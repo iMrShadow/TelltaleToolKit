@@ -1,0 +1,51 @@
+using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Serialization.Serializers;
+
+namespace TelltaleToolKit.T3Types.Textures;
+
+[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TextureType>))]
+public enum TextureType
+{
+    Unknown = 0,
+    LightmapV0 = 1,
+    Bumpmap = 2,
+    NormalMap = 3,
+    Unused1 = 4,
+    Unused2 = 5,
+    SubsurfaceScatteringMapV0 = 6,
+    SubsurfaceScatteringMap = 7,
+    DetailMap = 8,
+    StaticShadowMap = 9,
+    LightmapHdr = 10,
+    SdfDetailMap = 11,
+    EnvMap = 12,
+    SpecularColor = 13,
+    ToonLookup = 14,
+    Standard = 15,
+    OutlineDiscontinuity = 16,
+    LightmapHdrScaled = 17,
+    EmissiveMap = 18,
+    ParticleProperties = 19,
+    BrushNormalMap = 20,
+    Unused3 = 21,
+    NormalGlossMap = 22,
+    Lookup = 23,
+    AmbientOcclusion = 24,
+    PrefilteredEnvCubeMapHdr = 25,
+    BrushLookupMap = 26,
+    Vector2Map = 27,
+    NormalDxDyMap = 28,
+    PackedSdfDetailMap = 29,
+    SingleChannelSdfDetailMap = 30,
+    LightmapDirection = 31,
+    LightmapStaticShadows = 32,
+    LightStaticShadowMapAtlas = 33,
+    LightStaticShadowMap = 34,
+    PrefilteredEnvCubeMapHdrScaled = 35,
+    LightStaticShadowVolume = 36,
+    LightmapAtlas = 37,
+    NormalXyMap = 38,
+    LightmapFlatAtlas = 39,
+    LookupXy = 40,
+    ObjectNormalMap = 41,
+}
