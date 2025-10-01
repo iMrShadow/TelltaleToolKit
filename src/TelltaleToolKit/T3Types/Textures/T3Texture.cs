@@ -47,7 +47,7 @@ public partial class T3Texture
     /// The number of mip map levels in the texture.
     /// </summary>
     [MetaMember("mNumMipLevels")]
-    public uint NumMipLevels { get; set; } = 0;
+    public uint NumMipLevels { get; set; } = 1;
 
     [MetaMember("mD3DFormat")]
     public uint D3DFormat { get; set; } = 0;
@@ -56,13 +56,13 @@ public partial class T3Texture
     /// The pixel width of the texture.
     /// </summary>
     [MetaMember("mWidth")]
-    public uint Width { get; set; } = 0;
+    public uint Width { get; set; } = 1;
 
     /// <summary>
     /// The pixel height of the texture.
     /// </summary>
     [MetaMember("mHeight")]
-    public uint Height { get; set; } = 0;
+    public uint Height { get; set; } = 1;
 
     [MetaMember("mType")]
     public int Type { get; set; } = 0;
@@ -95,7 +95,10 @@ public partial class T3Texture
     public byte[] DdsTextureData { get; set; } = [];
 
     public byte[] TplTextureData { get; set; } = [];
-    // =========================
+
+    // ===================================================
+
+    // ===================================================
 
     /// <summary>
     /// The meta version of this texture.
@@ -113,13 +116,13 @@ public partial class T3Texture
     /// The platform type for this texture.
     /// </summary>
     [MetaMember("mPlatform")]
-    public EnumPlatformType PlatformType { get; set; } = new();
+    public EnumPlatformType PlatformType { get; set; } = new EnumPlatformType() { Value = T3Types.PlatformType.None };
 
     /// <summary>
     /// The import scale of the texture file.
     /// </summary>
     [MetaMember("mImportScale")]
-    public float ImportScale { get; set; }
+    public float ImportScale { get; set; } = 1.0f;
 
     /// <summary>
     /// The import specular power of the texture;
@@ -137,37 +140,37 @@ public partial class T3Texture
     /// The depth of a volume texture.
     /// </summary>
     [MetaMember("mDepth")]
-    public uint Depth { get; set; }
+    public uint Depth { get; set; } = 1;
 
     /// <summary>
     /// The array size of this texture.
     /// </summary>
     [MetaMember("mArraySize")]
-    public uint ArraySize { get; set; }
+    public uint ArraySize { get; set; } = 1;
 
     /// <summary>
     /// The pixel format for this texture.
     /// </summary>
     [MetaMember("mSurfaceFormat")]
-    public T3SurfaceFormat SurfaceFormat { get; set; }
+    public T3SurfaceFormat SurfaceFormat { get; set; } = T3SurfaceFormat.Unknown;
 
     /// <summary>
     /// The texture layout for this texture.
     /// </summary>
     [MetaMember("mTextureLayout")]
-    public T3TextureLayout TextureLayout { get; set; }
+    public T3TextureLayout TextureLayout { get; set; } = T3TextureLayout.Texture2D;
 
     /// <summary>
     /// The gamma of the texture.
     /// </summary>
     [MetaMember("mSurfaceGamma")]
-    public T3SurfaceGamma SurfaceGamma { get; set; }
+    public T3SurfaceGamma SurfaceGamma { get; set; } = T3SurfaceGamma.Unknown;
 
     /// <summary>
     /// The multisample (anisotropic) level of the texture.
     /// </summary>
     [MetaMember("mSurfaceMultisample")]
-    public T3SurfaceMultisample SurfaceMultisample { get; set; }
+    public T3SurfaceMultisample SurfaceMultisample { get; set; } = T3SurfaceMultisample.None;
 
     /// <summary>
     /// The resource usage of the texture.
@@ -179,7 +182,7 @@ public partial class T3Texture
     /// The type of the texture. The enum version is for modern games.
     /// </summary>
     [MetaMember("mType")]
-    public TextureType TypeEnum { get; set; }
+    public TextureType TypeEnum { get; set; } = TextureType.Standard;
 
     /// <summary>
     /// [4 bytes] Defines the format of the normal map.
@@ -191,49 +194,49 @@ public partial class T3Texture
     /// Describes if the color channels were switched. (Usually used for normal maps, console textures and others.)
     /// </summary>
     [MetaMember("mSwizzle")]
-    public RenderSwizzleParams Swizzle { get; set; }
+    public RenderSwizzleParams Swizzle { get; set; } = new RenderSwizzleParams() { Channel0 = 0, Channel1 = 1, Channel2 = 2, Channel3 = 3 };
 
     /// <summary>
     /// The glossiness of the texture.
     /// </summary>
     [MetaMember("mSpecularGlossExponent")]
-    public float SpecularGlossExponent { get; set; }
+    public float SpecularGlossExponent { get; set; } = 8.0f;
 
     /// <summary>
     /// The brightness scale of the texture. (used for lightmaps)
     /// </summary>
     [MetaMember("mHDRLightmapScale")]
-    public float HdrLightmapScale { get; set; }
+    public float HdrLightmapScale { get; set; } = 6.0f;
 
     /// <summary>
     /// The toon cutoff gradient of the texture.
     /// </summary>
     [MetaMember("mToonGradientCutoff")]
-    public float ToonGradientCutoff { get; set; }
+    public float ToonGradientCutoff { get; set; } = -1.0f;
 
     /// <summary>
     /// The alpha type of the texture. (or what will have).
     /// </summary>
     [MetaMember("mAlphaMode")]
-    public AlphaMode AlphaModeEnum { get; set; }
+    public AlphaMode AlphaModeEnum { get; set; } = Textures.AlphaMode.Unknown;
 
     /// <summary>
     /// The color range of the texture.
     /// </summary>
     [MetaMember("mColorMode")]
-    public ColorMode ColorMode { get; set; }
+    public ColorMode ColorMode { get; set; } = ColorMode.eTxColorUnknown;
 
     /// <summary>
     /// A vector, defines the UV offset values when the shader on a material samples the texture.
     /// </summary>
     [MetaMember("mUVOffset")]
-    public Vector2 UvOffset { get; set; }
+    public Vector2 UvOffset { get; set; } = Vector2.Zero;
 
     /// <summary>
     /// A vector, defines the UV scale values when the shader on a material samples the texture.
     /// </summary>
     [MetaMember("mUVScale")]
-    public Vector2 UvScale { get; set; }
+    public Vector2 UvScale { get; set; } = Vector2.One;
 
     /// <summary>
     /// An array containing frame names. (Usually unused)
