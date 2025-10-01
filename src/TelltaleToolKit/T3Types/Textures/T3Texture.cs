@@ -503,4 +503,33 @@ public partial class T3Texture
         [MetaMember("mData")]
         public BinaryBuffer Data { get; set; } = new();
     }
+
+    /// <summary>
+    /// Determines if the texture layout represents a cubemap or a cubemap array.
+    /// </summary>
+    /// <returns>True if the texture is a cubemap or cubemap array; otherwise, false.</returns>
+    public bool IsCubemap()
+       => TextureLayout is T3TextureLayout.TextureCubemap or T3TextureLayout.TextureCubemapArray;
+
+    /// <summary>
+    /// Determines if the texture layout represents a volumetric (3D) texture.
+    /// </summary>
+    /// <returns>True if the texture is a 3D volumemap; otherwise, false.</returns>
+    public bool IsVolumemap() 
+        => TextureLayout == T3TextureLayout.Texture3D;
+
+    /// <summary>
+    /// Determines if the texture layout represents an array texture (2D array or cubemap array).
+    /// </summary>
+    /// <returns>True if the texture is a 2D array or cubemap array; otherwise, false.</returns>
+    public bool IsArrayTexture()
+        => TextureLayout is T3TextureLayout.Texture2DArray or T3TextureLayout.TextureCubemapArray;
+
+    /// <summary>
+    /// Indicates whether this texture uses the legacy D3DTX format. 
+    /// The first version to not use this format is version 3, assuming version 1 and 2 do not exist.
+    /// </summary>
+    /// <returns>True if the texture version is 2 or below; otherwise, false.</returns>
+    public bool IsLegacyD3DTX()
+        => Version <= 2;
 }
