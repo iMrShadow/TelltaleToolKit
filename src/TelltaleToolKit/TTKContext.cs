@@ -244,4 +244,14 @@ public class TTKContext
     {
         return MetaClassRegistry.GetClass(type, crc32);
     }
+
+    public GameDescriptor GetCurrentlyActiveGame()
+    {
+        if (ActiveGameRegistry is null)
+        {
+            throw new InvalidOperationException("No active game registry has been set.");
+        }
+
+        return ActiveGameRegistry;
+    }
 }

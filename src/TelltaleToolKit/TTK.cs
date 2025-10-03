@@ -1,3 +1,4 @@
+using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
@@ -188,4 +189,11 @@ public static class TTK
             // TODO: Check for .t3fxpreloadpack
         };
     }
+
+    /// <summary>
+    /// Gets the <see cref="GameDescriptor"/> of the currently active game in the TTK context.
+    /// </summary>
+    /// <returns>The current active <see cref="GameDescriptor"/>.</returns>
+    public static GameDescriptor GetCurrentActiveGameDescriptor()
+      => TTKContext.Instance().GetCurrentlyActiveGame();
 }
