@@ -1,14 +1,12 @@
+<!-- omit in toc -->
 # TelltaleToolKit Databases
 
 Welcome to the TelltaleToolKit database documentation. This guide provides an overview of the database system used in the project, including data structure standards, file organization, and a table of supported games and formats.
 You can find the [changelog here](./CHANGELOG.md).
 
+<!-- omit in toc -->
 ## Table of Contents
 
-<!-- omit in toc -->
-
-- [TelltaleToolKit Databases](#telltaletoolkit-databases)
-  - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
   - [Database Categories](#database-categories)
   - [File Naming \& Standards](#file-naming--standards)
@@ -17,7 +15,6 @@ You can find the [changelog here](./CHANGELOG.md).
   - [Supported Games Matrix](#supported-games-matrix)
   - [Contributing](#contributing)
   - [FAQ](#faq)
-
 
 # Overview
 
@@ -36,7 +33,7 @@ There are three main categories of databases:
    - **Purpose:** Describes metaclass descriptions for a given game.
    - **Format:** JSON file (extension: `.vdb.json`)
    - **Aliases:** Metaclass description databases.
-   - **Note:** Version databases **require a game descriptor to function with the same sluggified name**.
+   - **Note:** Version databases **require a game descriptor to function with the same slug**.
 
 3. **Hash Database(s)** (Planned/Experimental)  
    - **Purpose:** Contains SQLite databases with file hashes unique to each game.
@@ -46,12 +43,12 @@ There are three main categories of databases:
 
 ## File Naming & Standards
 
-For consistency, all database files follow a sluggified naming convention with the appropriate extension:
+For consistency, all database file names are in slug form with the appropriate extension:
 
 ```
-[slugified-title]-[year]-[month]-[platform]-[demo]
+[slug-title]-[year]-[month]-[platform]-[demo]
 ```
-- **slugified-title:** Lowercase, spaces replaced with hyphens, special characters removed.
+- **slug-title:** The full name of the game in slug form.
 - **year/month:** Release date of the game (e.g., `2012` or `2016-01`).
 - **platform:** If applicable, a platform tag (e.g., `xbox360`).
 - **demo:** If applicable and the game itself was a demo, a demo tag (e.g., `demo`).
@@ -112,6 +109,6 @@ If you'd like to add a new game, update existing entries, or help implement hash
 **Q:** Can I use these databases in my own tools?  
 **A:** Absolutely! All databases are open for community use and extension.
 
-**Q:** What is a "slugified title"?  
-**A:** A string, which is in lowercase, has spaces replaced with hyphens, and has
+**Q:** What is a "slug title/text"?  
+**A:** Descriptive text, which is in lowercase, has spaces replaced with hyphens, and has
 special characters removed (e.g., "The Walking Dead: Season 2" → `the-walking-dead-season-2`).
