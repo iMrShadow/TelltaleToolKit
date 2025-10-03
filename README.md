@@ -1,5 +1,5 @@
 [![Nuget](https://img.shields.io/nuget/v/TelltaleToolKit)](https://www.nuget.org/packages/TelltaleToolKit/)
-[![License](https://img.shields.io/github/license/iMrShadow/TelltaleToolKit)](LICENSE)
+![License](https://img.shields.io/github/license/iMrShadow/TelltaleToolKit)
 
 <!-- omit in toc -->
 # TelltaleToolKit
@@ -108,5 +108,7 @@ Thanks to [Bennyboy](https://github.com/bgbennyboy) for their work on [`Telltale
 Thanks to [Azil Zogby](https://github.com/asilz) for his work on [`TelltaleHydra`](https://github.com/asilz/TelltaleHydra) and [`TelltaleDevTool`](https://github.com/asilz/TelltaleDevTool).
 
 Thanks to all [contributors](https://github.com/stride3d/stride/graphs/contributors) which worked on the popular C# game engine [`Stride`](https://github.com/stride3d/stride). The serialization system is inspired from there.
+
+Thanks to [Plague](https://x.com/QueenPlagueCure) for providing version databases for Borderlands 2021 PC and Nintendo Switch.
 
 Thanks to [David Matos](https://github.com/frostbone25) for introducing me to the `Telltale Modding Community`.
