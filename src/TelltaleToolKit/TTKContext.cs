@@ -4,6 +4,7 @@ using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.Utility.Blowfish;
 
@@ -97,6 +98,12 @@ public class TTKContext
     {
         ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
         ActiveGameRegistry = FindGame(gameName);
+
+        _defaultMetaStreamConfiguration = new MetaStreamConfiguration
+        {
+            Version = ActiveGameRegistry.MetaStreamVersion,
+            AreSymbolsHashed = ActiveGameRegistry.AreSymbolsHashed,
+        };
     }
 
     public GameDescriptor FindGame(string gameName)
@@ -253,5 +260,22 @@ public class TTKContext
         }
 
         return ActiveGameRegistry;
+    }
+
+    private MetaStreamConfiguration? _defaultMetaStreamConfiguration;
+
+    /// <summary>
+    /// Gets the default <see cref="MetaStreamConfiguration"/> for the currently active game.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public MetaStreamConfiguration DefaultMetaStreamConfiguration
+    {
+        get
+        {
+            if (_defaultMetaStreamConfiguration is null)
+                throw new InvalidOperationException("Cannot provide default MetaStreamConfiguration. No active game registry has been set.");
+            return _defaultMetaStreamConfiguration;
+        }
     }
 }
