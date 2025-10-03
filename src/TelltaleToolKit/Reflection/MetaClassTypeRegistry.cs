@@ -456,6 +456,7 @@ public static class MetaClassTypeRegistry
         Register("class CompressedKeys<struct PhonemeKey>", typeof(CompressedKeys<PhonemeKey>));
         Register("class CompressedKeys<struct ScriptEnum>", typeof(CompressedKeys<ScriptEnum>));
         Register("class CompressedKeys<unsigned __int64>", typeof(CompressedKeys<ulong>));
+        Register("class CompressedKeys<unsigned long long>", typeof(CompressedKeys<ulong>));
         Register("class CompressedPathBlockingValue", typeof(CompressedPathBlockingValue));
         Register("class CompressedPhonemeKeys", typeof(CompressedPhonemeKeys));
         Register("class CompressedQuaternionKeys", typeof(CompressedQuaternionKeys));
@@ -854,6 +855,8 @@ public static class MetaClassTypeRegistry
         Register("class KeyframedValue<struct ScriptEnum>", typeof(KeyframedValue<ScriptEnum>));
         Register("class KeyframedValue<unsigned __int64>", typeof(KeyframedValue<ulong>));
         Register("class KeyframedValue<unsigned __int64>::Sample", typeof(KeyframedValue<ulong>.Sample));
+        Register("class KeyframedValue<unsigned long long>", typeof(KeyframedValue<ulong>));
+        Register("class KeyframedValue<unsigned long long>::Sample", typeof(KeyframedValue<ulong>.Sample));
         Register("class KeyframedValueInterface", typeof(KeyframedValueInterface), MetaFlags.MetaSerializeDisable);
         Register("class KeyframedValueSteppedString", typeof(KeyframedValueSteppedString));
         Register("class LanguageDB", typeof(LanguageDb));
@@ -1084,6 +1087,7 @@ public static class MetaClassTypeRegistry
         Register("class SingleValue<struct CompressedPathBlockingValue::CompressedPathInfoKey>", typeof(SingleValue<CompressedPathBlockingValue.CompressedPathInfoKey>));
         Register("class SingleValue<struct PhonemeKey>", typeof(SingleValue<PhonemeKey>));
         Register("class SingleValue<struct ScriptEnum>", typeof(SingleValue<ScriptEnum>));
+        Register("class SingleValue<unsigned long long>", typeof(SingleValue<ulong>));
         Register("class SingleValue<unsigned __int64>", typeof(SingleValue<ulong>));
         Register("class SingleVector3Value", typeof(SingleVector3Value));
         Register("class Skeleton", typeof(Skeleton));
