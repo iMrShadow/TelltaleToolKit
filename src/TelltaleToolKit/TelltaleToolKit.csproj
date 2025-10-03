@@ -10,12 +10,13 @@
     <Title>TelltaleToolKit</Title>
     <Authors>Ivan Panayotov</Authors>
     <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
-    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
     <TargetFramework>net8.0</TargetFramework>
-    <PackageTags>Telltale</PackageTags>
-    <Description>TelltaleToolKit is a .NET library for parsing, editing, and managing Telltale Tool assets and file formats. It provides APIs for reading and writing game data, supports common Telltale engine formats, and aims to simplify modding and content extraction workflows for developers and enthusiasts.</Description>
+    <PackageTags>telltale; ttarch; ttarch2; modding;</PackageTags>
+    <Description>A .NET library for modding games running on the Telltale Tool engine, providing an API to read and write assets and archives. </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>https://github.com/iMrShadow/TelltaleToolKit/releases</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
