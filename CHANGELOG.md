@@ -9,12 +9,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - Helper methods for `T3Texture`.
 - Method to retrieve the currently active game descriptor.
+- Some animation/skeleton related types in the type registry.
+- A default metastream configuration in the TTK context. It is automatically set depending on the currently active game.
+- A new contributor in README.md.
 
 ### Changed
-- IsMetaFile method has more excluded file types.
+- `IsMetaFile` method has more excluded file types.
 - Some `T3Texture` members now have default values.
+- NuGet related metadata in `TelltaleToolKit.csproj`.
+
+### Removed
+- Default static class member in `MetaStreamConfiguration`.
 
 ### Fixed
+- `Save<T>` without a configuration now works properly.
 
 ## [0.1.0] - 2025-09-30
 
