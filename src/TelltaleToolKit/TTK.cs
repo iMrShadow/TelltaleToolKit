@@ -183,8 +183,9 @@ public static class TTK
         {
             ".lua" or ".lenc" or ".ncb" or ".vws" or ".txt" or ".data" or ".scc" or ".vssscc" or ".dds" or ".sfk"
                 or ".xls" or ".suo" or ".vpw" or ".vtg" or ".tga" or ".vers" or ".ttarch" or ".ttarch2" or ".json"
-                or ".wav" or ".ogg" or ".html" or ".css" => false,
+                or ".wav" or ".ogg" or ".html" or ".css" or ".log" or ".t3fxpreloadpack" or ".t3fxpack" or ".bank" or ".0" or ".vpj" => false,
             _ => true
+            // TODO: Check for .t3fxpreloadpack
         };
     }
 }
