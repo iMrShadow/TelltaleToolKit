@@ -1,0 +1,17 @@
+[
+    {
+        "type": "KeyframedValue<Handle<SoundBusSnapshot::SnapshotSuite>>::Sample",
+        "crc32": 2388032948,
+        "members": []
+    },
+    {
+        "type": "T3EffectPreloadPackage",
+        "crc32": 625267112,
+        "members": []
+    },
+    {
+        "type": "T3OverlaySpriteParams",
+        "crc32": 3456231570,
+        "members": []
+    }
+]
