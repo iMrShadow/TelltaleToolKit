@@ -84,18 +84,8 @@ public static class TTK
     /// <param name="obj">The object to serialize.</param>
     /// <param name="stream">The stream to write to.</param>
     public static void Save<T>(T obj, Stream stream) where T : class, new()
-    {
-        var streamWriter = new MetaStreamWriter(stream);
+     => Save(obj, stream, TTKContext.Instance().DefaultMetaStreamConfiguration);
 
-        var type = default(T);
-
-        streamWriter.Serialize(ref type);
-
-        if (type is null)
-        {
-            throw new InvalidOperationException("Type could not be initialized");
-        }
-    }
 
     /// <summary>
     /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file using a provided <see cref="MetaStreamConfiguration"/>.
