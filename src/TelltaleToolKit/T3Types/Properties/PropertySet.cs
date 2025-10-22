@@ -101,4 +101,22 @@ public class PropertySet
             stream.EndBlock();
         }
     }
+
+    public object? GetProperty(string propertyName)
+    {
+        var symbol = new Symbol(propertyName);
+
+        Properties.TryGetValue(symbol, out object? obj);
+        {
+            return obj;
+        }
+    }
+    
+    public object? GetProperty(ulong crc64)
+    {
+        Properties.TryGetValue(new Symbol(crc64), out object? obj);
+        {
+            return obj;
+        }
+    }
 }
