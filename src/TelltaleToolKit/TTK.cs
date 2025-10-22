@@ -1,3 +1,4 @@
+using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
@@ -172,7 +173,7 @@ public static class TTK
 
         return extension switch
         {
-            ".lua" or ".lenc" or ".ncb" or ".vws" or ".txt" or ".data" or ".scc" or ".vssscc" or ".dds" or ".sfk"
+            ".lua" or ".lenc" or ".ncb" or ".vws" or ".txt" or ".data" or ".scc" or ".vssscc" or ".dds" or ".sfk" or ".gif" or ".js" or ".jpg" or ".png"
                 or ".xls" or ".suo" or ".vpw" or ".vtg" or ".tga" or ".vers" or ".ttarch" or ".ttarch2" or ".json"
                 or ".wav" or ".ogg" or ".html" or ".css" or ".log" or ".t3fxpreloadpack" or ".t3fxpack" or ".bank" or ".0" or ".vpj" => false,
             _ => true
@@ -186,4 +187,10 @@ public static class TTK
     /// <returns>The current active <see cref="GameDescriptor"/>.</returns>
     public static GameDescriptor GetCurrentActiveGameDescriptor()
       => TTKContext.Instance().GetCurrentlyActiveGame();
+
+    public static void JsonSerialize<T>(T obj, string filePath)
+    {
+        string json = JsonSerializer.Serialize(obj);
+        File.WriteAllText(filePath, json);
+    }
 }
