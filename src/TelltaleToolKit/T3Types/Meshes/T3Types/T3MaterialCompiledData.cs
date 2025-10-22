@@ -86,6 +86,12 @@ public class T3MaterialCompiledData
     [MetaMember("mParameterBufferScalarSize[1]")]
     public uint ParameterBufferScalarSize1 { get; set; }
 
+    [MetaMember("mParameterBufferScalarSize[2]")]
+    public uint ParameterBufferScalarSize2 { get; set; }
+
+    [MetaMember("mParameterBufferScalarSize[3]")]
+    public uint ParameterBufferScalarSize3 { get; set; }
+
     [MetaMember("mPreShaderParameterBufferScalarSize")]
     public uint PreShaderParameterBufferScalarSize { get; set; }
 }

@@ -39,7 +39,6 @@ public class T3MeshData
     [MetaMember("mLocalTransforms")]
     public List<T3MeshLocalTransformEntry> LocalTransforms { get; set; }
 
-
     [MetaMember("mMaterialRequirements")]
     public T3MaterialRequirements MaterialRequirements { get; set; }
 
@@ -79,9 +78,18 @@ public class T3MeshData
     [MetaMember("mMeshPreload")]
     public List<T3MeshEffectPreload> MeshPreload { get; set; } = [];
 
+    // Batman
+    [MetaMember("mBonePalettes")]
+    public List<List<T3MeshBonePaletteEntry>> BonePalettes { get; set; }
+    // TODO:
+    // public List<T3MeshEffectPreload> MeshPreload { get; set; } = [];
+
+    [MetaMember("mLocalTransformPalettes")]
+    public List<List<T3MeshLocalTransformEntry>> LocalTransformPalettes { get; set; }
+
     public List<T3GFXVertexState> VertexStates { get; set; } = [];
-    public T3MeshCPUSkinningData CPUSkinningData;
-    public T3MeshTexCoordTransform[] TexCoordTransform = new T3MeshTexCoordTransform[4];
+    public T3MeshCPUSkinningData CPUSkinningData { get; set; }
+    public T3MeshTexCoordTransform[] TexCoordTransform { get; set; } = new T3MeshTexCoordTransform[4];
 
     public class Serializer : MetaClassSerializer<T3MeshData>
     {
@@ -102,20 +110,21 @@ public class T3MeshData
 
                 for (var i = 0; i < uvTransforms; i++)
                 {
-                    int vectorCol = streamReader.ReadInt32();
+                    int uvLayer = streamReader.ReadInt32();
 
                     // Experimenting with a helper function.
-                    TTK.PreSerialize(ref obj.TexCoordTransform[vectorCol], stream);
-                    TTK.Serialize(ref obj.TexCoordTransform[vectorCol], stream);
+                    TTK.PreSerialize(ref obj.TexCoordTransform[uvLayer], stream);
+                    TTK.Serialize(ref obj.TexCoordTransform[uvLayer], stream);
                     // TTKContext.Instance().GetSerializer<T3MeshTexCoordTransform>().Serialize(ref obj.TexCoordTransform[vector], stream);
                 }
 
                 if ((obj.Flags.Data & (int)MeshFlags.eHasCPUSkinning) != 0)
                 {
-                    TTK.PreSerialize(ref obj.CPUSkinningData, stream);
-                    TTK.Serialize(ref obj.CPUSkinningData, stream);
+                    T3MeshCPUSkinningData t3MeshCpuSkinningData = obj.CPUSkinningData;
+                    TTK.PreSerialize(ref t3MeshCpuSkinningData, stream);
+                    TTK.Serialize(ref t3MeshCpuSkinningData, stream);
                 }
-                
+
                 int vertexStates = streamReader.ReadInt32();
 
                 for (var i = 0; i < vertexStates; i++)
@@ -127,4 +136,20 @@ public class T3MeshData
             }
         }
     }
+}
+
+[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshBonePaletteEntry>))]
+public class T3MeshBonePaletteEntry
+{
+    [MetaMember("mBoneName")]
+    public Symbol BoneName { get; set; }
+
+    [MetaMember("mBoundingBox")]
+    public BoundingBox BoundingBox { get; set; }
+
+    [MetaMember("mBoundingSphere")]
+    public Sphere BoundingSphere { get; set; }
+
+    [MetaMember("mNumVerts")]
+    public int NumVerts { get; set; }
 }

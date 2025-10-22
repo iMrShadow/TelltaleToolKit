@@ -31,10 +31,16 @@ public class T3MaterialTransform2D
     
     [MetaMember("mScalarOffset0[1]")]
     public int ScalarOffset01 { get; set; }
-
+    [MetaMember("mScalarOffset0[2]")]
+    public int ScalarOffset02 { get; set; }
+    [MetaMember("mScalarOffset0[3]")]
+    public int ScalarOffset03 { get; set; }
     [MetaMember("mScalarOffset1[1]")]
     public int ScalarOffset11 { get; set; } 
-
+    [MetaMember("mScalarOffset1[2]")]
+    public int ScalarOffset12 { get; set; }
+    [MetaMember("mScalarOffset1[3]")]
+    public int ScalarOffset13 { get; set; }
     [MetaMember("mPreShaderScalarOffset0")]
     public int PreShaderScalarOffset0 { get; set; }
 
