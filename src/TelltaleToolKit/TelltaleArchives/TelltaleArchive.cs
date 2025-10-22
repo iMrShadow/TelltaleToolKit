@@ -90,6 +90,18 @@ public abstract class ArchiveBase : IDisposable
 
     protected abstract void ReadMetadata();
     public abstract MemoryStream ExtractFile(string fileName);
+    public abstract MemoryStream ExtractFile(ulong crc64);
+
+    public bool ContainsFile(string fileName)
+    {
+        return FileEntries.Any(file => file.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public bool ContainsFile(ulong crc64)
+    {
+        return FileEntries.Any(file => file.Crc64 == crc64);
+    }
+    
     public abstract void ExtractAll(string destinationPath);
 
     protected bool IsEncrypted() =>
@@ -103,8 +115,11 @@ public abstract class ArchiveBase : IDisposable
 
     protected int FileCount() => FileEntries.Length;
 
-    protected TelltaleFileEntry? FindEntry(string name) =>
+    public TelltaleFileEntry? FindEntry(string name) =>
         FileEntries.FirstOrDefault(file => file.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+    public TelltaleFileEntry? FindEntry(ulong crc64) =>
+        FileEntries.FirstOrDefault(file => file.Crc64 == crc64);
 
     protected void DecryptBlock(Span<byte> data, int version, string key, ContainerFlags flags)
     {

@@ -1,4 +1,5 @@
 using System.Text;
+using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.TelltaleArchives;
 
@@ -72,6 +73,8 @@ public class T3Archive : ArchiveBase
             _ = reader.ReadInt32(); // always shows 0 value. Probably a way to assign to a folder, in the order of the folder names.
             FileEntries[i].FileOffset = reader.ReadUInt32();
             FileEntries[i].FileSize = reader.ReadInt32();
+            
+            FileEntries[i].Crc64 = Symbol.GetCrc64(FileEntries[i].Name);
         }
     }
 
@@ -186,18 +189,36 @@ public class T3Archive : ArchiveBase
     }
 
 
+  
+
     public override void ExtractAll(string destinationPath)
     {
         throw new NotImplementedException();
     }
 
+    public override MemoryStream ExtractFile(ulong crc64)
+    {
+        TelltaleFileEntry? entry = FindEntry(crc64);
+
+        if (entry == null)
+            throw new FileNotFoundException($"File '{crc64}' not found in the archive.");
+
+        return ExtractFile(entry);
+    }
+    
     public override MemoryStream ExtractFile(string name)
     {
-        byte[] result; // Initialize the result array
         TelltaleFileEntry? entry = FindEntry(name);
 
         if (entry == null)
             throw new FileNotFoundException($"File '{name}' not found in the archive.");
+
+        return ExtractFile(entry);
+    }
+    
+     public MemoryStream ExtractFile(TelltaleFileEntry entry)
+    {
+        byte[] result; // Initialize the result array
 
         int fileSize = entry.FileSize; // Get the file size
 

@@ -40,7 +40,7 @@ public class T3Archive2 : ArchiveBase
             {
                 throw new InvalidDataException("Invalid chunk size");
             }
-            
+
             Info.ChunkCount = reader.ReadUInt32(); // Number of chunks in the archive
 
             Info.ChunkBlockSizes = new long[Info.ChunkCount];
@@ -216,6 +216,14 @@ public class T3Archive2 : ArchiveBase
     }
 
 
+    public override MemoryStream ExtractFile(ulong crc64)
+    {
+        TelltaleFileEntry entry = FindEntry(crc64) ??
+                                  throw new FileNotFoundException($"File '{crc64}' not found in the archive.");
+
+        return ExtractFile(entry);
+    }
+
     public override void ExtractAll(string destinationPath)
     {
         throw new NotImplementedException();
@@ -223,10 +231,15 @@ public class T3Archive2 : ArchiveBase
 
     public override MemoryStream ExtractFile(string name)
     {
-        using BinaryReader reader = new(ArchiveStream, Encoding.UTF8, true);
-
         TelltaleFileEntry entry = FindEntry(name) ??
-                                 throw new FileNotFoundException($"File '{name}' not found in the archive.");
+                                  throw new FileNotFoundException($"File '{name}' not found in the archive.");
+
+        return ExtractFile(entry);
+    }
+
+    public MemoryStream ExtractFile(TelltaleFileEntry entry)
+    {
+        using BinaryReader reader = new(ArchiveStream, Encoding.UTF8, true);
 
         long fileOffset = Info.FilesOffset + entry.FileOffset; // Calculate the file offset
         int fileSize = entry.FileSize; // Get the file size
@@ -259,7 +272,7 @@ public class T3Archive2 : ArchiveBase
             }
 
             // Seek to the block start offset
-            reader.BaseStream.Seek(Info.ArchiveOffset + blockStartOffset, SeekOrigin.Begin); 
+            reader.BaseStream.Seek(Info.ArchiveOffset + blockStartOffset, SeekOrigin.Begin);
 
             using MemoryStream ms = new();
             using BinaryWriter blockWriter = new(ms);
@@ -276,7 +289,7 @@ public class T3Archive2 : ArchiveBase
             }
 
             // This is relative to the blocks themselves
-            long startIndex = fileOffset - (Info.ChunkSize * blockStartIndex); 
+            long startIndex = fileOffset - (Info.ChunkSize * blockStartIndex);
             resultWriter.Write(ms.ToArray(), (int)startIndex, fileSize); // Write the data to the result stream
         }
         else

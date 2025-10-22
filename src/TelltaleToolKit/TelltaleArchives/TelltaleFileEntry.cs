@@ -3,7 +3,7 @@ namespace TelltaleToolKit.TelltaleArchives;
 public class TelltaleFileEntry
 {
     public string Name { get; set; } = string.Empty;
-    public ulong Crc64 { get; init; }
+    public ulong Crc64 { get; set; }
     public long FileOffset { get; set; } // The offset starts when the actual files are written.
     public int FileSize { get; set; }
 
