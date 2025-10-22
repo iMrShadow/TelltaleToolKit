@@ -29,7 +29,7 @@ public class T3GFXBuffer
     public uint Stride { get; set; }
 
     // cpu buffer
-    public byte[] Buffer = [];
+    public byte[] Buffer { get; set; } = [];
 
     public class Serializer : MetaClassSerializer<T3GFXBuffer>
     {

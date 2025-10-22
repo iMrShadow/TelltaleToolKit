@@ -31,4 +31,8 @@ public class DialogExchange : IDialogBase
 
     [MetaMember("mhChore")]
     public Handle<Chore> Chore { get; set; } = new();
+
+    internal class ExchangeElem
+    {
+    }
 }

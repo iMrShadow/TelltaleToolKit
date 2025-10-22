@@ -10,13 +10,13 @@ public class T3MeshLOD
 {
     // Michonne for e.g. uses a DCArray of batches. In new games they only use 2.
     [MetaMember("mBatches")]
-    public List<T3MeshBatch> Batches { get; set; } = [];// Default and Shadow
+    public List<T3MeshBatch> Batches { get; set; } = []; // Default
 
     [MetaMember("mBatches[0]")]
-    public  List<T3MeshBatch> Batches1 { get; set; }  = [];// Default 
-    
+    public List<T3MeshBatch> Batches1 { get; set; } = []; // Default 
+
     [MetaMember("mBatches[1]")]
-    public  List<T3MeshBatch> Batches2 { get; set; } = []; //  Shadow
+    public List<T3MeshBatch> Batches2 { get; set; } = []; //  Shadow
 
     [MetaMember("mVertexStreams")]
     public BitSetBase VertexStreams { get; set; }

@@ -41,7 +41,7 @@ public enum GFXPlatformFormat
     //  eGFXPlatformFormat_
     None = 0x0,
     F32 = 0x1,
-    F32x2 = 0x2,
+    F32x2 = 0x2, // hmm
     F32x3 = 0x3,
     F32x4 = 0x4,
     F16x2 = 0x5,
@@ -65,7 +65,7 @@ public enum GFXPlatformFormat
     SN16x2 = 0x17,
     UN16x2 = 0x18,
     SN16x4 = 0x19,
-    UN16x4 = 0x1A,
+    UN16x4 = 0x1A, // 26
     S8 = 0x1B,
     U8 = 0x1C,
     S8x2 = 0x1D,
@@ -76,10 +76,10 @@ public enum GFXPlatformFormat
     UN8 = 0x22,
     SN8x2 = 0x23,
     UN8x2 = 0x24,
-    SN8x4 = 0x25,
-    UN8x4 = 0x26,
+    SN8x4 = 0x25, // 37
+    UN8x4 = 0x26, // 38
     SN10_SN11_SN11 = 0x27,
     SN10x3_SN2 = 0x28,
-    UN10x3_UN2 = 0x29,
+    UN10x3_UN2 = 0x29, // 41
     D3DCOLOR = 0x2A,
 }

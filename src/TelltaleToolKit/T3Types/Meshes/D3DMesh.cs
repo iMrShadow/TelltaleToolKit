@@ -35,6 +35,18 @@ public class D3DMesh
 
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
+    
+    [MetaMember("mLightmapUVGenerationType")]
+    public int mLightmapUVGenerationType { get; set; }
+    
+    [MetaMember("mLightmapTexelAreaPerSurfaceArea")]
+    public float LightmapTexelAreaPerSurfaceArea { get; set; }
+    
+    [MetaMember("mLightmapTextureWidth")]
+    public uint mLightmapTextureWidth { get; set; }
+    
+    [MetaMember("mLightmapTextureHeight")]
+    public uint mLightmapTextureHeight { get; set; }
 
     [MetaMember("mbDeformable")]
     public bool Deformable { get; set; }
@@ -63,11 +75,13 @@ public class D3DMesh
     [MetaMember("mbMeshHasVertexAlpha")]
     public bool MeshHasVertexAlpha { get; set; }
 
+
+    public PropertySet InternalResources { get; set; } = new();
     public T3IndexBuffer T3IndexBuffer { get; set; }
     public T3VertexBuffer[] T3VertexBuffers { get; set; }
 
-    public T3OcclusionMeshData OcclusionMeshData = new();
-    public T3MeshData MeshData = new();
+    public T3OcclusionMeshData OcclusionMeshData { get; set; } = new();
+    public T3MeshData MeshData { get; set; } = new();
 
     /// <summary>
     /// This is a combination of T3MeshBatch and others for old games ( from Texas Hold'em to unknown).
@@ -238,15 +252,17 @@ public class D3DMesh
                     {
                         // TODO: Assign this.
                         stream.BeginBlock();
+                        T3OcclusionMeshData objOcclusionMeshData = obj.OcclusionMeshData;
                         TTKContext.Instance().GetSerializer<T3OcclusionMeshData>()
-                            .Serialize(ref obj.OcclusionMeshData, stream);
+                            .Serialize(ref objOcclusionMeshData, stream);
                         stream.EndBlock();
                     }
                 }
 
                 stream.BeginBlock();
-                TTKContext.Instance().GetSerializer<T3MeshData>().PreSerialize(ref obj.MeshData, stream);
-                TTKContext.Instance().GetSerializer<T3MeshData>().Serialize(ref obj.MeshData, stream);
+                T3MeshData objMeshData = obj.MeshData;
+                TTKContext.Instance().GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
+                TTKContext.Instance().GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
                 stream.EndBlock();
             }
         }
@@ -301,11 +317,12 @@ public class D3DMesh
             }
             else if (stream is MetaStreamReader streamReader)
             {
+                obj.InternalResources = new PropertySet();
+
                 int numRes = streamReader.ReadInt32();
 
                 for (var i = 0; i < numRes; i++)
                 {
-                    // TODO: Add InternalResources list
                     Symbol symbol = streamReader.ReadSymbol();
                     MetaClassType typeSymbol = streamReader.ReadMetaClassType();
 
@@ -316,6 +333,8 @@ public class D3DMesh
                     TTKContext.Instance().GetSerializer(typeSymbol.LinkingType)
                         .PreSerialize(ref propertyValue, stream, typeSymbol);
                     TTKContext.Instance().GetSerializer(typeSymbol.LinkingType).Serialize(ref propertyValue, stream);
+
+                    obj.InternalResources.Properties.Add(symbol, propertyValue);
 
                     stream.EndBlock();
                 }
@@ -339,4 +358,138 @@ public class D3DMesh
     public class BoneEntry
     {
     }
+
+    public PropertySet? GetMaterialPropertySet(int index)
+    {
+        int count = 0;
+        foreach (object f in InternalResources.Properties.Values)
+        {
+            if (f is not PropertySet pSet)
+                continue;
+
+            if (count == index)
+            {
+                return pSet;
+            }
+
+            count++;
+        }
+
+        return null;
+    }
+
+    public Handle<T3Texture>? GetDiffuseTexture(Handle<PropertySet> symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Diffuse Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+
+    public Handle<T3Texture>? GetNormalMapTexture(Handle<PropertySet>  symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Normal Map Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+    
+    public Handle<T3Texture>? GetDetailTexture(Handle<PropertySet> symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Detail Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+
+    public Handle<T3Texture>? GetSpecularTexture(Handle<PropertySet> symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Specular Map Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+    
+    public Handle<T3Texture>? GetDiffuseTexture(Symbol symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Diffuse Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+
+    public Handle<T3Texture>? GetNormalMapTexture(Symbol symbol)
+    {
+        var propSet = InternalResources.GetProperty(symbol.Crc64) as PropertySet;
+
+        object? prop = propSet?.GetProperty("Material - Normal Map Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+   
+    
+    public Handle<T3Texture>? GetDiffuseTexture(int index)
+    {
+        PropertySet? propSet = GetMaterialPropertySet(index);
+
+        object? prop = propSet?.GetProperty("Material - Diffuse Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+
+    public Handle<T3Texture>? GetNormalMapTexture(int index)
+    {
+        PropertySet? propSet = GetMaterialPropertySet(index);
+
+        object? prop = propSet?.GetProperty("Material - Normal Map Texture");
+
+        return prop as Handle<T3Texture>;
+    }
+    
+   
+
+    public List<Handle<T3Texture>> GetDiffuseTextures()
+    {
+        List<Handle<T3Texture>> handles = [];
+        foreach (object f in InternalResources.Properties.Values)
+        {
+            if (f is not PropertySet pSet)
+                continue;
+
+            object? prop = pSet.GetProperty("Material - Diffuse Texture");
+
+            if (prop is Handle<T3Texture> handle)
+            {
+                handles.Add(handle);
+            }
+        }
+
+        return handles;
+    }
+
+    public List<Handle<T3Texture>> GetNormalTextures()
+    {
+        List<Handle<T3Texture>> handles = [];
+        foreach (object f in InternalResources.Properties.Values)
+        {
+            if (f is not PropertySet pSet)
+                continue;
+
+            object? prop = pSet.GetProperty("Material - Normal Space");
+
+            if (prop is Handle<T3Texture> handle)
+            {
+                handles.Add(handle);
+            }
+        }
+
+        return handles;
+    }
+
+    
 }

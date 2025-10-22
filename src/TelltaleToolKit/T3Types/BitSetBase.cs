@@ -7,7 +7,7 @@ namespace TelltaleToolKit.T3Types;
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class BitSetBase
 {
-    public uint[] Values;
+    public uint[] Values { get; set; }
 
     public BitSetBase(int numValues)
     {

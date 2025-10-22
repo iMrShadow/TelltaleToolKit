@@ -146,8 +146,8 @@ public static class MetaClassTypeRegistry
         Register("DCArray<D3DMesh::Texture>", typeof(List<D3DMesh.Texture>));
         Register("DCArray<D3DMesh::VertexAnimation>", typeof(List<D3DMesh.VertexAnimation>));
         Register("DCArray<DCArray<D3DMesh::LocalTransformEntry>>", typeof(NotImplementedException));
-        Register("DCArray<DCArray<T3MeshBonePaletteEntry>>", typeof(NotImplementedException));
-        Register("DCArray<DCArray<T3MeshLocalTransformEntry>>", typeof(NotImplementedException));
+        Register("DCArray<DCArray<T3MeshBonePaletteEntry>>", typeof(List<List<T3MeshBonePaletteEntry>>));
+        Register("DCArray<DCArray<T3MeshLocalTransformEntry>>", typeof(List<List<T3MeshLocalTransformEntry>>));
         Register("DCArray<DlgStructs::DlgObjIDAndDlg>", typeof(NotImplementedException));
         Register("DCArray<LightProbeData::ProbeSH>", typeof(NotImplementedException));
         Register("DCArray<LightProbeData::Tetrahedra>", typeof(NotImplementedException));
@@ -160,7 +160,7 @@ public static class MetaClassTypeRegistry
         Register("DCArray<T3EffectBinaryDataCg::VertexStreamIndex>", typeof(List<T3EffectBinaryDataCg.VertexStreamIndex>));
         Register("DCArray<T3EffectPreloadPackage::EffectEntry>", typeof(NotImplementedException));
         Register("DCArray<T3EffectPreloadPackage::VarianceEntry>", typeof(NotImplementedException));
-        Register("DCArray<T3MeshBonePaletteEntry>", typeof(NotImplementedException));
+        Register("DCArray<T3MeshBonePaletteEntry>", typeof(List<T3MeshBonePaletteEntry>));
         Register("DglChoiceInstance",typeof(NotImplementedException));
         Register("DialogBaseInstance<DialogBranch>",typeof(NotImplementedException));
         Register("DialogBaseInstance<DialogDialog>",typeof(NotImplementedException));
@@ -303,11 +303,11 @@ public static class MetaClassTypeRegistry
         Register("T3EffectPreloadPackage", typeof(NotImplementedException));
         Register("T3MaterialBrushNormalImportParams", typeof(NotImplementedException));
         Register("T3MaterialTextureImport", typeof(NotImplementedException));
-        Register("T3MeshBonePaletteEntry", typeof(NotImplementedException));
+        Register("T3MeshBonePaletteEntry", typeof(T3MeshBonePaletteEntry));
         Register("T3MeshBuffer", typeof(NotImplementedException));
-        Register("T3MeshCPUSkinningData", typeof(NotImplementedException));
+        Register("T3MeshCPUSkinningData", typeof(T3MeshCPUSkinningData));
         Register("T3MeshTexture", typeof(NotImplementedException));
-        Register("T3MeshVertexState", typeof(NotImplementedException));
+        Register("T3MeshVertexState", typeof(NotImplementedException)); // TODO Propert merge
         Register("T3OverlayObjectData_Text", typeof(T3OverlayObjectDataText));
         Register("T3OverlayTextParams", typeof(T3OverlayTextParams));
         Register("T3VertexComponent", typeof(T3VertexComponent));
@@ -644,6 +644,7 @@ public static class MetaClassTypeRegistry
         Register("class DialogBranch", typeof(DialogBranch));
         Register("class DialogDialog", typeof(DialogDialog));
         Register("class DialogExchange", typeof(DialogExchange));
+        Register("class DialogExchange::ExchangeElem", typeof(DialogExchange.ExchangeElem));
         Register("class DialogInstance::InstanceID", typeof(DialogInstance.InstanceID));
         Register("class DialogItem", typeof(DialogItem));
         Register("class DialogLine", typeof(DialogLine));

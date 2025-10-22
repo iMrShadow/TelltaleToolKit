@@ -22,9 +22,9 @@ public class T3GFXVertexState
     [MetaMember("mAttributeCount")]
     public uint AttributeCount { get; set; }
 
-    public GFXPlatformAttributeParams[] Attributes = new GFXPlatformAttributeParams[32];
-    public T3GFXBuffer[] IndexBuffer = new T3GFXBuffer[4];
-    public T3GFXBuffer[] VertexBuffer = new T3GFXBuffer[32];
+    public List<GFXPlatformAttributeParams> Attributes { get; set; } = [];
+    public List<T3GFXBuffer> IndexBuffer { get; set; } = [];
+    public List<T3GFXBuffer> VertexBuffer { get; set; } = [];
 
     public class Serializer : MetaClassSerializer<T3GFXVertexState>
     {
@@ -36,7 +36,7 @@ public class T3GFXVertexState
             DefaultSerializer.Serialize(ref obj, stream);
 
             MetaClass? desc = stream.GetMetaClass(typeof(T3GFXVertexState));
-            
+
             if (stream is MetaStreamWriter)
             {
                 throw new NotSupportedException();
@@ -45,28 +45,29 @@ public class T3GFXVertexState
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");
-                
-                if(obj.VertexCountPerInstance > 32)
+
+                if (obj.VertexCountPerInstance > 32)
                     throw new InvalidDataException("VertexCountPerInstance is too large"); // Remove this for modding
-                
-                if(obj.IndexBufferCount > 4)
+
+                if (obj.IndexBufferCount > 4)
                     throw new InvalidDataException("IndexBufferCount is too large");
 
-                if (obj.AttributeCount > 0)
+                for (var i = 0; i < obj.AttributeCount; i++)
                 {
-                    for (var i = 0; i < obj.AttributeCount; i++)
-                    {
-                        TTK.PreSerialize(ref obj.Attributes[i], stream);
-                        TTK.Serialize(ref obj.Attributes[i], stream);
-                    }
+                    var attribute = new GFXPlatformAttributeParams();
+                    TTK.PreSerialize(ref attribute, stream);
+                    TTK.Serialize(ref attribute, stream);
+                    obj.Attributes.Add(attribute);
                 }
-                
+
                 if (desc is not null && desc.ContainsMember("mIndexBufferCount"))
                 {
                     for (var i = 0; i < obj.IndexBufferCount; i++)
                     {
-                        TTK.PreSerialize(ref obj.IndexBuffer[i], stream);
-                        TTK.Serialize(ref obj.IndexBuffer[i], stream);
+                        var indexBuffer = new T3GFXBuffer();
+                        TTK.PreSerialize(ref indexBuffer, stream);
+                        TTK.Serialize(ref indexBuffer, stream);
+                        obj.IndexBuffer.Add(indexBuffer);
                     }
                 }
                 else
@@ -76,15 +77,19 @@ public class T3GFXVertexState
                     bool hasIndexBuffer = streamReader.ReadBoolean();
                     if (hasIndexBuffer)
                     {
-                        TTK.PreSerialize(ref obj.IndexBuffer[0], stream);
-                        TTK.Serialize(ref obj.IndexBuffer[0], stream);
+                        var indexBuffer = new T3GFXBuffer();
+                        TTK.PreSerialize(ref indexBuffer, stream);
+                        TTK.Serialize(ref indexBuffer, stream);
+                        obj.IndexBuffer.Add(indexBuffer);
                     }
                 }
 
                 for (var i = 0; i < obj.VertexBufferCount; i++)
                 {
-                    TTK.PreSerialize(ref obj.VertexBuffer[i], stream);
-                    TTK.Serialize(ref obj.VertexBuffer[i], stream);
+                    var submesh = new T3GFXBuffer();
+                    TTK.PreSerialize(ref submesh, stream);
+                    TTK.Serialize(ref submesh, stream);
+                    obj.VertexBuffer.Add(submesh);
                 }
             }
         }
