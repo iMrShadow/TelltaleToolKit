@@ -17,7 +17,8 @@ public class AudioSound
     [MetaClassSerializerGlobal(typeof(EnumSerializer<SoundMode>))]
     public enum SoundMode
     {
-        // TODO:
-        // Verify
+        mono = 0,
+        stereo = 1,
+        surround = 2
     }
 }
