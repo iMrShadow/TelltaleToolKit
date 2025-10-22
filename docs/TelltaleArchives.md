@@ -4,7 +4,7 @@ Telltale Archives are zip-like containers used for storing game data, with optio
 
 ---
 
-### TTArch (`.ttarch`) Support Overview
+### TTArchive (`.ttarch`) Support Overview
 
 | TTArch Version | Extracting | Rebuilding | Notes                |
 | -------------- | :--------: | :--------: | -------------------- |
@@ -31,7 +31,7 @@ Telltale Archives are zip-like containers used for storing game data, with optio
 
 ---
 
-### TTArch2 (`.ttarch2`) Support Overview
+### TTArchive2 (`.ttarch2`) Support Overview
 
 | TTArch2 Version | Extracting | Rebuilding |
 | --------------- | :--------: | :--------: |
