@@ -10,6 +10,7 @@ using TelltaleToolKit.T3Types.Dialogs;
 using TelltaleToolKit.T3Types.Dialogs.Dlg;
 using TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 using TelltaleToolKit.T3Types.Dialogs.DlgSettings;
+using TelltaleToolKit.T3Types.Effects;
 using TelltaleToolKit.T3Types.Fonts;
 using TelltaleToolKit.T3Types.InputMaps;
 using TelltaleToolKit.T3Types.Languages.Landb;
@@ -135,17 +136,20 @@ public static class MetaClassTypeRegistry
         Register("ChoreAgentInst", typeof(NotImplementedException));
         Register("ChoreInst*", typeof(ChoreInst));
         Register("CompressedSkeletonPoseContext", typeof(NotImplementedException));
-        Register("D3DMesh::LocalTransformEntry", typeof(NotImplementedException));
+        Register("D3DMesh::LocalTransformEntry", typeof(D3DMesh.LocalTransformEntry));
         Register("D3DMesh::Texture", typeof(D3DMesh.Texture));
         Register("DArray<InputMapper*>", typeof(List<InputMapper>));
         Register("DArray<unsignedint>", typeof(List<uint>));
-        Register("DCArray<D3DMesh::AnimatedVertexEntry>", typeof(NotImplementedException));
+        Register("DCArray<D3DMesh::AnimatedVertexEntry>", typeof(List<D3DMesh.AnimatedVertexEntry>));
+        Register("D3DMesh::AnimatedVertexEntry", typeof(D3DMesh.AnimatedVertexEntry));
         Register("DCArray<D3DMesh::BoneEntry>", typeof(List<D3DMesh.BoneEntry>));
-        Register("DCArray<D3DMesh::LocalTransformEntry>", typeof(NotImplementedException));
+        Register("DCArray<D3DMesh::LocalTransformEntry>", typeof(List<D3DMesh.LocalTransformEntry>));
         Register("DCArray<D3DMesh::SkinningEntry>", typeof(List<D3DMesh.SkinningEntry>));
         Register("DCArray<D3DMesh::Texture>", typeof(List<D3DMesh.Texture>));
         Register("DCArray<D3DMesh::VertexAnimation>", typeof(List<D3DMesh.VertexAnimation>));
-        Register("DCArray<DCArray<D3DMesh::LocalTransformEntry>>", typeof(NotImplementedException));
+        Register("VertexAnimation", typeof(D3DMesh.VertexAnimation));
+        Register("class SArray<int,11>", typeof(int[]));
+        Register("DCArray<DCArray<D3DMesh::LocalTransformEntry>>", typeof(List<List<D3DMesh.LocalTransformEntry>>));
         Register("DCArray<DCArray<T3MeshBonePaletteEntry>>", typeof(List<List<T3MeshBonePaletteEntry>>));
         Register("DCArray<DCArray<T3MeshLocalTransformEntry>>", typeof(List<List<T3MeshLocalTransformEntry>>));
         Register("DCArray<DlgStructs::DlgObjIDAndDlg>", typeof(NotImplementedException));
@@ -201,7 +205,8 @@ public static class MetaClassTypeRegistry
         Register("LanguageLookupMap::DlgIDSet", typeof(NotImplementedException));
         Register("LanguageRegister",typeof(NotImplementedException));
         Register("Map<String,Rule*,less<String>>", typeof(NotImplementedException));
-        Register("Map<Symbol,D3DMesh::AnimatedVertexGroupEntry,less<Symbol>>", typeof(NotImplementedException));
+        Register("Map<Symbol,D3DMesh::AnimatedVertexGroupEntry,less<Symbol>>", typeof(Dictionary<Symbol, D3DMesh.AnimatedVertexGroupEntry>));
+        Register("D3DMesh::AnimatedVertexGroupEntry", typeof(D3DMesh.AnimatedVertexGroupEntry));
         Register("Map<float,KeyframedValue<int>,less<float>>", typeof(NotImplementedException));
         Register("Map<int,DCArray<unsignedint>,less<int>>", typeof(NotImplementedException));
         Register("Map<int,unsignedint,less<int>>", typeof(NotImplementedException));
@@ -1036,6 +1041,7 @@ public static class MetaClassTypeRegistry
         Register("class SArray<int,4>", typeof(int[]));
         Register("class SArray<unsigned char,32>", typeof(byte[]));
         Register("class SArray<unsigned int,3>", typeof(uint[]));
+        Register("class SArray<DCArray<D3DMesh::Texture>,11>", typeof(List<D3DMesh.Texture>[]));
         Register("class SaveGame", typeof(SaveGame));
         Register("class SaveGame::AgentInfo", typeof(SaveGame.AgentInfo));
         Register("class Scene", typeof(Scene));
@@ -1607,9 +1613,6 @@ public enum T3EffectParameterType
     EVSMShadowSamplerCount = 0x2,
 }
 
-public class T3VertexComponent
-{
-}
 
 public class T3EffectBinaryData
 {
@@ -1826,9 +1829,7 @@ public class FilterArea
 {
 }
 
-public class PathBase
-{
-}
+
 
 public class InverseKinematicsDerived
 {
@@ -1901,13 +1902,9 @@ public class SoundBusSystem
     }
 }
 
-public class ZTestFunction
-{
-}
 
-public class SoundReverbPreset
-{
-}
+
+
 
 public class Selectable
 {
@@ -1969,24 +1966,12 @@ public class CompressedQuaternionKeys2
 {
 }
 
-public class T3LightSceneInternalData
-{
-    public class QualityEntry
-    {
-    }
 
-    public class LightmapPage
-    {
-    }
-}
 
 public class StyleIdleTransitionsRes
 {
 }
 
-public class MeshSceneEnlightenData
-{
-}
 
 public class CinematicLightRig
 {
@@ -2033,24 +2018,12 @@ public class T3RenderStateBlock
 public class RenderObject_PostMaterial
 {
 }
-
-public class WalkPath
-{
-}
-
 public class T3OcclusionMeshData
 {
 }
 
 public class SoundEventBankMap
 {
-}
-
-public class MeshSceneLightmapData
-{
-    public class Entry
-    {
-    }
 }
 
 public class PhysicsData
@@ -2092,21 +2065,6 @@ public class SkeletonPoseValue
     }
 }
 
-public class RootKey
-{
-}
-
-public class HingeJointKey
-{
-}
-
-public class PivotJointKey
-{
-}
-
-public class BallTwistJointKey
-{
-}
 
 public class LightProbeData
 {
@@ -2139,9 +2097,6 @@ public class ChorecorderParameters
 {
 }
 
-public class CameraFacingTypes
-{
-}
 
 public class Agent
 {
@@ -2174,9 +2129,6 @@ public class PhysicsObject
     }
 }
 
-public class T3LightCinematicRigLOD
-{
-}
 
 public class ParticleProperties
 {
@@ -2224,9 +2176,6 @@ public class EnumeTangentModes
 {
 }
 
-public class LinkedBallTwistJointKey
-{
-}
 
 public class PreloadPackage
 {
@@ -2262,18 +2211,9 @@ public class PreloadPackage
     }
 }
 
-public class SoundFootsteps
-{
-    public class EnumMaterial
-    {
-    }
-}
+
 
 public class SklNodeData
-{
-}
-
-public class ParticlePropConnect
 {
 }
 
@@ -2285,9 +2225,6 @@ public class InverseKinematicsBase
 {
 }
 
-public class ParticleLODKey
-{
-}
 
 public class T3HeapAllocator
 {
@@ -2372,17 +2309,10 @@ public class RenderObject_Mesh
     }
 }
 
-public class PlaceableBallTwistJointKey
-{
-}
-
 public class CompressedKeys<T>
 {
 }
 
-public class BallJointKey
-{
-}
 
 public class PathTo
 {
@@ -2396,118 +2326,12 @@ public class AgentState
 {
 }
 
-public class EnlightenModule
-{
-    public class EnumeQualityWithDefault
-    {
-    }
-
-    public class EnlightenSystemSettings
-    {
-    }
-
-    public class EnumeProbeResolution
-    {
-    }
-
-    public class EnlightenCubemapSettings
-    {
-    }
-
-    public class EnlightenAdaptiveProbeVolumeSettings
-    {
-    }
-
-    public class EnumeQuality
-    {
-    }
-
-    public class EnlightenProbeVolumeSettings
-    {
-    }
-
-    public class EnlightenAutoProbeVolumeSettings
-    {
-    }
-
-    public class EnlightenLightSettings
-    {
-    }
-
-    public class EnlightenPrimitiveSettings
-    {
-    }
-
-    public class EnumeInstanceType
-    {
-    }
-
-    public class EnumeUpdateMethod
-    {
-    }
-
-    public class EnumeDistributedBuildSystem
-    {
-    }
-
-    public class EnumeSceneOptimisationMode
-    {
-    }
-
-    public class EnumeBackfaceType
-    {
-    }
-
-    public class EnumeAutoUVSimplificationMode
-    {
-    }
-
-    public class EnumeProbeSampleMethod
-    {
-    }
-
-    public class EnumeDisplayQuality
-    {
-    }
-
-    public class EnumeRadiositySampleRate
-    {
-    }
-
-    public class EnumeAgentUsage
-    {
-    }
-
-    public class EnumeUpdateMethodWithDefault
-    {
-    }
-
-    public class EnumeProbeResolutionWithDefault
-    {
-    }
-
-    public class EnlightenMeshSettings
-    {
-        public class AutoUVSettings
-        {
-        }
-    }
-
-    public class EnumeSimplifyMode
-    {
-    }
-}
 
 public class LightGroupInstance
 {
 }
 
-public class T3LightEnvInternalData
-{
-    public class QualityEntry
-    {
-    }
-}
+
 
 public class ColorHDR
 {
@@ -2520,22 +2344,13 @@ public class ResourceBundle
     }
 }
 
-public class T3LightProbeInternalData
-{
-    public class QualityEntry
-    {
-    }
-}
+
 
 public class CompressedPathBlockingValue
 {
     public class CompressedPathInfoKey
     {
     }
-}
-
-public class CompressedSkeletonPoseKeys
-{
 }
 
 public class BlendGraph
