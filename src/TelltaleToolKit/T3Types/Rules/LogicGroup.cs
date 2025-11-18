@@ -37,5 +37,14 @@ public class LogicGroup
 
         [MetaMember("mKeyNegateList")]
         public Dictionary<Symbol, bool> GroupOperator { get; set; } = []; // also a string/symbol 
+        
+        [MetaMember("mKeyComparisonList")]
+        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = []; // also a string/symbol 
+
+        [MetaMember("mKeyActionList")]
+        public Dictionary<Symbol, int> KeyActionList { get; set; } = []; // also a string/symbol 
+
+        [MetaMember("mReferenceKeyList")]
+        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol 
     }
 }

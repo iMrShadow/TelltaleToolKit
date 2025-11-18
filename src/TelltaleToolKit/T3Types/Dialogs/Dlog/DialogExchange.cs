@@ -2,6 +2,7 @@ using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Chores;
+using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
@@ -24,7 +25,7 @@ public class DialogExchange : IDialogBase
     public string ExitScript { get; set; } = string.Empty;
 
     [MetaMember("mDispTextProxy")]
-    public LanguageResourceProxy DispTextProxy { get; set; } = new();
+    public LanguageResProxy DispTextProxy { get; set; } = new();
 
     [MetaMember("mExitTrigger")]
     public int ExitTrigger { get; set; }

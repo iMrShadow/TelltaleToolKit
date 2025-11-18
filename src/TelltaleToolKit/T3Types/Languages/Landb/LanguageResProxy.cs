@@ -8,5 +8,5 @@ namespace TelltaleToolKit.T3Types.Languages.Landb;
 public class LanguageResProxy
 {
     [MetaMember("mID")]
-    public int Id { get; set; }
+    public uint Id { get; set; }
 }

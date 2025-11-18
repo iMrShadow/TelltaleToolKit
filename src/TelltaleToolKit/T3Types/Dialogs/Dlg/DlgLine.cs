@@ -2,6 +2,7 @@
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;
+using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
@@ -11,9 +12,9 @@ public class DlgLine : IOwner, IDlgObjIdOwner
     [MetaMember("Baseclass_UID::Owner")]
     public Owner Owner { get; set; }
 
-    [MetaMember("Baseclass_DlgObjIdOwner")]
+    [MetaMember("Baseclass_DlgObjIDOwner")]
     public DlgObjIDOwner DlgObjIdOwner { get; set; }
 
     [MetaMember("mLangResProxy")]
-    public LanguageResourceProxy LangResProxy { get; set; }
+    public LanguageResProxy LangResProxy { get; set; }
 }

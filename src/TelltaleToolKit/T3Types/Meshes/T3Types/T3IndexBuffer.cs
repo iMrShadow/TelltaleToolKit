@@ -16,6 +16,12 @@ public class T3IndexBuffer
 
     [MetaMember("mFormat")]
     public int Format { get; set; }
+    
+    [MetaMember("mFlags")]
+    public Flags Flags { get; set; }
+    
+    [MetaMember("mUsage")]
+    public int Usage { get; set; }
 
     [MetaMember("mNumIndicies")]
     public int NumIndices { get; set; }
@@ -23,7 +29,7 @@ public class T3IndexBuffer
     [MetaMember("mIndexByteSize")]
     public int IndexByteSize { get; set; }
 
-    public byte[] IndexBufferData = [];
+    public byte[] Buffer { get; set; } = [];
 
     [MetaClassSerializerGlobal(typeof(T3IndexBufferSerializer))]
     public class T3IndexBufferSerializer : MetaClassSerializer<T3IndexBuffer>
@@ -39,16 +45,48 @@ public class T3IndexBuffer
             }
             else if (stream is MetaStreamReader streamReader)
             {
-                var bufferBytes = 2;
-                if (obj.Format != 101)
+                int bufferBytes = obj.Format switch
                 {
-                    bufferBytes = 4;
+                    101 => 2,
+                    102 => 4,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                if (obj.IndexByteSize == 0)
+                {
+                    obj.IndexByteSize = bufferBytes;
                 }
 
-                obj.IndexBufferData = streamReader.ReadBytes(obj.IndexByteSize * obj.NumIndices);
+                obj.Buffer = streamReader.ReadBytes(bufferBytes * obj.NumIndices);
             }
         }
     }
+}
+
+[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3VertexComponent>))]
+public class T3VertexComponent
+{
+    [MetaMember("mOffset")]
+    public uint Offset { get; set; }
+
+    [MetaMember("mCount")]
+    public uint Count { get; set; }
+    
+    [MetaMember("mType")]
+    public EnumType Type { get; set; }
+    
+    [MetaClassSerializerGlobal(typeof(EnumSerializer<EnumType>))]
+    public enum EnumType {
+        VTypeNone = 0,
+        VTypeFloat = 1,
+        VTypeS8N = 2,//N meaning normalised between -127 and 127 so when read cast to float and divide by 127
+        VTypeU8N = 3,
+        VTypeS16N = 4,
+        VTypeU16N = 5,
+        //../
+        VTypeS8NBones = 8,
+        VTypeSF16 = 11,//signed half float
+    };
 }
 
 // Right, so D3DIndexBuffer changes to T3IndexBuffer (probably because the engine became cross-platform at the time).

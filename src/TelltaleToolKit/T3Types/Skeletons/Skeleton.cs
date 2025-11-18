@@ -1,7 +1,9 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
-using TelltaleToolKit.T3Types.Mathematics;
+using Quaternion = TelltaleToolKit.T3Types.Mathematics.Quaternion;
+using Vector3 = TelltaleToolKit.T3Types.Mathematics.Vector3;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
@@ -63,6 +65,9 @@ public class Skeleton
         [MetaMember("mResourceGroupMembership")]
         public Dictionary<Symbol, float> ResourceGroupMembership { get; set; } = [];
 
+        [MetaMember("mResourceGroupMembership")]
+        public Dictionary<string, float> ResourceGroupMembershipStr { get; set; } = [];
+        
         [MetaMember("mConstraints")]
         public BoneConstraints Constraints { get; set; } = new();
 

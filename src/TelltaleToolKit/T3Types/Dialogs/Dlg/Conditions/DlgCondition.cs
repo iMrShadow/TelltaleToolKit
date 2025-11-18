@@ -7,6 +7,6 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgCondition>))]
 public class DlgCondition : IDlgObjIdOwner
 {
-    [MetaMember("Baseclass_DlgObjIdOwner")]
+    [MetaMember("Baseclass_DlgObjIDOwner")]
     public DlgObjIDOwner DlgObjIdOwner { get; set; }
 }

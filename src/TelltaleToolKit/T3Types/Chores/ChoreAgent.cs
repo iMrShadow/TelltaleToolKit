@@ -3,6 +3,7 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
+using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
@@ -29,6 +30,12 @@ public class ChoreAgent
 
     [MetaMember("mAttachment")]
     public Attachment AttachmentWhat { get; set; } = new(); // ???????/
+    
+    [MetaMember("mAABinding")]
+    public ActorAgentBinding AABinding { get; set; } 
+    
+    [MetaMember("mAgentEnabledRule")]
+    public Rule AgentEnabledRule { get; set; } // Bone only
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Attachment>))]
     public class Attachment

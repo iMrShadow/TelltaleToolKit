@@ -7,6 +7,6 @@ namespace TelltaleToolKit.T3Types.Dialogs;
 [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageResourceProxy>))]
 public class LanguageResourceProxy
 {
-    [MetaMember("mLangID")]
-    public int LangId { get; set; }
+    [MetaMember("mID")]
+    public uint LangId { get; set; }
 }

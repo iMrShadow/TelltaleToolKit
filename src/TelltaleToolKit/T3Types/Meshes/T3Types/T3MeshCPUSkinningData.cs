@@ -42,7 +42,7 @@ public enum GFXPlatformFormat
     None = 0x0,
     F32 = 0x1,
     F32x2 = 0x2, // hmm
-    F32x3 = 0x3,
+    F32x3 = 0x3, // 3 - used
     F32x4 = 0x4,
     F16x2 = 0x5,
     F16x4 = 0x6,
@@ -63,7 +63,7 @@ public enum GFXPlatformFormat
     SN16 = 0x15,
     UN16 = 0x16,
     SN16x2 = 0x17,
-    UN16x2 = 0x18,
+    UN16x2 = 0x18, // 24 Ok
     SN16x4 = 0x19,
     UN16x4 = 0x1A, // 26
     S8 = 0x1B,
@@ -71,7 +71,7 @@ public enum GFXPlatformFormat
     S8x2 = 0x1D,
     U8x2 = 0x1E,
     S8x4 = 0x1F,
-    U8x4 = 0x20,
+    U8x4 = 0x20, // 32 TODO:
     SN8 = 0x21,
     UN8 = 0x22,
     SN8x2 = 0x23,

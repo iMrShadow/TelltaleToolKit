@@ -1,6 +1,7 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
@@ -17,7 +18,7 @@ public class DialogItem : IDialogBase
     public string Name { get; set; } = string.Empty;
 
     [MetaMember("mDispTextProxy")]
-    public LanguageResourceProxy DispTextProxy { get; set; } = new();
+    public LanguageResProxy DispTextProxy { get; set; } = new();
 
     [MetaMember("mPlaybackMode")]
     public int PlaybackMode { get; set; } // TODO Change to PlayBackMode

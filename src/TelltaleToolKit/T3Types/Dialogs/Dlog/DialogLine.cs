@@ -1,6 +1,7 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
@@ -11,5 +12,5 @@ public class DialogLine : IDialogBase
     public DialogBase DialogBase { get; set; } = new();
 
     [MetaMember("mLangResProxy")]
-    public LanguageResourceProxy LangResProxy { get; set; } = new();
+    public LanguageResProxy LangResProxy { get; set; } = new();
 }

@@ -178,6 +178,7 @@ public sealed class ArraySerializer<T> : MetaClassSerializer<T[]>
     {
         for (var i = 0; i < obj.Length; ++i)
         {
+            _itemDataClassSerializer.PreSerialize(ref obj[i], stream);
             _itemDataClassSerializer.Serialize(ref obj[i], stream);
         }
     }

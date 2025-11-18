@@ -5,7 +5,6 @@ using TelltaleToolKit.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-
 /// <summary>
 /// Old name - D3DVertexBuffer
 /// </summary>
@@ -27,16 +26,25 @@ public class T3VertexBuffer
     [MetaMember("mType")]
     public int Type { get; set; }
 
+    [MetaMember("mFlags")]
+    public Flags Flags { get; set; }
+
+    [MetaMember("mUsage")]
+    public int Usage { get; set; }
+
+    [MetaMember("mVertexComponents")]
+    public T3VertexComponent[] VertexComponents { get; set; } = new T3VertexComponent[12];
+
     [MetaMember("mbStoreCompressed")]
     public bool StoreCompressed { get; set; }
 
-    public byte[] VertexBufferData = [];
+    public byte[] Buffer = [];
 
     [MetaClassSerializerGlobal(typeof(T3VertexBufferSerializer))]
     public class T3VertexBufferSerializer : MetaClassSerializer<T3VertexBuffer>
     {
         private static readonly DefaultClassSerializer<T3VertexBuffer> DefaultSerializer = new();
-        
+
         public override void Serialize(ref T3VertexBuffer obj, MetaStream stream)
         {
             DefaultSerializer.Serialize(ref obj, stream);
@@ -53,7 +61,7 @@ public class T3VertexBuffer
                     _ => obj.NumVerts * obj.VertSize
                 };
 
-                obj.VertexBufferData = streamReader.ReadBytes(totalBytes);
+                obj.Buffer = streamReader.ReadBytes(totalBytes);
             }
         }
     }
