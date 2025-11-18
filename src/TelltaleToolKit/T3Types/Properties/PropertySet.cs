@@ -19,7 +19,21 @@ public class PropertySet
     [MetaMember("mParentList")]
     public List<Handle<PropertySet>> ParentList { get; set; } = [];
 
-    public Dictionary<Symbol, object> Properties = [];
+    public Dictionary<Symbol, PropertyEntry> Properties = [];
+
+    // New: store a small wrapper per-property so we can remember the MetaClassType used for each value
+    public struct PropertyEntry
+    {
+        public object? Value;
+        public MetaClassType? MetaType;
+
+        public PropertyEntry(object? value, MetaClassType? metaType = null)
+        {
+            Value = value;
+            MetaType = metaType;
+        }
+    }
+
     public PropertySet ParentProperties;
 
     public class Serializer : MetaClassSerializer<PropertySet>
@@ -36,29 +50,124 @@ public class PropertySet
 
         public override void Serialize(ref PropertySet obj, MetaStream stream)
         {
+            DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
 
             if (stream is MetaStreamWriter streamWriter)
             {
-                throw new NotImplementedException();
+                // Write ParentList when PropVersion > 0
+                if (obj.PropVersion > 0)
+                {
+                    int parentCount = obj.ParentList.Count;
+                    streamWriter.Write(parentCount);
+
+                    MetaClassSerializer<Handle<PropertySet>> parentSerializer =
+                        TTKGlobalContext.Instance().GetSerializer<Handle<PropertySet>>();
+                    for (var i = 0; i < parentCount; i++)
+                    {
+                        // Use a local variable so we can pass by ref into serializer
+                        Handle<PropertySet> parent = obj.ParentList[i];
+                        parentSerializer.PreSerialize(ref parent, stream);
+                        parentSerializer.Serialize(ref parent, stream);
+                        // Update back in case the serializer modified the handle (consistent with reader logic)
+                        obj.ParentList[i] = parent;
+                    }
+                }
+
+                // Maintain backwards-compat for PropVersion == 1: reader does EndBlock(); BeginBlock();
+                if (obj.PropVersion == 1)
+                {
+                    stream.EndBlock();
+                    stream.BeginBlock();
+                }
+
+                // Group properties by their MetaClassType so we can write number-of-types block
+                // Determine MetaClassType for each property's value
+                var groups =
+                    new Dictionary<MetaClassType, List<KeyValuePair<Symbol, PropertyEntry>>>(ReferenceEqualityComparer
+                        .Instance);
+
+                foreach ((Symbol key, PropertyEntry entry) in obj.Properties)
+                {
+                    MetaClassType? typeSymbol = entry.MetaType;
+
+                    if (typeSymbol is null)
+                    {
+                        continue;
+                    }
+
+                    if (!groups.TryGetValue(typeSymbol, out List<KeyValuePair<Symbol, PropertyEntry>>? list))
+                    {
+                        list = [];
+                        groups[typeSymbol] = list;
+                    }
+
+                    list.Add(new KeyValuePair<Symbol, PropertyEntry>(key, new PropertyEntry(entry.Value, typeSymbol)));
+                }
+
+                // Write number of distinct meta types
+                streamWriter.Write(groups.Count);
+
+                // Stable order: order by the MetaClassType's identity marker (e.g., its symbol or linking-type name)
+                // Use MetaClassType.Symbol if present (prefer preserving the meta-symbol ordering), otherwise LinkingType.FullName
+                IOrderedEnumerable<KeyValuePair<MetaClassType, List<KeyValuePair<Symbol, PropertyEntry>>>> ordered =
+                    groups.OrderBy(g =>
+                    {
+                        // Prefer meta-symbol if available (so ordering depends on meta identity)
+                        Symbol? sym = g.Key.Symbol; // assume MetaClassType has .Symbol
+                        if (sym != null)
+                            return sym.ToString();
+                        var lt = g.Key.LinkingType;
+                        return lt?.FullName ?? string.Empty;
+                    }, StringComparer.Ordinal);
+
+                foreach ((MetaClassType typeSymbol, List<KeyValuePair<Symbol, PropertyEntry>> entries) in ordered)
+                {
+                    streamWriter.Write(typeSymbol);
+                    streamWriter.Write(entries.Count);
+
+                    MetaClassSerializer classTypeSerializer =
+                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
+
+                    foreach ((Symbol key, PropertyEntry value) in entries)
+                    {
+                        streamWriter.Write(key);
+
+                        object? propertyValue = value.Value;
+
+                        classTypeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
+                        classTypeSerializer.Serialize(ref propertyValue, stream);
+
+                        // Note: we intentionally don't mutate the stored PropertyEntry.Value here.
+                        // If serializer changes the in-memory object and you want that persisted, set it before calling Serialize.
+                    }
+                }
+
+                bool embeddedParentProps = obj.PropertyFlags.Has(1024);
+                if (embeddedParentProps)
+                {
+                    MetaClassSerializer<PropertySet> propSetSerializer =
+                        TTKGlobalContext.Instance().GetSerializer<PropertySet>();
+                    propSetSerializer.Serialize(ref obj.ParentProperties, stream);
+                }
             }
             else if (stream is MetaStreamReader streamReader)
             {
-                if (obj.PropVersion > 0)
+                if (obj.PropVersion > 1)
                 {
                     obj.ParentList.Capacity = streamReader.ReadInt32();
 
                     for (var i = 0; i < obj.ParentList.Capacity; i++)
                     {
                         var parent = new Handle<PropertySet>();
-                        TTKContext.Instance().GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
+                        TTKGlobalContext.Instance().GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
                         obj.ParentList.Add(parent);
                     }
                 }
 
-                if (obj.PropVersion == 1)
+                if (obj.PropVersion == 1 && !stream.GetMetaClass(typeof(PropertySet)).ContainsMember("mParentList"))
                 {
                     stream.EndBlock();
                     stream.BeginBlock();
@@ -69,12 +178,11 @@ public class PropertySet
                 {
                     // The type of the class 
                     MetaClassType typeSymbol = streamReader.ReadMetaClassType();
-
                     // The number of times that type has been serialized
                     int numOfType = streamReader.ReadInt32();
 
                     MetaClassSerializer classTypeSerializer =
-                        TTKContext.Instance().GetSerializer(typeSymbol.LinkingType);
+                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {
@@ -85,16 +193,16 @@ public class PropertySet
 
                         classTypeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
                         classTypeSerializer.Serialize(ref propertyValue, stream);
-                        obj.Properties[propertyKey] = propertyValue;
+                        obj.Properties[propertyKey] = new PropertyEntry(propertyValue, typeSymbol);
                     }
                 }
 
-                bool embeddedParentProps = (obj.PropertyFlags.Data & 1024) != 0;
+                bool embeddedParentProps = obj.PropertyFlags.Has(1024);
 
                 // If the flag is true
                 if (embeddedParentProps)
                 {
-                    TTKContext.Instance().GetSerializer<PropertySet>().Serialize(ref obj.ParentProperties, stream);
+                    TTK.Serialize(ref obj.ParentProperties, stream);
                 }
             }
 
@@ -102,21 +210,44 @@ public class PropertySet
         }
     }
 
+    public void EmbedParentProperties()
+    {
+        PropertyFlags |= 1024;
+    }
+
     public object? GetProperty(string propertyName)
     {
         var symbol = new Symbol(propertyName);
 
-        Properties.TryGetValue(symbol, out object? obj);
+        Properties.TryGetValue(symbol, out PropertyEntry obj);
         {
-            return obj;
+            return obj.Value;
+        }
+    }
+
+    public object? GetProperty(ulong crc64)
+    {
+        Properties.TryGetValue(new Symbol(crc64), out PropertyEntry obj);
+        {
+            return obj.Value;
         }
     }
     
-    public object? GetProperty(ulong crc64)
+    public T? GetProperty<T>(string propertyName)
     {
-        Properties.TryGetValue(new Symbol(crc64), out object? obj);
+        var symbol = new Symbol(propertyName);
+
+        Properties.TryGetValue(symbol, out PropertyEntry obj);
         {
-            return obj;
+            return obj.Value is T value ? value : default;
+        }
+    }
+
+    public T? GetProperty<T>(ulong crc64)
+    {
+        Properties.TryGetValue(new Symbol(crc64), out PropertyEntry obj);
+        {
+            return obj.Value is T value ? value : default;
         }
     }
 }
