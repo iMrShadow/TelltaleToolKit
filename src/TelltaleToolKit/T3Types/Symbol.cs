@@ -19,17 +19,30 @@ public class Symbol
         Crc64 = crc64;
     }
 
+    public Symbol(string name, ulong crc64)
+    {
+        SymbolName = name;
+        Crc64 = crc64;
+    }
+
     public static readonly Symbol DefaultSymbol = new(0);
 
     /// <summary>
     /// Get the CRC64 of the type name. This is used to identify the type in the metaclass header. This is consistent throughout all Telltale Tool games.
     /// </summary>
     /// <returns></returns>
-    public static ulong GetCrc64(string symbol) =>
-        System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
+    public static ulong GetCrc64(string? symbol)
+    {
+        if (symbol == null)
+        {
+            return 0;
+        }
+
+        return System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
+    }
 
     public override string ToString()
-        => HasString() ? $"{SymbolName}" : $"{Crc64}";
+        => !string.IsNullOrEmpty(SymbolName) ? SymbolName : $"{Crc64:X}";
     
     // Equality & hashing so different Symbol instances with the same Crc64 are equal keys in dictionaries
     public override bool Equals(object? obj) => Equals(obj as Symbol);
