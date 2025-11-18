@@ -36,8 +36,7 @@ public class Animation
         public int ValueCount { get; set; }
         public uint Version { get; set; }
     }
-
-
+    
     public List<InterfaceInfo> Descriptors { get; set; } = [];
 
     public List<IAnimatedValueInterface> Values { get; set; } = [];
@@ -98,7 +97,7 @@ public class Animation
 
                 foreach (InterfaceInfo desc in obj.Descriptors)
                 {
-                    MetaClassSerializer serializer = TTKContext.Instance().GetSerializer(desc.Type.LinkingType);
+                    MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(desc.Type.LinkingType);
 
                     for (var j = 0; j < desc.ValueCount; j++)
                     {
@@ -153,7 +152,7 @@ public class Animation
                     int numOfType = streamReader.ReadInt32(); // The number of times that type has been serialized
 
                     MetaClassSerializer serializer =
-                        TTKContext.Instance().GetSerializer(typeSymbol.LinkingType);
+                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {

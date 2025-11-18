@@ -373,12 +373,12 @@ public partial class T3Texture
                     };
 
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    TTKContext.Instance().GetSerializer<StreamHeader>().Serialize(ref streamHeader, stream);
+                    TTKGlobalContext.Instance().GetSerializer<StreamHeader>().Serialize(ref streamHeader, stream);
 
                     foreach (RegionStreamHeader region in obj.RegionHeaders)
                     {
                         RegionStreamHeader regionStreamHeader = region;
-                        TTKContext.Instance().GetSerializer<RegionStreamHeader>()
+                        TTKGlobalContext.Instance().GetSerializer<RegionStreamHeader>()
                             .Serialize(ref regionStreamHeader, stream);
                     }
 
@@ -412,7 +412,7 @@ public partial class T3Texture
                 if (classDescription.ContainsMember("mVersion"))
                 {
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    TTKContext.Instance().GetSerializer<StreamHeader>()?.Serialize(ref streamHeader, stream);
+                    TTKGlobalContext.Instance().GetSerializer<StreamHeader>()?.Serialize(ref streamHeader, stream);
                     obj.RegionMainHeader = streamHeader;
 
                     obj.RegionHeaders = new List<RegionStreamHeader>(streamHeader.RegionCount);
@@ -420,7 +420,7 @@ public partial class T3Texture
                     for (var i = 0; i < streamHeader.RegionCount; i++)
                     {
                         var regionStreamHeader = new RegionStreamHeader();
-                        TTKContext.Instance().GetSerializer<RegionStreamHeader>()
+                        TTKGlobalContext.Instance().GetSerializer<RegionStreamHeader>()
                             .Serialize(ref regionStreamHeader, stream);
                         obj.RegionHeaders.Add(regionStreamHeader);
                     }
@@ -434,7 +434,7 @@ public partial class T3Texture
                         for (var i = 0; i < obj.RegionMainHeader.AuxDataCount; i++)
                         {
                             var aux = new AuxiliaryData();
-                            TTKContext.Instance().GetSerializer<AuxiliaryData>().Serialize(ref aux, stream);
+                            TTKGlobalContext.Instance().GetSerializer<AuxiliaryData>().Serialize(ref aux, stream);
                             obj.AuxilaryData.Add(aux);
                         }
 

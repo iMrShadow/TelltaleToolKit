@@ -10,9 +10,15 @@ namespace TelltaleToolKit.T3Types.Chores;
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class ChoreResource
 {
+    [MetaMember("mVersion")]
+    public int Version { get; set; }
+    
     [MetaMember("mResName")]
     public string ResName { get; set; } = string.Empty;
 
+    [MetaMember("mResName")]
+    public Symbol ResNameSymbol { get; set; }
+    
     [MetaMember("mResLength")]
     public float ResLength { get; set; }
 
@@ -48,12 +54,18 @@ public class ChoreResource
 
     [MetaMember("mbViewResourceGroups")]
     public bool ViewResourceGroups { get; set; }
+    
+    [MetaMember("mbViewEmptyGraphs")]
+    public bool ViewEmptyGraphs { get; set; }
 
     [MetaMember("mResourceProperties")]
     public PropertySet ResourceProperties { get; set; } = new();
 
     [MetaMember("mResourceGroupInclude")]
     public Dictionary<string, float> ResourceGroupInclude { get; set; } = [];
+    
+    [MetaMember("mResourceGroupInclude")]
+    public Dictionary<Symbol, float> ResourceGroupIncludeSymbol { get; set; } = [];
 
     [MetaMember("mFlags")]
     public Flags Flags { get; set; } = new(); // Bone only
@@ -63,7 +75,7 @@ public class ChoreResource
 
     [MetaMember("mhObject")]
     public HandleBase ObjectHandle { get; set; } = new(); // Bone only
-
+    
     public object? Embedded { get; set; }
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Block>))]
@@ -110,7 +122,7 @@ public class ChoreResource
 
                     object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
 
-                    TTKContext.Instance().GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
+                    TTKGlobalContext.Instance().GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
                     obj.Embedded = embedded;
                 }
             }

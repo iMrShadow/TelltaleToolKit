@@ -8,10 +8,16 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class DlgConditionSet
 {
-    public List<IDlgCondition> Conditions { get; set; }
+    public List<IDlgCondition> Conditions { get; set; } = [];
     
     public class Serializer : MetaClassSerializer<DlgConditionSet>
     {
+        public override void PreSerialize(ref DlgConditionSet obj, MetaStream stream, MetaClassType? type = null )
+        {
+            obj ??= new DlgConditionSet();
+        }
+        
+        
         public override void Serialize(ref DlgConditionSet obj, MetaStream stream)
         {
             if (stream is MetaStreamWriter streamWriter)
@@ -25,7 +31,7 @@ public class DlgConditionSet
                 for (var i = 0; i < numChildren; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer conditionSerializer = TTKContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer conditionSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
 
                     object? dlgConditionSet = null;
                     conditionSerializer.PreSerialize(ref dlgConditionSet, stream);

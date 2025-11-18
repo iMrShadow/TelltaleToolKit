@@ -71,7 +71,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
             object? value = cached.Getter(ref obj);
 
-            MetaClassSerializer serializer = TTKContext.Instance().GetSerializer(cached.Property.PropertyType);
+            MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(cached.Property.PropertyType);
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream);
 
@@ -118,15 +118,19 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         }
 
         // 3. String<->Symbol fallback
-        if (propDesc.Type.LinkingType == typeof(string))
+        if (propDesc.Type.LinkingType == typeof(string) || propDesc.Type.LinkingType == typeof(Symbol))
         {
+            throw new MetaMemberNotFoundException(
+                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
             if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Symbol)), out var cachedAlt))
                 return cachedAlt;
         }
 
-        // 4. String<->Symbol fallback
+        //4. String<->Symbol fallback
         if (propDesc.Type.LinkingType == typeof(Dictionary<string, float>))
         {
+            throw new MetaMemberNotFoundException(
+                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
             if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Dictionary<Symbol, float>)),
                     out CachedMember? cachedAlt))
                 return cachedAlt;
@@ -142,7 +146,10 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         // 6. string<->Symbol (dictionary)
         if (propDesc.Type.LinkingType == typeof(Dictionary<string, TransitionMap.TransitionMapInfo>))
         {
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Dictionary<Symbol, TransitionMap.TransitionMapInfo>)),
+            throw new MetaMemberNotFoundException(
+                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
+            if (MemberCache.TryGetValue(
+                    (propDesc.MemberName, typeof(Dictionary<Symbol, TransitionMap.TransitionMapInfo>)),
                     out CachedMember? cachedAlt))
                 return cachedAlt;
         }
@@ -150,18 +157,23 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         // 7. string<->Symbol (dictionary)
         if (propDesc.Type.LinkingType == typeof(Dictionary<string, bool>))
         {
+            throw new MetaMemberNotFoundException(
+                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
             if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Dictionary<Symbol, bool>)),
                     out CachedMember? cachedAlt))
                 return cachedAlt;
         }
 
         // Final: First available
-        CachedMember? cachedAltFinal = MemberCache
+        
+        if (propDesc.Type.LinkingType == typeof(int) || propDesc.Type.LinkingType == typeof(uint))
+        {
+            CachedMember? cachedAltFinal = MemberCache
                 .FirstOrDefault(kvp => kvp.Key.Item1 == propDesc.MemberName)
                 .Value;
-        if (cachedAltFinal != null)
-            return cachedAltFinal;
-
+            if (cachedAltFinal != null)
+                return cachedAltFinal;
+        }
 
         throw new MetaMemberNotFoundException(
             $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");

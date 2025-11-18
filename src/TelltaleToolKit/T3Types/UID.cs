@@ -89,8 +89,8 @@ namespace TelltaleToolKit.T3Types.Common
                     return;
 
                 PropertySet propertySet = obj.OverridableValues;
-                TTKContext.Instance().GetSerializer<PropertySet>().PreSerialize(ref propertySet, stream);
-                TTKContext.Instance().GetSerializer<PropertySet>().Serialize(ref propertySet, stream);
+                TTKGlobalContext.Instance().GetSerializer<PropertySet>().PreSerialize(ref propertySet, stream);
+                TTKGlobalContext.Instance().GetSerializer<PropertySet>().Serialize(ref propertySet, stream);
             }
         }
     }

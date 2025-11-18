@@ -28,18 +28,11 @@ public class DlgNodeIdle : IDlgNode
     public int IdleSlot { get; set; }
 
     [MetaMember("mOverrideOptionTime")]
-    public EnumOverrideOption OverrideOptionTime { get; set; }
+    public OverrideOption OverrideOptionTime { get; set; }
 
     [MetaMember("mOverrideOptionStyle")]
-    public EnumOverrideOption OverrideOptionStyle { get; set; }
-
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumOverrideOption>))]
-    public struct EnumOverrideOption
-    {
-        [MetaMember("mVal")]
-        public OverrideOption Value { get; set; }
-    }
-
+    public OverrideOption OverrideOptionStyle { get; set; }
+    
     [MetaMember("Baseclass_DlgNode")]
     public DlgNode DlgNode { get; set; }
 }

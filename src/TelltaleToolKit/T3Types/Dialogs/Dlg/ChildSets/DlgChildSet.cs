@@ -17,7 +17,7 @@ public class DlgChildSet
     {
         public override void PreSerialize(ref DlgChildSet obj, MetaStream stream, MetaClassType? type = null)
         {
-            if (stream is MetaStreamReader)
+            if (obj is null)
             {
                 obj = new DlgChildSet();
             }
@@ -36,7 +36,7 @@ public class DlgChildSet
                 for (var i = 0; i < numChildren; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer childSerializer = TTKContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer childSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
 
                     object? dlgChild = null;
                     childSerializer.PreSerialize(ref dlgChild, stream);

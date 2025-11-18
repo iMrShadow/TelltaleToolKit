@@ -79,7 +79,7 @@ public class T3MaterialData
                     int materialIndex = streamReader.ReadInt32();
 
                     T3MaterialCompiledData compiledData = new();
-                    TTKContext.Instance().GetSerializer<T3MaterialCompiledData>().Serialize(ref compiledData, stream);
+                    TTKGlobalContext.Instance().GetSerializer<T3MaterialCompiledData>().Serialize(ref compiledData, stream);
                     obj.CompiledData2.Add(compiledData);
                 }
             }

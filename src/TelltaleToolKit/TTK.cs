@@ -69,25 +69,26 @@ public static class TTK
     public static MetaStreamConfiguration ExtractMetaStreamConfiguration(Stream stream)
         => new MetaStreamReader(stream).Configuration;
 
-    /// <summary>
-    /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file.
-    /// </summary>
-    /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
-    /// <param name="obj">The object to serialize.</param>
-    /// <param name="fileName">The path to the file to save to.</param>
-    public static void Save<T>(T obj, string fileName) where T : class, new() =>
-        Save(obj, File.OpenWrite(fileName));
+    // /// <summary>
+    // /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file.
+    // /// </summary>
+    // /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
+    // /// <param name="obj">The object to serialize.</param>
+    // /// <param name="fileName">The path to the file to save to.</param>
+    // [Obsolete("")]
+    // public static void Save<T>(T obj, string fileName) where T : class, new() =>
+    //     Save(obj, File.OpenWrite(fileName));
 
-    /// <summary>
-    /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream.
-    /// </summary>
-    /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
-    /// <param name="obj">The object to serialize.</param>
-    /// <param name="stream">The stream to write to.</param>
-    public static void Save<T>(T obj, Stream stream) where T : class, new()
-     => Save(obj, stream, TTKContext.Instance().DefaultMetaStreamConfiguration);
-
-
+    // /// <summary>
+    // /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream.
+    // /// </summary>
+    // /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
+    // /// <param name="obj">The object to serialize.</param>
+    // /// <param name="stream">The stream to write to.</param>
+    // [Obsolete("")]
+    // public static void Save<T>(T obj, Stream stream) where T : class, new()
+    //  => Save(obj, stream, TTKGlobalContext.Instance().DefaultMetaStreamConfiguration);
+    
     /// <summary>
     /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file using a provided <see cref="MetaStreamConfiguration"/>.
     /// </summary>
@@ -95,6 +96,7 @@ public static class TTK
     /// <param name="obj">The object to serialize.</param>
     /// <param name="fileName">The path to the file to save to.</param>
     /// <param name="configuration">The <see cref="MetaStreamConfiguration"/> to use during serialization.</param>
+    [Obsolete("")]
     public static void Save<T>(T obj, string fileName, MetaStreamConfiguration configuration) where T : class, new() =>
         Save(obj, File.OpenWrite(fileName), configuration);
 
@@ -123,7 +125,7 @@ public static class TTK
     /// <param name="type"></param>
     public static void PreSerialize<T>(ref T obj, MetaStream stream, MetaClassType? type = null) where T : new()
     {
-        TTKContext.Instance().GetSerializer<T>().PreSerialize(ref obj, stream, type);
+        TTKGlobalContext.Instance().GetSerializer<T>().PreSerialize(ref obj, stream, type);
     }
 
     /// <summary>
@@ -133,7 +135,7 @@ public static class TTK
     /// <param name="stream">The stream to serialize or deserialize to.</param>
     public static void Serialize<T>(ref T obj, MetaStream stream) where T : new()
     {
-        TTKContext.Instance().GetSerializer<T>().Serialize(ref obj, stream);
+        TTKGlobalContext.Instance().GetSerializer<T>().Serialize(ref obj, stream);
     }
 
     /// <summary>
@@ -180,13 +182,6 @@ public static class TTK
             // TODO: Check for .t3fxpreloadpack
         };
     }
-
-    /// <summary>
-    /// Gets the <see cref="GameDescriptor"/> of the currently active game in the TTK context.
-    /// </summary>
-    /// <returns>The current active <see cref="GameDescriptor"/>.</returns>
-    public static GameDescriptor GetCurrentActiveGameDescriptor()
-      => TTKContext.Instance().GetCurrentlyActiveGame();
 
     public static void JsonSerialize<T>(T obj, string filePath)
     {

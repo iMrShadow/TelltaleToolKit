@@ -23,14 +23,14 @@ public sealed class MetaClass
     /// The members (properties) of this class.
     /// This is a list of MetaMember objects, each describing a property.
     /// </summary>
-    public List<MetaMember> Members { get; init; } = [];
+    public List<MetaMember> Members { get; set; } = [];
 
     /// <summary>
     /// Registers the current MetaClass instance with the toolkit context.
     /// </summary>
     [Obsolete(
         "The register function is deprecated. You can register the class using the context class. This function was previously used when I originally registered from code only.")]
-    public void Register() => TTKContext.Instance().RegisterClass(this);
+    public void Register() => TTKGlobalContext.Instance().RegisterClass(this);
 
     /// <inheritdoc cref="MetaClassType.IsBlocked"/>
     public bool IsBlocked()

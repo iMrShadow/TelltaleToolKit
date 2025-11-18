@@ -1,6 +1,7 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Animations;
@@ -60,6 +61,8 @@ public class ProceduralLookAt
         // 2 = final look at
     }
 
+    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Constraint>))]
+
     public struct Constraint
     {
         [MetaMember("mMaxLeftRight")]
@@ -94,7 +97,7 @@ public class ProceduralLookAt
                 }
 
                 Animation objAnimation = obj.Animation;
-                TTKContext.Instance().GetSerializer<Animation>().Serialize(ref objAnimation, stream);
+                TTKGlobalContext.Instance().GetSerializer<Animation>().Serialize(ref objAnimation, stream);
             }
             else if (stream is MetaStreamReader)
             {
@@ -104,7 +107,7 @@ public class ProceduralLookAt
                 }
 
                 var animation = new Animation();
-                TTKContext.Instance().GetSerializer<Animation>().Serialize(ref animation, stream);
+                TTKGlobalContext.Instance().GetSerializer<Animation>().Serialize(ref animation, stream);
 
                 obj.Animation = animation;
             }

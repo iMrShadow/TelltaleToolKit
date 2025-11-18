@@ -2,6 +2,8 @@ using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Dialogs.Dlg;
+using TelltaleToolKit.T3Types.Languages.Landb;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Scenes;
 
@@ -10,8 +12,14 @@ namespace TelltaleToolKit.T3Types.Chores;
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class Chore
 {
+    // [MetaMember("mpChore")]
+    // public  Name { get; set; } = string.Empty;
+    
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
+    
+    [MetaMember("mFlags")]
+    public Flags Flags { get; set; }
 
     [MetaMember("mhChoreScene")]
     public Handle<Scene> ChoreScene { get; set; } = new();
@@ -53,43 +61,56 @@ public class Chore
     public int RenderDelay { get; set; }
 
     [MetaMember("mResources")]
-    public List<ChoreResource> Resources { get; set; }
+    public List<ChoreResource> Resources { get; set; } = [];
 
+    [MetaMember("mSynchronizedToLocalization")]
+    public LocalizeInfo SynchronizedToLocalization { get; set; }
+    
+    [MetaMember("mDependencies")]
+   public DependencyLoader Dependencies  { get; set; }
+
+    [MetaMember("mToolProps")]
+    public ToolProps ToolProps  { get; set; }
+    
+    [MetaMember("mWalkPaths")]
+    public Dictionary<Symbol, WalkPath> WalkPaths  { get; set; }
 
     public class Serializer : MetaClassSerializer<Chore>
     {
         private static readonly DefaultClassSerializer<Chore> DefaultSerializer = new();
-
-
+        
         public override void Serialize(ref Chore obj, MetaStream stream)
         {
+            DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
+            MetaClass? choreMetaClassDescription = stream.GetMetaClass(typeof(Chore));
 
             if (stream is MetaStreamWriter streamWriter)
             {
             }
             else if (stream is MetaStreamReader streamReader)
             {
-                if (obj.NumResources > 0)
+                if (obj.NumResources > 0 && !choreMetaClassDescription.ContainsMember("mResourcesChore"))
                 {
                     // TODO: Check for Texas and Bone. They have DCArrays for Chore Resources
 
-                    for (int i = 0; i < obj.NumResources; i++)
+                    for (var i = 0; i < obj.NumResources; i++)
                     {
                         var choreResource = new ChoreResource();
-                        TTKContext.Instance().GetSerializer<ChoreResource>().Serialize(ref choreResource, stream);
+                        TTKGlobalContext.Instance().GetSerializer<ChoreResource>().PreSerialize(ref choreResource, stream);
+                        TTKGlobalContext.Instance().GetSerializer<ChoreResource>().Serialize(ref choreResource, stream);
                         obj.ResourcesChore.Add(choreResource);
                     }
                 }
 
-                if (obj.NumAgents > 0)
+                if (obj.NumAgents > 0 && !choreMetaClassDescription.ContainsMember("mAgents"))
                 {
                     // TODO: Check for Texas and Bone. They have DCArrays for Chore Agents
 
                     for (var i = 0; i < obj.NumAgents; i++)
                     {
                         var choreAgent = new ChoreAgent();
-                        TTKContext.Instance().GetSerializer<ChoreAgent>().Serialize(ref choreAgent, stream);
+                        TTKGlobalContext.Instance().GetSerializer<ChoreAgent>().Serialize(ref choreAgent, stream);
                         obj.Agents.Add(choreAgent);
                     }
                 }

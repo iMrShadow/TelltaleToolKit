@@ -85,12 +85,12 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                     obj.Folders.Add(folder);
                 }
 
-                var nodeCount = streamReader.ReadInt32();
+                int nodeCount = streamReader.ReadInt32();
                 obj.Nodes.Capacity = nodeCount;
                 for (var i = 0; i < nodeCount; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer metaClassSerializer = TTKContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer metaClassSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
 
                     object node = null!;
                     metaClassSerializer.PreSerialize(ref node, stream);

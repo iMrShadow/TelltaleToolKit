@@ -34,7 +34,7 @@ public static class StreamVersionExtensions
             MetaStreamVersion.Msv4 => "MSV4",
             MetaStreamVersion.Msv5 => "MSV5",
             MetaStreamVersion.Msv6 => "MSV6",
-            _ => throw new ArgumentOutOfRangeException(nameof(version), version, null)
+            _ => string.Empty
         };
     }
 }

@@ -44,7 +44,7 @@ public class Scene
                 for (var i = 0; i < numAgents; i++)
                 {
                     var agentInfo = new AgentInfo();
-                    TTKContext.Instance().GetSerializer<AgentInfo>().Serialize(ref agentInfo, stream);
+                    TTKGlobalContext.Instance().GetSerializer<AgentInfo>().Serialize(ref agentInfo, stream);
                     obj.Agents.Add(agentInfo);
                 }
             }
