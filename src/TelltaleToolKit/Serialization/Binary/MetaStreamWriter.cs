@@ -7,8 +7,9 @@ namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamWriter : MetaStream
 {
-    public MetaStreamWriter(Stream inputStream) : this(inputStream, TTKContext.Instance().GetDefaultMetaStreamConfiguration())
+    public MetaStreamWriter(Stream inputStream, TTKContext context) : this(inputStream, context.DefaultMetaStreamConfiguration)
     {
+        Context = context;
     }
 
     public MetaStreamWriter(Stream inputStream, MetaStreamConfiguration configuration)
@@ -110,7 +111,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.LinkingType == type);
         }
 
-        return TTKContext.Instance().GetMetaClassDescriptionFromActiveGame(type);
+        return Context?.GetMetaClassDescription(type);
     }
 
     public override MetaClass? GetMetaClass(Symbol symbol)
@@ -121,7 +122,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.Symbol.Crc64 == symbol.Crc64);
         }
 
-        return TTKContext.Instance().GetMetaClassDescriptionFromActiveGame(symbol);
+        return Context?.GetMetaClassDescription(symbol);
     }
 
     public override void Serialize(ref bool value) => Writer.Write(value ? '1' : '0');
@@ -157,7 +158,14 @@ public sealed class MetaStreamWriter : MetaStream
 
     public override void Serialize(ref MetaClassType value)
     {
-        throw new NotImplementedException();
+        if (Configuration.AreSymbolsHashed)
+        {
+            this.Write(value.Symbol.Crc64);
+        }
+        else
+        {
+            this.Write(value.FullTypeName);
+        }
     }
 
     public override void Serialize(byte[] values, int offset, int count) => Writer.Write(values, offset, count);

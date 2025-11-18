@@ -6,31 +6,19 @@ using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.Utility;
 
 namespace TelltaleToolKit;
 
 public class TTKContext
 {
-    private static TTKContext? _instance;
-
-    private MetaClassRegistry MetaClassRegistry { get; set; }
-    private MetaClassSerializerSelector MetaClassSerializerSelector { get; set; } = new();
-
-    private TTKContext()
+    private GameDescriptor _gameDescriptor;
+    public TTKContext(GameDescriptor  gameDescriptor)
     {
-        MetaClassRegistry = new MetaClassRegistry();
+        _gameDescriptor = gameDescriptor;
     }
-
-    private List<GameDescriptor> RegisteredGames { get; set; } = [];
-    public GameDescriptor? ActiveGameRegistry { get; set; }
-
-    public static TTKContext Instance() => _instance ??= new TTKContext();
-
-    public void Register(IEnumerable<MetaClass> metaClassDescriptions)
-    {
-        MetaClassRegistry.Register(metaClassDescriptions);
-    }
+    // public HashDatabase.HashDatabase? GameSpecificDatabase { get; set; }
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -38,244 +26,108 @@ public class TTKContext
         Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() }
     };
 
-    // public void LoadMetaClassDescriptionsFromJsonFolder(string folderPath)
-    // {
-    //     foreach (string filePath in Directory.GetFiles(folderPath, "*.json", SearchOption.AllDirectories))
-    //     {
-    //         LoadMetaClassDescriptionsFromJson(File.ReadAllText(filePath));
-    //     }
-    // }
-    //
-    //
-    // public void LoadMetaClassDescriptionsFromJsonFile(string path)
-    // {
-    //     LoadMetaClassDescriptionsFromJson(File.ReadAllText(path));
-    // }
-
-    public List<MetaClass>? GetMetaClassDescriptionsFromJson(string json)
-    {
-        return JsonSerializer.Deserialize<List<MetaClass>>(json, JsonOptions);
-    }
-
-    public MetaClass GetMetaClassDescriptionFromActiveGame(Type type)
-    {
-        if (ActiveGameRegistry is null)
-        {
-            throw new InvalidOperationException("No active game registry has been set");
-        }
-
-        KeyValuePair<MetaClassType, uint>? match =
-            ActiveGameRegistry.Classes.FirstOrDefault(tc => tc.Key.LinkingType == type);
-
-        return MetaClassRegistry.GetClass(match.Value.Key, match.Value.Value);
-    }
-
-    public bool IsMetaClassDescriptionInCrc32ActiveGame(MetaClass? desc)
-        => ActiveGameRegistry is not null && desc is not null && ActiveGameRegistry.Classes.ContainsKey(desc.ClassType);
-
-
-    public MetaClass? GetMetaClassDescriptionFromActiveGame(Symbol symbol)
-    {
-        ArgumentNullException.ThrowIfNull(ActiveGameRegistry);
-
-        KeyValuePair<MetaClassType, uint> match = ActiveGameRegistry.Classes
-            .FirstOrDefault(tc => tc.Key.Symbol.Crc64 == symbol.Crc64);
-
-        if (match.Key == null)
-            return null;
-
-        return MetaClassRegistry.GetClass(match.Key, match.Value);
-    }
-
-    public GameDescriptor GetTelltaleGame(string gameName)
-    {
-        ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
-
-        return RegisteredGames.First(g => g.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public void SetActiveGame(string gameName)
-    {
-        ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
-        ActiveGameRegistry = FindGame(gameName);
-
-        _defaultMetaStreamConfiguration = new MetaStreamConfiguration
-        {
-            Version = ActiveGameRegistry.MetaStreamVersion,
-            AreSymbolsHashed = ActiveGameRegistry.AreSymbolsHashed,
-        };
-    }
-
-    public GameDescriptor FindGame(string gameName)
-    {
-        ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
-        return RegisteredGames.First(g => g.Id.Equals(gameName, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public void RegisterGame(GameDescriptor gameDescriptor)
-    {
-        ArgumentNullException.ThrowIfNull(gameDescriptor, nameof(gameDescriptor));
-        RegisteredGames.Add(gameDescriptor);
-    }
-
-    public void RegisterGames(IEnumerable<GameDescriptor> games)
-        => RegisteredGames.AddRange(games);
-
-
-    public MetaClassSerializer<T> GetSerializer<T>() where T : new()
-        => MetaClassSerializerSelector.GetSerializer<T>();
-
-
-    public MetaClassSerializer GetSerializer(Type type)
-        => MetaClassSerializerSelector.GetSerializer(type);
-
-    // Utility to sanitize file names
-    private static string SanitizeFileName(string name)
-    {
-        foreach (char c in Path.GetInvalidFileNameChars())
-            name = name.Replace(c, '_');
-        return name;
-    }
-
-    public void RegisterClass(MetaClass metaClass)
-    {
-        MetaClassRegistry.RegisterClass(metaClass);
-    }
-
-    public MetaClass? GetClass(Symbol typeSymbol, uint crc32)
-        => MetaClassRegistry.GetClass(typeSymbol, crc32);
-
-    public void PrintRegisteredClasses()
-    {
-        MetaClassRegistry.PrintRegisteredClasses();
-    }
-
-    public void Load(string dataFolder)
-    {
-        string gameDescriptorsFolder = Path.Join(dataFolder, "game_descriptors");
-        string[] files = Directory.GetFiles(gameDescriptorsFolder, "*.json", SearchOption.TopDirectoryOnly);
-
-        string versionDbFolder = Path.Join(dataFolder, "versiondb"); // Unused
-
-        // Just asynchronously load all database files. It is thread safe.
-        Parallel.ForEach(files, filePath =>
-        {
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
-            string json = File.ReadAllText(filePath);
-            var gameRegistry = JsonSerializer.Deserialize<GameDescriptor>(json, JsonOptions);
-
-            if (gameRegistry == null)
-                return;
-
-            gameRegistry.Id = fileName;
-            lock (RegisteredGames)
-            {
-                RegisterGame(gameRegistry);
-            }
-
-            // Look for corresponding snapshot file
-            string snapshotPath = Path.Combine(versionDbFolder, fileName + ".vdb.json");
-            if (File.Exists(snapshotPath))
-            {
-                string snapshotJson = File.ReadAllText(snapshotPath);
-                List<MetaClass>? metaClassDescriptions = GetMetaClassDescriptionsFromJson(snapshotJson);
-
-                if (metaClassDescriptions is null)
-                {
-                    return;
-                }
-
-                lock (MetaClassRegistry)
-                {
-                    Register(metaClassDescriptions);
-                }
-
-                foreach (MetaClass metaClassDescription in metaClassDescriptions)
-                {
-                    lock (gameRegistry.Classes)
-                    {
-                        gameRegistry.Classes[metaClassDescription.ClassType] = metaClassDescription.Crc32;
-                    }
-                }
-            }
-        });
-    }
-
-    public static void PrintRegisteredTypes()
-    {
-        MetaClassTypeRegistry.PrintRegisteredTypes();
-    }
-
-    // Dump all metaclassdescriptions for all registered games to a folder
-    private void DumpAllGamesMetaClassDescriptions(string folderPath)
-    {
-        Directory.CreateDirectory(folderPath);
-
-        foreach (GameDescriptor game in RegisteredGames)
-        {
-            DumpGameMetaClassDescriptions(game, Path.Combine(folderPath, $"{SanitizeFileName(game.Name)}.json"));
-        }
-    }
-
-    // Dump metaclassdescriptions for a single game
-    private void DumpGameMetaClassDescriptions(GameDescriptor game, string filePath)
-    {
-        if (game == null)
-            throw new ArgumentNullException(nameof(game));
-
-        var metaClassDescriptions = new List<MetaClass>();
-        foreach (KeyValuePair<MetaClassType, uint> entry in game.Classes)
-        {
-            MetaClass? desc = MetaClassRegistry.GetClass(entry.Key, entry.Value);
-            if (desc != null)
-                metaClassDescriptions.Add(desc);
-        }
-
-        string json = JsonSerializer.Serialize(metaClassDescriptions, JsonOptions);
-        File.WriteAllText(filePath, json, Encoding.ASCII);
-    }
-
-    private void DumpAllMetaClassDescriptions(string path)
-    {
-        string json = JsonSerializer.Serialize(MetaClassRegistry.Classes.Values, JsonOptions);
-        File.WriteAllText(path, json, Encoding.ASCII);
-    }
-
-    public static void DumpMetaClassDescriptions(IEnumerable<MetaClass> metaClassDescriptions, string path)
-    {
-        string json = JsonSerializer.Serialize(metaClassDescriptions, JsonOptions);
-        File.WriteAllText(path, json, Encoding.ASCII);
-    }
-
-    private MetaClass? GetMetaClassDescription(MetaClassType type, uint crc32)
-    {
-        return MetaClassRegistry.GetClass(type, crc32);
-    }
-
-    public GameDescriptor GetCurrentlyActiveGame()
-    {
-        if (ActiveGameRegistry is null)
-        {
-            throw new InvalidOperationException("No active game registry has been set.");
-        }
-
-        return ActiveGameRegistry;
-    }
-
-    private MetaStreamConfiguration? _defaultMetaStreamConfiguration;
-
     /// <summary>
     /// Gets the default <see cref="MetaStreamConfiguration"/> for the currently active game.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public MetaStreamConfiguration DefaultMetaStreamConfiguration
+    public MetaStreamConfiguration DefaultMetaStreamConfiguration => new()
     {
-        get
+        AreSymbolsHashed = _gameDescriptor.AreSymbolsHashed,
+        Version = _gameDescriptor.MetaStreamVersion
+    };
+
+    public MetaClass? GetMetaClassDescription(Type? type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        
+        KeyValuePair<MetaClassType, uint>? match =
+            _gameDescriptor.Classes.FirstOrDefault(tc => tc.Key.LinkingType == type);
+
+        return TTKGlobalContext.Instance().GetClass(match.Value.Key.Symbol, match.Value.Value);
+    }
+
+    public MetaClass? GetMetaClassDescription(Symbol? symbol)
+    {
+        ArgumentNullException.ThrowIfNull(symbol);
+
+        KeyValuePair<MetaClassType, uint>? match = _gameDescriptor.Classes
+            .FirstOrDefault(tc => tc.Key.Symbol.Crc64 == symbol.Crc64);
+
+        return TTKGlobalContext.Instance().GetClass(match.Value.Key.Symbol, match.Value.Value);
+    }
+    
+    public bool IsMetaClassDescriptionRegistered(MetaClass? desc)
+        => desc is not null && _gameDescriptor.Classes.ContainsKey(desc.ClassType);
+    
+
+    // public void PrintRegisteredClasses()
+    // {
+    //     MetaClassRegistry.PrintRegisteredClasses();
+    // }
+
+    private MetaClass? GetMetaClassDescription(MetaClassType type)
+    {
+        if (!_gameDescriptor.Classes.ContainsKey(type))
         {
-            if (_defaultMetaStreamConfiguration is null)
-                throw new InvalidOperationException("Cannot provide default MetaStreamConfiguration. No active game registry has been set.");
-            return _defaultMetaStreamConfiguration;
+            Console.WriteLine($"Game descriptor doesn't have description for {type.FullTypeName}");
+            return null;
         }
+        
+        if (_gameDescriptor.Classes.TryGetValue(type, out uint crc32))
+        {
+            return TTKGlobalContext.Instance().GetClass(type.Symbol, crc32);
+        }
+        
+        Console.WriteLine($"Game descriptor doesn't have description for {type.FullTypeName} with crc32 {crc32}!");
+        return null;
+    }
+    
+    /// <summary>
+    /// Loads and parses a Telltale archive file (.ttarch or .ttarch2) using the specified blowfish key for decryption.
+    /// </summary>
+    /// <param name="ttarch">The path to the archive file.</param>
+    /// <param name="game">The blowfish key for the game.</param>
+    /// <param name="sort">Whether to sort archive entries.</param>
+    /// <param name="debugPrint">Whether to print debug information during loading.</param>
+    /// <returns>An <see cref="ArchiveBase"/> representing the loaded archive.</returns>
+    /// <exception cref="NotSupportedException">Thrown if the archive type is unsupported.</exception>
+    public ArchiveBase Load(string ttarch, bool sort = true,
+        bool debugPrint = false)
+    {
+       return TTKGlobalContext.Instance().Load(ttarch, _gameDescriptor.BlowfishKey, sort, debugPrint);
+    }
+    
+    /// <summary>
+    /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="stream">The stream to write to.</param>
+    public void Save<T>(T obj, Stream stream) where T : class, new()
+        => Save(obj, stream, DefaultMetaStreamConfiguration);
+    
+    /// <summary>
+    /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file using a provided <see cref="MetaStreamConfiguration"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="fileName">The path to the file to save to.</param>
+    /// <param name="configuration">The <see cref="MetaStreamConfiguration"/> to use during serialization.</param>
+    public void Save<T>(T obj, string fileName, MetaStreamConfiguration configuration) where T : class, new() =>
+        Save(obj, File.OpenWrite(fileName), configuration);
+    
+    /// <summary>
+    /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream using a provided <see cref="MetaStreamConfiguration"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to serialize. Must be a class with a parameterless constructor.</typeparam>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="stream">The stream to write to.</param>
+    /// <param name="configuration">The <see cref="MetaStreamConfiguration"/> to use during serialization.</param>
+    public static void Save<T>(T obj, Stream stream, MetaStreamConfiguration configuration) where T : class, new()
+    {
+        var streamWriter = new MetaStreamWriter(stream, configuration);
+        streamWriter.Serialize(ref obj);
+        streamWriter.Save();
     }
 }

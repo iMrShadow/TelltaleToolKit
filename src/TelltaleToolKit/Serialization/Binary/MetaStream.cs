@@ -7,7 +7,6 @@ namespace TelltaleToolKit.Serialization.Binary;
 /// <summary>
 /// Stream wrapper used for serializing telltale assets.
 /// A single Telltale Tool file has 1-3 stream sections (Main, Debug, Async) depending on its meta version.
-/// 
 /// </summary>
 public abstract class MetaStream : IDisposable
 {
@@ -29,24 +28,9 @@ public abstract class MetaStream : IDisposable
 
     protected internal MetaStreamConfiguration Configuration { get; set; } = new();
     
-    
-    // public MetaStreamVersion Version { get; set; }
-    //
-    // public List<MetaClass> SerializedClasses { get; set; } = [];
-    // public List<(MetaClassType, uint crc32)> UnregisteredClasses { get; set; } = [];
-    // public List<(ulong, uint)> UnregisteredTypes { get; set; } = [];
+    protected TTKContext? Context { get; set; }
 
     protected Stream UnderlyingStream { get; init; } = null!;
-
-    // /// <summary>
-    // /// Whether the symbols are hashed.
-    // /// </summary>
-    // public bool AreSymbolsHashed { get; set; }
-
-    // /// <summary>
-    // /// 
-    // /// </summary>
-    // public List<Symbol> SerializedSymbols { get; private set; } = [];
     
     protected Stream CurrentSubstream => GetCurrentSection().Stream;
 
@@ -118,7 +102,7 @@ public abstract class MetaStream : IDisposable
 
     public void Serialize<T>(ref T obj) where T : new()
     {
-        MetaClassSerializer<T> serializer = TTKContext.Instance().GetSerializer<T>();
+        MetaClassSerializer<T> serializer = TTKGlobalContext.Instance().GetSerializer<T>();
         serializer.PreSerialize(ref obj, this, null);
         serializer.Serialize(ref obj, this);
     }
@@ -127,7 +111,7 @@ public abstract class MetaStream : IDisposable
     {
         ArgumentNullException.ThrowIfNull(obj);
 
-        MetaClassSerializer serializer = TTKContext.Instance().GetSerializer(obj.GetType());
+        MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(obj.GetType());
         serializer.PreSerialize(ref obj, this);
         serializer.Serialize(ref obj, this);
     }
