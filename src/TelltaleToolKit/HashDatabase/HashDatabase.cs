@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.HashDatabase;
@@ -6,61 +7,58 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 
-// TODO: Rework for v0.2.0
-// Each game snapshot will have its own database with the following tables:
-// Files
-// Properties
-// Bones
-
 /// <summary>
 /// Provides a SQLite-backed database for storing and resolving <see cref="Symbol"/> entries.
 /// Implements <see cref="IDisposable"/> and <see cref="ISymbolResolver"/> for resource management and symbol resolution.
 /// </summary>
 public class HashDatabase : IDisposable, ISymbolResolver
 {
-    /// <summary>
-    /// The underlying SQLite connection.
-    /// </summary>
     private readonly SqliteConnection _conn;
-
-    /// <summary>
-    /// Synchronization lock for thread-safe operations.
-    /// </summary>
-    private readonly object _lock = new();
+    private readonly object _dbLock = new();
+    private readonly ConcurrentDictionary<ulong, string> _cache = new();
+    private const string TableName = "Symbols";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HashDatabase"/> class and opens a connection to the specified database file.
     /// Ensures the schema is created if it does not exist.
     /// </summary>
     /// <param name="dbPath">Path to the SQLite database file.</param>
-    public HashDatabase(string dbPath)
+    /// <param name="enableWriteOptimizations">If true, sets WAL mode and turns synchronous off for faster bulk inserts.</param>
+    public HashDatabase(string dbPath, bool enableWriteOptimizations = true)
     {
-        var connectionString = $"Data Source={dbPath}";
-        _conn = new SqliteConnection(connectionString);
+        if (string.IsNullOrWhiteSpace(dbPath))
+            throw new ArgumentException("dbPath cannot be null or empty", nameof(dbPath));
+
+        var csb = new SqliteConnectionStringBuilder { DataSource = dbPath };
+        _conn = new SqliteConnection(csb.ConnectionString);
         _conn.Open();
+
+        if (enableWriteOptimizations)
+        {
+            // These PRAGMAs are helpful for bulk imports; keep in mind they change durability guarantees.
+            //  using SqliteCommand pragmaCmd = _conn.CreateCommand();
+            // pragmaCmd.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;";
+            // pragmaCmd.ExecuteNonQuery();
+        }
+
         InitializeSchema();
     }
 
     /// <summary>
-    /// Disposes the database connection.
-    /// </summary>
-    public void Dispose()
-    {
-        _conn.Dispose();
-    }
-
-    /// <summary>
-    /// Ensures the entries table exists in the database.
+    /// Ensures the schema (Bones, Properties tables) exists.
     /// </summary>
     private void InitializeSchema()
     {
-        using SqliteCommand cmd = _conn.CreateCommand();
-        cmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Entries (
-                CRC INTEGER PRIMARY KEY,
-                Value TEXT
-            );";
-        cmd.ExecuteNonQuery();
+        lock (_dbLock)
+        {
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $@"
+                    CREATE TABLE IF NOT EXISTS {TableName} (
+                        Crc   INTEGER PRIMARY KEY,
+                        Value TEXT NOT NULL
+                    );";
+            cmd.ExecuteNonQuery();
+        }
     }
 
     /// <summary>
@@ -69,108 +67,329 @@ public class HashDatabase : IDisposable, ISymbolResolver
     /// <returns>The entry count.</returns>
     public int NumEntries()
     {
-        using SqliteCommand cmd = _conn.CreateCommand();
-        cmd.CommandText = "SELECT COUNT(*) FROM Entries";
-        return Convert.ToInt32(cmd.ExecuteScalar());
-    }
-
-    /// <summary>
-    /// Finds the symbol value for the specified CRC hash.
-    /// </summary>
-    /// <param name="crc">The CRC64 hash to look up.</param>
-    /// <returns>The symbol name if found; otherwise, <c>null</c>.</returns>
-    public string? FindSymbol(ulong crc)
-    {
-        lock (_lock)
+        lock (_dbLock)
         {
             using SqliteCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "SELECT Value FROM Entries WHERE CRC = @crc LIMIT 1";
-            cmd.Parameters.AddWithValue("@crc", crc);
-            object? result = cmd.ExecuteScalar();
-            return result?.ToString();
+            cmd.CommandText = $"SELECT COUNT(*) FROM {TableName};";
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }
     }
 
     /// <summary>
-    /// Adds a symbol to the database from its original string.
+    /// Finds a symbol by CRC.
     /// </summary>
-    /// <param name="originalString">The original symbol string.</param>
+    public string? FindSymbol(ulong crc)
+    {
+        long key = CrcToKey(crc);
+
+        lock (_dbLock)
+        {
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $"SELECT Value FROM {TableName} WHERE Crc = @crc LIMIT 1;";
+            cmd.Parameters.AddWithValue("@crc", key);
+            object? res = cmd.ExecuteScalar();
+            return res?.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Finds a symbol using the in-memory cache, with automatic caching of lookups.
+    /// </summary>
+    public string? FindSymbolCached(ulong crc)
+    {
+        if (_cache.TryGetValue(crc, out string? found))
+            return found;
+
+        string? value = FindSymbol(crc);
+        if (value is null)
+            return null;
+
+        _cache[crc] = value;
+        return value;
+    }
+
+    /// <summary>
+    /// Adds or updates a symbol entry.
+    /// </summary>
+    public void AddEntry(ulong crc, string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        long key = CrcToKey(crc);
+
+        lock (_dbLock)
+        {
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $"INSERT OR REPLACE INTO {TableName} (Crc, Value) VALUES (@crc, @val);";
+            cmd.Parameters.AddWithValue("@crc", key);
+            cmd.Parameters.AddWithValue("@val", value);
+            cmd.ExecuteNonQuery();
+        }
+
+        _cache[crc] = value;
+    }
+
+    /// <summary>
+    /// Adds a symbol from its original string.
+    /// </summary>
     public void AddSymbol(string originalString)
     {
+        ArgumentNullException.ThrowIfNull(originalString);
         var symbol = new Symbol(originalString);
         AddEntry(symbol.Crc64, symbol.SymbolName);
     }
 
     /// <summary>
-    /// Adds or updates a CRC-value entry in the database.
+    /// Bulk inserts CRC-value pairs for performance.
     /// </summary>
-    /// <param name="crc">The CRC64 hash.</param>
-    /// <param name="value">The symbol value.</param>
-    public void AddEntry(ulong crc, string value)
-    {
-        lock (_lock)
-        {
-            using SqliteCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = @"
-                INSERT OR REPLACE INTO Entries (CRC, Value) VALUES (@crc, @value)";
-            cmd.Parameters.AddWithValue("@crc", crc);
-            cmd.Parameters.AddWithValue("@value", value);
-            cmd.ExecuteNonQuery();
-        }
-    }
-
-    /// <summary>
-    /// Performs a bulk insert of CRC-value pairs using a transaction and prepared statement for performance.
-    /// </summary>
-    /// <param name="entries">The collection of entries to insert.</param>
     public void BulkInsert(IEnumerable<(ulong CRC, string Value)> entries)
     {
-        lock (_lock)
+        ArgumentNullException.ThrowIfNull(entries);
+
+        lock (_dbLock)
         {
-            using SqliteTransaction transaction = _conn.BeginTransaction();
-
+            using SqliteTransaction trans = _conn.BeginTransaction();
             using SqliteCommand cmd = _conn.CreateCommand();
-            cmd.CommandText = "INSERT OR REPLACE INTO Entries (CRC, Value) VALUES (@crc, @value)";
-
-            SqliteParameter crcParam = cmd.Parameters.Add("@crc", SqliteType.Integer);
-            SqliteParameter valueParam = cmd.Parameters.Add("@value", SqliteType.Text);
+            cmd.CommandText = $"INSERT OR REPLACE INTO {TableName} (Crc, Value) VALUES (@crc, @val);";
+            var crcParam = cmd.Parameters.Add("@crc", SqliteType.Integer);
+            var valParam = cmd.Parameters.Add("@val", SqliteType.Text);
 
             foreach ((ulong crc, string value) in entries)
             {
-                crcParam.Value = crc;
-                valueParam.Value = value;
+                crcParam.Value = CrcToKey(crc);
+                valParam.Value = value;
                 cmd.ExecuteNonQuery();
+
+                _cache[crc] = value;
             }
 
-            transaction.Commit();
+            trans.Commit();
         }
     }
 
     /// <summary>
-    /// Dumps all CRC-value entries from the database.
+    /// Removes a single entry (returns true if deleted).
     /// </summary>
-    /// <returns>A list of all entries as (CRC, Value) pairs.</returns>
-    public List<(long CRC, string Value)> DumpAll()
+    public bool RemoveEntry(ulong crc)
     {
-        var results = new List<(long, string)>();
-        using SqliteCommand cmd = _conn.CreateCommand();
-        cmd.CommandText = "SELECT CRC, Value FROM Entries";
-        using SqliteDataReader reader = cmd.ExecuteReader();
+        long key = CrcToKey(crc);
 
-        while (reader.Read())
+        lock (_dbLock)
         {
-            results.Add((reader.GetInt64(0), reader.GetString(1)));
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $"DELETE FROM {TableName} WHERE Crc = @crc;";
+            cmd.Parameters.AddWithValue("@crc", key);
+            int affected = cmd.ExecuteNonQuery();
+            if (affected > 0)
+                _cache.TryRemove(crc, out _);
+
+            return affected > 0;
+        }
+    }
+
+    /// <summary>
+    /// Remove all entries (clears DB table and cache).
+    /// </summary>
+    public void Clear()
+    {
+        lock (_dbLock)
+        {
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $"DELETE FROM {TableName};";
+            cmd.ExecuteNonQuery();
+        }
+
+        _cache.Clear();
+    }
+
+    /// <summary>
+    /// Dumps all entries from the table.
+    /// </summary>
+    public List<(ulong CRC, string Value)> DumpAll()
+    {
+        var results = new List<(ulong CRC, string Value)>();
+        lock (_dbLock)
+        {
+            using SqliteCommand cmd = _conn.CreateCommand();
+            cmd.CommandText = $"SELECT Crc, Value FROM {TableName};";
+            using SqliteDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                long signed = rdr.GetInt64(0);
+                ulong crc = KeyToCrc(signed);
+                string val = rdr.GetString(1);
+                results.Add((crc, val));
+            }
         }
 
         return results;
     }
 
+    private static long CrcToKey(ulong crc) => unchecked((long)crc);
+    private static ulong KeyToCrc(long key) => unchecked((ulong)key);
+
     /// <inheritdoc/>
     public void ResolveSymbol(Symbol symbol)
     {
-        if (!symbol.HasString())
+        ArgumentNullException.ThrowIfNull(symbol);
+        if (symbol.HasString()) return;
+
+        string? val = FindSymbolCached(symbol.Crc64);
+        if (val is not null)
+            symbol.SymbolName = val;
+    }
+
+    /// <summary>
+    /// Scans a directory for text files and imports each non-empty, non-comment line as a symbol string.
+    /// Lines starting with '#' are treated as comments. Returns number of symbols imported.
+    /// If a line already exists in DB (by CRC) it will be replaced.
+    /// </summary>
+    /// <param name="directoryPath">Directory to scan.</param>
+    /// <param name="searchPattern">File search pattern, default "*.txt".</param>
+    /// <param name="recursive">Search subdirectories if true.</param>
+    public int ImportFromDirectory(string directoryPath, string searchPattern = "*.txt", bool recursive = false)
+    {
+        if (string.IsNullOrWhiteSpace(directoryPath))
+            throw new ArgumentException("directoryPath cannot be null or empty", nameof(directoryPath));
+        if (!Directory.Exists(directoryPath))
+            throw new DirectoryNotFoundException(directoryPath);
+
+        var files = Directory.EnumerateFiles(directoryPath, searchPattern,
+            recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+        var toInsert = new List<(ulong CRC, string Value)>();
+
+        foreach (string file in files)
         {
-            symbol.SymbolName = FindSymbol(symbol.Crc64);
+            foreach (string rawLine in File.ReadLines(file))
+            {
+                if (string.IsNullOrWhiteSpace(rawLine)) continue;
+                string line = rawLine.Trim();
+                if (line.Length == 0) continue;
+                if (line.StartsWith("#")) continue; // allow comment lines
+
+                // treat the line as the original string to create a Symbol
+                var s = new Symbol(line);
+                toInsert.Add((s.Crc64, s.SymbolName));
+            }
         }
+
+        if (toInsert.Count > 0)
+            BulkInsert(toInsert);
+
+        return toInsert.Count;
+    }
+
+    /// <summary>
+    /// Resolve a collection of symbols in bulk. This method:
+    /// - uses the in-memory cache first,
+    /// - batches unresolved CRCs into IN (...) queries to the DB for efficiency,
+    /// - updates the cache and sets symbol.SymbolName for each resolved symbol.
+    /// Returns the number of symbols that were resolved by this call (including those resolved from cache).
+    /// </summary>
+    /// <param name="symbols">Collection of symbols to resolve (can be List&lt;Symbol&gt; or any IEnumerable&lt;Symbol&gt;).</param>
+    public int ResolveSymbols(IEnumerable<Symbol> symbols)
+    {
+        ArgumentNullException.ThrowIfNull(symbols);
+
+        // Map of CRC -> list of symbols that need resolution (not resolved by cache)
+        var unresolved = new Dictionary<ulong, List<Symbol>>();
+        int resolvedCount = 0;
+
+        // First pass: try cache and collect unresolved symbols
+        foreach (var s in symbols)
+        {
+            if (s is null) continue;
+            if (s.HasString()) continue;
+
+            ulong crc = s.Crc64;
+            if (_cache.TryGetValue(crc, out var cached))
+            {
+                s.SymbolName = cached;
+                resolvedCount++;
+                continue;
+            }
+
+            if (!unresolved.TryGetValue(crc, out var list))
+            {
+                list = [];
+                unresolved[crc] = list;
+            }
+
+            list.Add(s);
+        }
+
+        if (unresolved.Count == 0)
+            return resolvedCount;
+
+        // Query DB in batches (avoid building huge IN clauses)
+        const int BatchSize = 500;
+        List<ulong> crcKeys = unresolved.Keys.ToList();
+
+        for (var i = 0; i < crcKeys.Count; i += BatchSize)
+        {
+            List<ulong> chunk = crcKeys.Skip(i).Take(BatchSize).ToList();
+
+            lock (_dbLock)
+            {
+                using SqliteCommand cmd = _conn.CreateCommand();
+                var paramNames = new List<string>(chunk.Count);
+                for (var p = 0; p < chunk.Count; p++)
+                {
+                    string param = "@p" + p;
+                    paramNames.Add(param);
+                    cmd.Parameters.AddWithValue(param, CrcToKey(chunk[p]));
+                }
+
+                cmd.CommandText = $"SELECT Crc, Value FROM {TableName} WHERE Crc IN ({string.Join(",", paramNames)});";
+
+                using SqliteDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    long signed = rdr.GetInt64(0);
+                    ulong crc = KeyToCrc(signed);
+                    string val = rdr.GetString(1);
+
+                    // update cache
+                    _cache[crc] = val;
+
+                    // set all symbols that were waiting on this crc
+                    if (unresolved.TryGetValue(crc, out List<Symbol>? waiting))
+                    {
+                        foreach (Symbol sym in waiting)
+                        {
+                            sym.SymbolName = val;
+                            resolvedCount++;
+                        }
+
+                        unresolved.Remove(crc);
+                    }
+                }
+            }
+        }
+
+        return resolvedCount;
+    }
+
+
+    private bool _disposed;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+        if (disposing)
+        {
+            lock (_dbLock)
+            {
+                _conn?.Dispose();
+            }
+        }
+
+        _disposed = true;
     }
 }
