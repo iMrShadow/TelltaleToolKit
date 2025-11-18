@@ -294,8 +294,23 @@ public class T3Archive2 : ArchiveBase
         }
         else
         {
-            reader.BaseStream.Seek(fileOffset, SeekOrigin.Begin); // Seek to the file offset
-            resultWriter.Write(reader.ReadBytes(fileSize), 0, fileSize); // Read the file data
+            reader.BaseStream.Seek(fileOffset, SeekOrigin.Begin);
+        
+            // Read in chunks to avoid LOH allocations
+            const int bufferSize = 81920; // 80KB - under LOH threshold
+            int bytesRemaining = fileSize;
+            var buffer = new byte[Math.Min(bufferSize, bytesRemaining)];
+
+            while (bytesRemaining > 0)
+            {
+                int bytesToRead = Math.Min(buffer.Length, bytesRemaining);
+                int bytesRead = reader.Read(buffer, 0, bytesToRead);
+            
+                if (bytesRead == 0) break;
+            
+                result.Write(buffer, 0, bytesRead);
+                bytesRemaining -= bytesRead;
+            }
         }
 
         return result;
