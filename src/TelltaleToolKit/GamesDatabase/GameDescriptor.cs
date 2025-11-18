@@ -20,7 +20,7 @@ public sealed class GameDescriptor
     /// <summary>
     /// Gets the display name of the game.
     /// </summary>
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets a textual description of the game.
@@ -63,6 +63,16 @@ public sealed class GameDescriptor
     /// Gets a value indicating whether Oodle compression is enabled for game archives.
     /// </summary>
     public bool EnableOodleCompression { get; init; }
+    
+    /// <summary>
+    /// Identifier (name) of the metaclass database used for resolving MetaClass definitions for this game.
+    /// The value is a slug title from the already existing game descriptors.
+    /// By default, this value is the same as <see cref="Id"/>. Use this property to override the database name
+    /// when multiple games share a common metaclass database, or when the metaclass DB is stored under a different id.
+    /// If empty, resolution should default to <see cref="Id"/>.
+    /// If invalid (no metaclass database exists)
+    /// </summary>
+    public string MetaClassDatabase { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets a dictionary mapping <see cref="MetaClassType"/> to their corresponding IDs.
