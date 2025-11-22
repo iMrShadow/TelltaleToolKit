@@ -49,8 +49,13 @@ public class T3Archive : ArchiveBase
         for (var i = 0; i < directoriesCount; i++)
         {
             int directoryNameLength = reader.ReadInt32();
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(directoryNameLength, 255,
-                "Error: directory name length {directoryNameLength} is too long.");
+
+            if (directoryNameLength > 255)
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"Error: directory name length {directoryNameLength} is too long.", nameof(directoryNameLength)
+                );
+            }
 
             string name = Encoding.ASCII.GetString(reader.ReadBytes(directoryNameLength));
         }
@@ -64,8 +69,11 @@ public class T3Archive : ArchiveBase
             FileEntries[i] = new TelltaleFileEntry();
 
             int filenameLength = reader.ReadInt32();
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(filenameLength, 255,
-                "Error: directory name length {directoryNameLength} is too long.");
+            if (filenameLength > 255)
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"Error: File name length {filenameLength} is too long.", nameof(filenameLength));
+            }
 
             byte[] fileName = reader.ReadBytes(filenameLength);
 
@@ -73,7 +81,7 @@ public class T3Archive : ArchiveBase
             _ = reader.ReadInt32(); // always shows 0 value. Probably a way to assign to a folder, in the order of the folder names.
             FileEntries[i].FileOffset = reader.ReadUInt32();
             FileEntries[i].FileSize = reader.ReadInt32();
-            
+
             FileEntries[i].Crc64 = Symbol.GetCrc64(FileEntries[i].Name);
         }
     }
@@ -92,9 +100,11 @@ public class T3Archive : ArchiveBase
         }
 
         uint decryptionMode = reader.ReadUInt32();
-        ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(decryptionMode, 1,
-            "Error: decryptionMode not supported yet"
-        );
+        if (decryptionMode > 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(decryptionMode),
+                "Error: decryptionMode not supported yet");
+        }
 
         Info.Flags |= decryptionMode == 1 ? ContainerFlags.IsEncrypted : ContainerFlags.None;
 
@@ -103,21 +113,26 @@ public class T3Archive : ArchiveBase
 
         // Files mode 2 is the most common value. No idea what it means.
         uint filesMode = version >= 3 ? reader.ReadUInt32() : 0;
-        ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(filesMode, 2,
-            "Error: files_mode {filesMode} is not supported yet");
+        if (filesMode > 2)
+        {
+            throw new ArgumentOutOfRangeException(nameof(filesMode),
+                "Error: files_mode {filesMode} is not supported yet");
+        }
 
         // Compression is supported from version 3.
         if (version >= 3)
         {
             Info.ChunkCount = reader.ReadUInt32();
-            ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(  Info.ChunkCount, 100000,
-                "Error: decryptionMode not supported yet"
-            );
+            if (Info.ChunkCount > 100000)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Info.ChunkCount),
+                    "Error: Chunk counts are more than expected!");
+            }
+
             if (Info.ChunkCount > 0)
             {
-                Info.Flags |=
-                    ContainerFlags.IsRawDeflateCompressed |
-                    ContainerFlags.IsZlibCompressed; // Set both flags on. The decompression function will recognize which one is used.
+                // Set both flags on. The decompression function will recognize which one is used.
+                Info.Flags |= ContainerFlags.IsRawDeflateCompressed | ContainerFlags.IsZlibCompressed;
                 Info.ChunkBlockSizes = new long[Info.ChunkCount];
                 for (var i = 0; i < Info.ChunkCount; i++)
                 {
@@ -125,7 +140,8 @@ public class T3Archive : ArchiveBase
                 }
             }
 
-            uint FileDataSize = reader.ReadUInt32(); // the size of the field where are stored all the files contents
+            uint FileDataSize =
+                reader.ReadUInt32(); // the size of the field where are stored all the files contents
 
             if (version >= 4)
             {
@@ -137,7 +153,9 @@ public class T3Archive : ArchiveBase
                     uint xModeValue1 = reader.ReadUInt32(); // unknown
                     uint xModeValue2 = reader.ReadUInt32(); // unknown
 
-                    Info.Flags |= xModeValue1 == 1 || xModeValue2 == 1 ? ContainerFlags.IsXMode : ContainerFlags.None;
+                    Info.Flags |= xModeValue1 == 1 || xModeValue2 == 1
+                        ? ContainerFlags.IsXMode
+                        : ContainerFlags.None;
 
                     const uint blockSize = 1024;
                     Info.ChunkSize = (int)(reader.ReadUInt32() * blockSize);
@@ -145,7 +163,7 @@ public class T3Archive : ArchiveBase
                     {
                         var t = reader.ReadByte(); // unknown boolean
                     }
-                    
+
                     // FilesMode 2 = compressed
                     // FilesMode 1 = normal?
                     // Or maybe filesmode 2 means NO folders, while 1 means there are?
@@ -161,7 +179,7 @@ public class T3Archive : ArchiveBase
         int infoHeaderSize = reader.ReadInt32(); // size of the header
 
         // This is a workaround for some version 8 archives. I...I don't know why.
-        infoHeaderSize = infoHeaderSize == 0 ? reader.ReadInt32() : infoHeaderSize; 
+        infoHeaderSize = infoHeaderSize == 0 ? reader.ReadInt32() : infoHeaderSize;
 
         int compressedInfoHeaderSize =
             version >= 7 && filesMode >= 2 ? reader.ReadInt32() : 0; // size of the compressed data
@@ -189,8 +207,6 @@ public class T3Archive : ArchiveBase
     }
 
 
-  
-
     public override void ExtractAll(string destinationPath)
     {
         throw new NotImplementedException();
@@ -205,7 +221,7 @@ public class T3Archive : ArchiveBase
 
         return ExtractFile(entry);
     }
-    
+
     public override MemoryStream ExtractFile(string name)
     {
         TelltaleFileEntry? entry = FindEntry(name);
@@ -215,8 +231,8 @@ public class T3Archive : ArchiveBase
 
         return ExtractFile(entry);
     }
-    
-     public MemoryStream ExtractFile(TelltaleFileEntry entry)
+
+    public MemoryStream ExtractFile(TelltaleFileEntry entry)
     {
         byte[] result; // Initialize the result array
 
@@ -226,7 +242,15 @@ public class T3Archive : ArchiveBase
         {
             ArchiveStream.Seek(Info.FilesOffset + entry.FileOffset, SeekOrigin.Begin);
             result = new byte[fileSize];
-            ArchiveStream.ReadExactly(result, 0, result.Length); // Read the file data directly
+            var totalRead = 0;
+            while (totalRead < result.Length)
+            {
+                int bytesRead = ArchiveStream.Read(result, totalRead, result.Length - totalRead);
+                if (bytesRead == 0)
+                    throw new EndOfStreamException($"Unable to read {result.Length} bytes from stream.");
+                totalRead += bytesRead;
+            } // Read the file data directly
+
             TelltaleArchiveUtilities.DecryptFile(result, Info.BlowfishKey, (int)Info.Version);
         }
         else
@@ -234,17 +258,14 @@ public class T3Archive : ArchiveBase
             var blockStartIndex = (int)(entry.FileOffset / Info.ChunkSize);
             var blockEndIndex = (int)((entry.FileOffset + fileSize) / Info.ChunkSize);
 
-            ArgumentOutOfRangeException.ThrowIfLessThan(blockStartIndex, 0, "Block start index is less than 0.");
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(
-                blockStartIndex,
-                (int)Info.ChunkCount,
-                "Block start index is greater than chunk count."
-            );
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(
-                blockEndIndex,
-                (int)Info.ChunkCount,
-                "Block end index is greater than chunk count."
-            );
+            if (blockStartIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(blockStartIndex), "Block start index is less than 0.");
+            if (blockStartIndex > (int)Info.ChunkCount)
+                throw new ArgumentOutOfRangeException(nameof(blockStartIndex),
+                    "Block start index is greater than chunk count.");
+            if (blockEndIndex > (int)Info.ChunkCount)
+                throw new ArgumentOutOfRangeException(nameof(blockEndIndex),
+                    "Block end index is greater than chunk count.");
 
             long blockStartOffset = 0;
 
@@ -253,13 +274,23 @@ public class T3Archive : ArchiveBase
                 blockStartOffset += Info.ChunkBlockSizes[i];
             }
 
-            ArchiveStream.Seek(Info.FilesOffset + blockStartOffset, SeekOrigin.Begin); // Seek to the block start offset
+            ArchiveStream.Seek(Info.FilesOffset + blockStartOffset,
+                SeekOrigin.Begin); // Seek to the block start offset
 
             using MemoryStream ms = new();
             for (int i = blockStartIndex; i <= blockEndIndex; i++)
             {
                 var tmp = new byte[Info.ChunkBlockSizes[i]];
-                ArchiveStream.ReadExactly(tmp, 0, tmp.Length); // Read the chunk block size
+
+                // Replace ReadExactly with manual reading
+                var totalRead = 0;
+                while (totalRead < tmp.Length)
+                {
+                    int bytesRead = ArchiveStream.Read(tmp, totalRead, tmp.Length - totalRead);
+                    if (bytesRead == 0)
+                        throw new EndOfStreamException($"Unable to read {tmp.Length} bytes from stream.");
+                    totalRead += bytesRead;
+                }
 
                 DecryptBlock(tmp, (int)Info.Version, Info.BlowfishKey, Info.Flags);
 

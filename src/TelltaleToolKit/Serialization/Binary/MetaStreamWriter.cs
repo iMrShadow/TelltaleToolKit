@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.T3Types;
 
@@ -46,7 +45,7 @@ public sealed class MetaStreamWriter : MetaStream
         Writer = new BinaryWriter(UnderlyingStream);
         Writer.BaseStream.Seek(0, SeekOrigin.Begin);
 
-        if (!Enum.IsDefined(Configuration.Version))
+        if (!Enum.IsDefined(typeof(MetaStreamVersion), Configuration.Version))
             throw new InvalidDataException("Version not defined");
 
         this.Write((uint)Configuration.Version);
@@ -64,7 +63,7 @@ public sealed class MetaStreamWriter : MetaStream
                 break;
         }
 
-        Configuration.SerializedClasses = [.. Configuration.SerializedClasses.Distinct()];
+        Configuration.SerializedClasses = Configuration.SerializedClasses.Distinct().ToList();
 
         this.Write(Configuration.SerializedClasses.Count);
 

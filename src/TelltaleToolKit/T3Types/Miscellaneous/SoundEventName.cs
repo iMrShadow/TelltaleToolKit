@@ -48,7 +48,10 @@ public class SoundEventName
 
         public override void PreSerialize(ref SoundEventName obj, MetaStream stream, MetaClassType? type = null)
         {
-            ArgumentNullException.ThrowIfNull(type, "SoundEventName requires a metaclass type!");
+            if (type is null)
+            {
+                throw new NullReferenceException($"{nameof(SoundEventName)} cannot be null.");
+            }
 
             obj = type.Symbol.SymbolName switch
             {

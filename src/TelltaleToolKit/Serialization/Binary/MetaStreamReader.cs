@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using SubstreamSharp;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.T3Types;
 
@@ -24,10 +23,9 @@ public sealed class MetaStreamReader : MetaStream
         UnderlyingStream.Position = 0;
         Configuration.Version = (MetaStreamVersion)this.ReadUInt32();
 
-        if (!Enum.IsDefined(Configuration.Version))
+        if (!Enum.IsDefined(typeof(MetaStreamVersion), Configuration.Version))
             throw new InvalidDataException($"Not a valid meta stream version: {Configuration.Version}");
     }
-
 
     public override void SerializeMetaHeader()
     {
@@ -204,7 +202,10 @@ public sealed class MetaStreamReader : MetaStream
     {
         int strLength = Reader.ReadInt32();
 
-        ArgumentOutOfRangeException.ThrowIfLessThan(strLength, 0x0, nameof(strLength));
+        if (strLength < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(strLength));
+        }
 
         var buffer = new byte[strLength];
         int realLength = Reader.Read(buffer, 0, strLength);

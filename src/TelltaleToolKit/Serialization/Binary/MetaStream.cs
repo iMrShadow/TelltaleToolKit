@@ -23,15 +23,15 @@ public abstract class MetaStream : IDisposable
     [
         new(), // Main section
         new(), // Debug section
-        new(), // Async section
+        new() // Async section
     ];
 
     protected internal MetaStreamConfiguration Configuration { get; set; } = new();
-    
+
     protected TTKContext? Context { get; set; }
 
-    protected Stream UnderlyingStream { get; init; } = null!;
-    
+    protected Stream UnderlyingStream { get; set; } = null!;
+
     protected Stream CurrentSubstream => GetCurrentSection().Stream;
 
     public void Dispose()
@@ -49,7 +49,8 @@ public abstract class MetaStream : IDisposable
 
     public void BeginAsyncSection()
     {
-        if (_currentSection is SectionType.Async || Configuration.Version is not (MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6))
+        if (_currentSection is SectionType.Async ||
+            Configuration.Version is not (MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6))
             return;
         _currentSection = SectionType.Async;
         InitSerializer();
@@ -76,7 +77,7 @@ public abstract class MetaStream : IDisposable
     public void EndDebugSection()
     {
         if (_currentSection is not SectionType.Debug ||
-           Configuration.Version is not (MetaStreamVersion.Msv4 or MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6))
+            Configuration.Version is not (MetaStreamVersion.Msv4 or MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6))
             return;
         _currentSection = SectionType.Main;
         InitSerializer();
@@ -103,13 +104,16 @@ public abstract class MetaStream : IDisposable
     public void Serialize<T>(ref T obj) where T : new()
     {
         MetaClassSerializer<T> serializer = TTKGlobalContext.Instance().GetSerializer<T>();
-        serializer.PreSerialize(ref obj, this, null);
+        serializer.PreSerialize(ref obj, this);
         serializer.Serialize(ref obj, this);
     }
 
     public void Serialize(ref object? obj)
     {
-        ArgumentNullException.ThrowIfNull(obj);
+        if (obj is null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
 
         MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(obj.GetType());
         serializer.PreSerialize(ref obj, this);
@@ -253,11 +257,11 @@ public abstract class MetaStream : IDisposable
     public class MetaSection
     {
         // For blocks. In read, stores the sizes, in write stores the block offset initial.
-        public Stack<long> Blocks = [];
+        public Stack<long> Blocks = new();
 
         public bool IsCompressed = false;
 
         // Section data stream
         public Stream Stream = null!;
-    };
+    }
 }

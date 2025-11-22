@@ -1,7 +1,12 @@
 ﻿namespace TelltaleToolKit.Reflection;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class MetaMemberAttribute(string name) : Attribute
+public class MetaMemberAttribute : Attribute
 {
-    public string Name { get; } = name;
+    public MetaMemberAttribute(string name)
+    {
+        Name = name;
+    }
+
+    public string Name { get; }
 }

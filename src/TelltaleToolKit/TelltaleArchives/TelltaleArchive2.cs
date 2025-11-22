@@ -94,14 +94,16 @@ public class T3Archive2 : ArchiveBase
             }
 
             fileNameBufferSize = headerReader.ReadUInt32(); // Read the size of the file name buffer
-            ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(
-                fileNameBufferSize,
-                0x10000000,
-                nameof(fileNameBufferSize)
-            );
+            if (fileNameBufferSize > 0x10000000)
+            {
+                throw new ArgumentOutOfRangeException(nameof(fileNameBufferSize));
+            }
 
             Info.FileCount = headerReader.ReadUInt32(); // Read the number of files in the archive
-            ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(Info.FileCount, 0xFFFFF, nameof(Info.FileCount));
+            if (Info.FileCount > 0xFFFFF)
+            {
+                throw new  ArgumentOutOfRangeException(nameof(Info.FileCount));
+            }
 
             FileEntries = new TelltaleFileEntry[Info.FileCount]; // Initialize the file entries dictionary
 
@@ -142,14 +144,16 @@ public class T3Archive2 : ArchiveBase
         }
 
         fileNameBufferSize = fullHeader.ReadUInt32(); // Read the size of the file name buffer
-        ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(
-            fileNameBufferSize,
-            0x10000000,
-            nameof(fileNameBufferSize)
-        );
+        if (fileNameBufferSize > 0x10000000)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fileNameBufferSize));
+        }
 
         Info.FileCount = fullHeader.ReadUInt32(); // Read the number of files in the archive
-        ArgumentOutOfRangeException.ThrowIfGreaterThan<uint>(Info.FileCount, 0xFFFFF, nameof(Info.FileCount));
+        if (Info.FileCount > 0xFFFFF)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Info.FileCount));
+        }
 
         Info.FilesOffset = IsCompressed()
             ? Info.FilesOffset
@@ -252,17 +256,14 @@ public class T3Archive2 : ArchiveBase
             var blockStartIndex = (int)(fileOffset / Info.ChunkSize);
             var blockEndIndex = (int)((fileOffset + fileSize) / Info.ChunkSize);
 
-            ArgumentOutOfRangeException.ThrowIfLessThan(blockStartIndex, 0, "Block start index is less than 0.");
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(
-                blockStartIndex,
-                (int)Info.ChunkCount,
-                "Block start index is greater than chunk count."
-            );
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(
-                blockEndIndex,
-                (int)Info.ChunkCount,
-                "Block end index is greater than chunk count."
-            );
+            if (blockStartIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(blockStartIndex), "Block start index is less than 0.");
+            if (blockStartIndex > (int)Info.ChunkCount)
+                throw new ArgumentOutOfRangeException(nameof(blockStartIndex),
+                    "Block start index is greater than chunk count.");
+            if (blockEndIndex > (int)Info.ChunkCount)
+                throw new ArgumentOutOfRangeException(nameof(blockEndIndex),
+                    "Block end index is greater than chunk count.");
 
             long blockStartOffset = 0;
 

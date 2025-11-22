@@ -18,7 +18,10 @@ public class BitSetBase
     {
         public override void PreSerialize(ref BitSetBase obj, MetaStream stream, MetaClassType? type = null)
         {
-            ArgumentNullException.ThrowIfNull(type, "BitSetBase requires a metaclass type!");
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type), "BitSetBase requires a metaclass type!");
+            }
 
             obj = type.Symbol.SymbolName switch
             {
