@@ -1,4 +1,5 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using System.Numerics;
+using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Serialization.Serializers;
@@ -10,7 +11,7 @@ using TelltaleToolKit.Utility.Blowfish;
 namespace TelltaleToolKit.T3Types.Textures;
 
 [MetaClassSerializerGlobal(typeof(Serializer))]
-public partial class T3Texture
+public class T3Texture
 {
     // Most members here are before Poker Night 2
     /// <summary>
@@ -116,7 +117,7 @@ public partial class T3Texture
     /// The platform type for this texture.
     /// </summary>
     [MetaMember("mPlatform")]
-    public EnumPlatformType PlatformType { get; set; } = new EnumPlatformType() { Value = T3Types.PlatformType.None };
+    public EnumPlatformType PlatformType { get; set; } = new EnumPlatformType { Value = T3Types.PlatformType.None };
 
     /// <summary>
     /// The import scale of the texture file.
@@ -194,7 +195,7 @@ public partial class T3Texture
     /// Describes if the color channels were switched. (Usually used for normal maps, console textures and others.)
     /// </summary>
     [MetaMember("mSwizzle")]
-    public RenderSwizzleParams Swizzle { get; set; } = new RenderSwizzleParams() { Channel0 = 0, Channel1 = 1, Channel2 = 2, Channel3 = 3 };
+    public RenderSwizzleParams Swizzle { get; set; } = new RenderSwizzleParams { Channel0 = 0, Channel1 = 1, Channel2 = 2, Channel3 = 3 };
 
     /// <summary>
     /// The glossiness of the texture.
@@ -509,7 +510,7 @@ public partial class T3Texture
     /// </summary>
     /// <returns>True if the texture is a cubemap or cubemap array; otherwise, false.</returns>
     public bool IsCubemap()
-       => TextureLayout is T3TextureLayout.TextureCubemap or T3TextureLayout.TextureCubemapArray;
+        => TextureLayout is T3TextureLayout.TextureCubemap or T3TextureLayout.TextureCubemapArray;
 
     /// <summary>
     /// Determines if the texture layout represents a volumetric (3D) texture.

@@ -1,4 +1,4 @@
-using TelltaleToolKit.Reflection;
+using System.Numerics;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types.Mathematics;
@@ -30,8 +30,8 @@ public class CompressedVector3Keys
                 obj.Name = streamReader.ReadString();
                 obj.Flags = streamReader.ReadInt32();
                 
-                obj.Min = new Vector3() { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
-                obj.Max = new Vector3() { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
+                obj.Min = new Vector3 { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
+                obj.Max = new Vector3 { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
 
                 obj.MinTime = streamReader.ReadSingle();
                 obj.MaxTime = streamReader.ReadSingle();

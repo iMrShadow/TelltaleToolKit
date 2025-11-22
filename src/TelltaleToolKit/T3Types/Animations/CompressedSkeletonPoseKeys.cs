@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.InteropServices;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;

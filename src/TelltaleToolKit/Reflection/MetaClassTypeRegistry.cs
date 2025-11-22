@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.T3Types.ActorMaps;

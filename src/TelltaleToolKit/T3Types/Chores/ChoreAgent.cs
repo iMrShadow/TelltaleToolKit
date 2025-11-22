@@ -1,7 +1,7 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
-using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Rules;
 

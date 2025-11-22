@@ -1,7 +1,7 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Animations;
 

@@ -1,3 +1,4 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
@@ -24,4 +25,4 @@ public enum BoneType
     // eBoneType_
     Hinge = 0,
     Ball = 1
-};
+}

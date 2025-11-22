@@ -1,8 +1,8 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using System.Numerics;
+using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Serialization.Serializers;
-using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types;
@@ -14,13 +14,13 @@ public class SaveGame
     public string LuaDoFile { get; set; } = string.Empty;
 
     [MetaMember("mAgentInfo")]
-    public List<AgentInfo> AgentInformation { get; set; } = new();
+    public List<AgentInfo> AgentInformation { get; set; } = [];
 
     [MetaMember("mRuntimePropNames")]
-    public HashSet<string> RuntimePropNames { get; set; } = new();
+    public HashSet<string> RuntimePropNames { get; set; } = [];
 
     [MetaMember("mAdditionalPropNames")]
-    public HashSet<string> AdditionalPropNames { get; set; } = new();
+    public HashSet<string> AdditionalPropNames { get; set; } = [];
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
     public class AgentInfo
@@ -57,7 +57,8 @@ public class SaveGame
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 if (stream.GetMetaClass(typeof(PropertySet)) != null)
                 {
@@ -69,4 +70,3 @@ public class SaveGame
         }
     }
 }
-

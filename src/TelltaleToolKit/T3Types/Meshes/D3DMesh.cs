@@ -1,3 +1,4 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
@@ -94,9 +95,7 @@ public class D3DMesh
     public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; }
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocalTransformEntry>))]
-    public class LocalTransformEntry
-    {
-    }
+    public class LocalTransformEntry;
 
 
     [MetaMember("mTriangleStripState")]
@@ -127,17 +126,13 @@ public class D3DMesh
     public List<AnimatedVertexEntry> ToolAnimatedVertexEntries { get; set; } = [];
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimatedVertexEntry>))]
-    public class AnimatedVertexEntry
-    {
-    }
+    public class AnimatedVertexEntry;
 
     [MetaMember("mToolAnimatedVertexGroupEntries")]
-    public Dictionary<Symbol, AnimatedVertexGroupEntry> ToolAnimatedVertexGroupEntries { get; set; } = [];
+    public Dictionary<Symbol, AnimatedVertexGroupEntry> ToolAnimatedVertexGroupEntries { get; set; } = new();
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimatedVertexGroupEntry>))]
-    public class AnimatedVertexGroupEntry
-    {
-    }
+    public class AnimatedVertexGroupEntry;
 
     public PropertySet InternalResources { get; set; } = new();
     public T3IndexBuffer T3IndexBuffer { get; set; }
@@ -451,7 +446,8 @@ public class D3DMesh
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 obj.T3VertexBuffers = new T3VertexBuffer[15];
 
@@ -597,7 +593,8 @@ public class D3DMesh
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 // Read Index Buffer
                 bool hasIndexBuffer = streamReader.ReadBoolean();
@@ -639,7 +636,8 @@ public class D3DMesh
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 obj.InternalResources = new PropertySet();
 
@@ -695,9 +693,7 @@ public class D3DMesh
 
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<VertexAnimation>))]
-    public class VertexAnimation
-    {
-    }
+    public class VertexAnimation;
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Texture>))]
     public class Texture
@@ -725,14 +721,10 @@ public class D3DMesh
     }
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<SkinningEntry>))]
-    public class SkinningEntry
-    {
-    }
+    public class SkinningEntry;
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BoneEntry>))]
-    public class BoneEntry
-    {
-    }
+    public class BoneEntry;
 
     public PropertySet? GetMaterialPropertySet(int index)
     {
@@ -909,5 +901,5 @@ public class D3DMesh
         AMBIENT_OCCLUSION = 13,
         //From Lucas:
         // Unknowns could be: subsurface scat (normal or v0), lightmap hdr and scaled, sdf detail, spec colour, toon lookup, outling discontinuinity, particle props, lookup map, prefiltered cube, brush lookup,
-    };
+    }
 }

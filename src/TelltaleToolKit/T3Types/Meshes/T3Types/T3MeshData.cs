@@ -1,3 +1,4 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
@@ -104,7 +105,8 @@ public class T3MeshData
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 uint uvTransforms = streamReader.ReadUInt32();
 
