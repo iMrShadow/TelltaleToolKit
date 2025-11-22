@@ -1,3 +1,4 @@
+using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
@@ -44,7 +45,7 @@ public class MeshSceneLightmapData
 
 // Example enum for camera-facing type. Replace/extend as appropriate.
 [MetaClassSerializerGlobal(typeof(EnumSerializer<CameraFacingType>))]
-public enum CameraFacingType : int
+public enum CameraFacingType
 {
     None = 0,
     Billboard = 1,

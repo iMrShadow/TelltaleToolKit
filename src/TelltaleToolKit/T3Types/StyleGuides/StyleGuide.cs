@@ -54,7 +54,8 @@ public class StyleGuide
                 {
                     throw new NotImplementedException();
                 }
-                else if (stream is MetaStreamReader streamReader)
+
+                if (stream is MetaStreamReader streamReader)
                 {
                     int values = streamReader.ReadInt32();
 

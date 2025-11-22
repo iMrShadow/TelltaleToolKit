@@ -55,7 +55,8 @@ public class Note : IGenerator, IOwner
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 // mEntries is not serialized.
                 int numEntries = streamReader.ReadInt32();

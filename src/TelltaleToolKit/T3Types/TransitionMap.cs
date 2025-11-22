@@ -12,7 +12,7 @@ public class TransitionMap
 {
     // Symbols can be both strings and crc64s.
     [MetaMember("mRemapper")]
-    public Dictionary<Symbol, TransitionMapInfo> TransitionRemappers = [];
+    public Dictionary<Symbol, TransitionMapInfo> TransitionRemappers = new();
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TransitionMapInfo>))]
     public class TransitionMapInfo

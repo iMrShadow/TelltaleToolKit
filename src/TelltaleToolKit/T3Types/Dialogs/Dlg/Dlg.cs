@@ -72,7 +72,8 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 var folderCount = streamReader.ReadInt32();
                 obj.Folders.Capacity = folderCount;

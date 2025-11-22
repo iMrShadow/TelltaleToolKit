@@ -67,7 +67,7 @@ public class Chore
     public LocalizeInfo SynchronizedToLocalization { get; set; }
     
     [MetaMember("mDependencies")]
-   public DependencyLoader Dependencies  { get; set; }
+    public DependencyLoader Dependencies  { get; set; }
 
     [MetaMember("mToolProps")]
     public ToolProps ToolProps  { get; set; }

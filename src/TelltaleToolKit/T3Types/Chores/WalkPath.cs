@@ -25,7 +25,8 @@ public class WalkPath
             {
                 throw new NotImplementedException($"There is no serializer for {SerializationType}");
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int count = streamReader.ReadInt32();
                 MetaClassType type = streamReader.ReadMetaClassType();

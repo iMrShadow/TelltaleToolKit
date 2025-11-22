@@ -149,6 +149,4 @@ public enum T3MaterialChannelType
 }
 
 [MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialQualityType>))]
-public enum T3MaterialQualityType
-{
-}
+public enum T3MaterialQualityType;

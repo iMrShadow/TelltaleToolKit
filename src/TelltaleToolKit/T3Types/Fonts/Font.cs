@@ -31,7 +31,7 @@ public class Font
     public float Base { get; set; }
 
     [MetaMember("mGlyphInfo")]
-    public Dictionary<uint, GlyphInfo> GlyphInformationDic { get; set; } = [];
+    public Dictionary<uint, GlyphInfo> GlyphInformationDic { get; set; } = new();
 
     [MetaMember("mIsDistanceField")]
     public bool IsDistanceField { get; set; }

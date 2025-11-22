@@ -2,7 +2,7 @@ using TelltaleToolKit.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(BitSetBase.Serializer))]
+[MetaClassSerializerGlobal(typeof(Serializer))]
 public class BitSet<T> : BitSetBase where T : Enum
 {
     // A rare case where I actually inherit, and it makes sense to do so.

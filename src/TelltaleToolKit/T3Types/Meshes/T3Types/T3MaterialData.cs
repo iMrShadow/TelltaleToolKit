@@ -67,7 +67,8 @@ public class T3MaterialData
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int numCompiledData = streamReader.ReadInt32();
 

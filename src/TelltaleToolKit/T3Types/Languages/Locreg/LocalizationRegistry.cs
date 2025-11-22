@@ -4,6 +4,7 @@ using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Languages.Locreg;
+
 // .locreg
 [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocalizationRegistry>))]
 public class LocalizationRegistry
@@ -17,4 +18,3 @@ public class LocalizationRegistry
     [MetaMember("mToolProps")]
     public ToolProps ToolProps { get; set; }
 }
-

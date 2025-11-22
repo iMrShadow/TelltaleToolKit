@@ -18,4 +18,4 @@ public enum T3LightEnvLODFlags {
     High = 0x10000,
     Medium = 0x20000,
     Low = 0x40000,
-};
+}

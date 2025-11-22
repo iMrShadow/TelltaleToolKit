@@ -58,7 +58,8 @@ public class ActingPaletteClass
                 {
                     throw new NotImplementedException();
                 }
-                else if (stream is MetaStreamReader streamReader)
+
+                if (stream is MetaStreamReader streamReader)
                 {
                     throw new NotImplementedException();
                 }

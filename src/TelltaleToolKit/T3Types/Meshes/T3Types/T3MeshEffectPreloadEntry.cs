@@ -7,17 +7,17 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshEffectPreloadEntry>))]
 public class T3MeshEffectPreloadEntry
 {
-    [MetaMember("mEffectType")]
-    public uint EffectType { get; set; }
+	[MetaMember("mEffectType")]
+	public uint EffectType { get; set; }
 
-    [MetaMember("mStaticEffectFeatures")]
-    public BitSetBase StaticEffectFeatures { get; set; }
+	[MetaMember("mStaticEffectFeatures")]
+	public BitSetBase StaticEffectFeatures { get; set; }
 
-    [MetaMember("mMaterialCRC")]
-    public ulong MaterialCRC { get; set; }
+	[MetaMember("mMaterialCRC")]
+	public ulong MaterialCRC { get; set; }
 
-    [MetaMember("mDynamicEffectFeatures")]
-    public List<T3MeshEffectPreloadDynamicFeatures> DynamicEffectFeatures { get; set; }
+	[MetaMember("mDynamicEffectFeatures")]
+	public List<T3MeshEffectPreloadDynamicFeatures> DynamicEffectFeatures { get; set; }
 }
 
 // TODO:

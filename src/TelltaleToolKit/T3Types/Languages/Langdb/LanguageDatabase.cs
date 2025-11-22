@@ -11,5 +11,5 @@ public class LanguageDatabase
     public string Name { get; set; } = string.Empty;
 
     [MetaMember("mLanguageResources")]
-    public Dictionary<int, LanguageResource> LanguageResources { get; set; } = [];
+    public Dictionary<int, LanguageResource> LanguageResources { get; set; } = new();
 }

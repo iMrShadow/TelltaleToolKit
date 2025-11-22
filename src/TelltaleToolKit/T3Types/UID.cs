@@ -72,7 +72,8 @@ namespace TelltaleToolKit.T3Types.Common
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 long currPos = streamReader.GetCurrentPosition();
                 uint value = streamReader.ReadUInt32();

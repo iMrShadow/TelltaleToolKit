@@ -41,7 +41,8 @@ public class T3GFXVertexState
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");

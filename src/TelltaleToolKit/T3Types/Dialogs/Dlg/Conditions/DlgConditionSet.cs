@@ -1,7 +1,6 @@
 ﻿using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
@@ -24,7 +23,8 @@ public class DlgConditionSet
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int numChildren = streamReader.ReadInt32();
 

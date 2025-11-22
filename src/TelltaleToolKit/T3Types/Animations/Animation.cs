@@ -65,7 +65,8 @@ public class Animation
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int numTotalValues = streamReader.ReadInt32();
                 obj.Values = new List<IAnimatedValueInterface>(numTotalValues);
@@ -141,7 +142,8 @@ public class Animation
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int numTotalValues = streamReader.ReadInt32();
                 int numValueTypes = streamReader.ReadInt32();
@@ -164,7 +166,7 @@ public class Animation
                     }
                 }
             }
-            
+
             stream.EndBlock();
         }
     }

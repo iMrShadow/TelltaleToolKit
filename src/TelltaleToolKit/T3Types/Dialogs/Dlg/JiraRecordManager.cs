@@ -3,13 +3,12 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
-
 // TODO:
 
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class JiraRecordManager
 {
-    public Dictionary<string, JiraRecord> Records = [];
+    public Dictionary<string, JiraRecord> Records = new();
 
     public class Serializer : MetaClassSerializer<JiraRecordManager>
     {
@@ -35,7 +34,8 @@ public class JiraRecordManager
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 var numRecords = streamReader.ReadInt32();
                 

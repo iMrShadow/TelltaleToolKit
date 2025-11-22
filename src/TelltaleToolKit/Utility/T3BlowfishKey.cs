@@ -245,5 +245,3 @@ public enum T3BlowfishKey
     [Display(Name = "Sam & Max: The Devil's Playhouse Remastered")]
     SamMax300Remastered
 }
-
-

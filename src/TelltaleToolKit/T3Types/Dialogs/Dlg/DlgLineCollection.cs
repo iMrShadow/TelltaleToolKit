@@ -12,5 +12,5 @@ public class DlgLineCollection : IGenerator
     public Generator Generator { get; set; }
 
     [MetaMember("mLines")]
-    public Dictionary<int, DlgLine> Lines { get; set; } = [];
+    public Dictionary<int, DlgLine> Lines { get; set; } = new();
 }

@@ -17,7 +17,8 @@ public class DependencyLoader
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 bool hasResourceNames = streamReader.ReadBoolean();
 

@@ -62,10 +62,10 @@ public class ChoreResource
     public PropertySet ResourceProperties { get; set; } = new();
 
     [MetaMember("mResourceGroupInclude")]
-    public Dictionary<string, float> ResourceGroupInclude { get; set; } = [];
+    public Dictionary<string, float> ResourceGroupInclude { get; set; } = new();
     
     [MetaMember("mResourceGroupInclude")]
-    public Dictionary<Symbol, float> ResourceGroupIncludeSymbol { get; set; } = [];
+    public Dictionary<Symbol, float> ResourceGroupIncludeSymbol { get; set; } = new();
 
     [MetaMember("mFlags")]
     public Flags Flags { get; set; } = new(); // Bone only

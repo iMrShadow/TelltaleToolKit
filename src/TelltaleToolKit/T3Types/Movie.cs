@@ -21,5 +21,5 @@ public class MovieCaptureInfo
         public CompressorType Val { get; set; }
     }
     [MetaClassSerializerGlobal(typeof(EnumSerializer<CompressorType>))]
-    public enum CompressorType;
+    public enum CompressorType{}
 }

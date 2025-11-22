@@ -3,7 +3,7 @@ using TelltaleToolKit.Serialization.Binary;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
- [MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaClassSerializerGlobal(typeof(Serializer))]
 public class T3MeshTextureIndices
 {
     public int[] Index { get; set; } = [-1, -1]; // Usually 2 elements: for batch Default and for batch Shadow

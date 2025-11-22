@@ -11,7 +11,7 @@ namespace TelltaleToolKit.T3Types.ActorMaps;
 public class AgentMap
 {
     [MetaMember("maAgents")]
-    public Dictionary<string, AgentMapEntry> Agents { get; set; } = [];
+    public Dictionary<string, AgentMapEntry> Agents { get; set; } = new();
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentMapEntry>))]
     public class AgentMapEntry

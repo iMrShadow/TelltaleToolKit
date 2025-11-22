@@ -13,13 +13,13 @@ public class PropertySet
     public int PropVersion { get; set; }
 
     [MetaMember("mPropertyFlags")]
-    public Flags PropertyFlags { get; set; } = new();
+    public Flags PropertyFlags { get; set; }
 
     // Disappears
     [MetaMember("mParentList")]
-    public List<Handle<PropertySet>> ParentList { get; set; } = [];
+    public List<Handle<PropertySet>> ParentList { get; set; } = new();
 
-    public Dictionary<Symbol, PropertyEntry> Properties = [];
+    public Dictionary<Symbol, PropertyEntry> Properties = new();
 
     // New: store a small wrapper per-property so we can remember the MetaClassType used for each value
     public struct PropertyEntry
@@ -86,8 +86,7 @@ public class PropertySet
                 // Group properties by their MetaClassType so we can write number-of-types block
                 // Determine MetaClassType for each property's value
                 var groups =
-                    new Dictionary<MetaClassType, List<KeyValuePair<Symbol, PropertyEntry>>>(ReferenceEqualityComparer
-                        .Instance);
+                    new Dictionary<MetaClassType, List<KeyValuePair<Symbol, PropertyEntry>>>();
 
                 foreach ((Symbol key, PropertyEntry entry) in obj.Properties)
                 {
@@ -100,7 +99,7 @@ public class PropertySet
 
                     if (!groups.TryGetValue(typeSymbol, out List<KeyValuePair<Symbol, PropertyEntry>>? list))
                     {
-                        list = [];
+                        list = new List<KeyValuePair<Symbol, PropertyEntry>>();
                         groups[typeSymbol] = list;
                     }
 

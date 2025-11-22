@@ -37,7 +37,8 @@ public class DlgObjectPropsMap : IGenerator
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int groupDefinitionSize = streamReader.ReadInt32();
 

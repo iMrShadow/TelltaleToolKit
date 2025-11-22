@@ -64,7 +64,8 @@ public class DialogResource
             {
                 throw new NotImplementedException($"Serializer is not implement for {SerializationType}");
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 // Console.WriteLine("Current position: " + stream.GetCurrentPosition());
                 int dialogsCount = streamReader.ReadInt32();

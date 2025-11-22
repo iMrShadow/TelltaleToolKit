@@ -27,5 +27,5 @@ public class PhonemeTable
     public float ContributionScaler { get; set; } = 1.0f;
 
     [MetaMember("mAnimations")]
-    public Dictionary<Symbol, PhonemeEntry> Animations { get; set; } = [];
+    public Dictionary<Symbol, PhonemeEntry> Animations { get; set; } = new();
 }

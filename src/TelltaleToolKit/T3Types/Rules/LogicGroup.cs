@@ -12,7 +12,7 @@ public class LogicGroup
     public int Operator { get; set; }
 
     [MetaMember("mItems")]
-    public Dictionary<string, LogicItem> Items { get; set; } = [];
+    public Dictionary<string, LogicItem> Items { get; set; } = new();
 
     [MetaMember("mLogicGroups")]
     public List<LogicGroup> LogicGroups { get; set; } = [];
@@ -36,13 +36,13 @@ public class LogicGroup
         public string Name { get; set; } = string.Empty;
 
         [MetaMember("mKeyNegateList")]
-        public Dictionary<Symbol, bool> GroupOperator { get; set; } = []; // also a string/symbol 
+        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol 
         
         [MetaMember("mKeyComparisonList")]
-        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = []; // also a string/symbol 
+        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol 
 
         [MetaMember("mKeyActionList")]
-        public Dictionary<Symbol, int> KeyActionList { get; set; } = []; // also a string/symbol 
+        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol 
 
         [MetaMember("mReferenceKeyList")]
         public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol 

@@ -73,8 +73,3 @@ public class ActingPalette
         public ActiveDuring Val { get; set; }
     }
 }
-
-
-
-
-

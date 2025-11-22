@@ -29,7 +29,8 @@ public class DlgChildSet
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int numChildren = streamReader.ReadInt32();
 

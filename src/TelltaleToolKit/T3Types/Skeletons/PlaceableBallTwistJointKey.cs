@@ -153,5 +153,5 @@ public struct AnimationConstraint
         eKnee_R = 0x36,
         eAnkle_R = 0x37,
         eNumNodes = 0x38,
-    };
+    }
 }

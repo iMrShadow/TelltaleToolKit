@@ -3,11 +3,9 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;
-using TelltaleToolKit.T3Types.Languages.Llm;
 using TelltaleToolKit.T3Types.Languages.Locreg;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
-
 // New language database files
 
 [MetaClassSerializerGlobal(typeof(Serializer))]
@@ -20,7 +18,7 @@ public class LanguageDb
     public Generator UIdGenerator { get; set; } = null!;
 
     [MetaMember("mLanguageResources")]
-    public Dictionary<uint, LanguageRes> LanguageResources { get; set; } = [];
+    public Dictionary<uint, LanguageRes> LanguageResources { get; set; } = new();
 
     [MetaMember("mRegistry")]
     public LocalizationRegistry Registry { get; set; }
@@ -45,7 +43,6 @@ public class LanguageDb
 
             if (stream is MetaStreamReader streamReader)
             {
-                return;
                 // There should be things in the debug section that I would like to parse.
                 // It's not required, but it may contain useful information.
             }

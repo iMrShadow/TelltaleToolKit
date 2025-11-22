@@ -34,7 +34,8 @@ public class DlgObjectProps
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 if ((obj.Flags.Data & (int)PropsType.UserProps) != 0)
                 {

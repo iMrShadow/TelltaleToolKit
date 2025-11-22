@@ -12,7 +12,7 @@ public class NoteCollection : IGenerator
     public Generator Generator { get; set; }
 
     [MetaMember("mNotes")]
-    public Dictionary<int, Note> Notes { get; set; } = [];
+    public Dictionary<int, Note> Notes { get; set; } = new();
 
     public class Serializer : MetaClassSerializer<NoteCollection>
     {
@@ -22,7 +22,8 @@ public class NoteCollection : IGenerator
             {
                 throw new NotSupportedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 // mEntries is not serialized.
                 int numNotes = streamReader.ReadInt32();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TelltaleToolKit.Reflection;
+﻿using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -45,4 +40,3 @@ public class Localization
         public uint AudioVersionNumber { get; set; }
     }
 }
-

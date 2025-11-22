@@ -36,7 +36,7 @@ public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
         public bool InterpolateToNextKey { get; set; }
 
         [MetaMember("mValue")]
-        public T Value { get; set; }
+        public T Value { get; set; } = default!;
 
         [MetaMember("mTangentMode")]
         public TangentMode TangentMode { get; set; }

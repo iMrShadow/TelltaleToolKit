@@ -32,7 +32,7 @@ public class Vers
     {
         public override void Serialize(ref Vers obj, MetaStream stream)
         {
-            PreSerialize(ref obj, stream, null);
+            PreSerialize(ref obj, stream);
 
             if (stream is MetaStreamWriter streamWriter)
             {

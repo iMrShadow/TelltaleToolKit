@@ -18,7 +18,7 @@ public class Rules
     public HashSet<string> RulesSet { get; set; } = [];
 
     [MetaMember("mRuleMap")]
-    public Dictionary<string, Rule> RuleMap { get; set; } = [];
+    public Dictionary<string, Rule> RuleMap { get; set; } = new();
 
     public class Serializer : MetaClassSerializer<Rules>
     {
@@ -26,7 +26,7 @@ public class Rules
 
         public override void Serialize(ref Rules obj, MetaStream stream)
         {
-            PreSerialize(ref obj, stream, null);
+            PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
             stream.BeginBlock();
 
@@ -34,7 +34,8 @@ public class Rules
             {
                 throw new NotImplementedException();
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 HashSet<string> rulesSet = obj.RulesSet;
 

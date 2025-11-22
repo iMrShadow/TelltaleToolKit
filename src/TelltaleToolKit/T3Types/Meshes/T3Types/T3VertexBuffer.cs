@@ -53,7 +53,8 @@ public class T3VertexBuffer
             {
                 throw new NotImplementedException($"There is no serializer for {SerializationType}");
             }
-            else if (stream is MetaStreamReader streamReader)
+
+            if (stream is MetaStreamReader streamReader)
             {
                 int totalBytes = obj.StoreCompressed switch
                 {

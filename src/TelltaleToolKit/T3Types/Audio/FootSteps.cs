@@ -13,6 +13,7 @@ public class FootSteps
         public List<Handle<SoundData>> Sounds { get; set; } = [];
 
         [MetaMember("mMaterialFootsteps")]
-        public Dictionary<SoundFootsteps.EnumMaterial, List<Handle<SoundData>>> MaterialFootsteps { get; set; } = [];
+        public Dictionary<SoundFootsteps.EnumMaterial, List<Handle<SoundData>>> MaterialFootsteps { get; set; } =
+            new();
     }
 }

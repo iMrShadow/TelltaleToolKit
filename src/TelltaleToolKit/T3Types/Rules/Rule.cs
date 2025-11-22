@@ -68,7 +68,7 @@ public class Rule
 
         public override void Serialize(ref Rule obj, MetaStream stream)
         {
-            PreSerialize(ref obj, stream, null);
+            PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
             if (!obj.VersionHasAgents)

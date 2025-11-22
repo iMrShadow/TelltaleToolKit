@@ -31,7 +31,7 @@ public class T3SamplerStateBlock
         public Entry(int shift, int width)
         {
             Shift = shift;
-            Mask = ((uint)((1u << width) - 1u)) << shift;
+            Mask = (1u << width) - 1u << shift;
         }
     }
 

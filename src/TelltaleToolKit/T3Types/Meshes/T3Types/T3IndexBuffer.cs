@@ -86,7 +86,7 @@ public class T3VertexComponent
         //../
         VTypeS8NBones = 8,
         VTypeSF16 = 11,//signed half float
-    };
+    }
 }
 
 // Right, so D3DIndexBuffer changes to T3IndexBuffer (probably because the engine became cross-platform at the time).

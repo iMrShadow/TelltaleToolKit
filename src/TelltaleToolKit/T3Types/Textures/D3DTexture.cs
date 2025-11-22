@@ -1,5 +1,6 @@
 namespace TelltaleToolKit.T3Types.Textures;
 
+
 // TODO: Merge with T3Texture
 // [DataSerializerGlobal(typeof(D3DTextureClassSerializer))]
 // public class D3DTexture
