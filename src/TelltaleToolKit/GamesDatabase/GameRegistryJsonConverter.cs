@@ -1,11 +1,10 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility;
 
 namespace TelltaleToolKit.GamesDatabase;
-
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 /// <summary>
 /// Custom JSON converter for <see cref="GameDescriptor"/> objects.

@@ -1,5 +1,4 @@
 ﻿namespace TelltaleToolKit.Reflection;
-
 // TODO: Maybe Add enum descriptors. Currently we assume that the enums are fixed. It may not be worth it for the extra memory usage.
 
 /// <summary>
@@ -23,7 +22,7 @@ public sealed class MetaClass
     /// The members (properties) of this class.
     /// This is a list of MetaMember objects, each describing a property.
     /// </summary>
-    public List<MetaMember> Members { get; set; } = [];
+    public List<MetaMember> Members { get; set; } = new();
 
     /// <summary>
     /// Registers the current MetaClass instance with the toolkit context.

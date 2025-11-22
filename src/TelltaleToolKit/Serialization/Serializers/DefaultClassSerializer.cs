@@ -58,8 +58,10 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         }
 
         // Add this class to the metaclass header.
-        if (stream is MetaStreamWriter { Configuration.CanModifySerializedClassesList: true } streamWriter)
+        if (stream is MetaStreamWriter { Configuration: { CanModifySerializedClassesList: true } } streamWriter)
+        {
             streamWriter.AddVersionInfo(description);
+        }
 
         // Loop through the metaclass's properties/members
         foreach (MetaMember propDesc in description.Members.Where(propDesc => propDesc.IsSerialized()))
@@ -206,11 +208,9 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
                 instance = (T)boxed;
             };
         }
-        else
-        {
-            // For classes, direct set
-            return (ref T instance, object? value) => { prop.SetValue(instance, value); };
-        }
+
+        // For classes, direct set
+        return (ref T instance, object? value) => { prop.SetValue(instance, value); };
     }
 
     private class CachedMember

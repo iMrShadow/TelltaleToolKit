@@ -119,7 +119,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
         if (stream is MetaStreamReader streamReader)
         {
             if (obj is null)
-                obj = [];
+                obj = new Dictionary<TKey, TValue>();
             else
                 obj.Clear();
         }
@@ -134,7 +134,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
     /// <inheritdoc/>
     public override void Serialize(ref Dictionary<TKey, TValue> obj, MetaStream stream)
     {
-        PreSerialize(ref obj, stream, null);
+        PreSerialize(ref obj, stream);
 
         if (stream is MetaStreamWriter streamWriter)
         {

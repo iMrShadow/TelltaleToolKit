@@ -36,7 +36,7 @@ public class MetaClassJsonConverter : JsonConverter<MetaClass>
         // This is a minor optimization.
 
         // Read members
-        List<MetaMember> members = [];
+        List<MetaMember> members = new();
 
         if (obj.TryGetProperty("members", out JsonElement propsElement) &&
             propsElement.ValueKind == JsonValueKind.Array)

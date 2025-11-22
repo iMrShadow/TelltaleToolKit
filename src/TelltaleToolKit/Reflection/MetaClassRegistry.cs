@@ -10,7 +10,7 @@ public class MetaClassRegistry
     /// <summary>
     /// Dictionary for registered classes indexed by (CRC64 type hash, CRC32 version crc).
     /// </summary>
-    public Dictionary<(ulong TypeHash, uint Crc32), MetaClass> Classes { get; } = [];
+    public Dictionary<(ulong TypeHash, uint Crc32), MetaClass> Classes { get; } = new();
 
     /// <summary>
     /// Retrieves a class by MetaClassType and CRC32.

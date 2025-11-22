@@ -78,5 +78,5 @@ public sealed class GameDescriptor
     /// Gets a dictionary mapping <see cref="MetaClassType"/> to their corresponding IDs.
     /// This represents the metaclasses available in the game and their identifiers.
     /// </summary>
-    public Dictionary<MetaClassType, uint> Classes { get; init; } = [];
+    public Dictionary<MetaClassType, uint> Classes { get; init; } = new();
 }
