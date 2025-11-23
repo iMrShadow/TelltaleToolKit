@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Utility.Blowfish;
 using BlockConfiguration = (int blockSize, int cryptInterval, int cleanInterval);
@@ -102,7 +103,7 @@ public static class TelltaleArchiveUtilities
 
             try
             {
-                byte[] result = Decompress(ms => new ZLibStream(ms, CompressionMode.Decompress));
+                byte[] result = Decompress(ms => new InflaterInputStream(ms));
                 return result;
             }
             catch (Exception)
@@ -112,15 +113,18 @@ public static class TelltaleArchiveUtilities
 
             throw new InvalidDataException("Compresion not supported");
         }
-        else if (flags.HasFlag(ContainerFlags.IsRawDeflateCompressed))
+
+        if (flags.HasFlag(ContainerFlags.IsRawDeflateCompressed))
         {
             return Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress));
         }
-        else if (flags.HasFlag(ContainerFlags.IsZlibCompressed))
+
+        if (flags.HasFlag(ContainerFlags.IsZlibCompressed))
         {
-            return Decompress(ms => new ZLibStream(ms, CompressionMode.Decompress));
+            return Decompress(ms => new InflaterInputStream(ms));
         }
-        else if (flags.HasFlag(ContainerFlags.IsOodleCompressed))
+
+        if (flags.HasFlag(ContainerFlags.IsOodleCompressed))
         {
             // TODO: Add Oodle compression.
             throw new NotSupportedException("Oodle compression is not supported yet.");
