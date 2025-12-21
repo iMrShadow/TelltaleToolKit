@@ -37,7 +37,7 @@ public class DlgChildSet
                 for (var i = 0; i < numChildren; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer childSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer childSerializer = T3Kit.Instance.GetSerializer(type.LinkingType);
 
                     object? dlgChild = null;
                     childSerializer.PreSerialize(ref dlgChild, stream);

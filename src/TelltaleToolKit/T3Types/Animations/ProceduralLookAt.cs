@@ -98,7 +98,7 @@ public class ProceduralLookAt
                 }
 
                 Animation objAnimation = obj.Animation;
-                TTKGlobalContext.Instance().GetSerializer<Animation>().Serialize(ref objAnimation, stream);
+                T3Kit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
             }
             else if (stream is MetaStreamReader)
             {
@@ -108,7 +108,7 @@ public class ProceduralLookAt
                 }
 
                 var animation = new Animation();
-                TTKGlobalContext.Instance().GetSerializer<Animation>().Serialize(ref animation, stream);
+                T3Kit.Instance.GetSerializer<Animation>().Serialize(ref animation, stream);
 
                 obj.Animation = animation;
             }

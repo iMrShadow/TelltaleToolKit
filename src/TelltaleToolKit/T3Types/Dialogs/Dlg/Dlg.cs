@@ -91,7 +91,7 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                 for (var i = 0; i < nodeCount; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer metaClassSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer metaClassSerializer = T3Kit.Instance.GetSerializer(type.LinkingType);
 
                     object node = null!;
                     metaClassSerializer.PreSerialize(ref node, stream);

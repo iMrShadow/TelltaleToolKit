@@ -48,7 +48,7 @@ public class MetaClassBuilder
     /// </summary>
     /// <param name="member">The member to add.</param>
     /// <returns>The builder instance (for chaining).</returns>
-    private MetaClassBuilder AddMember(MetaMember member)
+    private MetaClassBuilder AddMember(MetaMember? member)
     {
         _metaClass.Members.Add(member ?? throw new ArgumentNullException(nameof(member)));
         return this;

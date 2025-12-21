@@ -1,5 +1,4 @@
 using System.Text.Json;
-using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
@@ -125,7 +124,7 @@ public static class TTK
     /// <param name="type"></param>
     public static void PreSerialize<T>(ref T obj, MetaStream stream, MetaClassType? type = null) where T : new()
     {
-        TTKGlobalContext.Instance().GetSerializer<T>().PreSerialize(ref obj, stream, type);
+        T3Kit.Instance.GetSerializer<T>().PreSerialize(ref obj, stream, type);
     }
 
     /// <summary>
@@ -135,7 +134,7 @@ public static class TTK
     /// <param name="stream">The stream to serialize or deserialize to.</param>
     public static void Serialize<T>(ref T obj, MetaStream stream) where T : new()
     {
-        TTKGlobalContext.Instance().GetSerializer<T>().Serialize(ref obj, stream);
+        T3Kit.Instance.GetSerializer<T>().Serialize(ref obj, stream);
     }
 
     /// <summary>
@@ -187,5 +186,31 @@ public static class TTK
     {
         string json = JsonSerializer.Serialize(obj);
         File.WriteAllText(filePath, json);
+    }
+    
+    
+    /// <summary>
+    /// Loads and parses a Telltale archive file (.ttarch or .ttarch2) using the specified blowfish key for decryption.
+    /// </summary>
+    /// <param name="ttarch">The path to the archive file.</param>
+    /// <param name="game">The blowfish key for the game.</param>
+    /// <param name="sort">Whether to sort archive entries.</param>
+    /// <param name="debugPrint">Whether to print debug information during loading.</param>
+    /// <returns>An <see cref="ArchiveBase"/> representing the loaded archive.</returns>
+    /// <exception cref="NotSupportedException">Thrown if the archive type is unsupported.</exception>
+    public static ArchiveBase Load(string ttarch, string game, bool sort = true,
+        bool debugPrint = false)
+    {
+        if (ttarch.EndsWith(".ttarch2"))
+        {
+            return ArchiveBase.Load<T3Archive2>(ttarch, game, sort, debugPrint);
+        }
+
+        if (ttarch.EndsWith(".ttarch"))
+        {
+            return ArchiveBase.Load<T3Archive>(ttarch, game, sort, debugPrint);
+        }
+
+        throw new NotSupportedException($"Unsupported archive type: {ttarch}");
     }
 }

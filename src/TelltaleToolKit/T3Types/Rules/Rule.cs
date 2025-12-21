@@ -85,7 +85,7 @@ public class Rule
                 // var numAgents = streamReader.ReadInt32();
 
                 List<AgentInfo> agents = obj.AgentInformation;
-                TTKGlobalContext.Instance().GetSerializer<List<AgentInfo>>().Serialize(ref agents, stream);
+                T3Kit.Instance.GetSerializer<List<AgentInfo>>().Serialize(ref agents, stream);
 
                 // for (int i = 0; i < numAgents; i++)
                 // {

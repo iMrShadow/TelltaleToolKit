@@ -98,7 +98,7 @@ public class Animation
 
                 foreach (InterfaceInfo desc in obj.Descriptors)
                 {
-                    MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(desc.Type.LinkingType);
+                    MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(desc.Type.LinkingType);
 
                     for (var j = 0; j < desc.ValueCount; j++)
                     {
@@ -153,8 +153,7 @@ public class Animation
                     MetaClassType typeSymbol = streamReader.ReadMetaClassType(); // The type of the class
                     int numOfType = streamReader.ReadInt32(); // The number of times that type has been serialized
 
-                    MetaClassSerializer serializer =
-                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
+                    MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {

@@ -64,7 +64,7 @@ public class PropertySet
                     streamWriter.Write(parentCount);
 
                     MetaClassSerializer<Handle<PropertySet>> parentSerializer =
-                        TTKGlobalContext.Instance().GetSerializer<Handle<PropertySet>>();
+                        T3Kit.Instance.GetSerializer<Handle<PropertySet>>();
                     for (var i = 0; i < parentCount; i++)
                     {
                         // Use a local variable so we can pass by ref into serializer
@@ -128,7 +128,7 @@ public class PropertySet
                     streamWriter.Write(entries.Count);
 
                     MetaClassSerializer classTypeSerializer =
-                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
+                        T3Kit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     foreach ((Symbol key, PropertyEntry value) in entries)
                     {
@@ -148,7 +148,7 @@ public class PropertySet
                 if (embeddedParentProps)
                 {
                     MetaClassSerializer<PropertySet> propSetSerializer =
-                        TTKGlobalContext.Instance().GetSerializer<PropertySet>();
+                        T3Kit.Instance.GetSerializer<PropertySet>();
                     propSetSerializer.Serialize(ref obj.ParentProperties, stream);
                 }
             }
@@ -161,7 +161,7 @@ public class PropertySet
                     for (var i = 0; i < obj.ParentList.Capacity; i++)
                     {
                         var parent = new Handle<PropertySet>();
-                        TTKGlobalContext.Instance().GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
+                        T3Kit.Instance.GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
                         obj.ParentList.Add(parent);
                     }
                 }
@@ -180,8 +180,7 @@ public class PropertySet
                     // The number of times that type has been serialized
                     int numOfType = streamReader.ReadInt32();
 
-                    MetaClassSerializer classTypeSerializer =
-                        TTKGlobalContext.Instance().GetSerializer(typeSymbol.LinkingType);
+                    MetaClassSerializer classTypeSerializer = T3Kit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {

@@ -28,7 +28,7 @@ public abstract class MetaStream : IDisposable
 
     protected internal MetaStreamConfiguration Configuration { get; set; } = new();
 
-    protected TTKContext? Context { get; set; }
+    protected GameContext? Context { get; set; }
 
     protected Stream UnderlyingStream { get; set; } = null!;
 
@@ -103,7 +103,7 @@ public abstract class MetaStream : IDisposable
 
     public void Serialize<T>(ref T obj) where T : new()
     {
-        MetaClassSerializer<T> serializer = TTKGlobalContext.Instance().GetSerializer<T>();
+        MetaClassSerializer<T> serializer = T3Kit.Instance.GetSerializer<T>();
         serializer.PreSerialize(ref obj, this);
         serializer.Serialize(ref obj, this);
     }
@@ -115,7 +115,7 @@ public abstract class MetaStream : IDisposable
             throw new ArgumentNullException(nameof(obj));
         }
 
-        MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(obj.GetType());
+        MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(obj.GetType());
         serializer.PreSerialize(ref obj, this);
         serializer.Serialize(ref obj, this);
     }

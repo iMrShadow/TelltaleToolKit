@@ -1,22 +1,32 @@
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
-using TelltaleToolKit.Utility;
 
 namespace TelltaleToolKit;
 
-public class TTKContext
+public class GameContext
 {
-    private GameDescriptor _gameDescriptor;
-    public TTKContext(GameDescriptor  gameDescriptor)
+    public string GameName { get; }
+    public GameDescriptor Descriptor;
+    public MetaStreamConfiguration DefaultMetaStreamConfig { get; }
+
+    // Archive management
+    private List<ArchiveBase> _loadedArchives = new();
+    
+    public GameContext(GameDescriptor descriptor)
     {
-        _gameDescriptor = gameDescriptor;
+      
+        Descriptor = descriptor;
+        GameName = descriptor.Name;
+        DefaultMetaStreamConfig = new MetaStreamConfiguration
+        {
+            AreSymbolsHashed = descriptor.AreSymbolsHashed,
+            Version = descriptor.MetaStreamVersion
+        };
     }
     // public HashDatabase.HashDatabase? GameSpecificDatabase { get; set; }
 
@@ -33,33 +43,39 @@ public class TTKContext
     /// <exception cref="InvalidOperationException"></exception>
     public MetaStreamConfiguration DefaultMetaStreamConfiguration => new()
     {
-        AreSymbolsHashed = _gameDescriptor.AreSymbolsHashed,
-        Version = _gameDescriptor.MetaStreamVersion
+        AreSymbolsHashed = Descriptor.AreSymbolsHashed,
+        Version = Descriptor.MetaStreamVersion
     };
 
     public MetaClass? GetMetaClassDescription(Type? type)
     {
-        ArgumentNullException.ThrowIfNull(type);
-        
-        KeyValuePair<MetaClassType, uint>? match =
-            _gameDescriptor.Classes.FirstOrDefault(tc => tc.Key.LinkingType == type);
+        if (type is null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
 
-        return TTKGlobalContext.Instance().GetClass(match.Value.Key.Symbol, match.Value.Value);
+        KeyValuePair<MetaClassType, uint>? match =
+            Descriptor.Classes.FirstOrDefault(tc => tc.Key.LinkingType == type);
+
+        return T3Kit.Instance.GetClass(match.Value.Key.Symbol, match.Value.Value);
     }
 
     public MetaClass? GetMetaClassDescription(Symbol? symbol)
     {
-        ArgumentNullException.ThrowIfNull(symbol);
+        if (symbol is null)
+        {
+            throw new ArgumentNullException(nameof(symbol));
+        }
 
-        KeyValuePair<MetaClassType, uint>? match = _gameDescriptor.Classes
+        KeyValuePair<MetaClassType, uint>? match = Descriptor.Classes
             .FirstOrDefault(tc => tc.Key.Symbol.Crc64 == symbol.Crc64);
 
-        return TTKGlobalContext.Instance().GetClass(match.Value.Key.Symbol, match.Value.Value);
+        return T3Kit.Instance.GetClass(match.Value.Key.Symbol, match.Value.Value);
     }
-    
+
     public bool IsMetaClassDescriptionRegistered(MetaClass? desc)
-        => desc is not null && _gameDescriptor.Classes.ContainsKey(desc.ClassType);
-    
+        => desc is not null && Descriptor.Classes.ContainsKey(desc.ClassType);
+
 
     // public void PrintRegisteredClasses()
     // {
@@ -68,21 +84,21 @@ public class TTKContext
 
     private MetaClass? GetMetaClassDescription(MetaClassType type)
     {
-        if (!_gameDescriptor.Classes.ContainsKey(type))
+        if (!Descriptor.Classes.ContainsKey(type))
         {
             Console.WriteLine($"Game descriptor doesn't have description for {type.FullTypeName}");
             return null;
         }
-        
-        if (_gameDescriptor.Classes.TryGetValue(type, out uint crc32))
+
+        if (Descriptor.Classes.TryGetValue(type, out uint crc32))
         {
-            return TTKGlobalContext.Instance().GetClass(type.Symbol, crc32);
+            return T3Kit.Instance.GetClass(type.Symbol, crc32);
         }
-        
+
         Console.WriteLine($"Game descriptor doesn't have description for {type.FullTypeName} with crc32 {crc32}!");
         return null;
     }
-    
+
     /// <summary>
     /// Loads and parses a Telltale archive file (.ttarch or .ttarch2) using the specified blowfish key for decryption.
     /// </summary>
@@ -95,9 +111,9 @@ public class TTKContext
     public ArchiveBase Load(string ttarch, bool sort = true,
         bool debugPrint = false)
     {
-       return TTKGlobalContext.Instance().Load(ttarch, _gameDescriptor.BlowfishKey, sort, debugPrint);
+        return T3Kit.Instance.Load(ttarch, Descriptor.BlowfishKey, sort, debugPrint);
     }
-    
+
     /// <summary>
     /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream.
     /// </summary>
@@ -106,7 +122,7 @@ public class TTKContext
     /// <param name="stream">The stream to write to.</param>
     public void Save<T>(T obj, Stream stream) where T : class, new()
         => Save(obj, stream, DefaultMetaStreamConfiguration);
-    
+
     /// <summary>
     /// Serializes and saves an object of type <typeparamref name="T"/> to the specified file using a provided <see cref="MetaStreamConfiguration"/>.
     /// </summary>
@@ -116,7 +132,7 @@ public class TTKContext
     /// <param name="configuration">The <see cref="MetaStreamConfiguration"/> to use during serialization.</param>
     public void Save<T>(T obj, string fileName, MetaStreamConfiguration configuration) where T : class, new() =>
         Save(obj, File.OpenWrite(fileName), configuration);
-    
+
     /// <summary>
     /// Serializes and saves an object of type <typeparamref name="T"/> to the specified stream using a provided <see cref="MetaStreamConfiguration"/>.
     /// </summary>
@@ -129,5 +145,10 @@ public class TTKContext
         var streamWriter = new MetaStreamWriter(stream, configuration);
         streamWriter.Serialize(ref obj);
         streamWriter.Save();
+    }
+
+    public string GetBlowfishKey()
+    {
+        return Descriptor.BlowfishKey;
     }
 }

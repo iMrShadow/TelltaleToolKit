@@ -78,7 +78,7 @@ public sealed class MetaStreamReader : MetaStream
                 continue;
             }
 
-            MetaClass? mcs = TTKGlobalContext.Instance().GetClass(type.Symbol, crc32);
+            MetaClass? mcs = T3Kit.Instance.GetClass(type.Symbol, crc32);
 
             if (mcs is not null)
             {

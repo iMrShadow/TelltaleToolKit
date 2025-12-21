@@ -31,7 +31,7 @@ public class DlgConditionSet
                 for (var i = 0; i < numChildren; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer conditionSerializer = TTKGlobalContext.Instance().GetSerializer(type.LinkingType);
+                    MetaClassSerializer conditionSerializer = T3Kit.Instance.GetSerializer(type.LinkingType);
 
                     object? dlgConditionSet = null;
                     conditionSerializer.PreSerialize(ref dlgConditionSet, stream);

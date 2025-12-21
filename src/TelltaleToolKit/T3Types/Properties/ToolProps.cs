@@ -36,7 +36,7 @@ public class ToolProps
                     return;
 
                 var runtimeProperties = new PropertySet();
-                TTKGlobalContext.Instance().GetSerializer<PropertySet>().Serialize(ref runtimeProperties, stream);
+                T3Kit.Instance.GetSerializer<PropertySet>().Serialize(ref runtimeProperties, stream);
                 throw new InvalidDataException("This type has tool properties. Please report this to the author!");
             }
         }

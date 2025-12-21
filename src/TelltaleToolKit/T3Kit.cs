@@ -4,27 +4,44 @@ using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility;
 
 namespace TelltaleToolKit;
 
-public class TTKGlobalContext
+public class T3Kit
 {
-    private static TTKGlobalContext? _instance;
+    private static T3Kit? _instance;
+    private bool _initialized = false;
+    
+    /// <summary>
+    /// Gets the singleton instance of TelltaleToolkit.
+    /// Must be initialized first using <see cref="Initialize"/>.
+    /// </summary>
+    public static T3Kit Instance
+    {
+        get
+        {
+            if (_instance == null)
+                throw new InvalidOperationException("TelltaleToolkit must be initialized first. Call TelltaleToolkit.Initialize()");
+            return _instance;
+        }
+    }
+    
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() }
+    };
+
+    private readonly Dictionary<ulong, string> Symbols = new();
+    
 
     private MetaClassRegistry MetaClassRegistry { get; set; }
     private MetaClassSerializerSelector MetaClassSerializerSelector { get; set; } = new();
 
-    private TTKGlobalContext()
-    {
-        MetaClassRegistry = new MetaClassRegistry();
-    }
-
     private List<GameDescriptor> RegisteredGames { get; set; } = [];
-    public static TTKGlobalContext Instance() => _instance ??= new TTKGlobalContext();
 
     public HashDatabase.HashDatabase? MainHashDatabase { get; set; }
 
@@ -32,12 +49,6 @@ public class TTKGlobalContext
     {
         MetaClassRegistry.Register(metaClassDescriptions);
     }
-
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() }
-    };
 
     // public void LoadMetaClassDescriptionsFromJsonFolder(string folderPath)
     // {
@@ -60,20 +71,31 @@ public class TTKGlobalContext
 
     public GameDescriptor GetTelltaleGame(string gameName)
     {
-        ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
+        if (gameName is null)
+        {
+            throw new ArgumentNullException(nameof(gameName));
+        }
 
         return RegisteredGames.First(g => g.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase));
     }
 
     public GameDescriptor FindGame(string gameName)
     {
-        ArgumentNullException.ThrowIfNull(gameName, nameof(gameName));
+        if (gameName is null)
+        {
+            throw new ArgumentNullException(nameof(gameName));
+        }
+
         return RegisteredGames.First(g => g.Id.Equals(gameName, StringComparison.OrdinalIgnoreCase));
     }
 
     public void RegisterGame(GameDescriptor gameDescriptor)
     {
-        ArgumentNullException.ThrowIfNull(gameDescriptor, nameof(gameDescriptor));
+        if (gameDescriptor is null)
+        {
+            throw new ArgumentNullException(nameof(gameDescriptor));
+        }
+
         RegisteredGames.Add(gameDescriptor);
     }
 
@@ -235,8 +257,6 @@ public class TTKGlobalContext
         }
     }
 
-    private readonly Dictionary<ulong, string> Symbols = [];
-
     public void InsertSymbolsIntoDatabase(List<Symbol> symbols)
     {
         foreach (Symbol symbol in symbols)
@@ -293,5 +313,28 @@ public class TTKGlobalContext
         }
 
         throw new NotSupportedException($"Unsupported archive type: {ttarch}");
+    }
+
+    public GameContext? GetContext(string name)
+    {
+        foreach (GameDescriptor game in RegisteredGames)
+        {
+            if (game.Name == name)
+            {
+                return new GameContext(game);
+            }
+        }
+
+        return null;
+    }
+
+    public bool HasContext(string name)
+    {
+        return RegisteredGames.Any(game => game.Name == name);
+    }
+
+    public List<string> GetSnapshotNames()
+    {
+        return RegisteredGames.Select(game => game.Name).ToList();
     }
 }

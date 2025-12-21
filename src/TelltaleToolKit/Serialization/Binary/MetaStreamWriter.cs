@@ -6,7 +6,7 @@ namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamWriter : MetaStream
 {
-    public MetaStreamWriter(Stream inputStream, TTKContext context) : this(inputStream, context.DefaultMetaStreamConfiguration)
+    public MetaStreamWriter(Stream inputStream, GameContext context) : this(inputStream, context.DefaultMetaStreamConfiguration)
     {
         Context = context;
     }

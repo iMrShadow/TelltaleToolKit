@@ -74,7 +74,7 @@ public class HandleSerializer<T> : MetaClassSerializer<Handle<T>>
     public override void Serialize(ref Handle<T> obj, MetaStream stream)
     {
         HandleBase handle = obj;
-        TTKGlobalContext.Instance().GetSerializer<HandleBase>().PreSerialize(ref handle, stream);
-        TTKGlobalContext.Instance().GetSerializer<HandleBase>().Serialize(ref handle, stream);
+        T3Kit.Instance.GetSerializer<HandleBase>().PreSerialize(ref handle, stream);
+        T3Kit.Instance.GetSerializer<HandleBase>().Serialize(ref handle, stream);
     }
 }

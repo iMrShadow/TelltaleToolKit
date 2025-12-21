@@ -29,7 +29,7 @@ public sealed class MetaClass
     /// </summary>
     [Obsolete(
         "The register function is deprecated. You can register the class using the context class. This function was previously used when I originally registered from code only.")]
-    public void Register() => TTKGlobalContext.Instance().RegisterClass(this);
+    public void Register() => T3Kit.Instance.RegisterClass(this);
 
     /// <inheritdoc cref="MetaClassType.IsBlocked"/>
     public bool IsBlocked()

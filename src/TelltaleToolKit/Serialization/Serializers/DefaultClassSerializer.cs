@@ -73,7 +73,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
             object? value = cached.Getter(ref obj);
 
-            MetaClassSerializer serializer = TTKGlobalContext.Instance().GetSerializer(cached.Property.PropertyType);
+            MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(cached.Property.PropertyType);
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream);
 
