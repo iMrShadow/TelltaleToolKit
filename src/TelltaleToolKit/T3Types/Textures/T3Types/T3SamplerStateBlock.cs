@@ -35,47 +35,46 @@ public class T3SamplerStateBlock
         }
     }
 
+    [MetaMember("Wrap U")]
     public TextureWrapMode WrapU
     {
         get => (TextureWrapMode)InternalGet(T3SamplerStateValue.WrapU);
         set => InternalSet(T3SamplerStateValue.WrapU, (uint)value);
     }
 
+    [MetaMember("Wrap V")]
     public TextureWrapMode WrapV
     {
         get => (TextureWrapMode)InternalGet(T3SamplerStateValue.WrapV);
         set => InternalSet(T3SamplerStateValue.WrapV, (uint)value);
     }
 
+    [MetaMember("Filtered")]
     public bool Filtered
     {
         get => InternalGet(T3SamplerStateValue.Filtered) != 0;
         set => InternalSet(T3SamplerStateValue.Filtered, value ? 1u : 0u);
     }
 
+    [MetaMember("Border Color")]
     public TextureBorderColor BorderColor
     {
         get => (TextureBorderColor)InternalGet(T3SamplerStateValue.BorderColor);
         set => InternalSet(T3SamplerStateValue.BorderColor, (uint)value);
     }
 
+    [MetaMember("Gamma Correct")]
     public bool GammaCorrect
     {
         get => InternalGet(T3SamplerStateValue.GammaCorrect) != 0;
         set => InternalSet(T3SamplerStateValue.GammaCorrect, value ? 1u : 0u);
     }
 
+    [MetaMember("Mip Bias")]
     public byte MipBias
     {
         get => (byte)InternalGet(T3SamplerStateValue.MipBias);
         set => InternalSet(T3SamplerStateValue.MipBias, value);
-    }
-
-    // Raw data access
-    public uint RawData
-    {
-        get => Data;
-        set => Data = value;
     }
 
     private uint InternalGet(T3SamplerStateValue state)
