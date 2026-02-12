@@ -1,0 +1,10 @@
+{
+    "name": "The Walking Dead: Season 2",
+    "description": "",
+    "blowfishKey": "Twd2",
+    "isTtarch2": true,
+    "ttarchVersion": 3,
+    "luaVersion": "5.1.2",
+    "metaStreamVersion": "MSV5",
+    "enableOodleCompression": false
+}
