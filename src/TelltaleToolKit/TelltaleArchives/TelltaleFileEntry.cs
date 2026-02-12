@@ -11,6 +11,6 @@ public class TelltaleFileEntry
     {
         return Crc64 == 0
             ? $"{Name} (Offset: {FileOffset}, Size: {FileSize})"
-            : $"{Name} (CRC: {Crc64:X8}, Offset: {FileOffset}, Size: {FileSize})";
+            : $"{Name} (CRC: {Crc64:X16}, Offset: {FileOffset}, Size: {FileSize})";
     }
 }

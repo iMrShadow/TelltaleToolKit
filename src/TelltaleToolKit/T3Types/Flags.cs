@@ -23,7 +23,7 @@ public struct Flags
     public Flags Clear(int flag) => new Flags(Data & ~flag);
     public Flags Toggle(int flag) => new Flags(Data ^ flag);
 
-    public override string ToString() => $"0x{Data:X8}";
+    public override string ToString() => $"0x{Data:X16}";
 
     public bool Equals(Flags other) => Data == other.Data;
     public override bool Equals(object? obj) => obj is Flags f && Equals(f);
