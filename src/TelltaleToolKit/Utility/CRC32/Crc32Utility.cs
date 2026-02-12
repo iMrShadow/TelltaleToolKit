@@ -2,7 +2,7 @@ using System.IO.Hashing;
 using System.Text;
 using TelltaleToolKit.Reflection;
 
-namespace TelltaleToolKit.Utility;
+namespace TelltaleToolKit.Utility.CRC32;
 
 /// <summary>
 /// MetaClass version info (crc32) calculating utility.
@@ -16,10 +16,10 @@ public static class T3Crc32Utilities
     /// </summary>
     /// <param name="metaClass"></param>
     /// <returns></returns>
-    public static uint CalculateCRC32_2016(MetaClass metaClass)
+    public static uint CalculateCRC32_MSV6(MetaClass metaClass)
     {
         // if it's blocked, start with 0xFFFFFFFF (or -1)
-        int buf = metaClass.IsBlocked() ? -1 : 0; 
+        int buf = metaClass.ClassType.IsBlocked() ? -1 : 0; 
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 
@@ -46,11 +46,11 @@ public static class T3Crc32Utilities
     /// </summary>
     /// <param name="metaClass"></param>
     /// <returns></returns>
-    public static uint CalculateCRC32_2005(MetaClass metaClass)
+    public static uint CalculateCRC32_MBIN(MetaClass metaClass)
     {
         // Initialize CRC with 0xFFFFFFFF if class is blocked (not NonBlocked), 0 otherwise
         // if it's blocked, start with 0xFFFFFFFF
-        uint buf = metaClass.IsBlocked() ? 0xFFFF : 0u; 
+        uint buf = metaClass.ClassType.IsBlocked() ? 0xFFFF : 0u; 
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 
@@ -80,9 +80,9 @@ public static class T3Crc32Utilities
     /// </summary>
     /// <param name="metaClass"></param>
     /// <returns></returns>
-    public static uint CalculateCRC32_2008(MetaClass metaClass)
+    public static uint CalculateCRC32_MTRE(MetaClass metaClass)
     {
-        int buf = metaClass.IsBlocked() ? -1 : 0; // if it's blocked, start with 0xFFFFFFFF (or -1)
+        int buf = metaClass.ClassType.IsBlocked() ? -1 : 0; // if it's blocked, start with 0xFFFFFFFF (or -1)
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 
@@ -101,9 +101,9 @@ public static class T3Crc32Utilities
     /// </summary>
     /// <param name="metaClass"></param>
     /// <returns></returns>
-    public static uint CalculateCRC32_2013(MetaClass metaClass)
+    public static uint CalculateCRC32_MSV5(MetaClass metaClass)
     {
-        int buf = metaClass.IsBlocked() ? -1 : 0; // if it's blocked, start with 0xFFFFFFFF (or -1)
+        int buf = metaClass.ClassType.IsBlocked() ? -1 : 0; // if it's blocked, start with 0xFFFFFFFF (or -1)
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 

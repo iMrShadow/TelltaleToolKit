@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TelltaleToolKit.Utility;
+namespace TelltaleToolKit.Utility.Blowfish;
 
 /// <summary>
 /// Enum representing the various Telltale games which use different blowfish keys.
