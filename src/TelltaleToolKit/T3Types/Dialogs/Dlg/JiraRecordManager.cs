@@ -37,11 +37,11 @@ public class JiraRecordManager
 
             if (stream is MetaStreamReader streamReader)
             {
-                var numRecords = streamReader.ReadInt32();
+                int numRecords = streamReader.ReadInt32();
                 
                 for (int i = 0; i < numRecords; i++)
                 {
-                    var key = streamReader.ReadString();
+                    string key = streamReader.ReadString();
                     var record = new JiraRecord();
 
                     obj.Records[key] = record;

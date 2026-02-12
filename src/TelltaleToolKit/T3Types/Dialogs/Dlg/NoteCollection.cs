@@ -30,8 +30,8 @@ public class NoteCollection : IGenerator
                 for (var i = 0; i < numNotes; i++)
                 {
                     Note? note = null;
-                    TTK.PreSerialize(ref note, stream);
-                    TTK.Serialize(ref note, stream);
+                    stream.PreSerialize(ref note);
+                    stream.Serialize(ref note);
                     // TODO: Set the correct IDs. Not a priority, I haven't seen this serialized anywhere.
                     obj.Notes.Add(i, note);
                 }

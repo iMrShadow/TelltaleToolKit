@@ -39,12 +39,12 @@ public class Rules
             {
                 HashSet<string> rulesSet = obj.RulesSet;
 
-                T3Kit.Instance.GetSerializer<HashSet<string>>()
+                Toolkit.Instance.GetSerializer<HashSet<string>>()
                     .Serialize(ref rulesSet, stream);
 
                 ////
 
-                MetaClassSerializer<Rule> ruleSerializer = T3Kit.Instance.GetSerializer<Rule>();
+                MetaClassSerializer<Rule> ruleSerializer = Toolkit.Instance.GetSerializer<Rule>();
 
                 obj.RuleMap = new Dictionary<string, Rule>();
 

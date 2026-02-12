@@ -6,9 +6,9 @@ namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamWriter : MetaStream
 {
-    public MetaStreamWriter(Stream inputStream, GameContext context) : this(inputStream, context.DefaultMetaStreamConfiguration)
+    public MetaStreamWriter(Stream inputStream, Workspace workspace) : this(inputStream, workspace.DefaultMetaStreamConfig)
     {
-        Context = context;
+        Context = workspace;
     }
 
     public MetaStreamWriter(Stream inputStream, MetaStreamConfiguration configuration)
@@ -38,8 +38,7 @@ public sealed class MetaStreamWriter : MetaStream
         // Truncate, otherwise there are some leftover bytes.
         UnderlyingStream.SetLength(UnderlyingStream.Position);
     }
-
-
+    
     public override void SerializeMetaHeader()
     {
         Writer = new BinaryWriter(UnderlyingStream);
@@ -69,15 +68,8 @@ public sealed class MetaStreamWriter : MetaStream
 
         foreach (MetaClass t in Configuration.SerializedClasses)
         {
-            if (Configuration.AreSymbolsHashed)
-            {
-                this.Write(t.ClassType.Symbol.Crc64);
-            }
-            else
-            {
-                this.Write(t.ClassType.FullTypeName);
-            }
-
+            MetaClassType metaClassType = t.ClassType;
+            Serialize(ref metaClassType);
             this.Write(t.Crc32);
         }
     }

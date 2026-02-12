@@ -97,8 +97,8 @@ public class Chore
                     for (var i = 0; i < obj.NumResources; i++)
                     {
                         var choreResource = new ChoreResource();
-                        T3Kit.Instance.GetSerializer<ChoreResource>().PreSerialize(ref choreResource, stream);
-                        T3Kit.Instance.GetSerializer<ChoreResource>().Serialize(ref choreResource, stream);
+                        Toolkit.Instance.GetSerializer<ChoreResource>().PreSerialize(ref choreResource, stream);
+                        Toolkit.Instance.GetSerializer<ChoreResource>().Serialize(ref choreResource, stream);
                         obj.ResourcesChore.Add(choreResource);
                     }
                 }
@@ -110,7 +110,7 @@ public class Chore
                     for (var i = 0; i < obj.NumAgents; i++)
                     {
                         var choreAgent = new ChoreAgent();
-                        T3Kit.Instance.GetSerializer<ChoreAgent>().Serialize(ref choreAgent, stream);
+                        Toolkit.Instance.GetSerializer<ChoreAgent>().Serialize(ref choreAgent, stream);
                         obj.Agents.Add(choreAgent);
                     }
                 }

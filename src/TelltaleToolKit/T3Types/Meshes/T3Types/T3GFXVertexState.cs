@@ -56,8 +56,8 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.AttributeCount; i++)
                 {
                     var attribute = new GFXPlatformAttributeParams();
-                    TTK.PreSerialize(ref attribute, stream);
-                    TTK.Serialize(ref attribute, stream);
+                    stream.PreSerialize(ref attribute);
+                    stream.Serialize(ref attribute);
                     obj.Attributes.Add(attribute);
                 }
 
@@ -66,8 +66,8 @@ public class T3GFXVertexState
                     for (var i = 0; i < obj.IndexBufferCount; i++)
                     {
                         var indexBuffer = new T3GFXBuffer();
-                        TTK.PreSerialize(ref indexBuffer, stream);
-                        TTK.Serialize(ref indexBuffer, stream);
+                        stream.PreSerialize(ref indexBuffer);
+                        stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer.Add(indexBuffer);
                     }
                 }
@@ -79,8 +79,8 @@ public class T3GFXVertexState
                     if (hasIndexBuffer)
                     {
                         var indexBuffer = new T3GFXBuffer();
-                        TTK.PreSerialize(ref indexBuffer, stream);
-                        TTK.Serialize(ref indexBuffer, stream);
+                        stream.PreSerialize(ref indexBuffer);
+                        stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer.Add(indexBuffer);
                     }
                 }
@@ -88,8 +88,8 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.VertexBufferCount; i++)
                 {
                     var submesh = new T3GFXBuffer();
-                    TTK.PreSerialize(ref submesh, stream);
-                    TTK.Serialize(ref submesh, stream);
+                    stream.PreSerialize(ref submesh);
+                    stream.Serialize(ref submesh);
                     obj.VertexBuffer.Add(submesh);
                 }
             }

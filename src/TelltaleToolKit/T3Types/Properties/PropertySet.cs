@@ -64,7 +64,7 @@ public class PropertySet
                     streamWriter.Write(parentCount);
 
                     MetaClassSerializer<Handle<PropertySet>> parentSerializer =
-                        T3Kit.Instance.GetSerializer<Handle<PropertySet>>();
+                        Toolkit.Instance.GetSerializer<Handle<PropertySet>>();
                     for (var i = 0; i < parentCount; i++)
                     {
                         // Use a local variable so we can pass by ref into serializer
@@ -118,7 +118,7 @@ public class PropertySet
                         Symbol? sym = g.Key.Symbol; // assume MetaClassType has .Symbol
                         if (sym != null)
                             return sym.ToString();
-                        var lt = g.Key.LinkingType;
+                        Type? lt = g.Key.LinkingType;
                         return lt?.FullName ?? string.Empty;
                     }, StringComparer.Ordinal);
 
@@ -128,7 +128,7 @@ public class PropertySet
                     streamWriter.Write(entries.Count);
 
                     MetaClassSerializer classTypeSerializer =
-                        T3Kit.Instance.GetSerializer(typeSymbol.LinkingType);
+                        Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     foreach ((Symbol key, PropertyEntry value) in entries)
                     {
@@ -143,14 +143,6 @@ public class PropertySet
                         // If serializer changes the in-memory object and you want that persisted, set it before calling Serialize.
                     }
                 }
-
-                bool embeddedParentProps = obj.PropertyFlags.Has(1024);
-                if (embeddedParentProps)
-                {
-                    MetaClassSerializer<PropertySet> propSetSerializer =
-                        T3Kit.Instance.GetSerializer<PropertySet>();
-                    propSetSerializer.Serialize(ref obj.ParentProperties, stream);
-                }
             }
             else if (stream is MetaStreamReader streamReader)
             {
@@ -161,7 +153,7 @@ public class PropertySet
                     for (var i = 0; i < obj.ParentList.Capacity; i++)
                     {
                         var parent = new Handle<PropertySet>();
-                        T3Kit.Instance.GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
+                        Toolkit.Instance.GetSerializer<Handle<PropertySet>>().Serialize(ref parent, stream);
                         obj.ParentList.Add(parent);
                     }
                 }
@@ -180,7 +172,7 @@ public class PropertySet
                     // The number of times that type has been serialized
                     int numOfType = streamReader.ReadInt32();
 
-                    MetaClassSerializer classTypeSerializer = T3Kit.Instance.GetSerializer(typeSymbol.LinkingType);
+                    MetaClassSerializer classTypeSerializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {
@@ -194,16 +186,16 @@ public class PropertySet
                         obj.Properties[propertyKey] = new PropertyEntry(propertyValue, typeSymbol);
                     }
                 }
-
-                bool embeddedParentProps = obj.PropertyFlags.Has(1024);
-
-                // If the flag is true
-                if (embeddedParentProps)
-                {
-                    TTK.Serialize(ref obj.ParentProperties, stream);
-                }
             }
 
+            bool embeddedParentProps = obj.PropertyFlags.Has(1024);
+
+            if (embeddedParentProps)
+            {
+                stream.PreSerialize(ref obj.ParentProperties);
+                stream.Serialize(ref obj.ParentProperties);
+            }
+            
             stream.EndBlock();
         }
     }
@@ -247,5 +239,15 @@ public class PropertySet
         {
             return obj.Value is T value ? value : default;
         }
+    }
+    
+    public object? GetProperty(Symbol symbol)
+    {
+        return GetProperty(symbol.Crc64);
+    }
+
+    public T? GetProperty<T>(Symbol symbol)
+    {
+        return GetProperty<T>(symbol.Crc64);
     }
 }

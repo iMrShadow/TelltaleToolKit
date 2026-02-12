@@ -41,8 +41,8 @@ public class DlgVisibilityConditions
                     return;
 
                 Rule objRule = obj.Rule;
-                TTK.PreSerialize(ref objRule, stream);
-                TTK.Serialize(ref objRule, stream);
+                stream.PreSerialize(ref objRule);
+                stream.Serialize(ref objRule);
             }
         }
     }

@@ -31,7 +31,7 @@ public class WalkPath
                 int count = streamReader.ReadInt32();
                 MetaClassType type = streamReader.ReadMetaClassType();
                 MetaClassSerializer classTypeSerializer =
-                    T3Kit.Instance.GetSerializer(type.LinkingType);
+                    Toolkit.Instance.GetSerializer(type.LinkingType);
                 
                 for (var i = 0; i < count; i++)
                 {

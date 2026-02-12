@@ -78,7 +78,7 @@ public sealed class MetaStreamReader : MetaStream
                 continue;
             }
 
-            MetaClass? mcs = T3Kit.Instance.GetClass(type.Symbol, crc32);
+            MetaClass? mcs = Toolkit.Instance.ClassRegistry.GetClass(type.Symbol, crc32);
 
             if (mcs is not null)
             {
@@ -116,6 +116,27 @@ public sealed class MetaStreamReader : MetaStream
         }
 
         InitSerializer();
+    }
+
+    public static bool IsValidMetaStream(Stream stream)
+    {
+        if (stream.Length < 4)
+            return false;
+
+        long originalPosition = stream.Position;
+
+        try
+        {
+            using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
+            uint version = reader.ReadUInt32();
+
+            // Check if it's a valid MetaStream version
+            return Enum.IsDefined(typeof(MetaStreamVersion), version);
+        }
+        finally
+        {
+            stream.Position = originalPosition;
+        }
     }
 
     protected override void InitSerializer() => Reader = new BinaryReader(CurrentSubstream, Encoding.UTF8, true);
@@ -221,16 +242,7 @@ public sealed class MetaStreamReader : MetaStream
 
     public override void Serialize(ref Symbol value)
     {
-        if (Configuration.AreSymbolsHashed)
-        {
-            value = new Symbol(Reader.ReadUInt64());
-        }
-        else
-        {
-            var valueSymbolName = string.Empty;
-            Serialize(ref valueSymbolName);
-            value = new Symbol(valueSymbolName);
-        }
+        value = new Symbol(Reader.ReadUInt64());
 
         Configuration.SerializedSymbols.Add(value);
     }

@@ -40,24 +40,24 @@ public class DlgObjectProps
                 if ((obj.Flags.Data & (int)PropsType.UserProps) != 0)
                 {
                     var userProps = new PropertySet();
-                    TTK.PreSerialize(ref userProps, stream);
-                    TTK.Serialize(ref userProps, stream);
+                    stream.PreSerialize(ref userProps);
+                    stream.Serialize(ref userProps);
                     obj.UserProperties = userProps;
                 }
                 
                 if ((obj.Flags.Data & (int)PropsType.ProductionProps) != 0)
                 {
                     var prodProps = new PropertySet();
-                    TTK.PreSerialize(ref prodProps, stream);
-                    TTK.Serialize(ref prodProps, stream);
+                    stream.PreSerialize(ref prodProps);
+                    stream.Serialize(ref prodProps);
                     obj.ProductionProperties = prodProps;
                 }
                 
                 if ((obj.Flags.Data & (int)PropsType.ToolProps) != 0)
                 {
                     var toolProps = new PropertySet();
-                    TTK.PreSerialize(ref toolProps, stream);
-                    TTK.Serialize(ref toolProps, stream);
+                    stream.PreSerialize(ref toolProps);
+                    stream.Serialize(ref toolProps);
                     obj.ToolProperties = toolProps;
                 }
             }

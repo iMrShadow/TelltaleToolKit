@@ -108,7 +108,7 @@ public class DialogResource
 
                 for (var i = 0; i < count; i++)
                 {
-                    T3Kit.Instance.GetSerializer<T>().Serialize(ref dialog, stream);
+                    Toolkit.Instance.GetSerializer<T>().Serialize(ref dialog, stream);
                     list.Add(dialog);
                     dialog.DialogBase.ActualId = ids[i];
                 }

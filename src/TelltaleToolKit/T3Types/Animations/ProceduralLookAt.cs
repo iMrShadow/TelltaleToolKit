@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
@@ -98,7 +99,7 @@ public class ProceduralLookAt
                 }
 
                 Animation objAnimation = obj.Animation;
-                T3Kit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
+                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
             }
             else if (stream is MetaStreamReader)
             {
@@ -108,7 +109,7 @@ public class ProceduralLookAt
                 }
 
                 var animation = new Animation();
-                T3Kit.Instance.GetSerializer<Animation>().Serialize(ref animation, stream);
+                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref animation, stream);
 
                 obj.Animation = animation;
             }

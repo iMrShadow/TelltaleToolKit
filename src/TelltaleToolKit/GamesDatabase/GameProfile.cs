@@ -1,6 +1,7 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit.GamesDatabase;
 
@@ -10,7 +11,7 @@ namespace TelltaleToolKit.GamesDatabase;
 /// <para>[slugified-title]-[year]-[month]-[platform]-[demo]</para>
 /// This registry contains general information about the game, versioning, encryption, and a mapping of metaclasses.
 /// </summary>
-public sealed class GameDescriptor
+public sealed class GameProfile
 {
     /// <summary>
     /// Gets or sets the unique identifier for the registry entry, derived from the file name.
@@ -29,7 +30,7 @@ public sealed class GameDescriptor
 
     /// <summary>
     /// Gets the Blowfish encryption key used for securing game archives.
-    /// In the config file, you can either use the name of <see cref="TelltaleToolKit.Utility.T3BlowfishKey"/> or a custom string.
+    /// In the config file, you can either use the name of <see cref="T3BlowfishKey"/> or a custom string.
     /// </summary>
     public string BlowfishKey { get; init; } = string.Empty;
 

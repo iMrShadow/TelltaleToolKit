@@ -122,7 +122,7 @@ public class ChoreResource
 
                     object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
 
-                    T3Kit.Instance.GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
+                    Toolkit.Instance.GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
                     obj.Embedded = embedded;
                 }
             }

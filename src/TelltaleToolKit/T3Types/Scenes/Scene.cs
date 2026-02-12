@@ -45,7 +45,7 @@ public class Scene
                 for (var i = 0; i < numAgents; i++)
                 {
                     var agentInfo = new AgentInfo();
-                    T3Kit.Instance.GetSerializer<AgentInfo>().Serialize(ref agentInfo, stream);
+                    Toolkit.Instance.GetSerializer<AgentInfo>().Serialize(ref agentInfo, stream);
                     obj.Agents.Add(agentInfo);
                 }
             }
@@ -53,8 +53,7 @@ public class Scene
             stream.EndBlock();
         }
     }
-
-
+    
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
     public class AgentInfo
     {

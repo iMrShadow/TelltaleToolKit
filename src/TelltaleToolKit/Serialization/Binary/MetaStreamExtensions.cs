@@ -201,7 +201,7 @@ public static class MetaStreamExtensions
         stream.Serialize(ref value);
         return value;
     }
-    
+
     // TODO: Fix documentation
     /// <summary>
     /// Reads a MetaClassType.
@@ -429,12 +429,36 @@ public static class MetaStreamExtensions
         stream.Serialize(values, 0, values.Length);
         return stream;
     }
-    
+
     // TODO: Fix documentation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MetaStreamWriter Write(this MetaStreamWriter stream, MetaClassType value)
     {
         stream.Serialize(ref value);
         return stream;
+    }
+
+    /// <summary>
+    /// Performs the first step of serialization or deserialization using the Telltale ToolKit context.
+    /// </summary>
+    /// <remarks>
+    /// Typically, it will instantiate the object if [null], and if it's a collection clear it.
+    /// </remarks>
+    /// <param name="obj">The object to process.</param>
+    /// <param name="stream">The stream to serialize or deserialize to.</param>
+    /// <param name="type"></param>
+    public static void PreSerialize<T>(this MetaStream stream, ref T obj, MetaClassType? type = null) where T : new()
+    {
+        Toolkit.Instance.GetSerializer<T>().PreSerialize(ref obj, stream, type);
+    }
+
+    /// <summary>
+    /// Serializes or deserializes the given object <paramref name="obj"/> using the Telltale ToolKit context.
+    /// </summary>
+    /// <param name="obj">The object to serialize or deserialize.</param>
+    /// <param name="stream">The stream to serialize or deserialize to.</param>
+    public static void Serialize<T>(this MetaStream stream, ref T obj) where T : new()
+    {
+        Toolkit.Instance.GetSerializer<T>().Serialize(ref obj, stream);
     }
 }

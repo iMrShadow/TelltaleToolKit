@@ -64,7 +64,7 @@ public class SaveGame
                 {
                     // TODO: There are 3 property sets one after another in old games.
                     var propertySet = new PropertySet();
-                    TTK.Serialize(ref propertySet, stream);
+                    stream.Serialize(ref propertySet);
                 }
             }
         }

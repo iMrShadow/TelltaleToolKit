@@ -36,8 +36,8 @@ public class DependencyLoader
                 }
                 
                 List<string> objResourceNames = obj.ResourceNames;
-                TTK.PreSerialize(ref objResourceNames, stream);
-                TTK.Serialize(ref objResourceNames, stream);
+                stream.PreSerialize(ref objResourceNames);
+                stream.Serialize(ref objResourceNames);
             }
         }
     }

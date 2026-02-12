@@ -134,7 +134,9 @@ public class D3DMesh
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimatedVertexGroupEntry>))]
     public class AnimatedVertexGroupEntry;
 
-    public PropertySet InternalResources { get; set; } = new();
+    [MetaMember("mInternalResources")]
+    public List<HandleBase> InternalResources { get; set; } = new();
+
     public T3IndexBuffer T3IndexBuffer { get; set; }
     public T3VertexBuffer[] T3VertexBuffers { get; set; }
 
@@ -143,6 +145,7 @@ public class D3DMesh
     /// <summary>
     /// The main mesh data for version above 22. It contains LODs, bone references
     /// </summary>
+    [MetaMember("mMeshData")]
     public T3MeshData MeshData { get; set; } = new();
 
     /// <summary>
@@ -376,7 +379,7 @@ public class D3DMesh
                         // TODO: Assign this.
                         stream.BeginBlock();
                         T3OcclusionMeshData objOcclusionMeshData = obj.OcclusionMeshData;
-                        T3Kit.Instance.GetSerializer<T3OcclusionMeshData>()
+                        Toolkit.Instance.GetSerializer<T3OcclusionMeshData>()
                             .Serialize(ref objOcclusionMeshData, stream);
                         stream.EndBlock();
                     }
@@ -384,8 +387,8 @@ public class D3DMesh
 
                 stream.BeginBlock();
                 T3MeshData objMeshData = obj.MeshData;
-                T3Kit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
-                T3Kit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
+                Toolkit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
+                Toolkit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
                 stream.EndBlock();
             }
             else if (stream is MetaStreamReader streamReader)
@@ -426,7 +429,7 @@ public class D3DMesh
                         // TODO: Assign this.
                         stream.BeginBlock();
                         T3OcclusionMeshData objOcclusionMeshData = obj.OcclusionMeshData;
-                        T3Kit.Instance.GetSerializer<T3OcclusionMeshData>()
+                        Toolkit.Instance.GetSerializer<T3OcclusionMeshData>()
                             .Serialize(ref objOcclusionMeshData, stream);
                         stream.EndBlock();
                     }
@@ -434,8 +437,8 @@ public class D3DMesh
 
                 stream.BeginBlock();
                 T3MeshData objMeshData = obj.MeshData;
-                T3Kit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
-                T3Kit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
+                Toolkit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
+                Toolkit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
                 stream.EndBlock();
             }
         }
@@ -454,105 +457,105 @@ public class D3DMesh
                 if (obj.Flags.Has((int)MeshFlags.HasIndexBuffer))
                 {
                     var buffer = new T3IndexBuffer();
-                    T3Kit.Instance.GetSerializer<T3IndexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3IndexBuffer>().Serialize(ref buffer, stream);
                     obj.T3IndexBuffer = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasPosStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[0] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasNormStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[1] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasSmoothNormStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[2] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasBlendWeightStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[3] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasBlendIdxStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[4] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasUV1Stream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[5] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasUV2Stream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[6] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasUV3Stream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[7] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasUV4Stream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[8] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasTangentStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[9] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasColorStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[10] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.Unknown))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[11] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasInterleavedStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[12] = buffer;
                 }
 
                 if (obj.Flags.Has((int)MeshFlags.HasSoftwareSkinningStream))
                 {
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
                     obj.T3VertexBuffers[13] = buffer;
                 }
                 // Read Index Buffer
@@ -602,7 +605,7 @@ public class D3DMesh
                 if (hasIndexBuffer)
                 {
                     var buffer = new T3IndexBuffer();
-                    T3Kit.Instance.GetSerializer<T3IndexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3IndexBuffer>().Serialize(ref buffer, stream);
                     obj.T3IndexBuffer = buffer;
                 }
 
@@ -623,7 +626,7 @@ public class D3DMesh
                         continue;
 
                     var buffer = new T3VertexBuffer();
-                    T3Kit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
+                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
 
                     obj.T3VertexBuffers[i] = buffer;
                 }
@@ -639,12 +642,14 @@ public class D3DMesh
 
             if (stream is MetaStreamReader streamReader)
             {
-                obj.InternalResources = new PropertySet();
+                obj.InternalResources = [];
 
+                // Part of DC Array
                 int numRes = streamReader.ReadInt32();
 
                 for (var i = 0; i < numRes; i++)
                 {
+                    // Handle name?
                     Symbol symbol = streamReader.ReadSymbol();
                     MetaClassType typeSymbol = streamReader.ReadMetaClassType();
 
@@ -652,13 +657,21 @@ public class D3DMesh
 
                     object? propertyValue = null;
 
-                    T3Kit.Instance.GetSerializer(typeSymbol.LinkingType)
+                    Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
                         .PreSerialize(ref propertyValue, stream, typeSymbol);
-                    T3Kit.Instance.GetSerializer(typeSymbol.LinkingType)
+                    Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
                         .Serialize(ref propertyValue, stream);
 
-                    obj.InternalResources.Properties.Add(symbol,
-                        new PropertySet.PropertyEntry(propertyValue, typeSymbol));
+                    var objHandle = new HandleBase
+                    {
+                        ObjectInfo =
+                        {
+                            ObjectName = symbol,
+                            Type = typeSymbol
+                        }
+                    };
+                    
+                    obj.InternalResources.Add(objHandle);
 
                     stream.EndBlock();
                 }
@@ -729,9 +742,9 @@ public class D3DMesh
     public PropertySet? GetMaterialPropertySet(int index)
     {
         var count = 0;
-        foreach (PropertySet.PropertyEntry f in InternalResources.Properties.Values)
+        foreach (HandleBase? handle in InternalResources)
         {
-            if (f.Value is not PropertySet pSet)
+            if (handle.ObjectInfo.HandleObject is not PropertySet pSet)
                 continue;
 
             if (count == index)
@@ -744,10 +757,15 @@ public class D3DMesh
 
         return null;
     }
-    
+
+    private object GetInternalResource(Symbol symbol)
+    {
+        return InternalResources.Find(res => res.ObjectInfo.ObjectName == symbol).ObjectInfo.HandleObject;
+    }
+
     public Handle<T3Texture>? GetDiffuseTexture(Handle<PropertySet> symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Diffuse Texture");
 
@@ -756,7 +774,7 @@ public class D3DMesh
 
     public Handle<T3Texture>? GetNormalMapTexture(Handle<PropertySet> symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Normal Map Texture");
 
@@ -770,7 +788,7 @@ public class D3DMesh
 
     public Handle<T3Texture>? GetDetailTexture(Handle<PropertySet> symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Detail Texture");
 
@@ -779,7 +797,7 @@ public class D3DMesh
 
     public Handle<T3Texture>? GetSpecularTexture(Handle<PropertySet> symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.ObjectInfo.ObjectName.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Specular Map Texture");
 
@@ -788,7 +806,7 @@ public class D3DMesh
 
     public Handle<T3Texture>? GetDiffuseTexture(Symbol symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Diffuse Texture");
 
@@ -797,7 +815,7 @@ public class D3DMesh
 
     public Handle<T3Texture>? GetNormalMapTexture(Symbol symbol)
     {
-        var propSet = InternalResources.GetProperty(symbol.Crc64) as PropertySet;
+        var propSet = GetInternalResource(symbol) as PropertySet;
 
         object? prop = propSet?.GetProperty("Material - Normal Map Texture");
 
@@ -827,9 +845,9 @@ public class D3DMesh
     public List<Handle<T3Texture>> GetDiffuseTextures()
     {
         List<Handle<T3Texture>> handles = [];
-        foreach (PropertySet.PropertyEntry f in InternalResources.Properties.Values)
+        foreach (HandleBase? obj in InternalResources)
         {
-            if (f.Value is not PropertySet pSet)
+            if (obj.ObjectInfo.HandleObject is not PropertySet pSet)
                 continue;
 
             object? prop = pSet.GetProperty("Material - Diffuse Texture");
@@ -846,9 +864,9 @@ public class D3DMesh
     public List<Handle<T3Texture>> GetNormalTextures()
     {
         List<Handle<T3Texture>> handles = [];
-        foreach (PropertySet.PropertyEntry f in InternalResources.Properties.Values)
+        foreach (HandleBase? obj in InternalResources)
         {
-            if (f.Value is not PropertySet pSet)
+            if (obj.ObjectInfo.HandleObject is not PropertySet pSet)
                 continue;
 
             object? prop = pSet.GetProperty("Material - Normal Space");

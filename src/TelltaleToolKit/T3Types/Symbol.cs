@@ -33,17 +33,14 @@ public class Symbol
     /// <returns></returns>
     public static ulong GetCrc64(string? symbol)
     {
-        if (symbol == null)
-        {
-            return 0;
-        }
-
-        return System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
+        return symbol == null
+            ? 0
+            : System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
     }
 
     public override string ToString()
         => !string.IsNullOrEmpty(SymbolName) ? SymbolName : $"{Crc64:X}";
-    
+
     // Equality & hashing so different Symbol instances with the same Crc64 are equal keys in dictionaries
     public override bool Equals(object? obj) => Equals(obj as Symbol);
 

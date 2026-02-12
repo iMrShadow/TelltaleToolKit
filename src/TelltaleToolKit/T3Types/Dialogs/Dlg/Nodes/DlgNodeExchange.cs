@@ -60,16 +60,16 @@ public class DlgNodeExchange : IDlgNode
                 if ((obj.DlgNode.Flags.Data & 1) != 0)
                 {
                     var notes = new NoteCollection();
-                    TTK.PreSerialize(ref notes, stream);
-                    TTK.Serialize(ref notes, stream);
+                    stream.PreSerialize(ref notes);
+                    stream.Serialize(ref notes);
                     obj.Notes = notes;
                 }
 
                 if ((obj.DlgNode.Flags.Data & 2) != 0)
                 {
                     var lines = new DlgLineCollection();
-                    TTK.PreSerialize(ref lines, stream);
-                    TTK.Serialize(ref lines, stream);
+                    stream.PreSerialize(ref lines);
+                    stream.Serialize(ref lines);
                     obj.Lines = lines;
                 }
             }

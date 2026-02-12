@@ -75,14 +75,14 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
 
             if (stream is MetaStreamReader streamReader)
             {
-                var folderCount = streamReader.ReadInt32();
+                int folderCount = streamReader.ReadInt32();
                 obj.Folders.Capacity = folderCount;
 
                 for (var i = 0; i < folderCount; i++)
                 {
                     var folder = new DlgFolder();
-                    TTK.PreSerialize(ref folder, stream);
-                    TTK.Serialize(ref folder, stream);
+                    stream.PreSerialize(ref folder);
+                    stream.Serialize(ref folder);
                     obj.Folders.Add(folder);
                 }
 
@@ -91,7 +91,7 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                 for (var i = 0; i < nodeCount; i++)
                 {
                     MetaClassType type = streamReader.ReadMetaClassType();
-                    MetaClassSerializer metaClassSerializer = T3Kit.Instance.GetSerializer(type.LinkingType);
+                    MetaClassSerializer metaClassSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object node = null!;
                     metaClassSerializer.PreSerialize(ref node, stream);

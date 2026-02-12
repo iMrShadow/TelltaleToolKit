@@ -52,14 +52,14 @@ public class DialogBase
             {
                 if (obj.HasStyleGuides)
                 {
-                    T3Kit.Instance.GetSerializer<List<StyleGuideRef>>().Serialize(ref obj.StyleGuideRefs, stream);
+                    Toolkit.Instance.GetSerializer<List<StyleGuideRef>>().Serialize(ref obj.StyleGuideRefs, stream);
                 }
             }
             else if (stream is MetaStreamReader streamReader)
             {
                 if (obj.HasStyleGuides)
                 {
-                    T3Kit.Instance.GetSerializer<List<StyleGuideRef>>().Serialize(ref obj.StyleGuideRefs, stream);
+                    Toolkit.Instance.GetSerializer<List<StyleGuideRef>>().Serialize(ref obj.StyleGuideRefs, stream);
                 }
             }
         }

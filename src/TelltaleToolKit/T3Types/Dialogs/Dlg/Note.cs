@@ -63,8 +63,8 @@ public class Note : IGenerator, IOwner
                 for (var i = 0; i < numEntries; i++)
                 {
                     Entry? entry = null;
-                    TTK.PreSerialize(ref entry, stream);
-                    TTK.Serialize(ref entry, stream);
+                    stream.PreSerialize(ref entry);
+                    stream.Serialize(ref entry);
                     obj.Entries.Add(entry);
                 }
             }

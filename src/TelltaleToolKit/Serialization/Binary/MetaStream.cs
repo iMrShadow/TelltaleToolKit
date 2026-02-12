@@ -26,9 +26,9 @@ public abstract class MetaStream : IDisposable
         new() // Async section
     ];
 
-    protected internal MetaStreamConfiguration Configuration { get; set; } = new();
+    public MetaStreamConfiguration Configuration { get; set; } = new();
 
-    protected GameContext? Context { get; set; }
+    protected Workspace? Context { get; set; }
 
     protected Stream UnderlyingStream { get; set; } = null!;
 
@@ -100,26 +100,7 @@ public abstract class MetaStream : IDisposable
     public abstract MetaClass? GetMetaClass(Type type);
 
     public abstract MetaClass? GetMetaClass(Symbol symbol);
-
-    public void Serialize<T>(ref T obj) where T : new()
-    {
-        MetaClassSerializer<T> serializer = T3Kit.Instance.GetSerializer<T>();
-        serializer.PreSerialize(ref obj, this);
-        serializer.Serialize(ref obj, this);
-    }
-
-    public void Serialize(ref object? obj)
-    {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
-
-        MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(obj.GetType());
-        serializer.PreSerialize(ref obj, this);
-        serializer.Serialize(ref obj, this);
-    }
-
+    
     /// <summary>
     /// Serializes the specified boolean value.
     /// </summary>

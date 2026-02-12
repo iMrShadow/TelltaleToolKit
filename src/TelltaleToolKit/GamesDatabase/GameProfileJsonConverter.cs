@@ -3,23 +3,24 @@ using System.Text.Json.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility;
+using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit.GamesDatabase;
 
 /// <summary>
-/// Custom JSON converter for <see cref="GameDescriptor"/> objects.
+/// Custom JSON converter for <see cref="GameProfile"/> objects.
 /// Handles conversion between JSON and game registry entries.
 /// </summary>
-public class GameRegistryJsonConverter : JsonConverter<GameDescriptor>
+public class GameRegistryJsonConverter : JsonConverter<GameProfile>
 {
     /// <summary>
-    /// Reads and converts the JSON to a <see cref="GameDescriptor"/> object.
+    /// Reads and converts the JSON to a <see cref="GameProfile"/> object.
     /// </summary>
     /// <param name="reader">The reader to read from.</param>
     /// <param name="typeToConvert">The type of object to convert.</param>
     /// <param name="options">Serializer options.</param>
-    /// <returns>The converted <see cref="GameDescriptor"/> object.</returns>
-    public override GameDescriptor Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    /// <returns>The converted <see cref="GameProfile"/> object.</returns>
+    public override GameProfile Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using JsonDocument doc = JsonDocument.ParseValue(ref reader);
         JsonElement obj = doc.RootElement;
@@ -35,13 +36,13 @@ public class GameRegistryJsonConverter : JsonConverter<GameDescriptor>
         bool enableOodleCompression = obj.GetProperty("enableOodleCompression").GetBoolean();
 
         // Attempt to resolve the blowfish key from known enum values. If not, use the string as a key.
-        if (Enum.TryParse(blowfishKey, out T3BlowfishKey myStatus))
+        if (Enum.TryParse(blowfishKey, out T3BlowfishKey enumBlowfishKey))
         {
-            blowfishKey = myStatus.ToString();
+            blowfishKey = enumBlowfishKey.GetBlowfishKey();
         }
 
         // Create and return a new GameDescriptor instance with the extracted properties.
-        return new GameDescriptor
+        return new GameProfile
         {
             Name = name,
             Description = description,
@@ -55,12 +56,12 @@ public class GameRegistryJsonConverter : JsonConverter<GameDescriptor>
     }
 
     /// <summary>
-    /// Writes a <see cref="GameDescriptor"/> object as JSON.
+    /// Writes a <see cref="GameProfile"/> object as JSON.
     /// </summary>
     /// <param name="writer">The <see cref="Utf8JsonWriter"/> to write to.</param>
-    /// <param name="value">The <see cref="GameDescriptor"/> value to write.</param>
+    /// <param name="value">The <see cref="GameProfile"/> value to write.</param>
     /// <param name="options">Serializer options.</param>
-    public override void Write(Utf8JsonWriter writer, GameDescriptor value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, GameProfile value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         writer.WriteString("name", value.Name);

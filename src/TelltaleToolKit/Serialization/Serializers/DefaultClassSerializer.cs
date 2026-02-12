@@ -50,7 +50,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         MetaClass? description = stream.GetMetaClass(typeof(T));
 
         // Console.WriteLine($"Reading {typeof(T).Name}.");
-        if (description is null || !description.IsSerialized())
+        if (description is null || !description.ClassType.IsSerialized())
         {
             if (description is null)
                 Console.WriteLine("No description available");
@@ -73,7 +73,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
             object? value = cached.Getter(ref obj);
 
-            MetaClassSerializer serializer = T3Kit.Instance.GetSerializer(cached.Property.PropertyType);
+            MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(cached.Property.PropertyType);
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream);
 
@@ -124,7 +124,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         {
             throw new MetaMemberNotFoundException(
                 $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Symbol)), out var cachedAlt))
+            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Symbol)), out CachedMember cachedAlt))
                 return cachedAlt;
         }
 

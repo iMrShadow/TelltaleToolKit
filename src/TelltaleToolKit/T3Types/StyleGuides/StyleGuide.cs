@@ -62,8 +62,8 @@ public class StyleGuide
                     for (var i = 0; i < values; i++)
                     {
                         var child = new ActingPaletteClass();
-                        TTK.PreSerialize<ActingPaletteClass>(ref child, stream);
-                        TTK.Serialize<ActingPaletteClass>(ref child, stream);
+                        stream.PreSerialize<ActingPaletteClass>(ref child);
+                        stream.Serialize<ActingPaletteClass>(ref child);
                         obj.PaletteClassesPtrs.Add(child);
                     }
                 }

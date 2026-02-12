@@ -91,8 +91,7 @@ public class T3Texture
 
     [MetaMember("mDetailMapBrightness")]
     public float DetailMapBrightness { get; set; }
-
-
+    
     public byte[] DdsTextureData { get; set; } = [];
 
     public byte[] TplTextureData { get; set; } = [];
@@ -274,8 +273,7 @@ public class T3Texture
     // List<PrimitiveInstance>? AuxData { get; set; } // The auxiliary data (appears after Poker Night 2).
 
     // This is strict to legacy d3dtx versions.
-
-
+    
     public void Decrypt(Blowfish blowfish)
     {
         if (!IsEncrypted)
@@ -374,12 +372,12 @@ public class T3Texture
                     };
 
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    T3Kit.Instance.GetSerializer<StreamHeader>().Serialize(ref streamHeader, stream);
+                    Toolkit.Instance.GetSerializer<StreamHeader>().Serialize(ref streamHeader, stream);
 
                     foreach (RegionStreamHeader region in obj.RegionHeaders)
                     {
                         RegionStreamHeader regionStreamHeader = region;
-                        T3Kit.Instance.GetSerializer<RegionStreamHeader>()
+                        Toolkit.Instance.GetSerializer<RegionStreamHeader>()
                             .Serialize(ref regionStreamHeader, stream);
                     }
 
@@ -413,7 +411,7 @@ public class T3Texture
                 if (classDescription.ContainsMember("mVersion"))
                 {
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    T3Kit.Instance.GetSerializer<StreamHeader>()?.Serialize(ref streamHeader, stream);
+                    Toolkit.Instance.GetSerializer<StreamHeader>()?.Serialize(ref streamHeader, stream);
                     obj.RegionMainHeader = streamHeader;
 
                     obj.RegionHeaders = new List<RegionStreamHeader>(streamHeader.RegionCount);
@@ -421,7 +419,7 @@ public class T3Texture
                     for (var i = 0; i < streamHeader.RegionCount; i++)
                     {
                         var regionStreamHeader = new RegionStreamHeader();
-                        T3Kit.Instance.GetSerializer<RegionStreamHeader>()
+                        Toolkit.Instance.GetSerializer<RegionStreamHeader>()
                             .Serialize(ref regionStreamHeader, stream);
                         obj.RegionHeaders.Add(regionStreamHeader);
                     }
@@ -435,7 +433,7 @@ public class T3Texture
                         for (var i = 0; i < obj.RegionMainHeader.AuxDataCount; i++)
                         {
                             var aux = new AuxiliaryData();
-                            T3Kit.Instance.GetSerializer<AuxiliaryData>().Serialize(ref aux, stream);
+                            Toolkit.Instance.GetSerializer<AuxiliaryData>().Serialize(ref aux, stream);
                             obj.AuxilaryData.Add(aux);
                         }
 

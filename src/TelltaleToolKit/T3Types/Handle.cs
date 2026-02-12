@@ -4,12 +4,12 @@ using TelltaleToolKit.Serialization.Binary;
 
 namespace TelltaleToolKit.T3Types;
 
-public struct HandleObjectInfo
+public class HandleObjectInfo
 {
-    [MetaMember("mObjectName")]
-    public Symbol ObjectName;
-    [MetaMember("mFlags")]
+    public Symbol ObjectName = new Symbol(0);
     public Flags Flags;
+    public MetaClassType Type;
+    public object HandleObject;
 
     public override string ToString()
     {
@@ -17,14 +17,10 @@ public struct HandleObjectInfo
     }
 }
 
-// public class HandleLock<T> : HandleBase
-// {
-// }
-
 public class HandleBase
 {
     // public Symbol ObjectName;
-    public HandleObjectInfo ObjectInfo;
+    public HandleObjectInfo ObjectInfo = new HandleObjectInfo();
 
     [MetaClassSerializerGlobal(typeof(HandleBaseSerializer))]
     public class HandleBaseSerializer : MetaClassSerializer<HandleBase>
@@ -36,18 +32,19 @@ public class HandleBase
                 obj = new HandleBase();
             }
         }
-        
+
         public override void Serialize(ref HandleBase obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Configuration.Version is MetaStreamVersion.Msv4 or MetaStreamVersion.Msv5
+                or MetaStreamVersion.Msv6)
             {
-                // stream.Serialize(ref (object)handle.ObjectInfo.mObjectName, description);
-                streamWriter.Write(obj.ObjectInfo.ObjectName);
+                stream.Serialize(ref obj.ObjectInfo.ObjectName);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else
             {
-                obj.ObjectInfo.ObjectName = streamReader.ReadSymbol();
-                // Console.WriteLine(obj.ObjectInfo.ObjectName.Crc64);
+                var name = string.Empty;
+                stream.Serialize(ref name);
+                obj.ObjectInfo.ObjectName = new Symbol(name);
             }
         }
     }
@@ -57,24 +54,27 @@ public class HandleBase
         return $"Handle: {ObjectInfo}";
     }
 }
+
 [MetaClassSerializerGlobal(typeof(HandleSerializer<>), typeof(Handle<>))]
 public class Handle<T> : HandleBase
 {
+}
 
+public class HandleLock<T> : Handle<T> 
+{
 }
 
 public class HandleSerializer<T> : MetaClassSerializer<Handle<T>>
 {
-    
     public override void PreSerialize(ref Handle<T> obj, MetaStream stream, MetaClassType? type = null)
     {
         obj = new Handle<T>();
     }
-    
+
     public override void Serialize(ref Handle<T> obj, MetaStream stream)
     {
         HandleBase handle = obj;
-        T3Kit.Instance.GetSerializer<HandleBase>().PreSerialize(ref handle, stream);
-        T3Kit.Instance.GetSerializer<HandleBase>().Serialize(ref handle, stream);
+        Toolkit.Instance.GetSerializer<HandleBase>().PreSerialize(ref handle, stream);
+        Toolkit.Instance.GetSerializer<HandleBase>().Serialize(ref handle, stream);
     }
 }
