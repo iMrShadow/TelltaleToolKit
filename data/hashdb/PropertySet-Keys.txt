@@ -1,3 +1,4 @@
+
 __T3LegacyMaterialParams__
 __T3MaterialData__
 __T3MaterialExpressionTree__
@@ -8,6 +9,8 @@ _shadow
 : Traditional Freewalk
 ***dialog_text***
 # of Quick Time Events
+101 - chapter 02 - Locked
+AA
 AbsoluteNode
 Account Link Join Attempt
 Account Link Join Cancel
@@ -17,18 +20,25 @@ Account Link Sign In Attempt
 Account Link Sign In Cancel
 Account Link Sign In Error
 Account Link Sign In Success
+Act Tuning Play Anim Or Chore- Intensity- Contribution Multiplier Range
+Act Tuning Play Anim Or Chore- Intensity- Scale Multiplier Range
+Act Tuning Play Anim Or Chore- Intensity- Time Between Actions Multiplier Range
+Act Tuning Play Anim Or Chore- Intensity- Validity Range
 Acting - Play Between Keyframes
 Acting -Play Between Keyframes
+Acting-Command Pause Default Length
 Action
 Action Enabled
 Action Reset
 ActionTable
 Active Camera
+Active Episode
 Actor Name
 Actor to Agent Map
 ActorMaps
 Add Anims to Both Chore and New Cut
 Add Anims To Chore
+Add Cam Idle to Chore
 Add Camera Anims to Chore
 Add Lighting Rig
 Additional visibility conditions
@@ -37,7 +47,10 @@ After Effects Enabled
 Age Restricted
 Agent
 Agent Map
+agent names
 Agent Props
+Agent Rules - File
+Agent Rules - Force Update
 Agent Source File
 agents
 AI Agent - AI Agent Enable
@@ -112,6 +125,13 @@ Ambient - Previous File
 Ambient - Scene
 Ambient Color
 Ambient On
+Ambient Sound - Controller Scene
+Ambient Sound - Enabled
+Ambient Sound - Fade Time
+Ambient Sound - File
+Ambient Sound - Initial Delay
+Ambient Sound - Pitch
+Ambient Sound - Previous File
 Ambient Track
 AmbientFile
 AmbientVolume
@@ -122,12 +142,16 @@ Animated Lookats Active
 AnimatedPropertyValue
 AO Texture
 app_id
+apply conflict to all
 Arabic
 Archery - Crosshair Offset
 Archery - Hit Target Dialogs
 Archery - Miss Dialog
 Archery - Ray Agent Name
 armorIronChestplate
+Aspect - From
+Aspect - Percent
+Aspect - To
 Aspect Ratio
 Aspect Ratio - Chore
 AsyncSavePrefs
@@ -165,16 +189,39 @@ Audio Version Number
 Authentication SKU
 Authentication Timeout
 Authentication URL
+Auto
+Auto Play - Enabled
 Auto Play - Node List
 Auto Select Agents
+Auto-acted Animation Blending Default
 Auto-acted Animation Fade Time Default
 Auto-acted Animation Post-delay Default
 Auto-acted Animation Pre-delay Default
+Auto-acted Animation Priority Default
+Auto-acted Animation Scale Range Default
+Auto-acted Contribution Scale Range Default
+autosave
 Available
 Available Save Files
 Background Chore
 Background Color
+Background Slot
 Bake As Static
+Balance - Activate Dialog File
+Balance - Activate Dialog Node
+Balance - Activate Prompt Text
+Balance - Activate Target Time
+Balance - Activate Time
+Balance - Balance Chore
+Balance - Balance Prompt Text
+Balance - Centered
+Balance - Centered Target Time
+Balance - Centered Time
+Balance - Do Balance Bump
+Balance - Failure Dialog File
+Balance - Failure Dialog Node
+Balance - Idle Chore
+Balance - Idle Contribution
 bar
 Base Texture
 Base Texture only
@@ -188,6 +235,7 @@ Begin Episode
 Beta Menu - Beta Test Crowd Play
 BGMTransitionNonLoopingSequence
 BGMTransitionTopLevel
+Blending
 Blocking
 Blocks on yields, waits, sleeps, etc.
 bLooping
@@ -213,8 +261,10 @@ Bounding Volume Scaling Factor
 Bounding Volume Type
 Branch Jump
 Brightness
+Brought Clementine To Crawford
 Brush Outline
 Build Startup SubProject
+bUsingJoystick
 Button - Chore Deselect
 Button - Chore Press
 Button - Chore Select
@@ -245,19 +295,35 @@ Button Dispatch Listener - Chore UnSelect
 Button Dispatch Listener - Controlling Button
 Button Mash - Cap Percentage at 1
 Button Mash - Current Percentage
+Button Mash - Currently Mashed
 Button Mash - Enabled
 Button Mash - Max Percentage
+Button Mash - Maximum Decay
 Button Mash - Rate of Decay
 Button Mash - Rate of Increase
 Button Press
 Calculates Value at Cursor
+Cam Direct Control - Current Rot
+Cam Direct Control - Dampening
+Cam Direct Control - Enabled
+Cam Direct Control - Max Contraints
+Cam Direct Control - Min Contraints
+Cam Direct Control - Rotate Relative
+Cam Direct Control - Rotation Speed
 Cam Overlay - Enabled
 Cam Overlay - Scene
 cam_lensKit
 Camera
+Camera - Hidden Agents
 Camera - Last Active
 Camera - Non-TV Field of View Scale
+Camera - Nonselectable Agents
 Camera Blend Enable
+Camera Box - Main Character Only
+Camera Box - OnEnter Camera Name
+Camera Box - OnExit Camera Name
+Camera Box - Player Agent Name
+Camera Box - Runtime Active
 Camera Cut Detection Speed
 Camera Cut Position Threshold
 Camera Cut Rotation Threshold
@@ -277,6 +343,7 @@ CamLightComposer - Rig Light Name Pattern
 CamLightComposer - Show Debug Output
 Can Purchase
 Cast Shadow
+Cast Shadows
 Category
 Cell 0 Color
 Cell 1 Color
@@ -285,6 +352,12 @@ Cell 3 Color
 Cell Blend Mode
 Cell Blend Weight
 Cell Light Blend Mask
+Character - Avatar Agent
+Character - Is Active
+Character - Name
+Character - Player Index to Character
+Character Light Rig Creation Terminating
+Character Light Rig Error
 CharLightComposer - Blocking Chore
 CharLightComposer - Blocking Chore Key Back Left
 CharLightComposer - Blocking Chore Key Back Right
@@ -295,24 +368,41 @@ CharLightComposer - Copy Values From Key Node
 CharLightComposer - Default Light Template Scene
 CharLightComposer - Enabled
 CharLightComposer - Force Camera Zone
+CharLightComposer - Force Key Node Quadrant
 CharLightComposer - Ignore Camera Culling
 CharLightComposer - Live Update Key Node Changes
 CharLightComposer - Node Location
 CharLightComposer - Rotation Amount
 CharLightComposer - Rotation Amount KeyLeft
+CharLightComposer - Scene Shadow Light
+CharLightComposer - Template Scene
 Check in files
 Check out files on update
 Checkpoint
+checkpoint dialog
+Checkpoint Dialog Item
 Chinese
+Choice - Current Side
 Choice - Default
 Choice - Delayed
+Choice - Dialog File
 Choice - Disable Pathing
+Choice - Dlg Node Down
+Choice - Dlg Node Left
+Choice - Dlg Node Right
+Choice - Dlg Node Up
 Choice - Hidden
 Choice - Index
 Choice - Interrupt
+Choice - Reset Reticle
+Choice - Reticle Move Width
 Choice - Skip UI Chores
+Choice - Use Combat UI
+Choice - Use Dual Analog Sticks
+Choice - Use Reticle Drive
 Choice - Verb Node
 Choice - Verb Preset
+Choice Data Tag
 Choice Display Text
 Choice Editor - Use Save Game Values
 Choice Icon
@@ -333,9 +423,16 @@ choices debug 5
 choices debug 6
 choices debug 7
 choices debug 8
+ChoiceTracker - Choices Taken
 Chooser Position
 Chore
 Chore Agent Group Filter Includes Nonskeleton
+Chore Box - Advance Only
+Chore Box - Chore
+Chore Box - Current Percent
+Chore Box - Dampen
+Chore Box - Desired Percent
+Chore Box - Max Percent
 Chore Color - Animation
 Chore Color - Chore
 Chore Color - Language
@@ -382,6 +479,11 @@ Chored Movement - Reverse Controls
 Chored Movement - Slow to Stop
 Chored Movement - Start Time
 Chored Movement Blend Graph Manager
+ChoredMove - Callback End
+ChoredMove - Callback Start
+ChoredMove - Chore Backward
+ChoredMove - Chore Forward
+ChristaOmid Choice
 CinLight - Color
 CinLight - Dimmer
 CinLight - Enabled
@@ -405,6 +507,7 @@ CinRig - Light Agent Key
 CinRig - Light Agent Rim
 CinRig - LOD Active
 CinRig - Shadow Enable
+ClemHouseInt - BabysitterPhase
 Clip Plane - Fair
 Clip Plane - Far
 Clip Plane - Near
@@ -429,6 +532,8 @@ Color on dark
 Color on dark - text
 Color on light
 Color on light - text
+Color Overlay - Chore
+Color Overlay - Scene
 Color Range
 Combat Character - Active Target
 Combat Character - Attack Cooldown Time
@@ -552,6 +657,7 @@ ComputeValue
 Confirm Cancel
 Confirm Dismissed No Selection
 Confirm OK
+conflict action
 Connected
 Console Filter
 Console Last Command
@@ -569,7 +675,9 @@ Constraint - Enabled
 Constraint - Position
 Constraint - Rotation
 Constraints
+ContextMenu - Text to Function Map
 Contribution
+Contribution Range
 Create (Non-Camera) Station Agent
 Create Multiple Lighting Rigs
 Create New Cut
@@ -580,6 +688,7 @@ Credits - End Lines
 Credits - Percent
 Credits Skipped
 Critical Decision
+Enable After Effects
 Crowd Play - Enable Expressions
 Crowd Play - Enable Overlay Info
 Crowd Play - Host Makes Choice
@@ -608,6 +717,7 @@ Crowdplay Stat Share Attempt
 CrowdPlay Stats Fail
 Crowdplay Summary Stat Share Attempt
 Cull Objects
+Current Pane
 Current State
 Current SubProject
 Current Subproject Script
@@ -622,18 +732,32 @@ Cut/Paste Between Editors Warning On
 Cutscene
 Cutscene?
 Cutscenes
+Tool Bar Buttons
+Recent Files:
+ServerData Cache
+Animation Group Preset Names
+Animation Group Dialog Position
 D3D Mesh
 D3D Mesh List
 data
+DataBackupManager - Last Data Upload
 Days Until Rating
 Days Until Reminder
 Death
 Debug - Device Type
+Debug - DrugstoreExtStartFromBrother
+Debug - DrugstoreStartFromWCZombie
 Debug - Enable Cheat Controls
 Debug - Enable Choice Tracker
 Debug - Enable Chore Tracker
 Debug - Enable Interactive Timer
+Debug - Player Move Look Prints
+Debug - PrologueStartFromChoice
+Debug - PrologueStartFromSaveClem
 Debug - Record Shader Preloads
+Debug - Relationship Stats Seed
+Debug - TestZombieBabysitter
+Debug - WoodsStartFromCop
 Debug Menu - Boot To Play - Force
 Debug Menu - Boot To Play - Prevent
 Debug Menu - Fake Age Restricted
@@ -665,6 +789,9 @@ Decal - Scale
 Decal - Size
 Decal - Static
 Decal - Visible Threshold Scale
+Decision Description Status Tag
+Decision Title Tag
+Default
 DEFAULT
 Default Bone Matrix Texture
 Default Branch Background Chore Persist Across Jumps
@@ -688,6 +815,7 @@ Deinterleave Normals
 Delay until instance retires
 DELETE ME
 Demo
+DemoShowSellScreen
 Dependent visibility branch
 Depth
 Depth Of Field - Far
@@ -718,6 +846,9 @@ Dialog - Mode
 Dialog - Postfix Solo Items
 Dialog - Postfix Text Items
 Dialog - String ID
+Dialog Agent - Autoplay Dialog Line
+Dialog Agent - File Primary
+Dialog Agent - File Secondary
 Dialog Branch
 Dialog Choice
 Dialog Choice Time
@@ -725,6 +856,9 @@ Dialog Choice Timeout
 Dialog Chore Look At
 Dialog Item - LookAt
 Dialog Name
+Dialog node - Ambient Line
+Dialog node - Eval Type Only Once
+Dialog node - Weight
 Dialog Project ID
 Dialog Prop Editor Position
 Dialog Resource
@@ -733,6 +867,14 @@ Dialog Tags
 Dialog to Scene Map
 Dialog Tracker Position
 Dialog Tree Editor Position
+Dialog Trigger - Allow Only Once Per Scene
+Dialog Trigger - Dialog File
+Dialog Trigger - Force As Ambient
+Dialog Trigger - Main Character Only
+Dialog Trigger - Off During Cutscenes
+Dialog Trigger - Play Item On Enter
+Dialog Trigger - Play Item On Exit
+Dialog Trigger - Stop All Dialog On Enter
 Dies Off
 Diffuse Only
 Diffuse Texture
@@ -741,12 +883,14 @@ Direct Control Axis - Update
 Directional scene shadows
 Disable development folders
 Disable Jira Tool Server
+Disable Mouse Reticle
 Disable Rounded Keys
 Disable Tutorial
 DisableInCamera
 DiskError-Message
 DiskError-Title
 Display Count
+Display Debug Lookat Data
 Display ID
 Distance Traveled
 DLC
@@ -756,7 +900,7 @@ DLC Installed
 DLC Names
 DLC Purchased
 DLCStatus_Refresh
-dlg_id: 
+dlg_id:
 Dlog
 DLV
 DLV Names
@@ -777,7 +921,15 @@ Download Succeed
 download_expressions
 Downloaded
 Drag - Active Radius
+Drag - Animate Arrow UI
+Drag - Animate Bracket UI
+Drag - Chore
+Drag - Complete on First Motion
+Drag - Completed
+Drag - Controller Reset
+Drag - Controller Time
 Drag - Deactivate on Success
+Drag - Direction
 Drag - Direction Chore Auto Play
 Drag - Direction Chore Pause on Release
 Drag - Direction Down Chore
@@ -793,6 +945,8 @@ Drag - Direction Up Chore
 Drag - Direction Up Enabled
 Drag - Direction Up Success
 Drag - Enabled
+Drag - Ended
+Drag - Exit Dialog Node
 Drag - Gamepad Button
 Drag - Hold Chore
 Drag - Hold Chore Auto Play
@@ -888,6 +1042,7 @@ Editor Color - Selection Marquee
 Editor Color - Sheet Button
 Editor Color - Sheet Caption Background
 Editor Color - Sheet Caption Border
+EE
 Effect Program
 Effect Shader
 Emitter - Debug Render Toggle
@@ -896,6 +1051,7 @@ Emitter - Global Alpha
 Emitter - Inherited Property Keys
 Emitter - Light Group
 Emitter - Lighting Contribution
+Emitter - Lighting Enable
 Emitter - Max Movement Speed
 Emitter - Max Particles
 Emitter - Number of Particles
@@ -914,10 +1070,40 @@ Emitter - Rotation Range X
 Emitter - Rotation Range Y
 Emitter - Rotation Range Z
 Emitter - Synchronized
+Emitters - Effect Scale
+Emitters - Effect Scale Rand
+Emitters - Enabled
+Emitters - Fade Far End
+Emitters - Fade Far Start
+Emitters - Fade Near End
+Emitters - Fade Near Start
+Emitters - Force Linear Depth Write
+Emitters - Global Alpha
+Emitters - Global Speed Weight
+Emitters - Global Tint
+Emitters - Inherit Agent Scale
+Emitters - Lighting Group
+Emitters - Local Position
+Emitters - Local Space
+Emitters - Max Particles
+Emitters - Particle Group
+Emitters - Pre Roll
+Emitters - Render Depth Test
+Emitters - Render Layer
+Emitters - Soft Depth Test
+Emitters - Spawn Burst Duration
+Emitters - Spawn Delay
+Emitters - Spawn Volume Offset
+Emitters - Teleport Threshold
+Emitters - Time Scale
+Emitters - Trigger Enable
 Empty Preference
 Enable Blend Camera Chore
+Enable Brush Outline
 Enable Callbacks For Unchanged Key Sets
 Enable Camera Cuts
+Enable Checkpoints
+Enable Choice Notification
 Enable Death
 Enable Dialog System 2.0
 Enable Embedded Guides
@@ -930,19 +1116,25 @@ Enable Missing Actor in Agent Map prompt on Dialog tool close
 Enable Mouse Reticle
 Enable Outliner Commands
 Enable Path To (script-enforced)
+Enable Win10 Touch Mode
 Enable Pathing
+Enable Reticle Buttons
+Enable Reticle Hint Dots
 Enable Plastic - Art
 Enable Plastic - GameData
 Enable Plastic - Tool
 Enable Reticle Hint Dots
+Enable Reticle Hints
 Enable Rollover Text
 Enable Subtitle Advance
 Enable Subtitles
+Enable Type
 enabled
 Encrypt MetaStreams
 End Episode
 End Position Lerp
 End Scene
+Engine Script
 Engine Shutdown
 English
 Enter Dialog
@@ -979,7 +1171,9 @@ EnvLight - LOD Active
 EnvLight - LOD Behavior
 EnvLight - Mobility
 EnvLight - NPR Band Thresholds
+Enable Height Blending
 EnvLight - NPR Banding
+Gloss Intensity
 EnvLight - Opacity
 EnvLight - Priority
 EnvLight - Radius
@@ -1011,13 +1205,82 @@ EnvLightGroup - Priority
 EnvTile - Light Probe Data
 EnvTile - Reflection Local Enable
 EnvTile - Reflection Texture
+EP 1 - Choices Updated From Server
+EP 1 - Number of choices
+EP 1 - Status Available
+EP 2 - Choices Updated From Server
+EP 2 - Number of choices
+EP 2 - Status Available
+EP 3 - Choices Updated From Server
+EP 3 - Number of choices
+EP 3 - Status Available
+EP 4 - Choices Updated From Server
+EP 4 - Number of choices
+EP 4 - Status Available
+EP 5 - Choices Updated From Server
+EP 5 - Number of choices
+EP 5 - Status Available
+EP 6 - Choices Updated From Server
+EP 6 - Number of choices
+EP 6 - Status Available
 Episode
 Episode - First Script
 Episode - Number
 Episode - Subtitle
+Episode 1
+Episode 101
+Episode 102
+Episode 103
+Episode 104
+Episode 105
+Episode 106
+Episode 2
+Episode 2: Available
+Episode 2: Downloaded
+Episode 2: Installed
+Episode 2: Purchased
+Episode 201
+Episode 202
+Episode 203
+Episode 204
+Episode 205
+Episode 3
+Episode 3: Available
+Episode 3: Downloaded
+Episode 3: Installed
+Episode 3: Purchased
+Episode 301
+Episode 302
+Episode 303
+Episode 304
+Episode 4
+Episode 4: Available
+Episode 4: Downloaded
+Episode 4: Installed
+Episode 4: Purchased
+Episode 401
+Episode 402
+Episode 403
+Episode 404
+Episode 5
+Episode 5: Available
+Episode 5: Downloaded
+Episode 5: Installed
+Episode 5: Purchased
+Episode 6
+Episode 6: Available
+Episode 6: Downloaded
+Episode 6: Installed
+Episode 6: Purchased
 Episode Content
 Episode Count
 Episode in Progress
+Episode M101
+Episode M102
+Episode M103
+Episode M104
+Episode M105
+Episode Select Press
 episode.prop
 Episode1
 Episode101
@@ -1062,6 +1325,7 @@ Exposure
 expression
 Expressions
 Extend time keys to the start and end of each block
+Extended Specular
 Extents Max
 Extents Min
 Eye Look-At Child Properties
@@ -1072,6 +1336,9 @@ Face Accent
 FaceAccent
 facebook_post_url
 facebook_revoke_url
+Fade - Alpha
+Fade - Color
+Fade Time
 FadeDownAndStop
 FadeDownStart
 FadeDownTime
@@ -1081,8 +1348,12 @@ FadeUpTime
 FadeUpVolume
 Fallback input source
 Fallback mode
+FastSlow - Dialog Fast
+FastSlow - Dialog Slow
+FastSlow - Direction
 Field of View
 Field of View Scale
+File Error Log
 Files: *
 Files: aam
 Files: anm
@@ -1106,9 +1377,15 @@ Files: skl
 Files: style
 Files: vox
 Files: wbox
+Fill
+Fill Light
 Final Look At
+Player Position
+Player Effect Distance
+Player Displacing Amount
 Fine
 First Boot
+Idle in Normal Direction
 First Line
 Fix Cut Dialog Node Names
 Fix Pop In Additive Idle Transition
@@ -1126,21 +1403,32 @@ Fog Near Plane
 Fog Override settings
 Font Texture
 Footer-Fixx
+Footstep Box - Agent Name to Footsteps Map
 Footstep Walk Boxes
 Footsteps - Bus
 Footsteps - Foot Nodes
+Footsteps - Footstep Banks
+Footsteps - Material Sound files
 Footsteps - Max Height
 Footsteps - Min Height
 Footsteps - Preload
 Footsteps - Selected Footstep Bank
 Footsteps - Sound File
+Footsteps - Sound Files
 Footsteps - Use Walk Animator
 Footsteps - Volume
 Footsteps - Volume Adjust
+Footsteps2 - Default Footstep Bank
 Footsteps2 - Foot Nodes
+Footsteps2 - Footstep Banks
+Footsteps2 - Max Height
+Footsteps2 - Min Height
+Footsteps2 - Selected Footstep Bank
 Footsteps2 - Volume
 Force End
+Force Load Full Textures
 Force software vertex processing
+Force Trial
 Force Write Linear Depth
 Forward Scale Min Clamp
 Frame Buffer Scale Factor
@@ -1149,6 +1437,7 @@ French
 FrontFace
 Fullscreen anti-aliasing quality
 Fullscreen Size
+FV
 FX AF Agent Rejection Angle
 FX AF Blur Enabled
 FX AF Blur Far Plane Offset
@@ -1272,6 +1561,7 @@ Game - Load Script On End
 Game - Swap Scene On End
 Game Audio Language
 Game Chronology
+Game Language
 Game Language Database
 Game Selectable
 Game Timer - Enable
@@ -1279,17 +1569,21 @@ Game Timer - Scale
 Game Timer - Screen Position
 Game Window Name
 Game Window Position
+Gamma Correct
 Generate Light Composer Blocking Chore
 Generate NPR Lines
 Generated Choices ID
 GenerateLookAtTargets
 Generic Buffer
 German
+GFX - Render Quality
+Global Bump Scale
 Glow
 Glow Clear Color
 Glow Sigma Scale
 Gobo color
 Gobo shadows
+Got Punched
 Graphic Black Alpha
 Graphic Black Far
 Graphic Black Near
@@ -1347,20 +1641,27 @@ Head Turn
 Health - Current
 Health - Delta
 Health - Enabled
+Helped Kill Larry
+Hid Bite
 Hide Subtitles
 High Pass Cutoff
 High Quality Shadow
+HLS - Pause
+HLS - Source
+HLS - Volume
 Host Agent Node
 HTTP
 Http Curl Error
 Http Response Code
 Http URL
+I
 Icon Pane - Chore Hide Highlight
 Icon Pane - Chore Show Highlight
 Icon Pane - Columns
 Icon Pane - First Child
 Icon Pane - Highlight Agent
 Icon Pane - Rows
+Icon Pane Button - Visible
 id
 Idle Agent Remap
 Idle Defaults: Background Slot
@@ -1378,6 +1679,8 @@ Idle Defaults: Idle Slot 9
 Idle Force Start
 Idle Look At
 Idle Scale Range
+Idle Slot
+Idle Transition Time Override
 IgnorePlayerOrigin
 Image
 Image Override
@@ -1390,6 +1693,9 @@ Include In Script Output
 Included On Disc
 Index
 Indirect (Enlighten) Only
+Init - First Interactive Scripts
+Init - First Scene Scripts
+Init - First Scripts
 Input Function
 Input Tracker Position
 Insert Flat Contribution Key
@@ -1397,6 +1703,8 @@ Install Name
 Installed
 Intensity
 Invert Joystick
+Invert X Axis
+Invert Y Axis
 iOS
 iOS Export URL Scheme
 iOS Import URL Scheme
@@ -1413,8 +1721,13 @@ Item Exist Script
 Japanese
 Jesse Armor Choice
 Jump Behavior
+Keep Temp Document JSON Files
 Key
+Key Light
+Key Node - Additional Groups
+Key Node - Blend Time
 Key Node - Chore to Play
+Key Node - Default Light Settings
 Key Node - Enabled
 Key Radius
 label
@@ -1434,6 +1747,7 @@ Legacy Chore Camera Layers
 Legacy Light Limits
 Legacy Use Default Lighting Group
 Legacy Use Old BGM Idle Behavior
+Legacy- Enable Targeted Blocking on Attachments
 Legend - Sound Back
 Lens - Aperture
 Lens - Auto Focus Enabled
@@ -1514,10 +1828,12 @@ Light_C Shadow Intensity
 Light_C Wrap
 LightBlocking A
 LightBlocking B
+LightBlocking Back Lighting On
 LightBlocking C
 LightBlocking LA
 LightBlocking LB
 LightBlocking LC
+LightBlocking On
 LightBlocking Template
 LightColorDiffuse
 LightEnv - Internal Data
@@ -1560,12 +1876,13 @@ Lipsync ignore text
 Lipsync Line End Buffer
 Lipsync Line Start Buffer
 List Button Locked
+LL
 Loading
 Loading Screen Overlay
 Local Ambient Falloff
 Local Ambient Light
 Local Import
-local kAttackChoresMedium = "Combat Jesse - Attack Chores Medium"
+local kAttackChoresMedium = Combat Jesse - Attack Chores Medium
 Local Settings
 Location
 LOD
@@ -1583,6 +1900,7 @@ Logic Listener - Chore Looped
 Logic Listener - Chore Scale Range
 Logic Listener - Logic Key
 Logic Listener - On Logic Change Function
+logic_saveload
 Logical Name
 Look
 Look - Agent
@@ -1595,6 +1913,16 @@ Look - Contribution Fade Speed
 Look - Enabled
 Look - Fade Speed
 Look - FOV Degrees
+Look At - Agent
+Look At - Chore Eyes
+Look At - Chore Head
+Look At - Contribution Fade Speed
+Look At - Enabled
+Look At - FOV (deg)
+Look At - Speed (deg/sec)
+Look-at Active
+Look-at Buffer Angle
+Look-at Fade Time
 Look-at Target Node Name
 Look-at Target Node Offset
 Look-at Target Node Position
@@ -1614,12 +1942,18 @@ Mac Directory Name
 Mac Encryption Key
 Mac Use Encryption
 machineidenfitiers
+Macon St - Gate open
+Macon St - Lock Chopped
+Macon St - TVs On
+Macon St - Window broken
+Main Data Tag
 Make Camera Light Composer
 Make Jira Polish Task
 MakeCharacter
 MakeUseable
 Master Audio Bus Reloaded
 Material
+Material - Alpha Ref
 Material - Bent Normal Map Texture
 Material - Blend Mode
 Material - Brush Normal Map Texture
@@ -1756,6 +2090,7 @@ material_ui_moreFromTelltale_storeImage_storeImageDefault_m - Diffuse Texture
 material_ui_popupMoreOptionsBig_window_popupLegendBackground_M - Visible
 material_ui_popupMoreOptionsWindow_ui_popupLegendBackground_M - Visible
 material_ui_popupWindow_windowOverlay_ui_popupLegendBackground_M - Visible
+material_waterbase - Alpha Fudge
 MaterialParameterFunction
 MaterialTextureFunction
 MaterialTransform2DFunction
@@ -1764,13 +2099,20 @@ Max Bokeh Buffer Amount
 Max Down Angle
 Max Left/Right Angle
 Max Path Length
+max save slots
 Max Up Angle
 Maximum Per Second Angle Increment
 Maya Mouse Sensitivity
+Mega Multi Pack : Purchased
+Menu - Account Link First Splash
 Menu - Account Link Splash Shown Count
 Menu - Account Link Splash Total Count
 Menu - Audio Language Prompt Complete
 Menu - Auto Update Selected Languages Enabled
+Menu - Chose Device
+Menu - Chose Guided
+Menu - Chose Survival
+Menu - Chose Touch
 Menu - Cloud Save Locked
 Menu - Cloud Save Prompt Complete
 Menu - Cloud Save Slot
@@ -1787,8 +2129,23 @@ Menu - Partner Teaser Count Limit
 Menu - Previous Downloaded Language
 Menu - System Language Prompt Complete
 Menu - Triggered Boot To Play
+Menu - Use Platform Data
 Menu - User Gamma Setting
+Menu - User Gamma Setting Set
 Menu - User Name
+Menu - User Selected Language
+Menu - Verbosity
+Menu Button - Activation Dialog Node
+Menu Button - Chore Activate
+Menu Button - Chore Deselect
+Menu Button - Chore Select
+Menu Button - Dialog File
+Menu Button - Sound Activate
+Menu Button - Sound Select
+Menu Control - Group
+Menu Control - Pane
+Menu Control - Pane Index
+Menu Control - Role
 Menu Page Hidden
 Menu Page Shown
 Menu palette
@@ -1811,9 +2168,20 @@ message
 Mip Usage
 Mirror Non-skeletal Animations
 Misc Texture
+MM
 module_camera
+module_decal_material
+module_decal_material.prop
 module_env_light
+module_legacy_material
+module_legacy_material.prop
+module_material
+module_material.prop
+module_particle_material
+module_particle_material.prop
 module_post_effect
+module_post_material
+module_post_material.prop
 module_selectable
 module_selectable.prop
 Most Recent Chore
@@ -1826,6 +2194,7 @@ Most Recent Script
 Most Recent Style
 Motion Blur
 Motion Blur Enabled
+Mouse Sensitivity
 Move Down Dialog
 Move Down Enabled
 Move Down Executing
@@ -1846,15 +2215,30 @@ Move Up Enabled
 Move Up Executing
 Move Up UI Agent
 Move Up UI Scale
+MoveAnimations - Lean Acceleration Forward
+MoveAnimations - Lean Acceleration Reverse
+MoveAnimations - Lean Chore Left
+MoveAnimations - Lean Chore Right
+MoveAnimations - Lean Max Speed
+MoveAnimations - Lean Min Speed
 Movie Capture Options
+Movie looping
+Movie name
+Movie playing
+Movie texture name
+Movie volume scale
 Multiply Alpha Test
 Multiply Inverse Alpha Test
 Mumble Mouth Animation
+MumbleMouth
+Music - Controller Scene
 Music - Enabled
 Music - Fade Time
 Music - File
 Music - ID
 Music - Initial Delay
+Music - Loop End Time
+Music - Loop Start Time
 Music - Looping
 Music - Pitch
 Music - Previous File
@@ -1870,6 +2254,8 @@ NavCam - Animation Max Time
 NavCam - Animation Min Time
 NavCam - Animation Time
 NavCam - Dampen
+NavCam - Direct Control Axis Agent
+NavCam - Direct Control Axis Update
 NavCam - Dynamic Conversation Distance
 NavCam - Dynamic Conversation Reference Agent
 NavCam - Home Position
@@ -1886,10 +2272,13 @@ NavCam - Target Agent Node
 NavCam - Target Offset
 NavCam - Trigger Horizontal Percentage
 NavCam - Trigger Vertical Percentage
+Navigate - Last Cursor Position
 Neck
+Neutral
 New
 News Feed Entries
 Next Video
+NN
 No Anim
 No Group
 No Mover Data in Idles
@@ -1906,13 +2295,16 @@ Note Editor Position
 Note Filter By Category
 Note Text
 Notebook Mode
+Notifications - Shown Multipack Ad
 NPR Line Mesh
 NPR Lines Alpha Bias
 NPR Lines Alpha Falloff
 NPR Lines Bias
 NPR Lines Falloff
 NPR Specular Intensity
+Number of Episodes
 NX Legacy Title ID
+O
 On Shot - Autofire
 On Shot - Decals
 On Shot - Dlg Node
@@ -1946,7 +2338,9 @@ Override Toon Outline Color
 Override Transition Style?
 Override Transition Time?
 P3D EDAT
+Pan Cam - Chore Fade Time
 Pan Cam - Chore Horizontal
+Pan Cam - Chore Priority
 Pan Cam - Chore Vertical
 Pan Cam - Dampening
 Pan Cam - Enabled
@@ -1954,13 +2348,22 @@ Pan Cam - Horiztonal Max Percentage Allowed
 Pan Cam - Horiztonal Min Percentage Allowed
 Pan Cam - Joystick Speed
 Pan Cam - Keep Agent On Screen
+Pan Cam - Keep Agent On Screen Name
+Pan Cam - Keep Camera Level
+Pan Cam - Nav Cam Name
+Pan Cam - Percentage Current Horizontal
+Pan Cam - Percentage Current Vertical
 Pan Cam - Percentage Desired Horizontal
 Pan Cam - Percentage Desired Vertical
 Pan Cam - Percentage Initial Horizontal
 Pan Cam - Percentage Initial Vertical
 Pan Cam - Reset On Enable
+Pan Cam - Reset On Next Start
+Pan Cam - Reset To Initial
 Pan Cam - Reticle Screen Lead
 Pan Cam - Reticle Sticks to World
+Pan Cam - Speed
+Pan Cam - Speed Vertical
 Pan Cam - Vertical Max Percentage Allowed
 Pan Cam - Vertical Min Percentage Allowed
 Pan Cam - Virtual Joystick Speed Horizontal
@@ -1971,6 +2374,7 @@ Panic Meter - Timer
 Panic Meter - Vignette
 Panic Meter - Vignette Chore
 parents
+Parse World Data
 Partially Downloaded
 Particle Mesh
 Particle Texture
@@ -2003,6 +2407,11 @@ PC Directory Name List
 PC Encryption Key
 PC Use Encryption
 Peek - Big Choice
+Peek - Callback Center
+Peek - Callback Down
+Peek - Callback Left
+Peek - Callback Right
+Peek - Callback Up
 Peek - Chore Down
 Peek - Chore Left
 Peek - Chore Right
@@ -2013,15 +2422,37 @@ Peek - Dialog Left
 Peek - Dialog Right
 Peek - Dialog Up
 Peek - Gutter Size
+Peek - Kludge Reverse
+Peek - Noun Down
+Peek - Noun Left
+Peek - Noun Right
+Peek - Noun Up
+Peek - Post-Peek Lookat World Pos
 Peek - Selected Dialog
+Peek - Speed Down Forward
+Peek - Speed Down Reverse
 Peek - Speed Forward Down
 Peek - Speed Forward Left
 Peek - Speed Forward Right
 Peek - Speed Forward Up
+Peek - Speed Left Forward
+Peek - Speed Left Reverse
 Peek - Speed Reverse Down
 Peek - Speed Reverse Left
 Peek - Speed Reverse Right
 Peek - Speed Reverse Up
+Peek - Speed Right Forward
+Peek - Speed Right Reverse
+Peek - Speed Up Forward
+Peek - Speed Up Reverse
+Peek - Sticky Down
+Peek - Sticky Left
+Peek - Sticky Right
+Peek - Sticky Up
+Peek - Verb Down
+Peek - Verb Left
+Peek - Verb Right
+Peek - Verb Up
 percent
 permissions
 Phoneme
@@ -2036,18 +2467,40 @@ Platform ID
 Platform Open URL
 Platform Price
 Platform Purchased
+Platform Server: EP 1 - Available
+Platform Server: EP 1 - Purchased
+Platform Server: EP 2 - Available
+Platform Server: EP 2 - Purchased
+Platform Server: EP 3 - Available
+Platform Server: EP 3 - Purchased
+Platform Server: EP 4 - Available
+Platform Server: EP 4 - Purchased
+Platform Server: EP 5 - Available
+Platform Server: EP 5 - Purchased
+Platform Server: EP 6 - Available
+Platform Server: EP 6 - Purchased
 Platform URL
 Platforms
 Playback Mode
+Player - Anim Turn Left 180
+Player - Anim Turn Left 90
+Player - Anim Turn Right 180
+Player - Anim Turn Right 90
+Player - Chore Turn Left 180
+Player - Chore Turn Left 90
+Player - Chore Turn Right 180
+Player - Chore Turn Right 90
 Player - Current Direction
 Player - Current Speed
 Player - Dialog
 Player - Movement Multiplier
+Player - Navigation Enabled
 Player - Over The Shoulder Control Mode
 Player - Run Anim
 Player - Run Settle Left
 Player - Run Settle Right
 Player - Run Speed
+Player - Run Transition Time
 Player - Use New Walk Animator
 Player - Velocity Direction
 Player - Walk Anim
@@ -2065,8 +2518,10 @@ Portuguese
 Position
 Post - Material
 Post-Choice
+Post-Delay
 PostChoice
 Pre-Choice
+Pre-Delay
 PreChoice
 Preload
 Preload - Scene for Node Chain
@@ -2080,6 +2535,7 @@ Previous Attack
 Previous Game Data Begin
 Previous Game Data End
 Previous Move
+Previous Pane
 Price
 Print Mode Stack
 Priority
@@ -2092,6 +2548,17 @@ Project Generates Procedural Look At Targets
 Project Menu Items
 Project Name
 Project Script
+Project Switcher - Enabled
+Project Switcher - Episode
+Project Switcher - Project Name
+Project Switcher - Season
+Project Switcher - Unlocked Episode 1
+Project Switcher - Unlocked Episode 2
+Project Switcher - Unlocked Episode 3
+Project Switcher - Unlocked Episode 4
+Project Switcher - Unlocked Episode 5
+Project Switcher - Unlocked Episode 6
+Project Switcher - Verbosity
 Projects
 Prompt User System Language
 Prop Name
@@ -2100,6 +2567,7 @@ Property Preset - Presets
 PS3
 PS3 Directory Name
 PS3 EDAT
+PS3 Product ID
 PS3 Save Format
 PS3 Table of Contents Name
 PS3 Table of Contents Version
@@ -2155,6 +2623,7 @@ QTE Prompt - 7
 QTE Prompt - 8
 QTE Prompt - 9
 question
+Queueing
 Randomize All Meshes
 Randomized Choices
 Rate Later Button Text
@@ -2166,7 +2635,9 @@ Rating Title
 Ratings Initalized
 Receive Shadow Intensity
 Receive Shadows
+Receive Shadows Decal
 Receive Shadows Doublesided
+Receive Shadows New
 Recently Updated
 Record Camera
 Recording Enabled
@@ -2179,11 +2650,14 @@ Remaining
 Remap bad bones
 Remap some Ascii chars to unicode smart chars
 Remote Settings
+Render - Antialiasing
 Render - Bokeh Quality
 Render - DOF Quality
 Render - Feature Level
 Render - Glow Quality
+Render - Graphic Black Enabled
 Render - HBAO Platform Preset
+Render - Level Intensity
 Render 3D Alpha
 Render After Anti-Aliasing
 Render After Post-Effects
@@ -2202,6 +2676,7 @@ Render Brush Near Detail Bias
 Render Brush Scale
 Render Brush Scale By Vertex
 Render Camera
+Render CinLight Rig
 Render Clear Color
 Render Color Correction
 Render Color Write
@@ -2214,8 +2689,10 @@ Render Depth Write
 Render Depth Write Alpha
 Render Diffuse Color
 Render Disable Light Bake
+Render Dynamic
 Render Emission Color
 Render Enlighten Force Visible
+Render EnvLight Shadow Cast Enable
 Render Force As Alpha
 Render FX Color Enabled
 Render Global Scale
@@ -2226,8 +2703,10 @@ Render LightEnv Node
 Render LightEnv Reflection Enable
 Render LightEnv Reflection Intensity
 Render Lighting Groups
+Render LOD Scale
 Render Mask Test
 Render Mask Write
+Render Material Time
 Render Pixel Shader
 Render Quality
 Render Receive Shadows Intensity
@@ -2249,24 +2728,42 @@ Render Texture Overrides
 Render Toon Outline
 Render Vertex Shader
 Require Sign in
+Require Sign In
 Required Nodes
 Reset Engine On SubProject Change
 Reset exchange counter on branch
 Reset On Season Switch
+Reset Texture
+Resource Groups
 Resource Out Facial Animation
 resourceSets
 Reticle - Icon
 Reticle - Preset
 Reticle - Resistance
 Reticle - Resistance Curve
+Reticle - Screen Lead
+Reticle - Sticks to World
 Reticle - Text Node
 Reticle Cam - Reticle Position Horizontal
 Reticle Cam - Reticle Position Vertical
 Reticle Choices
+Reticle Facebuttons
 Rich Presence
 Rich Presence - Dialog File
 Rich Presence - String ID
+RichPresence - Dialog Resource
+RichPresence - Items
+RichPresence - Key - Current
+RichPresence - Key - Default
+RichPresence - Key - Menu
+RichPresence - Menu Mode
+RichPresence Item - Name
+RichPresence Item - Xbox ID
+RichPresence Item - Xbox String ID
+RichPresence Item - Xbox String Token
 Right Foot Down
+Rim
+Rim Light
 Rollover Cursor Props
 Rollover Mesh
 Rollover Text
@@ -2277,6 +2774,11 @@ ROM Error Message
 ROM Error Title
 ROM Pack Subdirectory
 ROM Runtime Load
+Room - Current
+Room - Current Room ID
+Room - ID
+Room - Previous
+Room - Previous Room ID
 Root
 Rotate Host Node
 Rotation
@@ -2287,6 +2789,14 @@ Runtime: Visible
 Russian
 Sandbox - User Name
 Sandbox User Name
+Save - Slot
+Save - Slot 1 Checkpoint Episodes
+Save - Slot 1 Checkpoints
+Save - Slot 2 Checkpoint
+Save - Slot 2 Checkpoint Episodes
+Save - Slot 3 Checkpoint
+Save - Slot 3 Checkpoint Episodes
+Save - Split Files
 Save Duration
 Save File Creator Button Executed
 Save File Creator Cancelled
@@ -2299,12 +2809,22 @@ Save File Creator Summary
 Save File Rename
 Save File Select
 Save Game Description
+Save Game File
+Save Game Icon
+Save Game Size
+Save Game Subtitle
+Save Game Title
 Save Overlay
 Save Serial
 Save Space Available
 SaveCount
 Saved
 Saved Game Bundle
+Saved Game Bundle - Season 1
+Saved Game Bundle - Season 2
+Saved Game Bundle - Season 3
+Saved Game Bundle - Season 4
+Saved Game Bundle - Season M
 Saved Game Chapted ID
 Saved Game Chapter ID
 Saved Game Date
@@ -2328,23 +2848,36 @@ SaveLoad - Chapted ID
 SaveLoad - Chapter ID
 SaveLoad - Checkpoint Dialog File
 SaveLoad - Checkpoint Dialog Node
+SaveLoad - Is Enabled
+SaveLoad - Request Autosave
 Saving
 Scale
+Scale Range
+Scaled Frame Buffer Enabled
+Scaled Frame Buffer Factor
 Scene
 Scene - Background Scenes
 Scene - Blending Camera
 Scene - Blending Type
+Scene - Blocking 14x9
+Scene - Blocking 16x9
+Scene - Blocking 3x
+Scene - Blocking 4x3
 Scene - Camera
 Scene - Camera Idle
 Scene - Camera Idle Contribution
 Scene - Chore
+Scene - Chore Play on Close
+Scene - Chore Play on Open
 Scene - Current Camera
 Scene - Dialog
 Scene - Dialog Node
 Scene - FX Scene
 Scene - Last Camera
+Scene - Main Cameras
 Scene - Player
 Scene - Rules
+Scene Agent
 Scene Audio Event Banks
 Scene Audio Reverb
 Scene Audio: Listener
@@ -2363,6 +2896,8 @@ Scene Preloadable
 Scene Properties
 Scene Render Layer
 Scene Render Priority
+Scene Rules - File
+Scene Rules - Force Update
 Scene Time Scale
 Scene: Attach Agent
 Scene: Attach Node
@@ -2392,20 +2927,32 @@ Screenshot resolution
 Script
 Script - Command
 Script - Current
+Script - Current Scene
+Script - Current Scene File
 Script - Dialog Node
 Script - Previous
+Script - Previous Scene
+Script - Previous Scene File
+Script Request System Reset Hardware
 Script to Scene Map
+Season Number
 Season One Pass Menu Purchase
 Season Pass Menu Purchase
 Season Pass Menu Upsell
+Season Pass Price
+Season Pass Text
+Season Pass Updated
 Season Stats Shown
 Seen
+SeenLoadFileScreen
 Select Agents to Chorecord
 Selectable
 Selectable force draw
 Selection Color
 seq
 Sequence Name
+Series Name
+ServerData Cache
 session
 Set Audio Language
 Set Brightness
@@ -2415,6 +2962,7 @@ Set Enable Reticle Hint Dots
 Set Enable Subtitles
 Set FX anti-aliasing
 Set Invert Joystick
+Show Safe Zones
 Set Language
 Set new cut as Master
 Set Render - Bokeh Occlusion Type
@@ -2436,6 +2984,7 @@ Settle Anim - Left Anim
 Settle Anim - Left Foot
 Settle Anim - Right Anim
 Settle Anim - Start Percentage
+SH
 Shadow Cascades
 Shadow Color
 Shadow Map
@@ -2454,7 +3003,9 @@ Skeleton Body
 Skeleton Face
 Skeleton File
 SkeletonPose
+SourceSafe INI Path
 Skip Enter Cutscenes
+Skip Intro Cutscenes
 Skip Licence Check
 Skip License Check
 Skip Offer
@@ -2463,6 +3014,12 @@ Slider - Sound Decrease
 Slider - Sound Increase
 Slider Changed Callback Function
 Slot Name
+Sniper - Fire Delayed
+Sniper - Fire Dialog Node
+Sniper - Hide Back Button
+Sniper - Initial Percentage Horizontal
+Sniper - Initial Percentage Vertical
+Sniper - Miss Dialog Node
 Social
 Social Share action
 Social Share id
@@ -2471,21 +3028,60 @@ Social Share type
 Social Share user message
 Sort Order
 Sound - File
+Sound - Last Ambient Filename
+Sound - Last Music Filename
+Sound - Last Music ID
 Sound - Looping
+Sound - Pause Ambient
+Sound - Pause Music
 Sound - Pitch
 Sound - Stream
 Sound - Volume
+Sound Ambience - Definition
+Sound Ambience - Play
 Sound Ambience - Volume
+Sound Ambience - Wav Filename (Legacy)
+Sound Emitter - Distance Maximum
+Sound Emitter - Distance Minimum
+Sound Emitter - Enable Screen Center Proximity
+Sound Emitter - File
+Sound Emitter - Kill When Out Of Range
+Sound Emitter - Loop
+Sound Emitter - Pitch
+Sound Emitter - Start at Random Time
+Sound Emitter - Volume
+Sound Event Emitter - Event is Looping
+Sound Event Emitter - Event Name
+Sound Event Emitter - Max Distance (Legacy)
+Sound Event Emitter - Min Distance (Legacy)
+Sound Event Emitter - Play
+Sound Event Emitter - Play in 3d (Legacy)
+Sound Event Emitter - Show 3d Spheres
+Sound Event Emitter - Stream (Legacy)
 Sound Event Emitter - Volume
+Sound Event Emitter - Wav File Name (Legacy)
+Sound Event Preload - Common Folders
+Sound Event Preload - Scene Folders
+Sound Listener - Listener Agent
+Sound Listener - Max Move Distance Before Lerp
+Sound Listener - Player Origin
 Sound Mode
+Sound Music - Don't Drift Across Scene Loads
 Sound Music - Event is Looping
 Sound Music - Event Name
 Sound Music - Fade Time
+Sound Music - File
+Sound Music - ID
 Sound Music - Licensed Music
+Sound Music - Looping Enabled
 Sound Music - Play
 Sound Music - Volume
+Sound Music - Wav Filename (Legacy)
+Sound Reverb - Intensity
+Sound Reverb - Snapshot
 Sound Snapshot - Active
 Sound Snapshot - Intensity
+Sound Snapshot - Snapshot Event
 Sound3D: Draw Spheres
 Sound3D: Filename
 Sound3D: Loop
@@ -2497,6 +3093,9 @@ Sound3D: Stream
 Sound3D: Volume
 Sourcesafe Enable
 Spanish
+Spawn - Automatic
+Spawn - Delay
+Spawn - Delay Random Scale
 Speaker - Dialog File
 Speaker - Dialog Node
 Speaker - Mouth Shape
@@ -2541,16 +3140,53 @@ Station - Dialog Exit
 Station - Entered
 Station - Idle Chore
 Station - Previous Station
+StatManager - Achievement - Hidden
+StatManager - Achievement - Server-Side Activated
+StatManager - Condition - Function
+StatManager - Condition - Keys To Pass
+StatManager - Condition - Logic Keys
+StatManager - Condition - Minimum Int for Pass
+StatManager - Condition - Preference Keys
+StatManager - Condition - Reverse Bool Behaviors
+StatManager - Condition - Total Raw Value for All
+StatManager - Image - Achieved
+StatManager - Image - Unachieved
+StatManager - Internal Name
+StatManager - Platform - iOS Game Center - ID
+StatManager - Platform - iOS Game Center - Points
+StatManager - Platform - iOS Game Center - Stat ID
+StatManager - Platform - PS3 - ID
+StatManager - Platform - PS3 - Level
+StatManager - Platform - Steamworks - ID
+StatManager - Platform - Steamworks - Stat ID
+StatManager - Platform - Steamworks - String Token
+StatManager - Platform - Xbox - Achievement ID
+StatManager - Platform - Xbox - Achievement Points
+StatManager - Platform - Xbox - Category
+StatManager - Platform - Xbox - Stat ID
+StatManager - Platform - Xbox - String ID -  Numbers
+StatManager - Platform - Xbox - String ID -  String
+StatManager - Platform - Xbox One - Achievement ID
+StatManager - Server - Pull Updates To Logic
+StatManager - Triggers - Logic Keys
+StatManager - Triggers - Positive Values Only
 Stats Position
 Stats Shown
+StatsManager - Dialog Resource
+StatsManager - Hide System Dialog Box on Award
+StatsManager - Key Table
+StatsManager - Platform - Is XBLA
+StatsManager - Platform - PS3 Small Scope
 Status
 Status - Free Limited Time
 Status - On Sale Limited Time
 Status - Override Map
 StatusTable
+Stop
 Stop Scheduled
 Stop Trigger
 Stopping
+Store Button Press
 Strafe Freewalk
 Streaming Uniform
 String Value
@@ -2591,6 +3227,7 @@ Struggle - Swipe Vector
 Struggle - Type
 Struggle - Won
 Style Base Idle
+Style Base Idle Transition Time
 Style Guide
 Style Guide Idle Transition
 Style Guide Override Map
@@ -2602,6 +3239,11 @@ Style Guide4
 Style Guide5
 Style Idle
 Style Idle Base Transition Time
+Style Idle Props 1
+Style Idle Props 2
+Style Idle Props 3
+Style Idle Props 4
+Style Idle Props 5
 Style Idle Transition In Time Override
 Style Idle Transition Out Time Override
 Style Idle Transition Time
@@ -2617,12 +3259,28 @@ SubProject - Start Script
 SubProject - System Script
 Subtitle
 Subtitle Size
+Subtitles - Align to Bottom
+Subtitles - Allow Advance
+Subtitles - Color
 Subtitles - Force Off
 Subtitles - Force On
+Subtitles - Hidden
+Subtitles - Icon
+Subtitles - Icon Agent Name
+Subtitles - Scene File
+Subtitles - Text Agent Name
+Subtitles - Vector Bottom
+Subtitles - Vector Top
 SubtitleTable
 SummaryDescription
 Suppress post-localization edit warning
 SyncFS ID
+SynchFs Manager: EP 1 - Updated
+SynchFs Manager: EP 2 - Updated
+SynchFs Manager: EP 3 - Updated
+SynchFs Manager: EP 4 - Updated
+SynchFs Manager: EP 5 - Updated
+SynchFs Manager: EP 6 - Updated
 Synthesized
 System Dlg Note Features
 System Dlg Object Features
@@ -2641,6 +3299,7 @@ Tab Panel - On Open Function
 Talia Song Number
 Talking
 Talking Idle
+Talking Idle Transition Time
 Target Agent
 Target Agent Node
 Target Agent Node Offset
@@ -2649,6 +3308,7 @@ Target Node Name
 Target Type
 TChinese
 Telltale Available
+Telltale Resource API Version
 template
 Text
 Text - Simple Text (Zoom In)
@@ -2662,9 +3322,6 @@ Text Background Color
 Text Camera Facing
 Text Color
 Text Confine
-HLS - Source
-HLS - Volume
-HLS - Pause
 Text Depth Test
 Text Dialog 2.0 File
 Text Dialog 2.0 Node Name
@@ -2720,10 +3377,12 @@ TextGeometry
 TextGeometryGroup
 Texture
 Texture Quality
+TH
 Thumbnail
 Time
 Timed Text Min Seconds
 Timed Text Seconds Per Letter
+Timer Enabled
 timPauldrons
 Title
 TitleTable
@@ -2735,16 +3394,19 @@ Toggle Licensed
 Toggle Safe Area
 Toggle Triggers (all)
 Toggle Triggers (ignore cameras)
+Tool Script
 Tool Startup SubProject
 Tooltip Timeout
 Tooltip Touch Timeout
 Toon Outline Color
 Total
 TotalTime
+Touch UI
 Track
 Traditional Chinese
 Traditional Freewalk
 Transient Properties
+Transient Visibility Proxy
 Transition Style Override Value
 Transition Time Override Value
 Treat agents as visible if they are only visible in a shadow view
@@ -2778,10 +3440,42 @@ Turn Dampen
 Turn To Face Scheduled
 Turning To Face
 Type
+U
 UI Button - Chore Hide
 UI Button - Chore Show
 UI Button - Parent
 UI Button - Position
+UI Element - Accessory Agents
+UI Element - Accessory Postfix
+UI Element - Activate Function Name
+UI Element - Current Visibility
+UI Element - Currently Dragged
+UI Element - Currently Enabled
+UI Element - Drag Contain by Volume
+UI Element - Drag Container Name
+UI Element - Drag Enable
+UI Element - Drag Enter Function Name
+UI Element - Drag Leave Function Name
+UI Element - Drag On Move Function Name
+UI Element - Drag Start Function Name
+UI Element - Drop Function Name
+UI Element - Element Down
+UI Element - Element Down Function Name
+UI Element - Element Left
+UI Element - Element Left Function Name
+UI Element - Element Right
+UI Element - Element Right Function Name
+UI Element - Element Up
+UI Element - Element Up Function Name
+UI Element - Enabled
+UI Element - Focus Function Name
+UI Element - Hover Function Name
+UI Element - Idle Chore Prefix
+UI Element - Pointer Only
+UI Element - Tab Index
+UI Element - Tab Stop
+UI Element - Transition Chore Prefix
+UI Element - Visible
 UI Feed Cycle Left
 UI Feed Cycle Right
 UI Lock to Active Cam
@@ -2794,6 +3488,7 @@ UI Struggle Scale
 ui_aspectRatio.prop
 ui_boot
 ui_boot_updatingReason
+ui_controls - Texture
 ui_inventory_numberBackground - Visible
 ui_widgetChores.prop
 Uniform Buffer
@@ -2812,6 +3507,7 @@ Usage Session Execution Time
 Usage Shutdown Count
 Usage Total Execution Time
 Use Agent Metatables
+Use Agent Name
 Use Bokeh
 Use Cursor
 Use Curved Paths In Path To
@@ -2822,6 +3518,7 @@ Use High Quality DOF
 Use Legacy DOF
 Use New Auto Acting
 Use New Quaternion Interpolation
+Use New Selection Dialogs
 Use New Style Idles
 Use Private Node
 Use Radius Zero Pathing
@@ -2831,6 +3528,7 @@ Use Y Axis
 Useable - Auto Play
 Useable - Chore Deselect
 Useable - Chore Select
+Useable - Cursor Props
 Useable - Dialog Select
 Useable - Dies Off
 Useable - Hide On Use
@@ -2846,10 +3544,16 @@ Useable - Token Fade Distance
 Useable - Token Offset
 Useable - Token Props
 Useable - Use Agent
+Useable - Use Item Agent
 Useable - Verb Node
 Useable - Verb Preset
 User Dlg Note Features
 User Dlg Object Features
+User Idle 1
+User Idle 2
+User Idle 3
+User Idle 4
+User Idle 5
 User Rewind
 User space as archive
 User System Language
@@ -2860,6 +3564,10 @@ Validate Voice before Auto-acting
 Value
 Values
 Version Writebacks Enabled
+VFX Group Properties
+VFX Group Properties Index
+VFX Properties
+VFX Properties Index
 Video Cancel Spoiler
 Video End
 Video Link
@@ -2879,6 +3587,8 @@ Viewport Scissor Bottom
 Viewport Scissor Left
 Viewport Scissor Right
 Viewport Scissor Top
+Visibility - Hide in Cameras
+Visibility - Show Only in Cameras
 Visible
 Vita
 Vita Category
@@ -2887,6 +3597,9 @@ Vita Title ID
 Voice Complexity
 Voice Contribution
 Voice Quality
+Voice Speaker - 3D Dialog Event
+Voice Speaker - Dialog Event
+Voice Speaker - Sound Banks
 Voice Time
 Volume Ambient
 Volume Master
@@ -2909,8 +3622,39 @@ Walk Animator - Max Walk Speed
 Walk Animator - Walk Boxes
 Walk Boxes
 Walk Radius
+Walk Speed Scale
+WalkingDead101
+WalkingDead102
+WalkingDead103
+WalkingDead104
+WalkingDead105
+WalkingDead106
+WalkingDead201
+WalkingDead202
+WalkingDead203
+WalkingDead204
+WalkingDead205
+WalkingDead301
+WalkingDead302
+WalkingDead303
+WalkingDead304
+WalkingDead305
+WalkingDead401
+WalkingDead402
+WalkingDead403
+WalkingDead404
+WalkingDeadM101
+WalkingDeadM102
+WalkingDeadM103
+WalkingDeadM104
+WalkingDeadM105
 Watched Next Time On
 WaveformMonitor
+WDM AccountLink Complete
+WDM Update Play Count
+WDM Upsell Session Seen
+WDScene - Default Ambient File
+WDUseableTemp - LockToLine
 Weapon - Can Chain Attack
 Weapon - Continue Attack
 Weapon - Damage
@@ -2956,9 +3700,26 @@ Wind Gust Speed
 Wind Gust Strength
 Wind Idle Spacial Frequency
 Wind Idle Strength
+Wind Receiver - Enabled
+Wind Receiver - Material Names
+Wind Receiver - Use Custom Direction
+Wind Receiver - Use Custom Frequency
+Wind Receiver - Use Custom Noise Speed
+Wind Receiver - Use Custom Noise Strength
+Wind Receiver - Use Custom Strength
+Wind Source - Direction
+Wind Source - Enabled
+Wind Source - Frequency
+Wind Source - Noise Speed
+Wind Source - Noise Strength
+Wind Source - Strength
+Wind Source - Time Interval
 Wind Speed
 Window Size
 Windowed
+windReceiver.prop
+With Ben
+With Christa And Omid
 WorldXYZ
 WorldZ
 X Axis Chore
