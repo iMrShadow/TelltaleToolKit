@@ -4,19 +4,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AnalysisLevel>latest</AnalysisLevel>
-    <LangVersion>12</LangVersion>
+    <LangVersion>13</LangVersion>
     <RootNamespace>TelltaleToolKit</RootNamespace>
     <Version>0.1.0</Version>
     <Title>TelltaleToolKit</Title>
     <Authors>Ivan Panayotov</Authors>
     <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
-    <TargetFramework>net8.0</TargetFramework>
     <PackageTags>telltale; ttarch; ttarch2; modding;</PackageTags>
     <Description>A .NET library for modding games running on the Telltale Tool engine, providing an API to read and write assets and archives. </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>https://github.com/iMrShadow/TelltaleToolKit/releases</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,11 +30,10 @@
   <ItemGroup>
     <PackageReference Include="Base36" Version="1.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
-    <PackageReference Include="Oodle.NET" Version="2.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
-    <PackageReference Include="SubstreamSharp" Version="1.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
   </ItemGroup>
 
 </Project>
