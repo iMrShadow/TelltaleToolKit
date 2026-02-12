@@ -1,0 +1,1213 @@
+[
+    {
+        "type": "Transform",
+        "crc32": 3493138780,
+        "members": [
+            {
+                "name": "mRot",
+                "type": "Quaternion",
+                "flags": 0
+            },
+            {
+                "name": "mTrans",
+                "type": "Vector3",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Procedural_LookAt::Constraint",
+        "crc32": 2070937053,
+        "members": [
+            {
+                "name": "mMaxLeftRight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mMinLeftRight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mMaxUp",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mMinUp",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mLeftRightFixedOffsset",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mUpDownFixedOffsset",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "AnimOrChore",
+        "crc32": 3445786196,
+        "members": [
+            {
+                "name": "mhAnim",
+                "type": "Handle<Animation>",
+                "flags": 0
+            },
+            {
+                "name": "mhChore",
+                "type": "Handle<Chore>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgConditionInput",
+        "crc32": 3635003717,
+        "members": [
+            {
+                "name": "Baseclass_DlgCondition",
+                "type": "DlgCondition",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "TRect<float>",
+        "crc32": 1999893740,
+        "members": [
+            {
+                "name": "left",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "right",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "top",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "bottom",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "PhonemeKey",
+        "crc32": 643193775,
+        "members": [
+            {
+                "name": "mPhoneme",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mFadeInTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mHoldTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mFadeOutTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTargetContribution",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ResourceGroups",
+        "crc32": 2799865443,
+        "members": [
+            {
+                "name": "mGroups",
+                "type": "Map<String,float,less<String>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "TRange<float>",
+        "crc32": 4019342037,
+        "members": [
+            {
+                "name": "min",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "max",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgSystemSettings",
+        "crc32": 2201256133,
+        "members": [
+            {
+                "name": "mPropsMapUser",
+                "type": "DlgObjectPropsMap",
+                "flags": 0
+            },
+            {
+                "name": "mPropsMapProduction",
+                "type": "DlgObjectPropsMap",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ChoreAgent::Attachment",
+        "crc32": 799020592,
+        "members": [
+            {
+                "name": "mbDoAttach",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mAttachTo",
+                "type": "String",
+                "flags": 4096
+            },
+            {
+                "name": "mAttachToNode",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mAttachPos",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mAttachQuat",
+                "type": "Quaternion",
+                "flags": 0
+            },
+            {
+                "name": "mbAttachPreserveWorldPos",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mbLeaveAttachedWhenComplete",
+                "type": "bool",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ActorAgentBinding",
+        "crc32": 3457604738,
+        "members": [
+            {
+                "name": "mActorName",
+                "type": "String",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "AgentMap",
+        "crc32": 62021772,
+        "members": [
+            {
+                "name": "maAgents",
+                "type": "Map<String,AgentMap::AgentMapEntry,less<String>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "BoundingBox",
+        "crc32": 2395633409,
+        "members": [
+            {
+                "name": "mMin",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mMax",
+                "type": "Vector3",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ScriptEnum:ReticleActions",
+        "crc32": 3581553835,
+        "members": [
+            {
+                "name": "mCurValue",
+                "type": "String",
+                "flags": 1152
+            }
+        ]
+    },
+    {
+        "type": "DlgCondition",
+        "crc32": 2839969602,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 48
+            }
+        ]
+    },
+    {
+        "type": "Vector2",
+        "crc32": 713873068,
+        "members": [
+            {
+                "name": "x",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "y",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LocalizationRegistry",
+        "crc32": 3676887578,
+        "members": [
+            {
+                "name": "mFlagIndexMap",
+                "type": "Map<Symbol,int,less<Symbol>>",
+                "flags": 0
+            },
+            {
+                "name": "mFlagIndexMapReverse",
+                "type": "Map<int,Symbol,less<int>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Polar",
+        "crc32": 4194573120,
+        "members": [
+            {
+                "name": "mR",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTheta",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPhi",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ChoreResource::Block",
+        "crc32": 2258583657,
+        "members": [
+            {
+                "name": "mStartTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mEndTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbLoopingBlock",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mScale",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbSelected",
+                "type": "bool",
+                "flags": 1
+            }
+        ]
+    },
+    {
+        "type": "DlgObjID",
+        "crc32": 3933754241,
+        "members": [
+            {
+                "name": "mID",
+                "type": "Symbol",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgObjIDOwner",
+        "crc32": 632100095,
+        "members": [
+            {
+                "name": "mDlgObjID",
+                "type": "DlgObjID",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "Color",
+        "crc32": 1449415578,
+        "members": [
+            {
+                "name": "r",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "g",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "b",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "a",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Symbol",
+        "crc32": 2222126035,
+        "members": [
+            {
+                "name": "mCrc64",
+                "type": "unsigned__int64",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Sphere",
+        "crc32": 2966419603,
+        "members": [
+            {
+                "name": "mCenter",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mRadius",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Flags",
+        "crc32": 3661188781,
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "PropertySet",
+        "crc32": 3807316010,
+        "members": [
+            {
+                "name": "mPropVersion",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mPropertyFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mParentList",
+                "type": "List<Handle<PropertySet>>",
+                "flags": 0
+            },
+            {
+                "name": "mKeyMap",
+                "type": "IntrusiveSet<Symbol,PropertySet::KeyInfo,TagPropertyKeyInfoSet,less<Symbol>>",
+                "flags": 1
+            }
+        ]
+    },
+    {
+        "type": "D3DMesh",
+        "crc32": 1532326700,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mVersion",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 262144
+            },
+            {
+                "name": "mBoundingBox",
+                "type": "BoundingBox",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingSphere",
+                "type": "Sphere",
+                "flags": 0
+            },
+            {
+                "name": "mTriangleSets",
+                "type": "DCArray<D3DMesh::TriangleSet>",
+                "flags": 0
+            },
+            {
+                "name": "mVertexAnimations",
+                "type": "DCArray<D3DMesh::VertexAnimation>",
+                "flags": 0
+            },
+            {
+                "name": "mBonePalettes",
+                "type": "DCArray<DCArray<D3DMesh::PaletteEntry>>",
+                "flags": 0
+            },
+            {
+                "name": "mSkinningData",
+                "type": "DCArray<D3DMesh::SkinningEntry>",
+                "flags": 0
+            },
+            {
+                "name": "mBoneData",
+                "type": "DCArray<D3DMesh::BoneEntry>",
+                "flags": 0
+            },
+            {
+                "name": "mLocalTransformPalettes",
+                "type": "DCArray<DCArray<D3DMesh::LocalTransformEntry>>",
+                "flags": 0
+            },
+            {
+                "name": "mTriangleStripState",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mAnimatedVertexCount",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mTextures",
+                "type": "SArray<DCArray<D3DMesh::Texture>,11>",
+                "flags": 0
+            },
+            {
+                "name": "mDiffuseScale",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mLightMapScale",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mShadowMapScale",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mDetailScale",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mToolAnimatedVertexEntries",
+                "type": "DCArray<D3DMesh::AnimatedVertexEntry>",
+                "flags": 0
+            },
+            {
+                "name": "mToolAnimatedVertexGroupEntries",
+                "type": "Map<Symbol,D3DMesh::AnimatedVertexGroupEntry,less<Symbol>>",
+                "flags": 0
+            },
+            {
+                "name": "mToolProps",
+                "type": "ToolProps",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "Skeleton",
+        "crc32": 1326787262,
+        "members": [
+            {
+                "name": "mEntries",
+                "type": "DCArray<Skeleton::Entry>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Skeleton::Entry",
+        "crc32": 203355012,
+        "members": [
+            {
+                "name": "mJointName",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mParentName",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mParentIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mBoneLength",
+                "type": "float",
+                "flags": 1
+            },
+            {
+                "name": "mLocalPos",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mLocalQuat",
+                "type": "Quaternion",
+                "flags": 0
+            },
+            {
+                "name": "mRestXform",
+                "type": "Transform",
+                "flags": 0
+            },
+            {
+                "name": "mGlobalTranslationScale",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mLocalTranslationScale",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mAnimTranslationScale",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mResourceGroupMembership",
+                "type": "Map<String,float,less<String>>",
+                "flags": 0
+            },
+            {
+                "name": "mConstraints",
+                "type": "BoneContraints",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "BoneContraints",
+        "crc32": 2011802003,
+        "members": [
+            {
+                "name": "mBoneType",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mHingeAxis",
+                "type": "Vector3",
+                "flags": 0
+            },
+            {
+                "name": "mAxisRange",
+                "type": "SArray<TRange<float>,3>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "D3DMesh::TriangleSet",
+        "crc32": 3526165015,
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 262144
+            },
+            {
+                "name": "mBonePaletteIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mLocalTransformPaletteIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mLocalTransformIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mMinVertIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mMaxVertIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mStartIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mNumPrimitives",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingBox",
+                "type": "BoundingBox",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingSphere",
+                "type": "Sphere",
+                "flags": 0
+            },
+            {
+                "name": "mTxIndex",
+                "type": "SArray<int,11>",
+                "flags": 0
+            },
+            {
+                "name": "mTriStrips",
+                "type": "DCArray<unsignedshort>",
+                "flags": 0
+            },
+            {
+                "name": "mNumTotalIndices",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mfBumpHeight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfDetailBumpHeight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfEccentricity",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mSpecularColor",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mAmbientColor",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mToonOutlineColor",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mToonOutlineInvertColor",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mToonOutlineSize",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mToonMaxZConstOutlineSize",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mToonMinZConstOutlineSize",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mGlowIntensity",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mReceiveShadowIntensity",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mAlphaMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mfReflectivity",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mToonShades",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mUVGenMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mUVScreenSpaceScaling",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mSpecularOnAlpha",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mSubsurfaceScateringRadius",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mDiffuseColor",
+                "type": "Color",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "D3DMesh::PaletteEntry",
+        "crc32": 3674830062,
+        "members": [
+            {
+                "name": "mBoneName",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingBox",
+                "type": "BoundingBox",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingSphere",
+                "type": "Sphere",
+                "flags": 0
+            },
+            {
+                "name": "mNumVerts",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3Texture",
+        "crc32": 1983436093,
+        "members": [
+            {
+                "name": "mVersion",
+                "type": "int",
+                "flags": 32
+            },
+            {
+                "name": "mSamplerState",
+                "type": "T3SamplerStateBlock",
+                "flags": 0
+            },
+            {
+                "name": "mPlatform",
+                "type": "EnumPlatformType",
+                "flags": 0
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mImportName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mImportScale",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mToolProps",
+                "type": "ToolProps",
+                "flags": 32
+            },
+            {
+                "name": "mNumMipLevels",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "mWidth",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "mHeight",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "mSurfaceFormat",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mResourceUsage",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mType",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mNormalMapFormat",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mHDRLightmapScale",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mToonGradientCutoff",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mAlphaMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mColorMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mUVOffset",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mUVScale",
+                "type": "Vector2",
+                "flags": 0
+            },
+            {
+                "name": "mNumMipLevelsAllocated",
+                "type": "unsignedint",
+                "flags": 1
+            },
+            {
+                "name": "mNumSurfacesRequested",
+                "type": "unsignedint",
+                "flags": 1
+            },
+            {
+                "name": "mNumSurfacesRequired",
+                "type": "unsignedint",
+                "flags": 1
+            },
+            {
+                "name": "mNumSurfacesLoaded",
+                "type": "unsignedint",
+                "flags": 1
+            },
+            {
+                "name": "mToonRegions",
+                "type": "DCArray<T3ToonGradientRegion>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "D3DMesh::Texture",
+        "crc32": 666610591,
+        "members": [
+            {
+                "name": "mName",
+                "type": "Handle<T3Texture>",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 262144
+            },
+            {
+                "name": "mNameSymbol",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingBox",
+                "type": "BoundingBox",
+                "flags": 0
+            },
+            {
+                "name": "mBoundingSphere",
+                "type": "Sphere",
+                "flags": 0
+            },
+            {
+                "name": "mMaxObjAreaPerUVArea",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3IndexBuffer",
+        "crc32": 3740226422,
+        "members": [
+            {
+                "name": "mFormat",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mNumIndicies",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mUsage",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3VertexBuffer",
+        "crc32": 2687948751,
+        "members": [
+            {
+                "name": "mNumVerts",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mVertSize",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mType",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mUsage",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mVertexComponents",
+                "type": "SArray<T3VertexComponent,13>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3VertexComponent",
+        "crc32": 2889734205,
+        "members": [
+            {
+                "name": "mOffset",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "mCount",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "mType",
+                "type": "int",
+                "flags": 64
+            }
+        ]
+    },
+    {
+        "type": "T3SamplerStateBlock",
+        "crc32": 3591471850,
+        "members": [
+            {
+                "name": "mData",
+                "type": "unsignedint",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3Texture::StreamHeader",
+        "crc32": 4285233909,
+        "members": [
+            {
+                "name": "mRegionCount",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mAuxDataCount",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mTotalDataSize",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3Texture::RegionStreamHeader",
+        "crc32": 3260491271,
+        "members": [
+            {
+                "name": "mMipIndex",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mMipCount",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mDataSize",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mPitch",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "EnumPlatformType",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    }
+]
