@@ -8,7 +8,7 @@ public sealed class MetaStreamWriter : MetaStream
 {
     public MetaStreamWriter(Stream inputStream, Workspace workspace) : this(inputStream, workspace.DefaultMetaStreamConfig)
     {
-        Context = workspace;
+        Workspace = workspace;
     }
 
     public MetaStreamWriter(Stream inputStream, MetaStreamConfiguration configuration)
@@ -102,7 +102,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.LinkingType == type);
         }
 
-        return Context?.GetMetaClassDescription(type);
+        return Workspace?.GetMetaClassDescription(type);
     }
 
     public override MetaClass? GetMetaClass(Symbol symbol)
@@ -113,7 +113,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.Symbol.Crc64 == symbol.Crc64);
         }
 
-        return Context?.GetMetaClassDescription(symbol);
+        return Workspace?.GetMetaClassDescription(symbol);
     }
 
     public override void Serialize(ref bool value) => Writer.Write(value ? '1' : '0');

@@ -27,7 +27,7 @@ public class Workspace
     }
 
     /// <summary>
-    /// Gets the game descriptor for this workspace.
+    /// Gets the game profile for this workspace.
     /// </summary>
     public GameProfile Profile { get; }
 

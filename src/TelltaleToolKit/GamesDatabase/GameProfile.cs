@@ -67,7 +67,7 @@ public sealed class GameProfile
     
     /// <summary>
     /// Identifier (name) of the metaclass database used for resolving MetaClass definitions for this game.
-    /// The value is a slug title from the already existing game descriptors.
+    /// The value is a slug title from the already existing game profiles.
     /// By default, this value is the same as <see cref="Id"/>. Use this property to override the database name
     /// when multiple games share a common metaclass database, or when the metaclass DB is stored under a different id.
     /// If empty, resolution should default to <see cref="Id"/>.

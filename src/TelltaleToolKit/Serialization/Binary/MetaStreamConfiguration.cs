@@ -25,7 +25,7 @@ public class MetaStreamConfiguration
     public List<MetaClass> SerializedClasses { get; set; } = [];
 
     /// <summary>
-    /// Gets the list of classes found in the stream that are not registered in the current context.
+    /// Gets the list of classes found in the stream that are not registered in the current game profile.
     /// Each entry is a tuple containing the <see cref="MetaClassType"/> and its CRC32 checksum.
     /// </summary>
     public List<(MetaClassType, uint crc32)> UnregisteredClasses { get; set; } = [];

@@ -28,7 +28,7 @@ public abstract class MetaStream : IDisposable
 
     public MetaStreamConfiguration Configuration { get; set; } = new();
 
-    protected Workspace? Context { get; set; }
+    protected Workspace? Workspace { get; set; }
 
     protected Stream UnderlyingStream { get; set; } = null!;
 

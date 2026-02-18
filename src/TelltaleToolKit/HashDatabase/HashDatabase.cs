@@ -32,7 +32,7 @@ public class HashDatabase : ISymbolResolver
     }
 
     /// <summary>
-    /// Creates a HashDatabase pre-loaded from a directory.
+    /// Creates a HashDatabase preloaded from a directory.
     /// </summary>
     public HashDatabase(string directoryPath, string searchPattern = "*.txt", bool recursive = false)
     {
@@ -40,7 +40,7 @@ public class HashDatabase : ISymbolResolver
     }
 
     /// <summary>
-    /// Creates a HashDatabase pre-loaded from specific files.
+    /// Creates a HashDatabase preloaded from specific files.
     /// </summary>
     public HashDatabase(IEnumerable<string> filePaths)
     {

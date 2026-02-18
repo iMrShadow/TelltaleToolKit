@@ -41,7 +41,6 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
             blowfishKey = enumBlowfishKey.GetBlowfishKey();
         }
 
-        // Create and return a new GameDescriptor instance with the extracted properties.
         return new GameProfile
         {
             Name = name,

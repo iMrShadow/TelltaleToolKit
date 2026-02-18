@@ -13,8 +13,8 @@ namespace TelltaleToolKit;
 public class Toolkit
 {
     private static Toolkit? _instance;
-    private readonly Dictionary<string, Workspace> _gameContexts = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, GameProfile> _gameDescriptors = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, Workspace> _workspaces = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, GameProfile> _gameProfiles = new(StringComparer.OrdinalIgnoreCase);
     private readonly JsonSerializerOptions _jsonOptions;
 
     public static bool IsInitialized => _instance != null;
@@ -38,7 +38,7 @@ public class Toolkit
 
         if (!string.IsNullOrEmpty(config.DataFolder))
         {
-            LoadGameDescriptors(config.DataFolder);
+            LoadGameProfiles(config.DataFolder);
             LoadHashDatabase(config.DataFolder);
         }
     }
@@ -79,9 +79,9 @@ public class Toolkit
     public MetaClassSerializerSelector SerializerSelector { get; private set; }
 
     /// <summary>
-    /// Gets all registered game descriptors.
+    /// Gets all registered game profiles.
     /// </summary>
-    public IReadOnlyDictionary<string, GameProfile> GameDescriptors => _gameDescriptors;
+    public IReadOnlyDictionary<string, GameProfile> GameProfiles => _gameProfiles;
 
     /// <summary>
     /// Initializes the TelltaleToolkit with the specified configuration.
@@ -96,37 +96,35 @@ public class Toolkit
     }
 
     /// <summary>
-    /// Creates a game context for the specified game.
+    /// Creates a game workspace for the specified game.
     /// </summary>
-    public Workspace CreateGameContext(string contextName, string snapshotName)
+    public Workspace CreateWorkspace(string workspaceName, string gameProfile)
     {
-        if (!_gameDescriptors.TryGetValue(snapshotName, out GameProfile? descriptor))
-            throw new KeyNotFoundException($"Game descriptor '{snapshotName}' not found");
+        if (!_gameProfiles.TryGetValue(gameProfile, out GameProfile? profile))
+            throw new KeyNotFoundException($"Game profile '{gameProfile}' not found");
 
-        var context = new Workspace(contextName, this, descriptor);
-        _gameContexts[contextName] = context;
-        return context;
+        var workspace = new Workspace(workspaceName, this, profile);
+        _workspaces[workspaceName] = workspace;
+        return workspace;
     }
 
     /// <summary>
-    /// Gets an existing game context, or creates one if it doesn't exist.
+    /// Gets an existing workspace, or creates one if it doesn't exist.
     /// </summary>
-    public Workspace? GetGameContext(string contextName)
+    public Workspace? GetWorkspace(string gameProfileName)
     {
-        return _gameContexts.TryGetValue(contextName, out Workspace? context) ? context : null;
-
-        throw new KeyNotFoundException($"Game context '{contextName}' not found");
+        return _workspaces.GetValueOrDefault(gameProfileName);
     }
 
     /// <summary>
-    /// Registers a game descriptor.
+    /// Registers a game profile.
     /// </summary>
-    public void RegisterGameDescriptor(GameProfile profile)
+    public void RegisterGameProfile(GameProfile profile)
     {
         if (profile == null)
             throw new ArgumentNullException(nameof(profile));
 
-        _gameDescriptors[profile.Name] = profile;
+        _gameProfiles[profile.Name] = profile;
 
         // Load associated meta class descriptions
         if (!string.IsNullOrEmpty(Config.DataFolder))
@@ -275,30 +273,30 @@ public class Toolkit
         throw new NotSupportedException($"Unsupported archive format: {Path.GetExtension(archivePath)}");
     }
 
-    private void LoadGameDescriptors(string dataFolder)
+    private void LoadGameProfiles(string dataFolder)
     {
-        string descriptorsPath = Path.Combine(dataFolder, "game_profiles");
-        if (!Directory.Exists(descriptorsPath))
+        string profilesPath = Path.Combine(dataFolder, "game_profiles");
+        if (!Directory.Exists(profilesPath))
             return;
 
-        string[] files = Directory.GetFiles(descriptorsPath, "*.json", SearchOption.TopDirectoryOnly);
+        string[] files = Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly);
 
         foreach (string file in files)
         {
             try
             {
                 string json = File.ReadAllText(file);
-                var descriptor = JsonSerializer.Deserialize<GameProfile>(json, _jsonOptions);
+                var gameProfile = JsonSerializer.Deserialize<GameProfile>(json, _jsonOptions);
 
-                if (descriptor != null)
+                if (gameProfile != null)
                 {
-                    descriptor.Id = Path.GetFileNameWithoutExtension(file);
-                    RegisterGameDescriptor(descriptor);
+                    gameProfile.Id = Path.GetFileNameWithoutExtension(file);
+                    RegisterGameProfile(gameProfile);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load game descriptor from {file}: {ex.Message}");
+                Console.WriteLine($"Failed to load game profile from {file}: {ex.Message}");
             }
         }
     }
@@ -341,7 +339,7 @@ public class Toolkit
             {
                 ClassRegistry.Register(metaClasses);
 
-                // Update descriptor with class CRCs
+                // Update profile with class CRCs
                 foreach (MetaClass? metaClass in metaClasses)
                 {
                     profile.Classes[metaClass.ClassType] = metaClass.Crc32;
@@ -535,12 +533,12 @@ public class Toolkit
     public class Configuration
     {
         /// <summary>
-        /// Path to the data folder containing game descriptors, hash databases, etc.
+        /// Path to the data folder containing game profiles, hash databases, etc.
         /// </summary>
         public string DataFolder { get; set; }
 
         /// <summary>
-        /// Custom JSON serializer options for loading/saving descriptors.
+        /// Custom JSON serializer options for loading/saving profiles.
         /// </summary>
         public JsonSerializerOptions? JsonOptions { get; set; }
     }
