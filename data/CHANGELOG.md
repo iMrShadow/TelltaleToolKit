@@ -1,9 +1,28 @@
 ## Database Changelog
 
+### 18th of September, 2026
+
+#### Game Profiles
+- Added initial game profiles for the following games:
+  - Sam and Max: Season Two (2007)
+  - The Walking Dead: Season Two (2013)
+  - Tales of the Borderlands (2021) (Thank you [Plague](https://x.com/QueenPlagueCure))
+
+#### Version Database
+- Added initial version databases (.vdb) for all mentioned games in the game profiles section.
+- Modified a lot of database CRC32 values.
+
+#### Hash Database
+- Added initial hash databases as .txt files.
+  - Added over 3700 property keys, 2/3rds imported from Telltale Inspector.
+  - Added bone names from RTB's 3ds Max Script repository.
+  - Added bone groups from Telltale Inspector.
+--- 
+
 ### 30th of September, 2025
 
-#### Game Descriptors
-- Added initial game descriptors for the following games:
+#### Game Profiles
+- Added initial game profiles for the following games:
   - Telltale Texas Hold'em (2005)
   - Bone: Out from Boneville (2005)
   - Bone: The Great Cow Race (2006)
@@ -33,7 +52,7 @@
   - The Walking Dead: The Telltale Definitive Series (2019)
 
 #### Version Database
-- Added initial version databases (.vdb) for all mentioned games in the game descriptors section.
+- Added initial version databases (.vdb) for all mentioned games in the game profiles section.
 - Poker Night 2 only has D3DTX related classes registered.
 - The following databases are only for developer purposes or unfinished.
   - ignore-unsupported.vdb.json
