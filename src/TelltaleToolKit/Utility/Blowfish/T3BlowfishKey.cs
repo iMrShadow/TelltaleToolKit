@@ -243,5 +243,8 @@ public enum T3BlowfishKey
     SamMax200Remastered,
 
     [Display(Name = "Sam & Max: The Devil's Playhouse Remastered")]
-    SamMax300Remastered
+    SamMax300Remastered,
+    
+    [Display(Name = "Poker Night at the Inventory Remastered")]
+    CelebrityPokerRemastered,
 }
