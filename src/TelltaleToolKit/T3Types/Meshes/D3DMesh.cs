@@ -798,10 +798,10 @@ public class D3DMesh
     }
 
     /// <summary>
-    /// Attempts to get the normal map of this mesh. This can and will still exist even when per-vertex normals exist.
+    /// Attempts to get the detail texture of this mesh.
     /// </summary>
-    /// <param name="symbol">Material handle <see cref="T3MeshMaterial.Material"/></param>
-    /// <returns>Handle to the normal map texture if it exists, null otherwise</returns>
+    /// <param name="symbol"> Material handle <see cref="T3MeshMaterial.Material"/></param>
+    /// <returns>Handle to the detail texture if it exists, null otherwise</returns>
     public Handle<T3Texture>? GetDetailTexture(Handle<PropertySet> symbol)
     {
         var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;
@@ -811,6 +811,11 @@ public class D3DMesh
         return prop as Handle<T3Texture>;
     }
 
+    /// <summary>
+    /// Attempts to get the specular texture of this mesh.
+    /// </summary>
+    /// <param name="symbol"> Material handle <see cref="T3MeshMaterial.Material"/></param>
+    /// <returns>Handle to the specular texture if it exists, null otherwise</returns>
     public Handle<T3Texture>? GetSpecularTexture(Handle<PropertySet> symbol)
     {
         var propSet = GetInternalResource(symbol.ObjectInfo.ObjectName) as PropertySet;

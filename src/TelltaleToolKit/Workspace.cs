@@ -214,6 +214,7 @@ public class Workspace
         return false;
     }
 
+    
     /// <summary>
     /// Enables a resource context by name.
     /// </summary>
@@ -412,6 +413,29 @@ public class Workspace
 
         return null;
     }
+    
+    
+    /// <summary>
+    /// Gets the file provider for the given resource
+    /// </summary>
+    /// <param name="crc64">File to search for</param>
+    /// <returns>null if no providers contain the file</returns>
+    public IFileProvider? GetFileProviderForResource(ulong crc64)
+    {
+        foreach (var context in _contexts.AsReadOnly().Reverse())
+        {
+            foreach (var provider in context.Providers)
+            {
+                if (provider.ContainsFile(crc64))
+                {
+                    return provider;
+                }
+            }
+        }
+
+        return null;
+    }
+
 
     #endregion
 
@@ -429,9 +453,15 @@ public class Workspace
 
     #region Symbol Resolution
 
+    // /// <summary>
+    // /// Resolves a symbol.
+    // /// </summary>
+    
     /// <summary>
     /// Resolves a symbol.
     /// </summary>
+    /// <returns>true if the symbol has been resolved</returns>
+    /// <exception cref="ArgumentNullException"> Symbol is null </exception>
     public bool ResolveSymbol(Symbol symbol)
     {
         if (symbol == null)
