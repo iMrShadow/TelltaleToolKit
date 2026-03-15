@@ -1,16 +1,23 @@
+using System.Text;
+using Lua;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;
 
 public class Workspace
 {
-    private readonly SortedDictionary<int, ResourceContext> _contextsByPriority = new();
+    private static readonly List<LuaTable> ExtractedResourceDescriptions = [];
+    private readonly List<ResourceContext> _contexts = [];
+    
     private readonly Toolkit _toolkit;
+
+    private LuaState? _resdecLuaState = null;
 
     internal Workspace(string name, Toolkit toolkit, GameProfile profile)
     {
@@ -56,6 +63,47 @@ public class Workspace
     /// </summary>
     public HashDatabase.HashDatabase LocalHashDatabase { get; }
 
+    public LuaState ResdecLuaState
+    {
+        get
+        {
+            if (_resdecLuaState != null)
+            {
+                return _resdecLuaState;
+            }
+
+            _resdecLuaState = LuaState.Create();
+
+            SetupLuaState(_resdecLuaState);
+
+            return _resdecLuaState;
+        }
+    }
+
+    private ResourceContext? _contextsByPriority(int priority) => _contexts.Find((ctx) => ctx.Priority == priority);
+
+    private void _addResourceToContexts(ResourceContext ctx)
+    {
+        _contexts.Add(ctx);
+        _contexts.Sort((c, c1) => c.Priority.CompareTo(c1.Priority));
+    }
+
+    private static void SetupLuaState(LuaState state)
+    {
+        state.Environment["RegisterSetDescription"] = new LuaFunction((context, ct) =>
+        {
+            var resdesc = context.GetArgument<LuaTable>(0);
+
+            ExtractedResourceDescriptions.Add(resdesc);
+
+            context.Return();
+
+            return new(0);
+        });
+
+        state.Environment["_currentDirectory"] = "";
+    }
+
     /// <summary>
     /// Event raised when an archive is loaded.
     /// </summary>
@@ -65,6 +113,38 @@ public class Workspace
     /// Event raised when an archive is unloaded.
     /// </summary>
     public event Action<ArchiveBase> ArchiveUnloaded;
+
+    #region Version 1: Game Folder Mounting
+
+    /// <summary>
+    /// Mounts a game folder as a resource context with the specified priority.
+    /// For Version 1 games, use priority 0 for main root, 10 for patch root, etc.
+    /// </summary>
+    public ResourceContext MountGameFolder(string path, int priority)
+    {
+        var context = new ResourceContext($"Folder:{Path.GetFileName(path)}", priority, this);
+        var folderProvider = new FolderProvider(path, this);
+
+        // GameFolderProvider already loads archives via Workspace reference
+        context.AddProvider(folderProvider);
+
+        _addResourceToContexts(context);
+        return context;
+    }
+
+    #endregion
+
+    #region Archive Management
+
+    public ArchiveBase LoadArchive(string archivePath, bool sort = true, bool debugPrint = false)
+    {
+        // todo
+        ArchiveBase archive = _toolkit.LoadArchive(archivePath, BlowfishKey, sort, debugPrint);
+        ArchiveLoaded?.Invoke(archive);
+        return archive;
+    }
+
+    #endregion
 
     #region MetaClass Resolution
 
@@ -114,7 +194,7 @@ public class Workspace
     public ResourceContext CreateResourceContext(string name, int priority)
     {
         var context = new ResourceContext(name, priority, this);
-        _contextsByPriority[priority] = context; // Dictionary, not list - priority is unique
+        _addResourceToContexts(context); // Dictionary, not list - priority is unique | PRIORITY IS NOT UNIQUE - Gamma
         return context;
     }
 
@@ -122,13 +202,14 @@ public class Workspace
     /// Gets a resource context by name.
     /// </summary>
     public ResourceContext? GetResourceContext(string name)
-        => _contextsByPriority.Values.FirstOrDefault(context => context.Name == name);
+        => _contexts.FirstOrDefault(context => context.Name == name);
 
     /// <summary>
     /// Gets a resource context by priority.
     /// </summary>
+    [Obsolete("Priority is not unique, and _contexts should not be searched in by priority.")]
     public ResourceContext? GetResourceContext(int priority)
-        => _contextsByPriority.TryGetValue(priority, out ResourceContext? context) ? context : null;
+        => _contextsByPriority(priority);
 
 
     /// <summary>
@@ -140,7 +221,7 @@ public class Workspace
         if (context != null)
         {
             context.Unload();
-            return _contextsByPriority.Remove(context.Priority);
+            return _contexts.Remove(context);
         }
 
         return false;
@@ -149,17 +230,19 @@ public class Workspace
     /// <summary>
     /// Removes a resource context by priority.
     /// </summary>
+    [Obsolete("Priority is not unique, and _contexts should not be searched in by priority.")]
     public bool RemoveResourceContext(int priority)
     {
-        if (_contextsByPriority.TryGetValue(priority, out ResourceContext? context))
+        ResourceContext? ctx = _contextsByPriority(priority);
+        if (ctx != null)
         {
-            context.Unload();
-            return _contextsByPriority.Remove(priority);
+            ctx.Unload();
+            return _contexts.Remove(ctx);
         }
 
         return false;
     }
-
+    
     /// <summary>
     /// Enables a resource context by name.
     /// </summary>
@@ -189,29 +272,9 @@ public class Workspace
     /// </summary>
     public void ClearAllContexts()
     {
-        foreach (ResourceContext? context in _contextsByPriority.Values)
+        foreach (ResourceContext? context in _contexts)
             context.Unload();
-        _contextsByPriority.Clear();
-    }
-
-    #endregion
-
-    #region Version 1: Game Folder Mounting
-
-    /// <summary>
-    /// Mounts a game folder as a resource context with the specified priority.
-    /// For Version 1 games, use priority 0 for main root, 10 for patch root, etc.
-    /// </summary>
-    public ResourceContext MountGameFolder(string path, int priority)
-    {
-        var context = new ResourceContext($"Folder:{Path.GetFileName(path)}", priority, this);
-        var folderProvider = new FolderProvider(path, this);
-
-        // GameFolderProvider already loads archives via Workspace reference
-        context.AddProvider(folderProvider);
-
-        _contextsByPriority[priority] = context;
-        return context;
+        _contexts.Clear();
     }
 
     #endregion
@@ -223,13 +286,19 @@ public class Workspace
     /// </summary>
     public ResourceContext LoadResourceDescription(string descPath)
     {
-        (int priority, string name, List<string> archivePaths) = ParseResourceDescription(descPath);
+        LuaTable resdesc = ParseResourceDescription(descPath).Result;
+
+        var name = resdesc["name"].Read<string>();
+        var priority = resdesc["priority"].Read<int>();
+
         var context = new ResourceContext(name, priority, this);
 
         // Add archives from the resource description
-        foreach (string? archivePath in archivePaths)
+        foreach (KeyValuePair<LuaValue, LuaValue> kvPair in resdesc["gameDataArchives"].Read<LuaTable>().ToArray())
         {
-            string? fullPath = Path.IsPathRooted(archivePath)
+            var archivePath = kvPair.Value.Read<string>();
+
+            string fullPath = Path.IsPathRooted(archivePath)
                 ? archivePath
                 : Path.Combine(Path.GetDirectoryName(descPath)!, archivePath);
 
@@ -252,18 +321,63 @@ public class Workspace
             }
         }
 
-        _contextsByPriority[priority] = context;
+        _addResourceToContexts(context);
         return context;
     }
 
-    // TODO: Implement actual Lua parsing
-    private (int priority, string name, List<string> archives) ParseResourceDescription(string descPath)
+    private const string LEnHeader = "\eLEn";
+    private const string LuaHeader = "\eLua";
+    private const string LEoHeader = "\eLEo";
+
+    private async Task<LuaTable> ParseResourceDescription(string descPath)
     {
-        return (
-            priority: 100,
-            name: Path.GetFileNameWithoutExtension(descPath),
-            archives: new List<string>()
-        );
+        FileStream luaFile = File.OpenRead(descPath);
+
+        var headerBytes = new byte[4];
+        int read = luaFile.Read(headerBytes, 0, 4);
+
+        if (read < 4)
+        {
+            throw new IOException("Could not read header from lua file");
+        }
+
+        string header = Encoding.ASCII.GetString(headerBytes);
+
+        if (header is not LEnHeader and not LEoHeader)
+        {
+            luaFile.Position = 0;
+        }
+
+        var fileBytes = new byte[luaFile.Length - luaFile.Position];
+        read = luaFile.Read(fileBytes, 0, fileBytes.Length);
+
+        if (read < fileBytes.Length)
+        {
+            throw new IOException("Could not read header from lua file");
+        }
+
+        var blowfishInstance = new Blowfish(this.Profile.BlowfishKey, 7);
+
+        blowfishInstance.Decipher(fileBytes, fileBytes.Length);
+
+        if (header is LEnHeader)
+        {
+            // handle lua bytecode, but this shouldn't actually happen in resdesc parsing...
+            // byte[] lua = new byte[fileBytes.Length + 4];
+            // Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), lua, 4);
+            // Array.Copy(fileBytes, lua, fileBytes.Length);
+
+            Console.WriteLine("Got LEn Lua header during ParseResourceDescription!!! THIS SHOULD NOT HAPPEN!");
+            throw new ArgumentException("Improperly formatted resdesc file!");
+        }
+
+        string lua = Encoding.ASCII.GetString(fileBytes);
+
+        await ResdecLuaState.DoStringAsync(lua);
+
+        LuaTable? resdesc = ExtractedResourceDescriptions.Last();
+
+        return resdesc;
     }
 
     #endregion
@@ -273,9 +387,9 @@ public class Workspace
     public Stream? ExtractFile(ulong crc64)
     {
         // Search from highest priority to lowest (so highest overrides)
-        foreach (KeyValuePair<int, ResourceContext> kvp in _contextsByPriority.Reverse())
+        foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
         {
-            Stream? stream = kvp.Value.ExtractFile(crc64);
+            Stream? stream = context.ExtractFile(crc64);
             if (stream != null)
                 return stream;
         }
@@ -285,7 +399,7 @@ public class Workspace
 
     public bool ContainsFile(ulong crc64)
     {
-        return _contextsByPriority.Values
+        return _contexts
             .Any(c => c.IsEnabled && c.ContainsFile(crc64));
     }
 
@@ -294,11 +408,11 @@ public class Workspace
     /// </summary>
     public TelltaleFileEntry? FindFileEntry(ulong crc64)
     {
-        foreach (KeyValuePair<int, ResourceContext> context in _contextsByPriority.Reverse())
+        foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
         {
-            if (context.Value.IsEnabled)
+            if (context.IsEnabled)
             {
-                TelltaleFileEntry? entry = context.Value.GetFileEntry(crc64);
+                TelltaleFileEntry? entry = context.GetFileEntry(crc64);
                 if (entry != null)
                     return entry;
             }
@@ -306,17 +420,26 @@ public class Workspace
 
         return null;
     }
-
-    #endregion
-
-    #region Archive Management
-
-    public ArchiveBase LoadArchive(string archivePath, bool sort = true, bool debugPrint = false)
+    
+    /// <summary>
+    /// Gets the file provider for the given resource
+    /// </summary>
+    /// <param name="crc64">File to search for</param>
+    /// <returns>null if no providers contain the file</returns>
+    public IFileProvider? GetFileProviderForResource(ulong crc64)
     {
-        // todo
-        ArchiveBase archive = _toolkit.LoadArchive(archivePath, BlowfishKey, sort, debugPrint);
-        ArchiveLoaded?.Invoke(archive);
-        return archive;
+        foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
+        {
+            foreach (IFileProvider? provider in context.Providers)
+            {
+                if (provider.ContainsFile(crc64))
+                {
+                    return provider;
+                }
+            }
+        }
+
+        return null;
     }
 
     #endregion
@@ -326,6 +449,8 @@ public class Workspace
     /// <summary>
     /// Resolves a symbol.
     /// </summary>
+    /// <returns>true if the symbol has been resolved</returns>
+    /// <exception cref="ArgumentNullException"> Symbol is null </exception>
     public bool ResolveSymbol(Symbol symbol)
     {
         if (symbol == null)
@@ -364,7 +489,7 @@ public class Workspace
             ResolveSymbol(symbol);
         }
     }
-    
+
     #endregion
 
     #region Object Serialization
