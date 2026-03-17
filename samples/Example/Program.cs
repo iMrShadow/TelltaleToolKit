@@ -1,34 +1,43 @@
 ﻿using TelltaleToolKit;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Resource;
 using TelltaleToolKit.T3Types.Textures;
 using TelltaleToolKit.T3Types.Textures.T3Types;
-using TelltaleToolKit.Utility;
 
 // Set up the context from a folder.
-TTKContext.Instance().Load("../../../../../data");
+var toolkitConfiguration = new Toolkit.Configuration
+{
+    DataFolder = "../../../../../data",
+};
 
-// (Recommended) Set the active game for default configuration.
-TTKContext.Instance().SetActiveGame("the-walking-dead-definitive-series-2019");
+// Initialize the library.
+Toolkit.Initialize(toolkitConfiguration);
+
+// (Recommended) Create a workspace if you want to work with a specific game.
+Workspace workspace = Toolkit.Instance.CreateWorkspace("The Walking Dead", "The Walking Dead: Definitive Series");
+
+// Create a resource context.
+ResourceContext resourceContext = workspace.CreateResourceContext("Texture Archives", 100);
+
+// Add an archive to the resource context.
+resourceContext.AddProvider(new ArchiveProvider("WDC_pc_WalkingDead404_txmesh.ttarch2", workspace));
 
 // Replace the path with a valid one.
-// Load a Telltale archive. 
-using var archive = TTK.Load("WDC_pc_WalkingDead404_txmesh.ttarch2", T3BlowfishKey.Twdc);
+var texture = workspace.LoadAsset<T3Texture>("obj_backpackClementine400.d3dtx");
 
-// Extract a file from the archive in a stream.
-var blob = archive.ExtractFile("obj_backpackClementine400.d3dtx");
+// Alternatively, load the texture directly from the filesystem without a workspace and a resource context.
+// var textureDisk = Toolkit.Instance.LoadObject<T3Texture>("obj_backpackClementine400.d3dtx", out MetaStreamConfiguration  _);
 
-// Load the d3dtx from a memory stream.
-var d3dtxObj = TTK.Load<T3Texture>(blob, out MetaStreamConfiguration config);
+if (texture != null)
+{
+    // Modify the texture.
+    texture.Name = "My new modified texture!";
+    texture.SurfaceFormat = T3SurfaceFormat.ARGB8;
+    texture.Width = 1024;
+    texture.Height = 1024;
+    
+    // Save the modified texture on the filesystem.
+    workspace.SaveObject(texture, "new_modified.d3dtx");
+}
 
-// Alternatively, load the texture directly from the filesystem.
-// Replace the path with a valid one.
-// TTK.Load<T3Texture>("obj_backpackClementine400.d3dtx", out config);
 
-// Modify the texture.
-d3dtxObj.Name = "My new modified texture!";
-d3dtxObj.SurfaceFormat = T3SurfaceFormat.ARGB8;
-d3dtxObj.Width = 1024;
-d3dtxObj.Height = 1024;
 
-// Save the modified texture on the filesystem.
-TTK.Save(d3dtxObj, "new_modified.d3dtx", config);
