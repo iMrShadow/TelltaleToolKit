@@ -45,4 +45,9 @@ public class MetaStreamConfiguration
     /// Gets or sets a value indicating whether the list of serialized classes can be modified after initialization.
     /// </summary>
     public bool CanModifySerializedClassesList { get; set; }
+    
+    /// <summary>
+    /// Gets the current workspace. Required for serializing if custom types are added.
+    /// </summary>
+    public Workspace? Workspace { get; set; }
 }

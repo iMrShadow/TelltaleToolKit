@@ -27,9 +27,7 @@ public abstract class MetaStream : IDisposable
     ];
 
     public MetaStreamConfiguration Configuration { get; set; } = new();
-
-    protected Workspace? Workspace { get; set; }
-
+    
     protected Stream UnderlyingStream { get; set; } = null!;
 
     protected Stream CurrentSubstream => GetCurrentSection().Stream;
@@ -100,7 +98,7 @@ public abstract class MetaStream : IDisposable
     public abstract MetaClass? GetMetaClass(Type type);
 
     public abstract MetaClass? GetMetaClass(Symbol symbol);
-    
+
     /// <summary>
     /// Serializes the specified boolean value.
     /// </summary>

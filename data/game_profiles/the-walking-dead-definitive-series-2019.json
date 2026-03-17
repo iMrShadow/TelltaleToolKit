@@ -6,5 +6,6 @@
     "ttarchVersion": 4,
     "luaVersion": "5.2.3",
     "metaStreamVersion": "MSV6",
-    "enableOodleCompression": true
+    "enableOodleCompression": true,
+    "areSymbolsHashed": true
 }

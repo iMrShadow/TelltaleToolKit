@@ -8,7 +8,7 @@ namespace TelltaleToolKit.TelltaleArchives;
 public abstract class ArchiveBase : IDisposable
 {
     protected Stream? ArchiveStream { get; set; }
-    protected ArchiveInfo Info { get; set; } = new();
+    public ArchiveInfo Info { get; set; } = new();
     public TelltaleFileEntry[] FileEntries { get; set; } = [];
 
     public void Dispose()

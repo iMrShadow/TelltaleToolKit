@@ -32,18 +32,18 @@ public sealed class GameProfile
     /// Gets the Blowfish encryption key used for securing game archives.
     /// In the config file, you can either use the name of <see cref="T3BlowfishKey"/> or a custom string.
     /// </summary>
-    public string BlowfishKey { get; init; } = string.Empty;
+    public string BlowfishKey { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets a value indicating whether the game uses the TTARCH2 archive format.
     /// </summary>
-    public bool IsTtarch2 { get; init; }
+    public bool IsTtarch2 { get; set; }
 
     /// <summary>
     /// Gets the version of the TTARCH archive format used by the game.
     /// </summary>
     /// <seealso cref="ArchiveVersion"/>
-    public ArchiveVersion TtarchVersion { get; init; }
+    public ArchiveVersion TtarchVersion { get; set; }
 
     /// <summary>
     /// Gets the Lua scripting engine version used by the game.
@@ -55,10 +55,10 @@ public sealed class GameProfile
     /// Gets the version of the <see cref="MetaStream"/> stream format used in the game.
     /// </summary>
     /// <seealso cref="TelltaleToolKit.Serialization.Binary.MetaStreamVersion"/>
-    public MetaStreamVersion MetaStreamVersion { get; init; }
+    public MetaStreamVersion MetaStreamVersion { get; set; }
 
     // TODO: Automatically assign false if MetaStreamVersion is MBIN.
-    public bool AreSymbolsHashed { get; init; }
+    public bool AreSymbolsHashed { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether Oodle compression is enabled for game archives.

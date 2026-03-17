@@ -14,7 +14,7 @@ public class Workspace
 {
     private static readonly List<LuaTable> ExtractedResourceDescriptions = [];
     private readonly List<ResourceContext> _contexts = [];
-    
+
     private readonly Toolkit _toolkit;
 
     private LuaState? _resdecLuaState = null;
@@ -30,6 +30,8 @@ public class Workspace
         {
             AreSymbolsHashed = profile.AreSymbolsHashed,
             Version = profile.MetaStreamVersion,
+            Workspace = this,
+            CanModifySerializedClassesList = true
         };
     }
 
@@ -242,7 +244,7 @@ public class Workspace
 
         return false;
     }
-    
+
     /// <summary>
     /// Enables a resource context by name.
     /// </summary>
@@ -384,6 +386,38 @@ public class Workspace
 
     #region File Operations
 
+    public T? LoadAsset<T>(string name) where T : class, new()
+    {
+        return LoadAsset<T>(Symbol.GetCrc64(name));
+    }
+
+    public T? LoadAsset<T>(ulong crc64) where T : class, new()
+    {
+        // Search from highest priority to lowest (so highest overrides)
+        foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
+        {
+            Stream? stream = context.ExtractFile(crc64);
+            if (stream == null)
+                continue;
+
+            try
+            {
+                return LoadObject<T>(stream, out MetaStreamConfiguration? _);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public Stream? ExtractFile(string name)
+    {
+        return ExtractFile(Symbol.GetCrc64(name));
+    }
+
     public Stream? ExtractFile(ulong crc64)
     {
         // Search from highest priority to lowest (so highest overrides)
@@ -420,7 +454,7 @@ public class Workspace
 
         return null;
     }
-    
+
     /// <summary>
     /// Gets the file provider for the given resource
     /// </summary>
