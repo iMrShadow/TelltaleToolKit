@@ -231,8 +231,7 @@ public class Toolkit
         writer.Serialize(ref refObj);
         writer.Save();
     }
-
-
+    
     /// <summary>
     /// Saves an object to a file using the specified configuration.
     /// </summary>

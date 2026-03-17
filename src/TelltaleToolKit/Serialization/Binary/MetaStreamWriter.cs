@@ -6,11 +6,6 @@ namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamWriter : MetaStream
 {
-    public MetaStreamWriter(Stream inputStream, Workspace workspace) : this(inputStream, workspace.DefaultMetaStreamConfig)
-    {
-        Workspace = workspace;
-    }
-
     public MetaStreamWriter(Stream inputStream, MetaStreamConfiguration configuration)
     {
         UnderlyingStream = inputStream;
@@ -102,7 +97,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.LinkingType == type);
         }
 
-        return Workspace?.GetMetaClassDescription(type);
+        return Configuration.Workspace?.GetMetaClassDescription(type);
     }
 
     public override MetaClass? GetMetaClass(Symbol symbol)
@@ -113,7 +108,7 @@ public sealed class MetaStreamWriter : MetaStream
             return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.Symbol.Crc64 == symbol.Crc64);
         }
 
-        return Workspace?.GetMetaClassDescription(symbol);
+        return Configuration.Workspace?.GetMetaClassDescription(symbol);
     }
 
     public override void Serialize(ref bool value) => Writer.Write(value ? '1' : '0');
