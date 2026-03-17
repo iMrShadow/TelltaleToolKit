@@ -15,7 +15,6 @@ public class Toolkit
     private static Toolkit? _instance;
     private readonly Dictionary<string, Workspace> _workspaces = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, GameProfile> _gameProfiles = new(StringComparer.OrdinalIgnoreCase);
-    private readonly JsonSerializerOptions _jsonOptions;
 
     public static bool IsInitialized => _instance != null;
 
@@ -29,13 +28,13 @@ public class Toolkit
         GlobalHashDatabase = new HashDatabase.HashDatabase();
 
         // Setup JSON options
-        _jsonOptions = config.JsonOptions ?? new JsonSerializerOptions
+        Config.JsonOptions = config.JsonOptions ?? new JsonSerializerOptions
         {
             Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
             WriteIndented = true
         };
-
+        
         if (!string.IsNullOrEmpty(config.DataFolder))
         {
             LoadMetaClassDescriptions();
@@ -287,7 +286,7 @@ public class Toolkit
             try
             {
                 string json = File.ReadAllText(file);
-                var gameProfile = JsonSerializer.Deserialize<GameProfile>(json, _jsonOptions);
+                var gameProfile = JsonSerializer.Deserialize<GameProfile>(json, Config.JsonOptions);
 
                 if (gameProfile != null)
                 {
@@ -334,7 +333,7 @@ public class Toolkit
         try
         {
             string json = File.ReadAllText(snapshotPath);
-            GameProfileJsonExtensions.ReadClassesJsonInto(profile, json, _jsonOptions);
+            GameProfileJsonExtensions.ReadClassesJsonInto(profile, json, Config.JsonOptions);
         }
         catch (Exception ex)
         {
@@ -353,7 +352,7 @@ public class Toolkit
             return;
 
         string json = File.ReadAllText(globalDbPath);
-        var metaClasses = JsonSerializer.Deserialize<List<MetaClass>>(json, _jsonOptions);
+        var metaClasses = JsonSerializer.Deserialize<List<MetaClass>>(json, Config.JsonOptions);
 
         if (metaClasses != null)
         {
