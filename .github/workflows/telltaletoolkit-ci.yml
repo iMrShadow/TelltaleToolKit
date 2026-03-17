@@ -18,15 +18,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install dependencies
-        run: dotnet restore
+      - name: Restore main project
+        run: dotnet restore src/TelltaleToolKit/
+
+      - name: Restore all solutions/projects
+        run: |
+          dotnet restore samples/VersionDatabaseCreator/
+          dotnet restore samples/Example/
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
