@@ -26,20 +26,15 @@ using TelltaleToolKit.Utility.Blowfish;
 // E.g. the description of "class Vector3" will have "X", "Y" and "Z" as members.
 
 // Some games have been released multiple times.
-const string sluggifiedName = "back-to-the-future-the-game-episode-1";
+const string sluggedName = "puzzle-agent";
 const string gameFolderPath = "REPLACE_ME_WITH_GAME_FOLDER_PATH";
-const T3BlowfishKey blowfishKey = T3BlowfishKey.Bttf101;
+const T3BlowfishKey blowfishKey = T3BlowfishKey.Grickle101;
 
 // Alternatively, replace with a full path.
 const string dataFolderPath = "../../../../../data";
 Toolkit.Initialize(new Toolkit.Configuration()
 {
     DataFolder = dataFolderPath,
-    JsonOptions = new JsonSerializerOptions()
-    {
-        Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-    }
 });
 
 // Replace *ttarch with *ttarch2 if you want to scan ttarch2.
@@ -182,12 +177,12 @@ ImmutableSortedDictionary<string?, uint> classes = unionized.ToDictionary(
 string database = JsonSerializer.Serialize(classes, Toolkit.Instance.Config.JsonOptions);
 
 // Change output locations if needed.
-File.WriteAllText(Path.Join(dataFolderPath, "versiondb", sluggifiedName + "-NEW.vdb.json"), database);
+File.WriteAllText(Path.Join(dataFolderPath, "versiondb", sluggedName + "-NEW.vdb.json"), database);
 
 if (unregisteredMetaClasses.Count > 0)
 {
     Toolkit.Instance.DumpMetaClassDescriptions(unregisteredMetaClasses,
-        Path.Join(dataFolderPath, "versiondb", sluggifiedName + "-UNSUPPORTED.vdb.json"));
+        Path.Join(dataFolderPath, "versiondb", sluggedName + "-UNSUPPORTED.vdb.json"));
 }
 
 // All registered types that I currently have can be found in MetaClassTypeRegistry.cs.
@@ -206,12 +201,12 @@ if (unregisteredMetaClasses.Count > 0)
 
 if (!unregisteredTypes.IsEmpty)
 {
-    string path = Path.Join(dataFolderPath, "versiondb", sluggifiedName + "-UNSUPPORTED-TYPES.csv");
+    string path = Path.Join(dataFolderPath, "versiondb", sluggedName + "-UNSUPPORTED-TYPES.csv");
     IEnumerable<string> lines = unregisteredTypes.Keys.Select(t => $"{t.typeHash},{t.crc32}");
     File.WriteAllLines(path, lines);
 }
 
-string jsonFilePath = Path.Combine(dataFolderPath, "game_profiles", sluggifiedName + ".json");
+string jsonFilePath = Path.Combine(dataFolderPath, "game_profiles", sluggedName + ".json");
 if (!File.Exists(jsonFilePath))
 {
     JsonSerializerOptions jsonOptions = new()
@@ -223,8 +218,8 @@ if (!File.Exists(jsonFilePath))
     // Approximate game profile values.
     var gameProfile = new GameProfile
     {
-        Id = sluggifiedName,
-        Name = sluggifiedName,
+        Id = sluggedName,
+        Name = sluggedName,
         AreSymbolsHashed = areSymbolsHashed,
         BlowfishKey = blowfishKey.ToString(),
         EnableOodleCompression = false,
