@@ -34,7 +34,20 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
         string luaVersion = obj.GetProperty("luaVersion").GetString() ?? string.Empty;
         string metaStreamVersion = obj.GetProperty("metaStreamVersion").GetString() ?? string.Empty;
         bool enableOodleCompression = obj.GetProperty("enableOodleCompression").GetBoolean();
-
+        var areSymbolsHashed = true;
+        if (obj.TryGetProperty("areSymbolsHashed", out JsonElement value))
+        {
+            if (value.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            {
+                areSymbolsHashed = value.GetBoolean();
+            }
+            else if (value.ValueKind == JsonValueKind.String &&
+                     bool.TryParse(value.GetString(), out bool parsed))
+            {
+                areSymbolsHashed = parsed;
+            }
+        }
+      
         // Attempt to resolve the blowfish key from known enum values. If not, use the string as a key.
         if (Enum.TryParse(blowfishKey, out T3BlowfishKey enumBlowfishKey))
         {
@@ -50,7 +63,8 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
             TtarchVersion = ttarchVersion.TtarchVersionFromNumber(isTtarch2),
             LuaVersion = luaVersion.ParseLuaVersion(),
             MetaStreamVersion = metaStreamVersion.StreamVersionFromString(),
-            EnableOodleCompression = enableOodleCompression
+            EnableOodleCompression = enableOodleCompression,
+            AreSymbolsHashed = areSymbolsHashed
         };
     }
 
