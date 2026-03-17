@@ -18,7 +18,7 @@ public class Toolkit
     private readonly JsonSerializerOptions _jsonOptions;
 
     public static bool IsInitialized => _instance != null;
-    
+
     private Toolkit(Configuration config)
     {
         Config = config ?? throw new ArgumentNullException(nameof(config));
@@ -38,6 +38,7 @@ public class Toolkit
 
         if (!string.IsNullOrEmpty(config.DataFolder))
         {
+            LoadMetaClassDescriptions();
             LoadGameProfiles(config.DataFolder);
             LoadHashDatabase(config.DataFolder);
         }
@@ -199,7 +200,7 @@ public class Toolkit
         Type type = reader.Configuration.SerializedClasses.First().ClassType.LinkingType;
 
         object? obj = Activator.CreateInstance(type);
-        
+
         MetaClassSerializer serializer = Instance.GetSerializer(obj.GetType());
         serializer.PreSerialize(ref obj, reader);
         serializer.Serialize(ref obj, reader);
@@ -333,22 +334,30 @@ public class Toolkit
         try
         {
             string json = File.ReadAllText(snapshotPath);
-            var metaClasses = JsonSerializer.Deserialize<List<MetaClass>>(json, _jsonOptions);
-
-            if (metaClasses != null)
-            {
-                ClassRegistry.Register(metaClasses);
-
-                // Update profile with class CRCs
-                foreach (MetaClass? metaClass in metaClasses)
-                {
-                    profile.Classes[metaClass.ClassType] = metaClass.Crc32;
-                }
-            }
+            GameProfileJsonExtensions.ReadClassesJsonInto(profile, json, _jsonOptions);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load meta class descriptions for {profile.Name}: {ex.Message}");
+            Console.WriteLine($"Failed to load meta class descriptions for {profile.Id}: {ex.Message}");
+        }
+    }
+
+    private void LoadMetaClassDescriptions()
+    {
+        if (string.IsNullOrEmpty(Config.DataFolder))
+            return;
+
+        string globalDbPath = Path.Combine(Config.DataFolder, "versiondb", $"global.vdb.json");
+
+        if (!File.Exists(globalDbPath))
+            return;
+
+        string json = File.ReadAllText(globalDbPath);
+        var metaClasses = JsonSerializer.Deserialize<List<MetaClass>>(json, _jsonOptions);
+
+        if (metaClasses != null)
+        {
+            ClassRegistry.Register(metaClasses);
         }
     }
 
