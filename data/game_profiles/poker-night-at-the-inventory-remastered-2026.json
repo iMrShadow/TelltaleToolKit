@@ -1,1 +1,10 @@
-{"name":"poker-night-at-the-inventory-remastered-2026","description":"","blowfishKey":"Grickle101","isTtarch2":false,"ttarchVersion":0,"luaVersion":"5.0.2","metaStreamVersion":"MBIN","enableOodleCompression":false}
+{
+    "name": "Poker Night at the Inventory Remastered",
+    "description": "",
+    "blowfishKey": "CelebrityPokerRemastered",
+    "isTtarch2": true,
+    "ttarchVersion": 4,
+    "luaVersion": "5.2.3",
+    "metaStreamVersion": "MSV6",
+    "enableOodleCompression": true
+}

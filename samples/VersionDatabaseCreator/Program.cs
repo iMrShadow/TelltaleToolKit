@@ -39,7 +39,8 @@ Toolkit.Initialize(new Toolkit.Configuration()
     DataFolder = dataFolderPath,
 });
 
-//Newer games: replace *ttarch with *ttarch2 if you want to scan ttarch2.
+// Newer games especially:
+// Replace *ttarch with *ttarch2 if you want to scan ttarch2.
 const string filter = "*ttarch";
 string[] archivePaths = Directory.GetFiles(gameFolderPath, filter, SearchOption.AllDirectories);
 
