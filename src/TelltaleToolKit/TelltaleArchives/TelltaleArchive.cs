@@ -88,8 +88,8 @@ public abstract class ArchiveBase : IDisposable
     }
 
     protected abstract void ReadMetadata();
-    public abstract MemoryStream ExtractFile(string fileName);
-    public abstract MemoryStream ExtractFile(ulong crc64);
+    public abstract MemoryStream? ExtractFile(string fileName);
+    public abstract MemoryStream? ExtractFile(ulong crc64);
 
     public bool ContainsFile(string fileName)
     {

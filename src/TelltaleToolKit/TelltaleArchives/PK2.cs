@@ -8,12 +8,12 @@ public class PK2Archive : ArchiveBase
         throw new NotImplementedException();
     }
 
-    public override MemoryStream ExtractFile(string fileName)
+    public override MemoryStream? ExtractFile(string fileName)
     {
         throw new NotImplementedException();
     }
 
-    public override MemoryStream ExtractFile(ulong hash)
+    public override MemoryStream? ExtractFile(ulong hash)
     {
         throw new NotImplementedException();
     }
