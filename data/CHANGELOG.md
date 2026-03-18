@@ -1,5 +1,13 @@
 ## Database Changelog
 
+### 17th of March, 2026
+
+#### Game Profiles
+- Added initial game profile for Poker Night at the Inventory Remastered (2026)
+
+#### Version Database
+- Added initial version database for aforementoned Poker Night at the Inventory Remastered (2026)
+
 ### 18th of September, 2026
 
 #### Game Profiles

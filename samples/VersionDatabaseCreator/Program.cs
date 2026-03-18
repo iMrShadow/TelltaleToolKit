@@ -26,18 +26,20 @@ using TelltaleToolKit.Utility.Blowfish;
 // E.g. the description of "class Vector3" will have "X", "Y" and "Z" as members.
 
 // Some games have been released multiple times.
+// Make sure you update these with the game you want to run this script on!
 const string sluggedName = "puzzle-agent";
 const string gameFolderPath = "REPLACE_ME_WITH_GAME_FOLDER_PATH";
 const T3BlowfishKey blowfishKey = T3BlowfishKey.Grickle101;
 
-// Alternatively, replace with a full path.
+// Alternatively, replace with a full path
+// You can also modify it if you want to output the data files somewhere else
 const string dataFolderPath = "../../../../../data";
 Toolkit.Initialize(new Toolkit.Configuration()
 {
     DataFolder = dataFolderPath,
 });
 
-// Replace *ttarch with *ttarch2 if you want to scan ttarch2.
+//Newer games: replace *ttarch with *ttarch2 if you want to scan ttarch2.
 const string filter = "*ttarch";
 string[] archivePaths = Directory.GetFiles(gameFolderPath, filter, SearchOption.AllDirectories);
 
