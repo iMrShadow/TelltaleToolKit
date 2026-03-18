@@ -13,4 +13,6 @@ public struct Sphere
 
     [MetaMember("mRadius")]
     public float Radius { get; set; }
+
+    public override string ToString() => $"{Center}, {Radius}";
 }
