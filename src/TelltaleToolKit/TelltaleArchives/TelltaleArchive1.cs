@@ -212,24 +212,28 @@ public class T3Archive : ArchiveBase
         throw new NotImplementedException();
     }
 
-    public override MemoryStream ExtractFile(ulong crc64)
+    /// <summary>
+    /// Finds the memory stream referenced by the hash inside of this archive
+    /// </summary>
+    /// <param name="crc64">Hash</param>
+    /// <returns>A MemoryStream for the file at the hash or null if the file is not found</returns>
+    public override MemoryStream? ExtractFile(ulong crc64)
     {
         TelltaleFileEntry? entry = FindEntry(crc64);
 
-        if (entry == null)
-            throw new FileNotFoundException($"File '{crc64}' not found in the archive.");
-
-        return ExtractFile(entry);
+        return entry == null ? null : ExtractFile(entry);
     }
 
-    public override MemoryStream ExtractFile(string name)
+    /// <summary>
+    /// Finds the memory stream referenced by the file name inside of this archive
+    /// </summary>
+    /// <param name="name">File name</param>
+    /// <returns>A MemoryStream for the file at the file name or null if the file is not found</returns>
+    public override MemoryStream? ExtractFile(string name)
     {
         TelltaleFileEntry? entry = FindEntry(name);
 
-        if (entry == null)
-            throw new FileNotFoundException($"File '{name}' not found in the archive.");
-
-        return ExtractFile(entry);
+        return entry == null ? null : ExtractFile(entry);
     }
 
     public MemoryStream ExtractFile(TelltaleFileEntry entry)
