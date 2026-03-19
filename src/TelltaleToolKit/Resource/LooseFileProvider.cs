@@ -46,4 +46,18 @@ public class LooseFileProvider : IFileProvider
 
     public TelltaleFileEntry? GetFileEntry(string fileName)
         => fileName == Name ? GetFileEntry(Crc64) : null;
+
+    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    {
+        return
+        [
+            new TelltaleFileEntry
+            {
+                Crc64 = Crc64,
+                Name = Name,
+                FileOffset = 0,
+                FileSize = (int)Size,
+            }
+        ];
+    }
 }

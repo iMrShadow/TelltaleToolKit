@@ -33,4 +33,9 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
     
     public TelltaleFileEntry? GetFileEntry(string fileName) 
         => GetFileEntry(Symbol.GetCrc64(fileName));
+
+    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    {
+        return _archive.FileEntries;
+    }
 }

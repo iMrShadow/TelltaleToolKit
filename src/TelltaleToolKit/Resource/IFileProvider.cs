@@ -11,4 +11,6 @@ public interface IFileProvider
     Stream? ExtractFile(string fileName);
     bool ContainsFile(string fileName);
     TelltaleFileEntry? GetFileEntry(string fileName);
+
+    public IEnumerable<TelltaleFileEntry> GetAllEntries();
 }
