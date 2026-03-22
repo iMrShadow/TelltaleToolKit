@@ -146,6 +146,28 @@ public class Workspace
         return archive;
     }
 
+    /// <summary>
+    /// Explicitly create a resource context from a single archive, without a resdesc file
+    /// </summary>
+    /// <param name="archivePath"></param>
+    /// <param name="contextName"></param>
+    /// <param name="priority"></param>
+    /// <returns></returns>
+    public ResourceContext LoadArchive(string archivePath, string contextName, int priority = 1000)
+    {
+
+        ResourceContext context = CreateResourceContext(contextName, priority);
+        
+        var archiveProvider = new ArchiveProvider(
+            archivePath,
+            this
+        );
+        
+        context.AddProvider(archiveProvider);
+
+        return context;
+    }
+
     #endregion
 
     #region MetaClass Resolution
@@ -191,7 +213,6 @@ public class Workspace
 
     /// <summary>
     /// Creates a new resource context with explicit priority.
-    /// If a context with this priority already exists, it is replaced.
     /// </summary>
     public ResourceContext CreateResourceContext(string name, int priority)
     {
@@ -369,8 +390,8 @@ public class Workspace
             // Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), lua, 4);
             // Array.Copy(fileBytes, lua, fileBytes.Length);
 
-            Console.WriteLine("Got LEn Lua header during ParseResourceDescription!!! THIS SHOULD NOT HAPPEN!");
-            throw new ArgumentException("Improperly formatted resdesc file!");
+            Console.WriteLine("Got LEn Lua header during ParseResourceDescription, this is likely the result of passing the wrong .lua file as a resdec.");
+            throw new ArgumentException("Improperly formatted resdesc file");
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
