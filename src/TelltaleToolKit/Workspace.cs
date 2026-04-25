@@ -1,5 +1,6 @@
 using System.Text;
 using Lua;
+using Lua.Runtime;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
@@ -307,7 +308,7 @@ public class Workspace
     /// <summary>
     /// Loads a resource description (Lua script) and creates a context from it.
     /// </summary>
-    public ResourceContext LoadResourceDescription(string descPath)
+    public ResourceContext? LoadResourceDescription(string descPath)
     {
         LuaTable resdesc = ParseResourceDescription(descPath).Result;
 
@@ -321,6 +322,10 @@ public class Workspace
         if(archives.TryRead(out LuaTable table))
         {
             _addGameDataArchives(descPath, table, context);
+        }
+        else
+        {
+            return null;
         }
 
         // Add loose files from the base folder
@@ -402,12 +407,25 @@ public class Workspace
         if (header is LEnHeader)
         {
             // handle lua bytecode, but this shouldn't actually happen in resdesc parsing...
-            // byte[] lua = new byte[fileBytes.Length + 4];
-            // Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), lua, 4);
-            // Array.Copy(fileBytes, lua, fileBytes.Length);
+            byte[] newLua = new byte[fileBytes.Length + 4];
+            Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), newLua, 4);
+            Array.Copy(fileBytes, 0, newLua, 4, fileBytes.Length);
 
-            Console.WriteLine("Got LEn Lua header during ParseResourceDescription, this is likely the result of passing the wrong .lua file as a resdec.");
-            throw new ArgumentException("Improperly formatted resdesc file");
+            Console.WriteLine("Got LEn Lua header during ParseResourceDescription, this is likely the result of passing the wrong .lua file as a resdec. ");
+            Console.WriteLine("MCSM s2 may have this, and you can ignore if you konw what you're doing. Support for lua bytecode is also limited, here be dragons!");
+            // throw new ArgumentException("Compiled Resdesc file");
+
+            //is this the best way? just seeing if it works for right now
+            string tempFilePath = Path.GetTempFileName();
+            File.WriteAllBytes(tempFilePath, newLua);
+
+            await ResdecLuaState.DoFileAsync(tempFilePath);
+            
+            LuaTable? resdescFromCompiled = ExtractedResourceDescriptions.Last();
+            
+            // File.Delete(tempFilePath);
+
+            return resdescFromCompiled;
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
