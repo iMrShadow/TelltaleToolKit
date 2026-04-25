@@ -316,20 +316,11 @@ public class Workspace
 
         var context = new ResourceContext(name, priority, this);
 
-        // Add archives from the resource description
-        foreach (KeyValuePair<LuaValue, LuaValue> kvPair in resdesc["gameDataArchives"].Read<LuaTable>().ToArray())
+        LuaValue archives = resdesc["gameDataArchives"];
+        
+        if(archives.TryRead(out LuaTable table))
         {
-            var archivePath = kvPair.Value.Read<string>();
-
-            string fullPath = Path.IsPathRooted(archivePath)
-                ? archivePath
-                : Path.Combine(Path.GetDirectoryName(descPath)!, archivePath);
-
-            var archiveProvider = new ArchiveProvider(
-                fullPath,
-                this
-            );
-            context.AddProvider(archiveProvider);
+            _addGameDataArchives(descPath, table, context);
         }
 
         // Add loose files from the base folder
@@ -346,6 +337,31 @@ public class Workspace
 
         _addResourceToContexts(context);
         return context;
+    }
+
+    /// <summary>
+    /// Helper function to add all the game data archives in a given game data archives lua table.
+    /// </summary>
+    /// <param name="descPath">Resource Description Path</param>
+    /// <param name="archives">gameDataArchives entry</param>
+    /// <param name="context">resource context</param>
+    private void _addGameDataArchives(string descPath, LuaTable archives, ResourceContext context)
+    {
+        // Add archives from the resource description
+        foreach (KeyValuePair<LuaValue, LuaValue> kvPair in archives.ToArray())
+        {
+            var archivePath = kvPair.Value.Read<string>();
+
+            string fullPath = Path.IsPathRooted(archivePath)
+                ? archivePath
+                : Path.Combine(Path.GetDirectoryName(descPath)!, archivePath);
+
+            var archiveProvider = new ArchiveProvider(
+                fullPath,
+                this
+            );
+            context.AddProvider(archiveProvider);
+        }
     }
 
     private const string LEnHeader = "\eLEn";
