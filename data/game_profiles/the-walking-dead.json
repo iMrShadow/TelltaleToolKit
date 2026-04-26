@@ -1,0 +1,10 @@
+{
+    "name": "The Walking Dead",
+    "description": "",
+    "blowfishKey": "Twds1",
+    "isTtarch2": false,
+    "ttarchVersion": 9,
+    "luaVersion": "5.1.2",
+    "metaStreamVersion": "MTRE",
+    "enableOodleCompression": false
+}

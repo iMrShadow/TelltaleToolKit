@@ -215,10 +215,10 @@ public static class MetaClassTypeRegistry
         Register("Map<int,unsignedint,less<int>>", typeof(NotImplementedException));
         Register("MergeInGuideInfo",typeof(NotImplementedException));
         Register("MergeInMoodInfo",typeof(NotImplementedException));
-        Register("Note",typeof(NotImplementedException));
-        Register("Note::Entry",typeof(NotImplementedException));
+        Register("Note",typeof(Note));
+        Register("Note::Entry",typeof(Note.Entry));
         Register("NoteCategory",typeof(NotImplementedException));
-        Register("NoteCollection",typeof(NotImplementedException));
+        Register("NoteCollection",typeof(NoteCollection));
         Register("Physics::State", typeof(NotImplementedException));
         Register("Procedural_AnimatedLookAt_Value",typeof(NotImplementedException));
         Register("Procedural_Eyes_Value",typeof(NotImplementedException));
@@ -226,10 +226,11 @@ public static class MetaClassTypeRegistry
         Register("RenderObject_HLSMovie", typeof(NotImplementedException));
         Register("RenderObject_Mesh::MeshInstance", typeof(RenderObject_Mesh.MeshInstance));
         Register("RenderObject_Viewport", typeof(NotImplementedException));
-        Register("SArray<DCArray<D3DMesh::Texture>,14>", typeof(NotImplementedException));
-        Register("SArray<DCArray<RenderObject_Mesh::TextureInstance>,14>", typeof(NotImplementedException));
-        Register("SArray<T3VertexComponent,13>", typeof(NotImplementedException));
-        Register("SArray<int,14>", typeof(NotImplementedException));
+        Register("SArray<DCArray<D3DMesh::Texture>,14>", typeof(List<D3DMesh.Texture>[]));
+        Register("SArray<DCArray<RenderObject_Mesh::TextureInstance>,14>", typeof(List<RenderObject_Mesh.TextureInstance>[]));
+        Register("SArray<T3VertexComponent,13>", typeof(T3VertexComponent[]));
+        Register("SArray<T3VertexComponent,14>", typeof(T3VertexComponent[]));
+        Register("SArray<int,14>", typeof(int[]));
         Register("SArray<unsignedint,2>", typeof(uint[]));
         Register("ScriptEnum:AIAgentState", typeof(ScriptEnum));
         Register("ScriptEnum:AIDummyPos", typeof(ScriptEnum));
@@ -613,6 +614,7 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<struct Procedural_LookAt::Constraint>", typeof(List<ProceduralLookAt.Constraint>));
         Register("class DCArray<struct RenderObject_Mesh::TextureInstance>", typeof(List<RenderObject_Mesh.TextureInstance>));
         Register("class DCArray<struct SkeletonPoseValue::BoneEntry>", typeof(List<SkeletonPoseValue.BoneEntry>));
+        Register("class DCArray<struct SkeletonPoseValue::ValueEntry>", typeof(List<SkeletonPoseValue.ValueEntry>));
         Register("class DCArray<struct SkeletonPoseValue::Sample>", typeof(List<SkeletonPoseValue.Sample>));
         Register("class DCArray<struct SklNodeData>", typeof(List<SklNodeData>));
         Register("class DCArray<struct SoundAmbience::EventContext>", typeof(List<SoundAmbience.EventContext>));
@@ -648,6 +650,7 @@ public static class MetaClassTypeRegistry
         Register("class DebugString", typeof(DebugString));
         Register("class DelaunayTriangleSet", typeof(DelaunayTriangleSet));
         Register("class DependencyLoader<1>", typeof(DependencyLoader)); // TODO?
+        Register("class DependencyLoader<true>", typeof(DependencyLoader)); // TODO?
         Register("class DialogBase", typeof(DialogBase));
         Register("class DialogBranch", typeof(DialogBranch));
         Register("class DialogDialog", typeof(DialogDialog));
@@ -1023,6 +1026,8 @@ public static class MetaClassTypeRegistry
         Register("class Procedural_LookAt_Value", typeof(ProceduralLookAtValue), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class PropertySet", typeof(PropertySet));
         Register("class Ptr<struct PtrBase>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
+        Register("class Ptr<struct Agent>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
+        Register("class Ptr<struct Chore>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
         Register("class Quaternion", typeof(Quaternion), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class Rect", typeof(Rect), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class RenderObjectInterface", typeof(RenderObjectInterface));
@@ -1339,6 +1344,7 @@ public static class MetaClassTypeRegistry
         Register("struct Scene::AgentQualitySettings", typeof(Scene.AgentQualitySettings));
         Register("struct ScriptEnum", typeof(ScriptEnum));
         Register("struct SkeletonPoseValue::BoneEntry", typeof(SkeletonPoseValue.BoneEntry));
+        Register("struct SkeletonPoseValue::ValueEntry", typeof(SkeletonPoseValue.ValueEntry));
         Register("struct SkeletonPoseValue::Sample", typeof(SkeletonPoseValue.Sample));
         Register("struct SklNodeData", typeof(SklNodeData));
         Register("struct SoundAmbience::AmbienceDefinition", typeof(SoundAmbience.AmbienceDefinition));
@@ -1415,7 +1421,7 @@ public static class MetaClassTypeRegistry
     }
 
     public static MetaClassType? GetByHash(ulong hash) =>
-        ByHash.TryGetValue(hash, out MetaClassType? info) ? info : null;
+        ByHash.GetValueOrDefault(hash);
 
     public static void PrintRegisteredTypes()
     {
@@ -2055,6 +2061,10 @@ public class SkeletonPoseValue
     }
 
     public class BoneEntry
+    {
+    }
+
+    internal class ValueEntry
     {
     }
 }
