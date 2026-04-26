@@ -411,21 +411,13 @@ public class Workspace
             Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), newLua, 4);
             Array.Copy(fileBytes, 0, newLua, 4, fileBytes.Length);
 
-            Console.WriteLine("Got LEn Lua header during ParseResourceDescription, this is likely the result of passing the wrong .lua file as a resdec. ");
-            Console.WriteLine("MCSM s2 may have this, and you can ignore if you konw what you're doing. Support for lua bytecode is also limited, here be dragons!");
-            // throw new ArgumentException("Compiled Resdesc file");
-
             //is this the best way? just seeing if it works for right now
-            string tempFilePath = Path.GetTempFileName();
-            File.WriteAllBytes(tempFilePath, newLua);
-
-            await ResdecLuaState.DoFileAsync(tempFilePath);
+            //it does not, working on it
+            // string tempFilePath = Path.GetTempFileName();
+            // File.WriteAllBytes(tempFilePath, newLua);
             
-            LuaTable? resdescFromCompiled = ExtractedResourceDescriptions.Last();
+            throw new ArgumentException("Compiled Resdesc file");
             
-            // File.Delete(tempFilePath);
-
-            return resdescFromCompiled;
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
