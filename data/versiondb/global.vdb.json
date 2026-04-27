@@ -46402,5 +46402,2797 @@
                 "flags": 0
             }
         ]
+    },
+    {
+        "type": "LogicGroup::LogicItem",
+        "crc32": 718276212,
+        "members": [
+            {
+                "name": "Baseclass_PropertySet",
+                "type": "PropertySet",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mKeyNegateList",
+                "type": "Map<Symbol,bool,less<Symbol>>",
+                "flags": 0
+            },
+            {
+                "name": "mKeyComparisonList",
+                "type": "Map<Symbol,int,less<Symbol>>",
+                "flags": 0
+            },
+            {
+                "name": "mKeyActionList",
+                "type": "Map<Symbol,int,less<Symbol>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LanguageDB",
+        "crc32": 2189951970,
+        "members": [
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_UID::Generator",
+                "type": "UID::Generator",
+                "flags": 16
+            },
+            {
+                "name": "mLanguageResources",
+                "type": "Map<unsignedlong,LanguageRes,less<unsignedlong>>",
+                "flags": 0
+            },
+            {
+                "name": "mRegistry",
+                "type": "LocalizationRegistry",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mProjectID",
+                "type": "unsignedlong",
+                "flags": 0
+            },
+            {
+                "name": "mExpandedIDRanges",
+                "type": "DCArray<ProjectDatabaseIDPair>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChildSetChoice",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataCg::Pass",
+        "crc32": 2852153681,
+        "members": [
+            {
+                "name": "mVertexProgram",
+                "type": "BinaryBuffer",
+                "flags": 0
+            },
+            {
+                "name": "mFragmentProgram",
+                "type": "BinaryBuffer",
+                "flags": 0
+            },
+            {
+                "name": "mVertexDecl",
+                "type": "T3VertexDeclaration",
+                "flags": 0
+            },
+            {
+                "name": "mVertexParameters",
+                "type": "DCArray<T3EffectBinaryDataCg::ParameterLocation>",
+                "flags": 0
+            },
+            {
+                "name": "mFragmentParameters",
+                "type": "DCArray<T3EffectBinaryDataCg::ParameterLocation>",
+                "flags": 0
+            },
+            {
+                "name": "mFragmentParameterOffsets",
+                "type": "DCArray<T3EffectBinaryDataCg::ParameterOffsets>",
+                "flags": 0
+            },
+            {
+                "name": "mStateBlock",
+                "type": "T3RenderStateBlock",
+                "flags": 0
+            },
+            {
+                "name": "mStateMask",
+                "type": "T3RenderStateBlock",
+                "flags": 0
+            },
+            {
+                "name": "mParameters",
+                "type": "T3EffectParameters",
+                "flags": 0
+            },
+            {
+                "name": "mFragmentOffsets",
+                "type": "DArray<unsignedint>",
+                "flags": 0
+            },
+            {
+                "name": "mNeededInterface",
+                "type": "unsignedlong",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LogicGroup",
+        "crc32": 4057380215,
+        "members": [
+            {
+                "name": "mOperator",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mItems",
+                "type": "Map<String,LogicGroup::LogicItem,less<String>>",
+                "flags": 0
+            },
+            {
+                "name": "mLogicGroups",
+                "type": "DCArray<LogicGroup>",
+                "flags": 0
+            },
+            {
+                "name": "mGroupOperator",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mType",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChild",
+        "crc32": 3969573852,
+        "members": [
+            {
+                "name": "Baseclass_DlgChainHead",
+                "type": "DlgChainHead",
+                "flags": 48
+            },
+            {
+                "name": "mName",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "Baseclass_DlgVisibilityConditionsOwner",
+                "type": "DlgVisibilityConditionsOwner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_DlgObjectPropsOwner",
+                "type": "DlgObjectPropsOwner",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeSequence",
+        "crc32": 574142591,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mElements",
+                "type": "DlgNodeSequence::DlgChildSetElement",
+                "flags": 32
+            },
+            {
+                "name": "mPlaybackMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mLifetimeMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mElemUseCriteria",
+                "type": "DlgNodeCriteria",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgFolder",
+        "crc32": 631649975,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 48
+            },
+            {
+                "name": "Baseclass_DlgObjectPropsOwner",
+                "type": "DlgObjectPropsOwner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 48
+            },
+            {
+                "name": "Baseclass_TaskOwner",
+                "type": "TaskOwner",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "Symbol",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Rule",
+        "crc32": 4200941533,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mRuntimePropName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mConditions",
+                "type": "LogicGroup",
+                "flags": 0
+            },
+            {
+                "name": "mActions",
+                "type": "LogicGroup",
+                "flags": 0
+            },
+            {
+                "name": "mElse",
+                "type": "LogicGroup",
+                "flags": 0
+            },
+            {
+                "name": "mAgentCategory",
+                "type": "String",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeParallel::DlgChildSetElement",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "EnumRenderMaskWrite",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "CameraFacingTypes",
+        "crc32": 1963543730,
+        "members": [
+            {
+                "name": "mCameraFacingType",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ActingPaletteClass",
+        "crc32": 984762405,
+        "members": [
+            {
+                "name": "Baseclass_UID::Generator",
+                "type": "UID::Generator",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_ActingOverridablePropOwner",
+                "type": "ActingOverridablePropOwner",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mPalettePtrs",
+                "type": "DCArray<Ptr<ActingPalette>>",
+                "flags": 1
+            },
+            {
+                "name": "mPaletteGroupPtrs",
+                "type": "DCArray<Ptr<ActingPaletteGroup>>",
+                "flags": 1
+            },
+            {
+                "name": "mAlternateNames",
+                "type": "DCArray<String>",
+                "flags": 0
+            },
+            {
+                "name": "mDefaultPaletteGroupID",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mInstantChange",
+                "type": "bool",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgLineCollection",
+        "crc32": 3040635724,
+        "members": [
+            {
+                "name": "Baseclass_UID::Generator",
+                "type": "UID::Generator",
+                "flags": 16
+            },
+            {
+                "name": "mLines",
+                "type": "Map<int,DlgLine,less<int>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeMarker",
+        "crc32": 506075710,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "ScriptEnum:MenuAlignment",
+        "crc32": 3581553835,
+        "members": [
+            {
+                "name": "mCurValue",
+                "type": "String",
+                "flags": 1152
+            }
+        ]
+    },
+    {
+        "type": "SoundReverbDefinition",
+        "crc32": 2380080716,
+        "members": [
+            {
+                "name": "mbEnabled",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mfRoomEffectLevel",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfRoomEffectLevelHighFrequency",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfRoomEffectLevelLowFrequency",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfDecayTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfDecayHighFrequencyRatio",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfReflections",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfReflectionsDelay",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfReverb",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfReverbDelay",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfHighFrequencyReference",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfLowFrequencyReference",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfDiffusion",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mfDensity",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNode",
+        "crc32": 396956583,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 48
+            },
+            {
+                "name": "Baseclass_DlgVisibilityConditionsOwner",
+                "type": "DlgVisibilityConditionsOwner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_DlgObjectPropsOwner",
+                "type": "DlgObjectPropsOwner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_TaskOwner",
+                "type": "TaskOwner",
+                "flags": 16
+            },
+            {
+                "name": "mPrev",
+                "type": "DlgNodeLink",
+                "flags": 32
+            },
+            {
+                "name": "mNext",
+                "type": "DlgNodeLink",
+                "flags": 32
+            },
+            {
+                "name": "mName",
+                "type": "Symbol",
+                "flags": 32
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 32
+            },
+            {
+                "name": "mChainContextTypeID",
+                "type": "int",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeScript",
+        "crc32": 4148637686,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mScriptText",
+                "type": "String",
+                "flags": 32
+            },
+            {
+                "name": "mbBlocking",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mbExecuteOnInstanceRetire",
+                "type": "bool",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryData",
+        "crc32": 285363547,
+        "members": [
+            {
+                "name": "mPlatform",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mVariance",
+                "type": "unsignedlong",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChildSetChoicesChildPre",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "LanguageLookupMap",
+        "crc32": 3452540640,
+        "members": [
+            {
+                "name": "mIDSets",
+                "type": "DCArray<LanguageLookupMap::DlgIDSet>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "AgentMap::AgentMapEntry",
+        "crc32": 200502370,
+        "members": [
+            {
+                "name": "mzName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mzActor",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mazModels",
+                "type": "Set<String,less<String>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataHlsl_D3D",
+        "crc32": 1385181561,
+        "members": [
+            {
+                "name": "Baseclass_T3EffectBinaryDataCg",
+                "type": "T3EffectBinaryDataCg",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataAsm_GL",
+        "crc32": 1385181561,
+        "members": [
+            {
+                "name": "Baseclass_T3EffectBinaryDataCg",
+                "type": "T3EffectBinaryDataCg",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeNotes",
+        "crc32": 609964074,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mNoteText",
+                "type": "String",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "WalkBoxes::Edge",
+        "crc32": 2310622033,
+        "members": [
+            {
+                "name": "mV1",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mV2",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mEdgeDest",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mEdgeDestEdge",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mEdgeDir",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mMaxRadius",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeSequence::DlgChildSetElement",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "TaskOwner",
+        "crc32": 1881308952,
+        "members": [
+            {
+                "name": "mTaskID",
+                "type": "unsignedlong",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgChildSetChoicesChildPost",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeIdle",
+        "crc32": 3134119080,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mhIdle",
+                "type": "Handle<Chore>",
+                "flags": 0
+            },
+            {
+                "name": "mOverrideOptionTime",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mOverrideOptionStyle",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mTransitionTimeOverride",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionStyleOverride",
+                "type": "int",
+                "flags": 32
+            },
+            {
+                "name": "mIdleSlot",
+                "type": "int",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "T3VertexDeclaration",
+        "crc32": 803120902,
+        "members": [
+            {
+                "name": "mStreamFlags",
+                "type": "unsignedlong",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "StyleGuide",
+        "crc32": 4242131259,
+        "members": [
+            {
+                "name": "Baseclass_UID::Generator",
+                "type": "UID::Generator",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_ActingOverridablePropOwner",
+                "type": "ActingOverridablePropOwner",
+                "flags": 16
+            },
+            {
+                "name": "mDefPaletteClassID",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mbGeneratesLookAts",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mPaletteClassPtrs",
+                "type": "DCArray<Ptr<ActingPaletteClass>>",
+                "flags": 1
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mbDisallowOverrun",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mPaletteClasses",
+                "type": "DCArray<ActingPaletteClass>",
+                "flags": 32
+            },
+            {
+                "name": "mDefPaletteClassIndex",
+                "type": "int",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "LanguageResProxy",
+        "crc32": 846451146,
+        "members": [
+            {
+                "name": "mID",
+                "type": "unsignedlong",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeChoices",
+        "crc32": 1344933121,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mChoices",
+                "type": "DlgChildSetChoice",
+                "flags": 32
+            },
+            {
+                "name": "mPreChoice",
+                "type": "DlgChildSetChoicesChildPre",
+                "flags": 32
+            },
+            {
+                "name": "mPostChoice",
+                "type": "DlgChildSetChoicesChildPost",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "WalkBoxes",
+        "crc32": 1047744782,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTris",
+                "type": "DCArray<WalkBoxes::Tri>",
+                "flags": 0
+            },
+            {
+                "name": "mVerts",
+                "type": "DCArray<WalkBoxes::Vert>",
+                "flags": 0
+            },
+            {
+                "name": "mNormals",
+                "type": "DCArray<Vector3>",
+                "flags": 0
+            },
+            {
+                "name": "mQuads",
+                "type": "DCArray<WalkBoxes::Quad>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgDownstreamVisibilityConditions",
+        "crc32": 1943858373,
+        "members": [
+            {
+                "name": "mNodeTypeFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mMaxNumNodeEvals",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeChore",
+        "crc32": 1601859098,
+        "members": [
+            {
+                "name": "mChore",
+                "type": "Handle<Chore>",
+                "flags": 0
+            },
+            {
+                "name": "mPriority",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mLooping",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgConditionTime",
+        "crc32": 2449067384,
+        "members": [
+            {
+                "name": "Baseclass_DlgCondition",
+                "type": "DlgCondition",
+                "flags": 16
+            },
+            {
+                "name": "mDurationClass",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mSeconds",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgVisibilityConditions",
+        "crc32": 1502045756,
+        "members": [
+            {
+                "name": "mbDiesOff",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 32
+            },
+            {
+                "name": "mDownstreamVisCond",
+                "type": "DlgDownstreamVisibilityConditions",
+                "flags": 0
+            },
+            {
+                "name": "mScriptVisCond",
+                "type": "String",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "WalkBoxes::Tri",
+        "crc32": 2817794544,
+        "members": [
+            {
+                "name": "mFootstepMaterial",
+                "type": "SoundFootsteps::EnumMaterial",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mNormal",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mQuadBuddy",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mMaxRadius",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mVerts",
+                "type": "SArray<int,3>",
+                "flags": 0
+            },
+            {
+                "name": "mEdgeInfo",
+                "type": "SArray<WalkBoxes::Edge,3>",
+                "flags": 0
+            },
+            {
+                "name": "mVertOffsets",
+                "type": "SArray<int,3>",
+                "flags": 0
+            },
+            {
+                "name": "mVertScales",
+                "type": "SArray<float,3>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "IdleTransitionSettings",
+        "crc32": 2957607212,
+        "members": [
+            {
+                "name": "mTransitionTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionStyleDummy",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "PhonemeTable::PhonemeEntry",
+        "crc32": 1271806136,
+        "members": [
+            {
+                "name": "mAnimation",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mContributionScalar",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTimeScalar",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChainHead",
+        "crc32": 508613187,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 16
+            },
+            {
+                "name": "mLink",
+                "type": "DlgNodeLink",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinary",
+        "crc32": 913258285,
+        "members": [
+            {
+                "name": "mStateCrc",
+                "type": "unsignedlong",
+                "flags": 0
+            },
+            {
+                "name": "mVersion",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mEffectType",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mEffectFeatures",
+                "type": "unsignedlong",
+                "flags": 0
+            },
+            {
+                "name": "mEffectTechnique",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgObjectPropsMap::GroupDefinition",
+        "crc32": 2578545570,
+        "members": [
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "mGroupCat",
+                "type": "int",
+                "flags": 32
+            },
+            {
+                "name": "mVer",
+                "type": "int",
+                "flags": 32
+            },
+            {
+                "name": "mhProps",
+                "type": "Handle<PropertySet>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "SoundBusSystem::BusHolder",
+        "crc32": 4215561169,
+        "members": [
+            {
+                "name": "masterBus",
+                "type": "SoundBusSystem::BusDescription",
+                "flags": 0
+            },
+            {
+                "name": "assetMap",
+                "type": "Map<Symbol,Symbol,less<Symbol>>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeCriteria::EnumDefaultResultT",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "LanguageRes",
+        "crc32": 610130668,
+        "members": [
+            {
+                "name": "mResName",
+                "type": "Symbol",
+                "flags": 32
+            },
+            {
+                "name": "mID",
+                "type": "unsignedlong",
+                "flags": 32
+            },
+            {
+                "name": "mIDAlias",
+                "type": "unsignedlong",
+                "flags": 0
+            },
+            {
+                "name": "mhAnimation",
+                "type": "Handle<Animation>",
+                "flags": 0
+            },
+            {
+                "name": "mhVoiceData",
+                "type": "Handle<SoundData>",
+                "flags": 0
+            },
+            {
+                "name": "mLocalData",
+                "type": "DCArray<LanguageResLocal>",
+                "flags": 32
+            },
+            {
+                "name": "mLengthOverride",
+                "type": "float",
+                "flags": 32
+            },
+            {
+                "name": "mResolvedLocalData",
+                "type": "LanguageResLocal",
+                "flags": 32
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 262144
+            }
+        ]
+    },
+    {
+        "type": "DlgConditionRule",
+        "crc32": 3607645126,
+        "members": [
+            {
+                "name": "Baseclass_DlgCondition",
+                "type": "DlgCondition",
+                "flags": 16
+            },
+            {
+                "name": "mRule",
+                "type": "Rule",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "TRange<unsignedlong>",
+        "crc32": 3658224391,
+        "members": [
+            {
+                "name": "min",
+                "type": "unsignedlong",
+                "flags": 0
+            },
+            {
+                "name": "max",
+                "type": "unsignedlong",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeSequence::Element",
+        "crc32": 4095137764,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            },
+            {
+                "name": "mRepeat",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mPlayPosition",
+                "type": "int",
+                "flags": 64
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeWait",
+        "crc32": 1091079691,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_DlgConditionSet",
+                "type": "DlgConditionSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "IdleSlotDefaults",
+        "crc32": 3962816439,
+        "members": [
+            {
+                "name": "mTransitionInDefault",
+                "type": "IdleTransitionSettings",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionDefault",
+                "type": "IdleTransitionSettings",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionOutDefault",
+                "type": "IdleTransitionSettings",
+                "flags": 0
+            },
+            {
+                "name": "mBasePriority",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mSlotFriendlyName",
+                "type": "Symbol",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeText",
+        "crc32": 4218822652,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mLangResProxy",
+                "type": "LanguageResProxy",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgLine",
+        "crc32": 852155329,
+        "members": [
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "mLangResProxy",
+                "type": "LanguageResProxy",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ActingOverridablePropOwner",
+        "crc32": 1372011474,
+        "members": [
+            {
+                "name": "mSerializationFlags",
+                "type": "Flags",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Rect",
+        "crc32": 3190387342,
+        "members": [
+            {
+                "name": "left",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "right",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "top",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "bottom",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ZTestFunction",
+        "crc32": 1825338637,
+        "members": [
+            {
+                "name": "mZTestType",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3RenderStateBlock",
+        "crc32": 953011226,
+        "members": [
+            {
+                "name": "mData",
+                "type": "SArray<unsignedlong,3>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgConditionalCase",
+        "crc32": 3291321042,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "InputMapper::EventMapping",
+        "crc32": 2093390387,
+        "members": [
+            {
+                "name": "mInputCode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mEvent",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mScriptFunction",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mControllerIndexOverride",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgVisibilityConditionsOwner",
+        "crc32": 1147572831,
+        "members": [
+            {
+                "name": "mVisCond",
+                "type": "DlgVisibilityConditions",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LanguageResLocal",
+        "crc32": 1112852994,
+        "members": [
+            {
+                "name": "mPrefix",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mText",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mLocalInfo",
+                "type": "LocalizeInfo",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "ActingPaletteGroup",
+        "crc32": 3148997031,
+        "members": [
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mIdle",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mTalkingIdle",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mMumbleMouth",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mWeight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionOut",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mIdleTransitionTimeOverride",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mIdleTransitionKind",
+                "type": "ActingPaletteGroup::EnumIdleTransition",
+                "flags": 0
+            },
+            {
+                "name": "mTransition1",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn1",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset1",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay1",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay1",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition2",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn2",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset2",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay2",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay2",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition3",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn3",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset3",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay3",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay3",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition4",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn4",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset4",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay4",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay4",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition5",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn5",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset5",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay5",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay5",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition6",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn6",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset6",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay6",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay6",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition7",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn7",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset7",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay7",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay7",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition8",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn8",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset8",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay8",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay8",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition9",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn9",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset9",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay9",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay9",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition10",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn10",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset10",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay10",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay10",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition11",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn11",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset11",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay11",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay11",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition12",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn12",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset12",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay12",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay12",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition13",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn13",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset13",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay13",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay13",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition14",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn14",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset14",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay14",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay14",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTransition15",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mTransitionIn15",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mCenterOffset15",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPreDelay15",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mPostDelay15",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mRandomAutoMin",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mRandomAutoMax",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "EnumeTangentModes",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgObjectPropsOwner",
+        "crc32": 1413632789,
+        "members": [
+            {
+                "name": "mDlgObjectProps",
+                "type": "DlgObjectProps",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LanguageRegister",
+        "crc32": 969501839,
+        "members": [
+            {
+                "name": "Baseclass_UID::Generator",
+                "type": "UID::Generator",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "InputMapper",
+        "crc32": 148021896,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mMappedEvents",
+                "type": "DCArray<InputMapper::EventMapping>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "T3EffectParameters",
+        "crc32": 739154649,
+        "members": [
+            {
+                "name": "mParameters",
+                "type": "SArray<unsignedlong,6>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "UID::Generator",
+        "crc32": 1995286546,
+        "members": [
+            {
+                "name": "miNextUniqueID",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeExchange",
+        "crc32": 2432263475,
+        "members": [
+            {
+                "name": "mPriority",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mhChore",
+                "type": "Handle<Chore>",
+                "flags": 0
+            },
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mEntries",
+                "type": "DCArray<DlgNodeExchange::Entry>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "AssetCollection",
+        "crc32": 2785332707,
+        "members": [
+            {
+                "name": "mIncludeMasks",
+                "type": "DCArray<String>",
+                "flags": 0
+            },
+            {
+                "name": "mExcludeMasks",
+                "type": "DCArray<String>",
+                "flags": 0
+            },
+            {
+                "name": "mPreFilter",
+                "type": "String",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgChoice",
+        "crc32": 459846273,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_DlgConditionSet",
+                "type": "DlgConditionSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgChoicesChildPre",
+        "crc32": 3291321042,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeLogic",
+        "crc32": 1964345769,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mRule",
+                "type": "Rule",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgObjectProps",
+        "crc32": 1679512524,
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataCg",
+        "crc32": 756995673,
+        "members": [
+            {
+                "name": "Baseclass_T3EffectBinaryData",
+                "type": "T3EffectBinaryData",
+                "flags": 16
+            },
+            {
+                "name": "mPasses",
+                "type": "DCArray<T3EffectBinaryDataCg::Pass>",
+                "flags": 0
+            },
+            {
+                "name": "mSamplerState",
+                "type": "DCArray<T3EffectBinaryDataCg::SamplerState>",
+                "flags": 0
+            },
+            {
+                "name": "mParameters",
+                "type": "T3EffectParameters",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeStart",
+        "crc32": 506075710,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeParallel",
+        "crc32": 3799072638,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mPElements",
+                "type": "DlgNodeParallel::DlgChildSetElement",
+                "flags": 32
+            },
+            {
+                "name": "mElemUseCriteria",
+                "type": "DlgNodeCriteria",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataCg::SamplerState",
+        "crc32": 3755023320,
+        "members": [
+            {
+                "name": "mParameter",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mStateBlock",
+                "type": "T3SamplerStateBlock",
+                "flags": 0
+            },
+            {
+                "name": "mStateMask",
+                "type": "T3SamplerStateBlock",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeLink",
+        "crc32": 3174780826,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 16
+            },
+            {
+                "name": "mRequiredCCType",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeParallel::PElement",
+        "crc32": 3291321042,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "ScriptEnum:MenuVerticalAlignment",
+        "crc32": 3581553835,
+        "members": [
+            {
+                "name": "mCurValue",
+                "type": "String",
+                "flags": 1152
+            }
+        ]
+    },
+    {
+        "type": "LanguageLookupMap::DlgIDSet",
+        "crc32": 3915634169,
+        "members": [
+            {
+                "name": "mIDRange",
+                "type": "TRange<unsignedlong>",
+                "flags": 0
+            },
+            {
+                "name": "mAdditionalIDs",
+                "type": "Set<unsignedlong,less<unsignedlong>>",
+                "flags": 0
+            },
+            {
+                "name": "mhDlg",
+                "type": "Handle<Dlg>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "WalkBoxes::Vert",
+        "crc32": 2219473331,
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mPos",
+                "type": "Vector3",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "LocalizeInfo",
+        "crc32": 1679512524,
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "Font::GlyphInfo",
+        "crc32": 2846244501,
+        "members": [
+            {
+                "name": "mTexturePage",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mChannel",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mGlyph",
+                "type": "TRect<float>",
+                "flags": 0
+            },
+            {
+                "name": "mWidth",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mHeight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mXOffset",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mYOffset",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mXAdvance",
+                "type": "float",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeExit",
+        "crc32": 506075710,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeJump",
+        "crc32": 1051445924,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mJumpToLink",
+                "type": "DlgNodeLink",
+                "flags": 32
+            },
+            {
+                "name": "mJumpToName",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mJumpTargetClass",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mJumpBehavior",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mChoiceTransparency",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mVisibilityBehavior",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mhJumpToDlg",
+                "type": "Handle<Dlg>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "ActingPaletteGroup::EnumIdleTransition",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "PhonemeTable",
+        "crc32": 3076999303,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 32
+            },
+            {
+                "name": "mContributionScaler",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mAnimations",
+                "type": "Map<Symbol,PhonemeTable::PhonemeEntry,less<Symbol>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChildSetConditionalCase",
+        "crc32": 1710960316,
+        "members": [
+            {
+                "name": "Baseclass_DlgChildSet",
+                "type": "DlgChildSet",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "Dlg",
+        "crc32": 112081325,
+        "members": [
+            {
+                "name": "Baseclass_DlgObjIDOwner",
+                "type": "DlgObjIDOwner",
+                "flags": 48
+            },
+            {
+                "name": "Baseclass_TaskOwner",
+                "type": "TaskOwner",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 32
+            },
+            {
+                "name": "mVersion",
+                "type": "int",
+                "flags": 32
+            },
+            {
+                "name": "mDefFolderID",
+                "type": "DlgObjID",
+                "flags": 32
+            },
+            {
+                "name": "mLangDB",
+                "type": "LanguageDB",
+                "flags": 32
+            },
+            {
+                "name": "mProjectID",
+                "type": "unsignedlong",
+                "flags": 32
+            },
+            {
+                "name": "mResourceLocationID",
+                "type": "Symbol",
+                "flags": 32
+            },
+            {
+                "name": "mChronology",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 32
+            },
+            {
+                "name": "mDependencies",
+                "type": "DependencyLoader<1>",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeCancelChoices",
+        "crc32": 3352644329,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mCancelGroup",
+                "type": "int",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "EnumRenderMaskTest",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeCriteria::EnumThresholdT",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgFolderChild",
+        "crc32": 3291321042,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeCriteria",
+        "crc32": 4162985216,
+        "members": [
+            {
+                "name": "mTestType",
+                "type": "DlgNodeCriteria::EnumTestT",
+                "flags": 0
+            },
+            {
+                "name": "mFlagsThreshold",
+                "type": "DlgNodeCriteria::EnumThresholdT",
+                "flags": 0
+            },
+            {
+                "name": "mCriteriaThreshold",
+                "type": "DlgNodeCriteria::EnumThresholdT",
+                "flags": 0
+            },
+            {
+                "name": "mDefaultResult",
+                "type": "DlgNodeCriteria::EnumDefaultResultT",
+                "flags": 0
+            },
+            {
+                "name": "mClassFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mClassIDs",
+                "type": "Set<int,less<int>>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeExchange::Entry",
+        "crc32": 415572323,
+        "members": [
+            {
+                "name": "mID",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mType",
+                "type": "int",
+                "flags": 64
+            }
+        ]
+    },
+    {
+        "type": "T3EffectBinaryDataCg::ParameterLocation",
+        "crc32": 1182258142,
+        "members": [
+            {
+                "name": "mParameter",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mLocation",
+                "type": "int",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "SoundBusSystem::BusDescription",
+        "crc32": 1065524723,
+        "members": [
+            {
+                "name": "fVolumedB",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "fReverbWetLeveldB",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "fReverbDryLeveldB",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "fLowPassFrequencyCutoff",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "fHighPassFrequencyCutoff",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "bEnableLowPass",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "bEnableHighPass",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "children",
+                "type": "Map<String,SoundBusSystem::BusDescription,less<String>>",
+                "flags": 0
+            },
+            {
+                "name": "autoAssignPatternCollection",
+                "type": "AssetCollection",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeCriteria::EnumTestT",
+        "crc32": 648771917,
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "UID::Owner",
+        "crc32": 1365729871,
+        "members": [
+            {
+                "name": "miUniqueID",
+                "type": "int",
+                "flags": 32
+            }
+        ]
+    },
+    {
+        "type": "Font",
+        "crc32": 55166892,
+        "members": [
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mbUnicode",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mHeight",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mWiiScale",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mFontScale",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mGlyphInfo",
+                "type": "Map<unsignedlong,Font::GlyphInfo,less<unsignedlong>>",
+                "flags": 0
+            },
+            {
+                "name": "mTexturePages",
+                "type": "DCArray<T3Texture>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "DlgChoicesChildPost",
+        "crc32": 3291321042,
+        "members": [
+            {
+                "name": "Baseclass_DlgChild",
+                "type": "DlgChild",
+                "flags": 16
+            }
+        ]
+    },
+    {
+        "type": "DlgNodeConditional",
+        "crc32": 2136531840,
+        "members": [
+            {
+                "name": "Baseclass_DlgNode",
+                "type": "DlgNode",
+                "flags": 16
+            },
+            {
+                "name": "mCases",
+                "type": "DlgChildSetConditionalCase",
+                "flags": 32
+            }
+        ]
     }
 ]
