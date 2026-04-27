@@ -328,6 +328,9 @@ public class Workspace
             return null;
         }
 
+        //idea for this bit, make it so that they're only added to one context in the Workspace,
+        //  not every ResourceContext this generates - Gamma
+        
         // Add loose files from the base folder
         string? baseFolder = Path.GetDirectoryName(descPath);
         if (baseFolder != null)
@@ -373,6 +376,8 @@ public class Workspace
     private const string LuaHeader = "\eLua";
     private const string LEoHeader = "\eLEo";
 
+    //todo (gamma): try executing compiled resdescs (through decomp)
+    // and return null if they're not actually resdescs 
     private async Task<LuaTable> ParseResourceDescription(string descPath)
     {
         FileStream luaFile = File.OpenRead(descPath);
