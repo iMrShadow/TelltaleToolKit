@@ -34,10 +34,7 @@ const T3BlowfishKey blowfishKey = T3BlowfishKey.Grickle101;
 // Alternatively, replace with a full path
 // You can also modify it if you want to output the data files somewhere else
 const string dataFolderPath = "../../../../../data";
-Toolkit.Initialize(new Toolkit.Configuration()
-{
-    DataFolder = dataFolderPath,
-});
+Toolkit.Initialize(new Toolkit.Configuration() { DataFolder = dataFolderPath, });
 
 // Newer games especially:
 // Replace *ttarch with *ttarch2 if you want to scan ttarch2.
@@ -83,10 +80,11 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
         foreach (TelltaleFileEntry entry in archive.FileEntries)
         {
             // Console.WriteLine($"Reading {entry.Name}");
-            if (!Toolkit.IsMetaFile(entry.Name))
-                continue;
 
-            MemoryStream file = archive.ExtractFile(entry.Name);
+            using MemoryStream file = archive.ExtractFile(entry.Name);
+
+            if (!Toolkit.IsMetaFile(file))
+                continue;
 
             MetaStreamConfiguration config = new MetaStreamReader(file).Configuration;
 
@@ -98,12 +96,24 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
             foreach ((MetaClassType, uint crc32) urDesc in config.UnregisteredClasses)
                 unrecognizedMetaClassDescriptions.TryAdd(urDesc, 0);
+
+            if (config.UnregisteredTypes.Count > 0)
+            {
+                Console.Error.WriteLine(
+                    $"File {entry.Name} has {config.UnregisteredTypes.Count} unregistered types in {Path.GetFileName(filePath)}.");
+            }
+            
+            if (config.UnregisteredClasses.Count > 0)
+            {
+                Console.Error.WriteLine(
+                    $"File {entry.Name} has {config.UnregisteredClasses.Count} unregistered classes in {Path.GetFileName(filePath)}.");
+            }
         }
     }
     catch (Exception e)
     {
-        Console.WriteLine($"Something unexpected happened reading {filePath}!");
-        Console.WriteLine(e);
+        Console.Error.WriteLine($"Something unexpected happened reading {filePath}!");
+        Console.Error.WriteLine(e);
     }
 
     Console.WriteLine($"Finished reading {filePath}.");
@@ -163,10 +173,7 @@ List<MetaClass> unregisteredMetaClasses = [];
 
 foreach ((MetaClassType classType, uint crc32) unrecognized in unrecognizedMetaClassDescriptions.Keys)
 {
-    var mcs = new MetaClass()
-    {
-        ClassType = unrecognized.classType, Crc32 = unrecognized.crc32, Members = []
-    };
+    var mcs = new MetaClass() { ClassType = unrecognized.classType, Crc32 = unrecognized.crc32, Members = [] };
     unregisteredMetaClasses.Add(mcs);
 }
 
