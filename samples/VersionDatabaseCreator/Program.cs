@@ -34,10 +34,7 @@ const T3BlowfishKey blowfishKey = T3BlowfishKey.Grickle101;
 // Alternatively, replace with a full path
 // You can also modify it if you want to output the data files somewhere else
 const string dataFolderPath = "../../../../../data";
-Toolkit.Initialize(new Toolkit.Configuration()
-{
-    DataFolder = dataFolderPath,
-});
+Toolkit.Initialize(new Toolkit.Configuration() { DataFolder = dataFolderPath, });
 
 // Newer games especially:
 // Replace *ttarch with *ttarch2 if you want to scan ttarch2.
@@ -176,10 +173,7 @@ List<MetaClass> unregisteredMetaClasses = [];
 
 foreach ((MetaClassType classType, uint crc32) unrecognized in unrecognizedMetaClassDescriptions.Keys)
 {
-    var mcs = new MetaClass()
-    {
-        ClassType = unrecognized.classType, Crc32 = unrecognized.crc32, Members = []
-    };
+    var mcs = new MetaClass() { ClassType = unrecognized.classType, Crc32 = unrecognized.crc32, Members = [] };
     unregisteredMetaClasses.Add(mcs);
 }
 
