@@ -83,10 +83,11 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
         foreach (TelltaleFileEntry entry in archive.FileEntries)
         {
             // Console.WriteLine($"Reading {entry.Name}");
-            if (!Toolkit.IsMetaFile(entry.Name))
-                continue;
 
-            MemoryStream file = archive.ExtractFile(entry.Name);
+            using MemoryStream file = archive.ExtractFile(entry.Name);
+
+            if (!Toolkit.IsMetaFile(file))
+                continue;
 
             MetaStreamConfiguration config = new MetaStreamReader(file).Configuration;
 
