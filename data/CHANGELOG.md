@@ -1,5 +1,10 @@
 ## Database Changelog
 
+### 24th of April, 2026
+
+#### Game Profiles
+- Added the year to TWDS2 game profile json file name to match other entries
+
 ### 17th of March, 2026
 
 #### Game Profiles

@@ -67,4 +67,11 @@ public class ResourceContext : IFileProvider
             provider.Dispose();
         _providers.Clear();
     }
+    
+    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    {
+        IEnumerable<TelltaleFileEntry> entries = [];
+
+        return _providers.Aggregate(entries, (current, provider) => current.Concat(provider.GetAllEntries()));
+    }
 }

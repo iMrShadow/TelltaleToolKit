@@ -1,5 +1,6 @@
 using System.Text;
 using Lua;
+using Lua.Runtime;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
@@ -146,6 +147,28 @@ public class Workspace
         return archive;
     }
 
+    /// <summary>
+    /// Explicitly create a resource context from a single archive, without a resdesc file
+    /// </summary>
+    /// <param name="archivePath"></param>
+    /// <param name="contextName"></param>
+    /// <param name="priority"></param>
+    /// <returns></returns>
+    public ResourceContext LoadArchive(string archivePath, string contextName, int priority = 1000)
+    {
+
+        ResourceContext context = CreateResourceContext(contextName, priority);
+        
+        var archiveProvider = new ArchiveProvider(
+            archivePath,
+            this
+        );
+        
+        context.AddProvider(archiveProvider);
+
+        return context;
+    }
+
     #endregion
 
     #region MetaClass Resolution
@@ -191,7 +214,6 @@ public class Workspace
 
     /// <summary>
     /// Creates a new resource context with explicit priority.
-    /// If a context with this priority already exists, it is replaced.
     /// </summary>
     public ResourceContext CreateResourceContext(string name, int priority)
     {
@@ -286,7 +308,7 @@ public class Workspace
     /// <summary>
     /// Loads a resource description (Lua script) and creates a context from it.
     /// </summary>
-    public ResourceContext LoadResourceDescription(string descPath)
+    public ResourceContext? LoadResourceDescription(string descPath)
     {
         LuaTable resdesc = ParseResourceDescription(descPath).Result;
 
@@ -295,22 +317,20 @@ public class Workspace
 
         var context = new ResourceContext(name, priority, this);
 
-        // Add archives from the resource description
-        foreach (KeyValuePair<LuaValue, LuaValue> kvPair in resdesc["gameDataArchives"].Read<LuaTable>().ToArray())
+        LuaValue archives = resdesc["gameDataArchives"];
+        
+        if(archives.TryRead(out LuaTable table))
         {
-            var archivePath = kvPair.Value.Read<string>();
-
-            string fullPath = Path.IsPathRooted(archivePath)
-                ? archivePath
-                : Path.Combine(Path.GetDirectoryName(descPath)!, archivePath);
-
-            var archiveProvider = new ArchiveProvider(
-                fullPath,
-                this
-            );
-            context.AddProvider(archiveProvider);
+            _addGameDataArchives(descPath, table, context);
+        }
+        else
+        {
+            return null;
         }
 
+        //idea for this bit, make it so that they're only added to one context in the Workspace,
+        //  not every ResourceContext this generates - Gamma
+        
         // Add loose files from the base folder
         string? baseFolder = Path.GetDirectoryName(descPath);
         if (baseFolder != null)
@@ -327,10 +347,37 @@ public class Workspace
         return context;
     }
 
+    /// <summary>
+    /// Helper function to add all the game data archives in a given game data archives lua table.
+    /// </summary>
+    /// <param name="descPath">Resource Description Path</param>
+    /// <param name="archives">gameDataArchives entry</param>
+    /// <param name="context">resource context</param>
+    private void _addGameDataArchives(string descPath, LuaTable archives, ResourceContext context)
+    {
+        // Add archives from the resource description
+        foreach (KeyValuePair<LuaValue, LuaValue> kvPair in archives.ToArray())
+        {
+            var archivePath = kvPair.Value.Read<string>();
+
+            string fullPath = Path.IsPathRooted(archivePath)
+                ? archivePath
+                : Path.Combine(Path.GetDirectoryName(descPath)!, archivePath);
+
+            var archiveProvider = new ArchiveProvider(
+                fullPath,
+                this
+            );
+            context.AddProvider(archiveProvider);
+        }
+    }
+
     private const string LEnHeader = "\eLEn";
     private const string LuaHeader = "\eLua";
     private const string LEoHeader = "\eLEo";
 
+    //todo (gamma): try executing compiled resdescs (through decomp)
+    // and return null if they're not actually resdescs 
     private async Task<LuaTable> ParseResourceDescription(string descPath)
     {
         FileStream luaFile = File.OpenRead(descPath);
@@ -365,12 +412,17 @@ public class Workspace
         if (header is LEnHeader)
         {
             // handle lua bytecode, but this shouldn't actually happen in resdesc parsing...
-            // byte[] lua = new byte[fileBytes.Length + 4];
-            // Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), lua, 4);
-            // Array.Copy(fileBytes, lua, fileBytes.Length);
+            byte[] newLua = new byte[fileBytes.Length + 4];
+            Array.Copy(Encoding.ASCII.GetBytes(LuaHeader), newLua, 4);
+            Array.Copy(fileBytes, 0, newLua, 4, fileBytes.Length);
 
-            Console.WriteLine("Got LEn Lua header during ParseResourceDescription!!! THIS SHOULD NOT HAPPEN!");
-            throw new ArgumentException("Improperly formatted resdesc file!");
+            //is this the best way? just seeing if it works for right now
+            //it does not, working on it
+            // string tempFilePath = Path.GetTempFileName();
+            // File.WriteAllBytes(tempFilePath, newLua);
+            
+            throw new ArgumentException("Compiled Resdesc file");
+            
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
