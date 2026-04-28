@@ -34,7 +34,7 @@ public class Toolkit
             Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
             WriteIndented = true
         };
-        
+
         if (!string.IsNullOrEmpty(config.DataFolder))
         {
             LoadMetaClassDescriptions();
@@ -231,7 +231,7 @@ public class Toolkit
         writer.Serialize(ref refObj);
         writer.Save();
     }
-    
+
     /// <summary>
     /// Saves an object to a file using the specified configuration.
     /// </summary>
@@ -519,7 +519,7 @@ public class Toolkit
     }
 
     /// <summary>
-    /// Determines whether a file with the specified name should be considered a Meta (Telltale Tool specific) file,
+    /// Determines whether a file with the specified name should be considered a Meta file (Telltale Tool asset format)
     /// based on its extension.
     /// </summary>
     /// <param name="fileName">The name of the file or archive entry.</param>
@@ -532,6 +532,34 @@ public class Toolkit
             _ => false
             // TODO: Check for .t3fxpreloadpack
         };
+    }
+
+    /// <summary>
+    /// Determines whether a stream is a Meta file (Telltale Tool asset format)
+    /// by its version header.
+    /// </summary>
+    /// <param name="stream">The stream to check. The stream must be seekable and readable.
+    /// The stream position is restored after the check.</param>
+    /// <returns>
+    /// <c>true</c> if the stream's first 4 bytes represent a valid MetaStreamVersion value;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsMetaFile(Stream stream)
+    {
+        long oldPosition = stream.Position;
+        stream.Position = 0;
+
+        var header = new byte[4];
+        if (stream.Read(header, 0, 4) < 4)
+        {
+            stream.Position = oldPosition;
+            return false;
+        }
+
+        stream.Position = oldPosition;
+
+        var version = (MetaStreamVersion)BitConverter.ToInt32(header);
+        return Enum.IsDefined(typeof(MetaStreamVersion), version);
     }
 
     /// <summary>
