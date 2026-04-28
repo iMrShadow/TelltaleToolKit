@@ -99,12 +99,24 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
             foreach ((MetaClassType, uint crc32) urDesc in config.UnregisteredClasses)
                 unrecognizedMetaClassDescriptions.TryAdd(urDesc, 0);
+
+            if (config.UnregisteredTypes.Count > 0)
+            {
+                Console.Error.WriteLine(
+                    $"File {entry.Name} has {config.UnregisteredTypes.Count} unregistered types in {Path.GetFileName(filePath)}.");
+            }
+            
+            if (config.UnregisteredClasses.Count > 0)
+            {
+                Console.Error.WriteLine(
+                    $"File {entry.Name} has {config.UnregisteredClasses.Count} unregistered classes in {Path.GetFileName(filePath)}.");
+            }
         }
     }
     catch (Exception e)
     {
-        Console.WriteLine($"Something unexpected happened reading {filePath}!");
-        Console.WriteLine(e);
+        Console.Error.WriteLine($"Something unexpected happened reading {filePath}!");
+        Console.Error.WriteLine(e);
     }
 
     Console.WriteLine($"Finished reading {filePath}.");
