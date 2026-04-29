@@ -1059,6 +1059,7 @@ public static class MetaClassTypeRegistry
         Register("class SArray<unsigned char,32>", typeof(byte[]));
         Register("class SArray<unsigned int,3>", typeof(uint[]));
         Register("class SArray<unsigned long,3>", typeof(uint[]));
+        Register("class SArray<unsigned long,6>", typeof(uint[]));
         Register("class SArray<unsigned long,8>", typeof(uint[]));
         Register("class SArray<DCArray<D3DMesh::Texture>,11>", typeof(List<D3DMesh.Texture>[]));
         Register("class SaveGame", typeof(SaveGame));
