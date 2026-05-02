@@ -10,7 +10,7 @@ on:
       - "**.csproj"
 
 env:
-  DOTNET_VERSION: "9.0.x"
+  DOTNET_VERSION: "10.0.x"
 
 jobs:
   build-test:
@@ -32,6 +32,7 @@ jobs:
         run: |
           dotnet restore samples/VersionDatabaseCreator/
           dotnet restore samples/Example/
+          dotnet restore tools/TTKDatabaseGenerator/
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
