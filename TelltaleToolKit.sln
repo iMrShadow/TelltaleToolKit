@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -7,6 +7,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "samples\Example\Example.csproj", "{58A4C704-B01A-46F2-A544-7A3804FD986A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionDatabaseCreator", "samples\VersionDatabaseCreator\VersionDatabaseCreator.csproj", "{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTKDatabaseGenerator", "tools\TTKDatabaseGenerator\TTKDatabaseGenerator.csproj", "{457FFE0D-E2E0-45F4-B1E6-74CE5E615139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F1D503E-1D68-4BE4-80F4-5CB4E196D4E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{457FFE0D-E2E0-45F4-B1E6-74CE5E615139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457FFE0D-E2E0-45F4-B1E6-74CE5E615139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457FFE0D-E2E0-45F4-B1E6-74CE5E615139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457FFE0D-E2E0-45F4-B1E6-74CE5E615139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
