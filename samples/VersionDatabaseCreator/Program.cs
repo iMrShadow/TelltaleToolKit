@@ -102,7 +102,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
                 Console.Error.WriteLine(
                     $"File {entry.Name} has {config.UnregisteredTypes.Count} unregistered types in {Path.GetFileName(filePath)}.");
             }
-            
+
             if (config.UnregisteredClasses.Count > 0)
             {
                 Console.Error.WriteLine(
