@@ -18,6 +18,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <TargetFrameworks>net10.0;net8.0;net9.0</TargetFrameworks>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
