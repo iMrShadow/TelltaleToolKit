@@ -23,7 +23,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Manages prioritized resource contexts, similar to Telltale Tool.
   - Handles file extraction with proper override order (higher priority wins).
   - Provides game-specific metaclass lookup and symbol resolution.
-  - Default MetaStream configuration derived from the game profile.
+  - Default `MetaStream` configuration derived from the game profile.
+  - Can create resource contexts from Lua resdesc files.
 - `IFileProvider` interface - Common abstraction for file sources.
   - Implemented by `ArchiveProvider`, `FolderProvider`, and `LooseFileProvider`.
   - Supports lookup by both CRC64 and filename.
@@ -36,18 +37,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Workspace-level `LocalHashDatabase` for game-specific symbols.
   - Automatic fallback: global DB -> workspace DB -> mounted file names.
   - Batch resolution with `ResolveSymbols()`.
-- Various new T3Types for compatibility with MSV5 and MSV6 games.
+- Various new T3Types for compatibility with MTRE, MSV5 and MSV6 games.
 - Experimental `PropertySet` serializer.
 - Helper methods for `T3Texture` and `PropertySet`.
+- Serializers for `D3DMesh` related classes.
 - Some animation/skeleton related types in the type registry.
-- New contributor in README.md.
+- New contributors in README.md.
 
 ### Changed
 - `GameDescriptor` renamed to `GameProfile` to better reflect its purpose.
 - `GameContext` renamed to `Workspace` for clarity.
-
-- Moved `Lua` relate
-- Some `T3Texture` members now have default values.
+- Some class members now have default values.
 - NuGet related metadata in `TelltaleToolKit.csproj`.
 
 ### Removed
@@ -58,7 +58,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 - Due to the heavy refactoring, most old bugs do not apply to this version.
 - Various bugs regarding loading and saving have been fixed.
-- `Save<T>` without a configuration now works properly.
 
 ## [0.1.0] - 2025-09-30
 

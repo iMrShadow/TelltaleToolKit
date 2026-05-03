@@ -8,15 +8,27 @@
 #### Version Database
 - Added initial version database for The Wolf Among Us (2013)
 
+### 28th of April, 2026
+
+#### Game Profiles
+- Added a game profile and its corresponding version database for "The Walking Dead (2012)".
+
+#### Version Database
+- Added new metaclass descriptions to the global database.
+  - Added initial MTRE types which mainly support "The Walking Dead (2012)". This indirectly adds support for other MTRE games which were released relatively early to the game such as "Jurassic Park: The Game (2011)" and "Back to the Future: The Game (2010)", but this requires further testing.
+  - Added more MSV5 types which affect "The Walking Dead: Season 2 (2013)" and "The Wolf Among Us (2013)". These types used non-fixed-width primitive types (like ```int``` or ```unsigned long```) which affected almost all CRC32 checksums.
+- Added more class description mappings for "The Walking Dead: Season 2 (2012)"
+- Registered new types.
+
 ### 24th of April, 2026
 
 #### Game Profiles
-- Added the year to TWDS2 game profile json file name to match other entries
+- Added the year to TWDS2 game profile json file name to match other entries (Thank you @gamma-02)
 
 ### 17th of March, 2026
 
 #### Game Profiles
-- Added initial game profile for Poker Night at the Inventory Remastered (2026)
+- Added initial game profile for Poker Night at the Inventory Remastered (2026) (Thank you @gamma-02)
 
 #### Version Database
 - Added initial version database for aforementoned Poker Night at the Inventory Remastered (2026)

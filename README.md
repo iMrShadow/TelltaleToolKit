@@ -26,7 +26,7 @@
 - Open and extract files from `.ttarch` and `.ttarch2` archives.
 - Open, edit, and save file formats (textures, meshes, sounds, and more).
 - Modular and flexible registration system (types, metaclasses, serializers, per-game configs).
-- Create and manage a simple SQLite hash database.
+- Create and manage simple hash databases.
 - Cross-platform: Windows, Linux, Mac (requires .NET 8.0 or later).
 - For more details, check the [documentation folder](docs/README.md).
 
@@ -97,6 +97,12 @@ This project is licensed under the MIT License. See the [LICENSE](https://github
 
 ## Credits
 
+Thanks to [Gamma_02](https://github.com/gamma-02) for contributing a lot to this project such as adding resdesc parser and many improvements to the API. The Lua decompiler is based on their [UnLuaCSharp](https://github.com/gamma-02/UnLuaCSharp) library.
+
+Thanks to [Knollad Knolladious](https://github.com/LBPHaxMods) for adding `D3DMesh` serialization support.
+
+Thanks to [Plague](https://x.com/QueenPlagueCure) for providing version databases for Borderlands 2021 PC and Nintendo Switch.
+
 Thanks to [Lucas Saragosa](https://github.com/LucasSaragosa) for his outstanding work on [`TelltaleToolLib`](https://github.com/LucasSaragosa/TelltaleToolLib/tree/main), [`Telltale Inspector`](https://github.com/LucasSaragosa/TelltaleInspector) and [`Telltale Editor`](https://github.com/Telltale-Modding-Group/Telltale-Editor), which made me understand Telltale's meta system.
 
 Thanks to [Luigi Auriemma](https://aluigi.altervista.org/index.htm) for their [`ttarchext`](https://aluigi.altervista.org/papers.htm#others-file), which laid much of the groundwork for `.ttarch` and `.ttarch2` extraction.
@@ -108,7 +114,5 @@ Thanks to [Bennyboy](https://github.com/bgbennyboy) for their work on [`Telltale
 Thanks to [Azil Zogby](https://github.com/asilz) for his work on [`TelltaleHydra`](https://github.com/asilz/TelltaleHydra) and [`TelltaleDevTool`](https://github.com/asilz/TelltaleDevTool).
 
 Thanks to all [contributors](https://github.com/stride3d/stride/graphs/contributors) which worked on the popular C# game engine [`Stride`](https://github.com/stride3d/stride). The serialization system is inspired from there.
-
-Thanks to [Plague](https://x.com/QueenPlagueCure) for providing version databases for Borderlands 2021 PC and Nintendo Switch.
 
 Thanks to [David Matos](https://github.com/frostbone25) for introducing me to the `Telltale Modding Community`.

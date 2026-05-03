@@ -24,20 +24,20 @@ The library relies on a set of structured databases to support a wide variety of
 
 There are three main categories of databases:
 
-1. **Game Descriptors**  
+1. **Game Profiles**  
    - **Purpose:** Defines general configuration for each supported game.
    - **Format:** JSON file (extension: `.json`)
-   - **Aliases:** Game snapshots, game configurations.
+   - **Aliases:** Game snapshots, game configurations, game descriptors.
 
 2. **Version Databases**  
-   - **Purpose:** Describes metaclass descriptions for a given game.
+   - **Purpose:** Maps types to their corresponding CRC32 versions per game. `global.vdb.json` holds all metaclass descriptions. 
    - **Format:** JSON file (extension: `.vdb.json`)
    - **Aliases:** Metaclass description databases.
    - **Note:** Version databases **require a game descriptor to function with the same slug**.
 
-3. **Hash Database(s)** (Planned/Experimental)  
-   - **Purpose:** Contains SQLite databases with file hashes unique to each game.
-   - **Format:** SQLite database file (extension: `.db`)
+3. **Hash Database(s)** 
+   - **Purpose:**
+   - **Format:** 
    - **Aliases:**
    - **Note:** Do not try to implement any hash databases on your own as of now.
 
