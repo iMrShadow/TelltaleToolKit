@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
+        <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
     </ItemGroup>
 
 </Project>

@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
+        <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <Reference Include="XCompression">
             <HintPath>..\..\..\Downloads\XCompression-master\bin\Debug\XCompression.dll</HintPath>
@@ -19,7 +19,7 @@
             <HintPath>..\..\..\Downloads\XMemCompress-master\bin\Debug\net6.0\XMemCompress.dll</HintPath>
         </Reference>
     </ItemGroup>
-    
+
     <ItemGroup>
         <None Update="xcompress32.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

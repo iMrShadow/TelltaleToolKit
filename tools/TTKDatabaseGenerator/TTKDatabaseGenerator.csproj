@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
+        <ProjectReference Include="..\..\src\TelltaleToolKit\TelltaleToolKit.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.CommandLine" Version="2.0.7" />
+        <PackageReference Include="System.CommandLine" Version="2.0.7" />
     </ItemGroup>
 
 </Project>
