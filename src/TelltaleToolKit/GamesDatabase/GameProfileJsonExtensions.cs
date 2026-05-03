@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Text.Json;
 using TelltaleToolKit.Reflection;
 
@@ -11,14 +10,16 @@ public class GameProfileJsonExtensions
     /// </summary>
     public static string ToClassesJson(GameProfile profile, JsonSerializerOptions options)
     {
-        ImmutableSortedDictionary<string, uint> classes = profile.Classes.ToDictionary(
-            kvp => kvp.Key.Symbol.SymbolName,
-            kvp => kvp.Value
-        ).ToImmutableSortedDictionary();
+        var classes = new SortedDictionary<string?, uint>(
+            profile.Classes.ToDictionary(
+                kvp => kvp.Key.Symbol.SymbolName,
+                kvp => kvp.Value
+            )
+        );
 
         return JsonSerializer.Serialize(classes, options);
     }
-    
+
     /// <summary>
     /// Reads JSON produced by <see cref="ToClassesJson"/> and applies it back onto GameProfile.Classes.
     /// </summary>

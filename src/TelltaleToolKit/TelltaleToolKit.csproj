@@ -1,40 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <LangVersion>13</LangVersion>
-    <RootNamespace>TelltaleToolKit</RootNamespace>
-    <Version>0.1.0</Version>
-    <Title>TelltaleToolKit</Title>
-    <Authors>Ivan Panayotov</Authors>
-    <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
-    <PackageTags>telltale; ttarch; ttarch2; modding;</PackageTags>
-    <Description>A .NET library for modding games running on the Telltale Tool engine, providing an API to read and write assets and archives. </Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>https://github.com/iMrShadow/TelltaleToolKit/releases</PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <TargetFrameworks>net9.0;netstandard2.1;net10.0;net8.0</TargetFrameworks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <LangVersion>13</LangVersion>
+        <RootNamespace>TelltaleToolKit</RootNamespace>
+        <Version>0.1.0</Version>
+        <Title>TelltaleToolKit</Title>
+        <Authors>Ivan Panayotov</Authors>
+        <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
+        <PackageTags>telltale; ttarch; ttarch2; modding;</PackageTags>
+        <Description>A .NET library for modding games running on the Telltale Tool engine, providing an API to read and write assets and archives.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>https://github.com/iMrShadow/TelltaleToolKit/releases</PackageReleaseNotes>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <TargetFrameworks>net10.0;net8.0;net9.0;netstandard2.1</TargetFrameworks>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Base36" Version="1.0.0" />
-    <PackageReference Include="LuaCSharp" Version="0.5.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Base36" Version="1.0.0"/>
+        <PackageReference Include="LuaCSharp" Version="0.5.3"/>
+        <PackageReference Include="SharpZipLib" Version="1.4.2"/>
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
+        <PackageReference Include="System.IO.Hashing" Version="8.0.0"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.0"/>
+    </ItemGroup>
 
 </Project>
