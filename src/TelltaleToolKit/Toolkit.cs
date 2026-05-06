@@ -27,12 +27,9 @@ public class Toolkit
         SerializerSelector = new MetaClassSerializerSelector();
         GlobalHashDatabase = new HashDatabase.HashDatabase();
 
-        if (!string.IsNullOrEmpty(config.DataFolder))
-        {
-            LoadMetaClassDescriptions();
-            LoadGameProfiles(config.DataFolder);
-            LoadHashDatabase(config.DataFolder);
-        }
+        LoadMetaClassDescriptions();
+        LoadGameProfiles(config.DataFolder);
+        LoadHashDatabase(config.DataFolder);
     }
 
     /// <summary>
@@ -121,10 +118,7 @@ public class Toolkit
         _gameProfiles[profile.Name] = profile;
 
         // Load associated meta class descriptions
-        if (!string.IsNullOrEmpty(Config.DataFolder))
-        {
-            LoadMetaClassDescriptionsForGame(profile);
-        }
+        LoadMetaClassDescriptionsForGame(profile);
     }
 
     /// <summary>
@@ -296,9 +290,6 @@ public class Toolkit
 
     private void LoadHashDatabase(string dataFolder)
     {
-        if (string.IsNullOrEmpty(dataFolder))
-            return;
-
         string hashDbDir = Path.Combine(dataFolder, "hashdb");
         if (!Directory.Exists(hashDbDir))
             return;
@@ -316,9 +307,6 @@ public class Toolkit
 
     private void LoadMetaClassDescriptionsForGame(GameProfile profile)
     {
-        if (string.IsNullOrEmpty(Config.DataFolder))
-            return;
-
         string snapshotPath = Path.Combine(Config.DataFolder, "versiondb", $"{profile.Id}.vdb.json");
         if (!File.Exists(snapshotPath))
             return;
@@ -336,7 +324,7 @@ public class Toolkit
 
     private void LoadMetaClassDescriptions()
     {
-        if (string.IsNullOrEmpty(Config.DataFolder))
+        if (!Directory.Exists(Config.DataFolder))
             return;
 
         string globalDbPath = Path.Combine(Config.DataFolder, "versiondb", $"global.vdb.json");
