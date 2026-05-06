@@ -34,7 +34,7 @@ public class MetaClassType
     /// <para>
     /// The underlying string and its CRC64 are derived from the stripped type name in lower case.
     /// <br/>
-    /// Example: <c>class DCArray&lt;struct Font::GlyphInfo&gt;</c> becomes <c>DCArray&lt;Font::GlyphInfo&gt;</c> for <see cref="T3Types.Symbol.SymbolName"/>,
+    /// Example: <c>class DCArray&lt;struct Font::GlyphInfo&gt;</c> becomes <c>DCArray&lt;Font::GlyphInfo&gt;</c> for <see cref="T3Types.Symbol.DebugString"/>,
     /// and <c>dcarray&lt;font::glyphinfo&gt;</c> for <see cref="T3Types.Symbol.Crc64"/>.
     /// </para>
     /// </summary>

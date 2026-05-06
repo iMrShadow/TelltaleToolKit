@@ -211,7 +211,7 @@ internal static class Program
             // Build output files
             PrintInfo("Building output files...");
 
-            // Convert unrecognized class descriptions 
+            // Convert unrecognized class descriptions
             List<MetaClass> unregisteredMetaClasses = [];
             unregisteredMetaClasses.AddRange(unrecognizedMeta.Keys.Select(unrecognized =>
                 new MetaClass { ClassType = unrecognized.Item1, Crc32 = unrecognized.Item2, Members = [] }));
@@ -222,7 +222,7 @@ internal static class Program
             // Build dictionary
             ImmutableSortedDictionary<string?, uint> classes = unionized
                 .ToDictionary(
-                    kvp => kvp.ClassType.Symbol.SymbolName,
+                    kvp => kvp.ClassType.Symbol.DebugString,
                     kvp => kvp.Crc32
                 )
                 .ToImmutableSortedDictionary();

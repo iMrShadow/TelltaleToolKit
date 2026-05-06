@@ -1,45 +1,67 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace TelltaleToolKit.T3Types;
 
 public class Symbol
 {
-    public ulong Crc64 { get; }
-    public string? SymbolName { get; set; } = string.Empty;
-    public bool HasString() => !string.IsNullOrEmpty(SymbolName);
+    public static readonly Symbol DefaultSymbol = new(0);
+
+    public Symbol()
+    {
+    }
 
     public Symbol(string name)
     {
-        SymbolName = name;
+        DebugString = name;
         Crc64 = GetCrc64(name);
     }
 
     public Symbol(ulong crc64)
     {
         Crc64 = crc64;
+        DebugString = null;
     }
 
     public Symbol(string name, ulong crc64)
     {
-        SymbolName = name;
+        DebugString = name;
         Crc64 = crc64;
     }
 
-    public static readonly Symbol DefaultSymbol = new(0);
+    public ulong Crc64 { get; private set; }
+    public string? DebugString { get; private set; } = string.Empty;
+
+    public void SetSymbol(string name)
+    {
+        Crc64 = GetCrc64(name);
+        DebugString = name;
+    }
+
+    public void SetSymbol(ulong crc64)
+    {
+        DebugString = null;
+        Crc64 = crc64;
+    }
+
+    public void SetSymbol(string name, ulong crc64)
+    {
+        DebugString = name;
+        Crc64 = crc64;
+    }
 
     /// <summary>
     /// Get the CRC64 of the type name. This is used to identify the type in the metaclass header. This is consistent throughout all Telltale Tool games.
     /// </summary>
     /// <returns></returns>
-    public static ulong GetCrc64(string? symbol)
-    {
-        return symbol == null
-            ? 0
-            : System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
-    }
+    public static ulong GetCrc64(string symbol)
+        => System.IO.Hashing.Crc64.HashToUInt64(Encoding.UTF8.GetBytes(symbol.ToLowerInvariant()));
+
+    public bool IsCorrectString(string str)
+        => Crc64 == GetCrc64(str);
 
     public override string ToString()
-        => !string.IsNullOrEmpty(SymbolName) ? SymbolName : $"{Crc64:X}";
+        => DebugString ?? $"{Crc64:X}";
 
     // Equality & hashing so different Symbol instances with the same Crc64 are equal keys in dictionaries
     public override bool Equals(object? obj) => Equals(obj as Symbol);

@@ -54,12 +54,12 @@ public class HashDatabase : ISymbolResolver
     {
         if (symbol == null) throw new ArgumentNullException(nameof(symbol));
 
-        if (symbol.HasString())
+        if (symbol.DebugString is not null)
             return true;
 
         if (_symbols.TryGetValue(symbol.Crc64, out string? name))
         {
-            symbol.SymbolName = name;
+            symbol.SetSymbol(name, symbol.Crc64);
             return true;
         }
 
@@ -77,12 +77,12 @@ public class HashDatabase : ISymbolResolver
 
         foreach (Symbol? symbol in symbols)
         {
-            if (symbol == null || symbol.HasString())
+            if (symbol.DebugString is not null)
                 continue;
 
             if (_symbols.TryGetValue(symbol.Crc64, out string? name))
             {
-                symbol.SymbolName = name;
+                symbol.SetSymbol(name, symbol.Crc64);
                 resolved++;
             }
         }
@@ -95,9 +95,9 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public void AddSymbol(Symbol symbol)
     {
-        if (symbol.HasString())
+        if (symbol.DebugString is not null)
         {
-            AddSymbol(symbol.Crc64, symbol.SymbolName);
+            AddSymbol(symbol.Crc64, symbol.DebugString);
         }
     }
     

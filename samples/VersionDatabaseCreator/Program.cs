@@ -180,7 +180,7 @@ foreach ((MetaClassType classType, uint crc32) unrecognized in unrecognizedMetaC
 IEnumerable<MetaClass> unionized = serializedMetaClasses.Keys.Union(unregisteredMetaClasses);
 
 ImmutableSortedDictionary<string?, uint> classes = unionized.ToDictionary(
-    kvp => kvp.ClassType.Symbol.SymbolName,
+    kvp => kvp.ClassType.Symbol.DebugString,
     kvp => kvp.Crc32
 ).ToImmutableSortedDictionary();
 

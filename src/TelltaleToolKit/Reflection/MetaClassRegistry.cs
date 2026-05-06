@@ -69,6 +69,6 @@ public class MetaClassRegistry
     {
         foreach (MetaClass cls in Classes.Values)
             Console.WriteLine(
-                $"{cls.ClassType.Symbol.SymbolName} => CRC64: {cls.ClassType.Symbol.Crc64:X} CRC32: {cls.Crc32:X}");
+                $"{cls.ClassType.Symbol.DebugString} => CRC64: {cls.ClassType.Symbol.Crc64:X} CRC32: {cls.Crc32:X}");
     }
 }

@@ -1423,7 +1423,7 @@ public static class MetaClassTypeRegistry
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(MetaClassType info)
     {
-        ByName.Add(info.Symbol.SymbolName, info);
+        ByName.Add(info.Symbol.DebugString, info);
         ByHash.Add(info.Symbol.Crc64, info);
     }
 
@@ -1440,7 +1440,7 @@ public static class MetaClassTypeRegistry
     {
         foreach (MetaClassType type in ByHash.Values)
         {
-            Console.WriteLine(($"{type.Symbol.SymbolName} {type.Symbol.Crc64:X}"));
+            Console.WriteLine(($"{type.Symbol.DebugString} {type.Symbol.Crc64:X}"));
         }
     }
 }
