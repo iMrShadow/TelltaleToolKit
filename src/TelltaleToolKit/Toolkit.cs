@@ -570,7 +570,7 @@ public class Toolkit
         /// <summary>
         /// Path to the data folder containing game profiles, hash databases, etc.
         /// </summary>
-        public string DataFolder { get; set; }
+        public string DataFolder { get; set; } = "ttk-data";
 
         /// <summary>
         /// Custom JSON serializer options for loading/saving profiles.
