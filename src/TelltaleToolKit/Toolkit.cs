@@ -27,14 +27,6 @@ public class Toolkit
         SerializerSelector = new MetaClassSerializerSelector();
         GlobalHashDatabase = new HashDatabase.HashDatabase();
 
-        // Setup JSON options
-        Config.JsonOptions = config.JsonOptions ?? new JsonSerializerOptions
-        {
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
-            WriteIndented = true
-        };
-
         if (!string.IsNullOrEmpty(config.DataFolder))
         {
             LoadMetaClassDescriptions();
@@ -87,10 +79,12 @@ public class Toolkit
     /// Initializes the TelltaleToolkit with the specified configuration.
     /// Must be called once before using the toolkit.
     /// </summary>
-    public static void Initialize(Configuration config)
+    public static void Initialize(Configuration? config = null)
     {
         if (_instance != null)
             throw new InvalidOperationException("TelltaleToolkit is already initialized");
+
+        config ??= new Configuration();
 
         _instance = new Toolkit(config);
     }
@@ -575,6 +569,11 @@ public class Toolkit
         /// <summary>
         /// Custom JSON serializer options for loading/saving profiles.
         /// </summary>
-        public JsonSerializerOptions? JsonOptions { get; set; }
+        public JsonSerializerOptions JsonOptions { get; set; } = new()
+        {
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
+            WriteIndented = true
+        };
     }
 }
