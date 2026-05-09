@@ -1,7 +1,6 @@
 using System.Numerics;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Serialization.Serializers;
 

@@ -1,5 +1,4 @@
 using System.Text;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.TelltaleArchives;
 
@@ -82,7 +81,7 @@ public class T3Archive : ArchiveBase
             FileEntries[i].FileOffset = reader.ReadUInt32();
             FileEntries[i].FileSize = reader.ReadInt32();
 
-            FileEntries[i].Crc64 = Symbol.GetCrc64(FileEntries[i].Name);
+            FileEntries[i].Crc64 = Utility.Hashing.Crc64.Compute(FileEntries[i].Name);
         }
     }
 

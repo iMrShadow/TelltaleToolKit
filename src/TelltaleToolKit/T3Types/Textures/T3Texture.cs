@@ -3,7 +3,6 @@ using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.Serialization.Serializers;
-using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Textures.T3Types;
 using TelltaleToolKit.Utility.Blowfish;
@@ -91,7 +90,7 @@ public class T3Texture
 
     [MetaMember("mDetailMapBrightness")]
     public float DetailMapBrightness { get; set; }
-    
+
     public byte[] DdsTextureData { get; set; } = [];
 
     public byte[] TplTextureData { get; set; } = [];
@@ -273,7 +272,7 @@ public class T3Texture
     // List<PrimitiveInstance>? AuxData { get; set; } // The auxiliary data (appears after Poker Night 2).
 
     // This is strict to legacy d3dtx versions.
-    
+
     public void Decrypt(Blowfish blowfish)
     {
         if (!IsEncrypted)
@@ -483,7 +482,7 @@ public class T3Texture
     public class AuxiliaryData
     {
         [MetaMember("mType")]
-        public Symbol Type { get; set; } = new(0);
+        public Symbol Type { get; set; } = Symbol.Empty;
 
         // This is officially the first serializing hack.
         // The T3Texture::AuxiliaryData is usually not loaded into any game memory, including Poker Night 2.
@@ -514,7 +513,7 @@ public class T3Texture
     /// Determines if the texture layout represents a volumetric (3D) texture.
     /// </summary>
     /// <returns>True if the texture is a 3D volumemap; otherwise, false.</returns>
-    public bool IsVolumemap() 
+    public bool IsVolumemap()
         => TextureLayout == T3TextureLayout.Texture3D;
 
     /// <summary>
@@ -525,7 +524,7 @@ public class T3Texture
         => TextureLayout is T3TextureLayout.Texture2DArray or T3TextureLayout.TextureCubemapArray;
 
     /// <summary>
-    /// Indicates whether this texture uses the legacy D3DTX format. 
+    /// Indicates whether this texture uses the legacy D3DTX format.
     /// The first version to not use this format is version 3, assuming version 1 and 2 do not exist.
     /// </summary>
     /// <returns>True if the texture version is 2 or below; otherwise, false.</returns>

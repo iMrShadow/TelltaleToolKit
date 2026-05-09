@@ -1,4 +1,3 @@
-using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 
 namespace TelltaleToolKit.Resource;
@@ -9,7 +8,7 @@ public class LooseFileProvider : IFileProvider
     {
         Path = path;
         Name = System.IO.Path.GetFileName(path);
-        Crc64 = Symbol.GetCrc64(Name);
+        Crc64 = Utility.Hashing.Crc64.Compute(Name);
         Size = new FileInfo(path).Length;
     }
 
@@ -30,10 +29,7 @@ public class LooseFileProvider : IFileProvider
         if (crc64 != Crc64) return null;
         return new TelltaleFileEntry
         {
-            Crc64 = crc64,
-            Name = Name,
-            FileOffset = 0,
-            FileSize = (int)Size,
+            Crc64 = crc64, Name = Name, FileOffset = 0, FileSize = (int)Size,
         };
     }
 
@@ -53,10 +49,7 @@ public class LooseFileProvider : IFileProvider
         [
             new TelltaleFileEntry
             {
-                Crc64 = Crc64,
-                Name = Name,
-                FileOffset = 0,
-                FileSize = (int)Size,
+                Crc64 = Crc64, Name = Name, FileOffset = 0, FileSize = (int)Size,
             }
         ];
     }

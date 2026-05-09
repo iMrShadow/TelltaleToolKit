@@ -9,10 +9,9 @@ public class SymbolSerializer : MetaClassSerializer<Symbol>
 {
     public override void PreSerialize(ref Symbol obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (obj is null)
-            obj = Symbol.DefaultSymbol;
+        obj ??= Symbol.Empty;
     }
-    
+
     public override void Serialize(ref Symbol obj, MetaStream stream)
     {
         stream.Serialize(ref obj);

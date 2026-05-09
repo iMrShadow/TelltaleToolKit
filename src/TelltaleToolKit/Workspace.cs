@@ -1,6 +1,5 @@
 using System.Text;
 using Lua;
-using Lua.Runtime;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
@@ -8,6 +7,7 @@ using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit;
 
@@ -440,7 +440,7 @@ public class Workspace
 
     public T? LoadAsset<T>(string name) where T : class, new()
     {
-        return LoadAsset<T>(Symbol.GetCrc64(name));
+        return LoadAsset<T>(Crc64.Compute(name));
     }
 
     public T? LoadAsset<T>(ulong crc64) where T : class, new()
@@ -467,7 +467,7 @@ public class Workspace
 
     public Stream? ExtractFile(string name)
     {
-        return ExtractFile(Symbol.GetCrc64(name));
+        return ExtractFile(Crc64.Compute(name));
     }
 
     public Stream? ExtractFile(ulong crc64)
@@ -558,7 +558,7 @@ public class Workspace
         TelltaleFileEntry? fileEntry = FindFileEntry(symbol.Crc64);
         if (fileEntry?.Name != null)
         {
-            symbol.SetSymbol(fileEntry.Name, symbol.Crc64);
+            symbol.Resolve(fileEntry.Name);
             return true;
         }
 

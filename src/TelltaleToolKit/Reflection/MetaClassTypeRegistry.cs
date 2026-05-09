@@ -1,7 +1,5 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.T3Types.ActorMaps;
 using TelltaleToolKit.T3Types.Animations;
@@ -1412,7 +1410,6 @@ public static class MetaClassTypeRegistry
         Register("unsigned short", typeof(ushort),MetaFlags.MetaSerializeBlockingDisabled);
         // @formatter:on
     }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(string typeName, Type linkingType, MetaFlags flags = MetaFlags.None)

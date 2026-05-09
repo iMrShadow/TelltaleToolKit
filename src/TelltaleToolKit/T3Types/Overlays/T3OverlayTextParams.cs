@@ -4,7 +4,6 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Dialogs.Dlg;
 using TelltaleToolKit.T3Types.Fonts;
-using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 

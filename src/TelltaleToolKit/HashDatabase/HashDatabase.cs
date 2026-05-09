@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using TelltaleToolKit.T3Types;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.HashDatabase;
 
@@ -57,7 +58,7 @@ public class HashDatabase : ISymbolResolver
 
         if (_symbols.TryGetValue(symbol.Crc64, out string? name))
         {
-            symbol.SetSymbol(name, symbol.Crc64);
+            symbol.Resolve(name);
             return true;
         }
 
@@ -80,7 +81,7 @@ public class HashDatabase : ISymbolResolver
 
             if (_symbols.TryGetValue(symbol.Crc64, out string? name))
             {
-                symbol.SetSymbol(name, symbol.Crc64);
+                symbol.Resolve(name);
                 resolved++;
             }
         }
@@ -107,7 +108,7 @@ public class HashDatabase : ISymbolResolver
         if (string.IsNullOrWhiteSpace(symbolName))
             throw new ArgumentException("Symbol name cannot be null or empty", nameof(symbolName));
 
-        AddSymbol(Symbol.GetCrc64(symbolName), symbolName);
+        AddSymbol(Crc64.Compute(symbolName), symbolName);
     }
 
     /// <summary>
@@ -167,7 +168,7 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public bool RemoveSymbol(string symbolName)
     {
-        return RemoveSymbol(Symbol.GetCrc64(symbolName));
+        return RemoveSymbol(Crc64.Compute(symbolName));
     }
 
     /// <summary>
@@ -191,7 +192,7 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public bool Contains(string symbolName)
     {
-        return Contains(Symbol.GetCrc64(symbolName));
+        return Contains(Crc64.Compute(symbolName));
     }
 
     /// <summary>

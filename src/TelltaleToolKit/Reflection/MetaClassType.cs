@@ -19,7 +19,7 @@ public class MetaClassType
     public MetaClassType(string name, Type linkingType, MetaFlags flags = MetaFlags.None)
     {
         FullTypeName = name;
-        Symbol = new Symbol(GetStrippedTypeName(name));
+        Symbol = Symbol.FromName(GetStrippedTypeName(name));
         LinkingType = linkingType;
         Flags = flags;
     }

@@ -646,7 +646,7 @@ public class D3DMesh
 
                 foreach (HandleBase handle in obj.InternalResources)
                 {
-                    Symbol symbol = handle?.ObjectInfo?.ObjectName ?? Symbol.DefaultSymbol;
+                    Symbol symbol = handle?.ObjectInfo?.ObjectName ?? Symbol.Empty;
 
                     object? propertyValue = handle?.ObjectInfo?.HandleObject;
                     if (propertyValue is null)

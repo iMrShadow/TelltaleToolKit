@@ -197,7 +197,7 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Symbol ReadSymbol(this MetaStreamReader stream)
     {
-        var value = Symbol.DefaultSymbol;
+        var value = Symbol.Empty;
         stream.Serialize(ref value);
         return value;
     }

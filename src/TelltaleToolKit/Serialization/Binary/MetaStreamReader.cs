@@ -217,7 +217,6 @@ public sealed class MetaStreamReader : MetaStream
     /// <inheritdoc />
     public override void Serialize(ref ulong value) => value = Reader.ReadUInt64();
 
-
     /// <inheritdoc />
     public override void Serialize(ref string value)
     {
@@ -242,8 +241,8 @@ public sealed class MetaStreamReader : MetaStream
 
     public override void Serialize(ref Symbol value)
     {
-        value = new Symbol(Reader.ReadUInt64());
-
+        ulong crc64 = Reader.ReadUInt64();
+        value = Symbol.FromCrc64(crc64);
         Configuration.SerializedSymbols.Add(value);
     }
 
