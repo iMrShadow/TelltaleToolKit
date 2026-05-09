@@ -35,7 +35,7 @@ public abstract class MetaClassSerializer
     /// Performs the first step of serialization or deserialization.
     /// </summary>
     /// <remarks>
-    /// Typically, it will instantiate the object if [null], and if it's a collection clear it.
+    /// Typically, it will instantiate the object if [null], and if it's a collection, clear it.
     /// </remarks>
     /// <param name="obj">The object to process.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
@@ -83,7 +83,7 @@ public abstract class MetaClassSerializer<T> : MetaClassSerializer
     /// Performs the first step of serialization or deserialization.
     /// </summary>
     /// <remarks>
-    /// Typically, it will instantiate the object if [null], and if it's a collection clear it.
+    /// Typically, it will instantiate the object if [null], and if it's a collection, clear it.
     /// </remarks>
     /// <param name="obj">The object to process.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>

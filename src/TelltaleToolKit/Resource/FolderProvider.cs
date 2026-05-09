@@ -1,5 +1,5 @@
-using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.Resource;
 
@@ -19,7 +19,7 @@ public sealed class FolderProvider : IFileProvider
         foreach (string file in Directory.GetFiles(rootPath))
         {
             string ext = Path.GetExtension(file).ToLowerInvariant();
-            if (ext != ".ttarch" && ext != ".ttarch2") 
+            if (ext != ".ttarch" && ext != ".ttarch2")
                 _providers.Add(new LooseFileProvider(file));
         }
 
@@ -63,14 +63,14 @@ public sealed class FolderProvider : IFileProvider
         return null;
     }
 
-    public Stream? ExtractFile(string fileName) 
-        => ExtractFile(Symbol.GetCrc64(fileName));
-    
-    public bool ContainsFile(string fileName) 
-        => ContainsFile(Symbol.GetCrc64(fileName));
-    
-    public TelltaleFileEntry? GetFileEntry(string fileName) 
-        => GetFileEntry(Symbol.GetCrc64(fileName));
+    public Stream? ExtractFile(string fileName)
+        => ExtractFile(Crc64.Compute(fileName));
+
+    public bool ContainsFile(string fileName)
+        => ContainsFile(Crc64.Compute(fileName));
+
+    public TelltaleFileEntry? GetFileEntry(string fileName)
+        => GetFileEntry(Crc64.Compute(fileName));
 
     public IEnumerable<TelltaleFileEntry> GetAllEntries()
     {

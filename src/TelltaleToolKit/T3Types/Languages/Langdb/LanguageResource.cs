@@ -35,5 +35,6 @@ public class LanguageResource
 
     [MetaMember("mFlags")]
     public Flags Flags { get; set; } = new();
-    public Symbol ResName => new($"{Id}.langres");
+
+    public Symbol ResName => Symbol.FromName($"{Id}.langres");
 }

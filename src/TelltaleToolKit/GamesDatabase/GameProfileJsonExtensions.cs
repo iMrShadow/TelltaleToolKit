@@ -12,7 +12,7 @@ public class GameProfileJsonExtensions
     {
         var classes = new SortedDictionary<string?, uint>(
             profile.Classes.ToDictionary(
-                kvp => kvp.Key.Symbol.SymbolName,
+                kvp => kvp.Key.Symbol.DebugString,
                 kvp => kvp.Value
             )
         );

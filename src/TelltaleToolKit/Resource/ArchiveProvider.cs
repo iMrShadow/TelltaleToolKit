@@ -1,5 +1,5 @@
-using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.Resource;
 
@@ -24,15 +24,15 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
     public Stream? ExtractFile(ulong crc64) => _archive.ExtractFile(crc64);
     public bool ContainsFile(ulong crc64) => _archive.ContainsFile(crc64);
     public TelltaleFileEntry? GetFileEntry(ulong crc64) => _archive.FindEntry(crc64);
-    
-    public Stream? ExtractFile(string fileName) 
-        => ExtractFile(Symbol.GetCrc64(fileName));
-    
-    public bool ContainsFile(string fileName) 
-        => ContainsFile(Symbol.GetCrc64(fileName));
-    
-    public TelltaleFileEntry? GetFileEntry(string fileName) 
-        => GetFileEntry(Symbol.GetCrc64(fileName));
+
+    public Stream? ExtractFile(string fileName)
+        => ExtractFile(Crc64.Compute(fileName));
+
+    public bool ContainsFile(string fileName)
+        => ContainsFile(Crc64.Compute(fileName));
+
+    public TelltaleFileEntry? GetFileEntry(string fileName)
+        => GetFileEntry(Crc64.Compute(fileName));
 
     public IEnumerable<TelltaleFileEntry> GetAllEntries()
     {

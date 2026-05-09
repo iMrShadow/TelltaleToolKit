@@ -167,7 +167,7 @@ public class PropertySet
                 int numTypes = streamReader.ReadInt32();
                 for (var i = 0; i < numTypes; i++)
                 {
-                    // The type of the class 
+                    // The type of the class
                     MetaClassType typeSymbol = streamReader.ReadMetaClassType();
                     // The number of times that type has been serialized
                     int numOfType = streamReader.ReadInt32();
@@ -195,7 +195,7 @@ public class PropertySet
                 stream.PreSerialize(ref obj.ParentProperties);
                 stream.Serialize(ref obj.ParentProperties);
             }
-            
+
             stream.EndBlock();
         }
     }
@@ -207,7 +207,7 @@ public class PropertySet
 
     public object? GetProperty(string propertyName)
     {
-        var symbol = new Symbol(propertyName);
+        var symbol = Symbol.FromName(propertyName);
 
         Properties.TryGetValue(symbol, out PropertyEntry obj);
         {
@@ -217,15 +217,15 @@ public class PropertySet
 
     public object? GetProperty(ulong crc64)
     {
-        Properties.TryGetValue(new Symbol(crc64), out PropertyEntry obj);
+        Properties.TryGetValue(Symbol.FromCrc64(crc64), out PropertyEntry obj);
         {
             return obj.Value;
         }
     }
-    
+
     public T? GetProperty<T>(string propertyName)
     {
-        var symbol = new Symbol(propertyName);
+        var symbol = Symbol.FromName(propertyName);
 
         Properties.TryGetValue(symbol, out PropertyEntry obj);
         {
@@ -235,12 +235,12 @@ public class PropertySet
 
     public T? GetProperty<T>(ulong crc64)
     {
-        Properties.TryGetValue(new Symbol(crc64), out PropertyEntry obj);
+        Properties.TryGetValue(Symbol.FromCrc64(crc64), out PropertyEntry obj);
         {
             return obj.Value is T value ? value : default;
         }
     }
-    
+
     public object? GetProperty(Symbol symbol)
     {
         return GetProperty(symbol.Crc64);

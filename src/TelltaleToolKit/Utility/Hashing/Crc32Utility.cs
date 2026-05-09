@@ -2,13 +2,13 @@ using System.IO.Hashing;
 using System.Text;
 using TelltaleToolKit.Reflection;
 
-namespace TelltaleToolKit.Utility.CRC32;
+namespace TelltaleToolKit.Utility.Hashing;
 
 /// <summary>
 /// MetaClass version info (crc32) calculating utility.
 /// This is only useful for looking at how the game calculate the versions themselves.
 /// </summary>
-public static class T3Crc32Utilities
+public static class Crc32Utilities
 {
     /// <summary>
     /// Calculate CRC32 for a given MetaClass.
@@ -19,7 +19,7 @@ public static class T3Crc32Utilities
     public static uint CalculateCRC32_MSV6(MetaClass metaClass)
     {
         // if it's blocked, start with 0xFFFFFFFF (or -1)
-        int buf = metaClass.ClassType.IsBlocked() ? -1 : 0; 
+        int buf = metaClass.ClassType.IsBlocked() ? -1 : 0;
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 
@@ -30,11 +30,11 @@ public static class T3Crc32Utilities
             bool isMemberBlocked = member.Type.IsBlocked();
 
             // Append member Name
-            crc32.Append(Encoding.UTF8.GetBytes(member.MemberName)); 
+            crc32.Append(Encoding.UTF8.GetBytes(member.MemberName));
             // Append member Type CRC64
-            crc32.Append(BitConverter.GetBytes(member.Type.Symbol.Crc64)); 
+            crc32.Append(BitConverter.GetBytes(member.Type.Symbol.Crc64));
             // Append 1 or 0 whether it's blocked or not
-            crc32.Append(new[] { Convert.ToByte(isMemberBlocked) }); 
+            crc32.Append(new[] { Convert.ToByte(isMemberBlocked) });
         }
 
         return crc32.GetCurrentHashAsUInt32();
@@ -50,7 +50,7 @@ public static class T3Crc32Utilities
     {
         // Initialize CRC with 0xFFFFFFFF if class is blocked (not NonBlocked), 0 otherwise
         // if it's blocked, start with 0xFFFFFFFF
-        uint buf = metaClass.ClassType.IsBlocked() ? 0xFFFF : 0u; 
+        uint buf = metaClass.ClassType.IsBlocked() ? 0xFFFF : 0u;
         var crc32 = new Crc32();
         crc32.Append(BitConverter.GetBytes(buf));
 
@@ -60,7 +60,7 @@ public static class T3Crc32Utilities
                 continue;
 
             crc32.Append(Encoding.UTF8.GetBytes(member.MemberName));
-            
+
             string typeName = member.Type.FullTypeName;
             // Hack for inherited classes. The types of all `Baseclass_` members are pointers.
             // Presumably that is fixed after the first MBIN games.

@@ -1,4 +1,3 @@
-using TelltaleToolKit.Utility;
 using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit.TelltaleArchives;
@@ -100,7 +99,7 @@ public abstract class ArchiveBase : IDisposable
     {
         return FileEntries.Any(file => file.Crc64 == crc64);
     }
-    
+
     public abstract void ExtractAll(string destinationPath);
 
     protected bool IsEncrypted() =>

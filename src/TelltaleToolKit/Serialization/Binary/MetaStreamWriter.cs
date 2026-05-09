@@ -33,7 +33,7 @@ public sealed class MetaStreamWriter : MetaStream
         // Truncate, otherwise there are some leftover bytes.
         UnderlyingStream.SetLength(UnderlyingStream.Position);
     }
-    
+
     public override void SerializeMetaHeader()
     {
         Writer = new BinaryWriter(UnderlyingStream);
@@ -166,7 +166,7 @@ public sealed class MetaStreamWriter : MetaStream
         }
         else
         {
-            string valueSymbolName = value.SymbolName;
+            string valueSymbolName = value.DebugString;
             Serialize(ref valueSymbolName);
         }
     }

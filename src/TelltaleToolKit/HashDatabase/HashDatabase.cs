@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using TelltaleToolKit.T3Types;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.HashDatabase;
 
@@ -16,8 +17,6 @@ public class HashDatabase : ISymbolResolver
     /// Gets the number of symbols in the database.
     /// </summary>
     public int Count => _symbols.Count;
-    
-    public bool IsReadOnly { get; init; }
 
     /// <summary>
     /// Gets all symbols as CRC64-name pairs.
@@ -54,12 +53,12 @@ public class HashDatabase : ISymbolResolver
     {
         if (symbol == null) throw new ArgumentNullException(nameof(symbol));
 
-        if (symbol.HasString())
+        if (symbol.DebugString is not null)
             return true;
 
         if (_symbols.TryGetValue(symbol.Crc64, out string? name))
         {
-            symbol.SymbolName = name;
+            symbol.Resolve(name);
             return true;
         }
 
@@ -73,16 +72,16 @@ public class HashDatabase : ISymbolResolver
     {
         if (symbols == null) throw new ArgumentNullException(nameof(symbols));
 
-        var resolved = 0;
+        int resolved = 0;
 
-        foreach (Symbol? symbol in symbols)
+        foreach (Symbol symbol in symbols)
         {
-            if (symbol == null || symbol.HasString())
+            if (symbol.DebugString is not null)
                 continue;
 
             if (_symbols.TryGetValue(symbol.Crc64, out string? name))
             {
-                symbol.SymbolName = name;
+                symbol.Resolve(name);
                 resolved++;
             }
         }
@@ -95,12 +94,12 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public void AddSymbol(Symbol symbol)
     {
-        if (symbol.HasString())
+        if (symbol.DebugString is not null)
         {
-            AddSymbol(symbol.Crc64, symbol.SymbolName);
+            AddSymbol(symbol.Crc64, symbol.DebugString);
         }
     }
-    
+
     /// <summary>
     /// Adds a symbol from its string representation.
     /// </summary>
@@ -109,8 +108,7 @@ public class HashDatabase : ISymbolResolver
         if (string.IsNullOrWhiteSpace(symbolName))
             throw new ArgumentException("Symbol name cannot be null or empty", nameof(symbolName));
 
-        var symbol = new Symbol(symbolName);
-        AddSymbol(symbol.Crc64, symbol.SymbolName);
+        AddSymbol(Crc64.Compute(symbolName), symbolName);
     }
 
     /// <summary>
@@ -121,14 +119,6 @@ public class HashDatabase : ISymbolResolver
         if (string.IsNullOrWhiteSpace(symbolName))
             throw new ArgumentException("Symbol name cannot be null or empty", nameof(symbolName));
 
-        _symbols[crc64] = symbolName;
-    }
-    
-    private void AddSymbolInternal(ulong crc64, string symbolName)
-    {
-        if (IsReadOnly)
-            throw new InvalidOperationException("Cannot add symbols to a read-only database");
-        
         _symbols[crc64] = symbolName;
     }
 
@@ -148,18 +138,18 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public void AddSymbols(IEnumerable<string> symbolNames)
     {
-        foreach (string? name in symbolNames)
+        foreach (string name in symbolNames)
         {
             AddSymbol(name);
         }
     }
-    
+
     /// <summary>
     /// Adds multiple symbols from their string representations.
     /// </summary>
     public void AddSymbols(IEnumerable<Symbol> symbols)
     {
-        foreach (Symbol? symbol in symbols)
+        foreach (Symbol symbol in symbols)
         {
             AddSymbol(symbol);
         }
@@ -178,8 +168,7 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public bool RemoveSymbol(string symbolName)
     {
-        var symbol = new Symbol(symbolName);
-        return RemoveSymbol(symbol.Crc64);
+        return RemoveSymbol(Crc64.Compute(symbolName));
     }
 
     /// <summary>
@@ -203,16 +192,23 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public bool Contains(string symbolName)
     {
-        var symbol = new Symbol(symbolName);
-        return Contains(symbol.Crc64);
+        return Contains(Crc64.Compute(symbolName));
     }
 
     /// <summary>
     /// Tries to get a symbol name by CRC64.
     /// </summary>
-    public bool TryGetValue(ulong crc64, out string symbolName)
+    public bool TryGetValue(ulong crc64, out string? symbolName)
     {
-        return _symbols.TryGetValue(crc64, out symbolName);
+        if (_symbols.TryGetValue(crc64, out string? value))
+        {
+            symbolName = value;
+
+            return true;
+        }
+
+        symbolName = null;
+        return false;
     }
 
     /// <summary>
@@ -234,17 +230,7 @@ public class HashDatabase : ISymbolResolver
     /// </summary>
     public int ImportFromFiles(IEnumerable<string> filePaths)
     {
-        var imported = 0;
-
-        foreach (string? filePath in filePaths)
-        {
-            if (!File.Exists(filePath))
-                continue;
-
-            imported += ImportFromFile(filePath);
-        }
-
-        return imported;
+        return filePaths.Where(File.Exists).Sum(ImportFromFile);
     }
 
     /// <summary>
@@ -255,26 +241,28 @@ public class HashDatabase : ISymbolResolver
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"File not found: {filePath}");
 
-        var imported = 0;
+        int imported = 0;
 
-        foreach (string? line in File.ReadLines(filePath))
+        foreach (string line in File.ReadLines(filePath))
         {
             string trimmed = line.Trim();
 
             // Skip empty lines and comments
-            if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("#") || trimmed.StartsWith("//"))
+            if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith('#') || trimmed.StartsWith("//"))
                 continue;
 
             // Handle tab-separated CRC64 and name format
             if (trimmed.Contains('\t'))
             {
-                string[]? parts = trimmed.Split('\t');
-                if (parts.Length >= 2 && ulong.TryParse(parts[0].Trim(), System.Globalization.NumberStyles.HexNumber,
+                string[] parts = trimmed.Split('\t');
+                if (parts.Length < 2 || !ulong.TryParse(parts[0].Trim(), System.Globalization.NumberStyles.HexNumber,
                         null, out ulong crc64))
                 {
-                    AddSymbol(crc64, parts[1].Trim());
-                    imported++;
+                    continue;
                 }
+
+                AddSymbol(crc64, parts[1].Trim());
+                imported++;
             }
             else
             {
@@ -295,9 +283,9 @@ public class HashDatabase : ISymbolResolver
         Directory.CreateDirectory(directoryPath);
 
         List<KeyValuePair<ulong, string>> symbols = _symbols.ToList();
-        var fileCount = 0;
+        int fileCount = 0;
 
-        for (var i = 0; i < symbols.Count; i += maxPerFile)
+        for (int i = 0; i < symbols.Count; i += maxPerFile)
         {
             IEnumerable<KeyValuePair<ulong, string>> chunk = symbols.Skip(i).Take(maxPerFile);
             string filePath = Path.Combine(directoryPath, $"symbols_{fileCount++:D4}.txt");
@@ -309,7 +297,7 @@ public class HashDatabase : ISymbolResolver
     /// <summary>
     /// Exports symbols to a file.
     /// </summary>
-    public void ExportToFile(string filePath, IEnumerable<KeyValuePair<ulong, string>> symbols = null)
+    public void ExportToFile(string filePath, IEnumerable<KeyValuePair<ulong, string>>? symbols = null)
     {
         IEnumerable<KeyValuePair<ulong, string>> targetSymbols = symbols ?? _symbols;
 

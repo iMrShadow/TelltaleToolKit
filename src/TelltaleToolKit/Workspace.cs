@@ -1,6 +1,5 @@
 using System.Text;
 using Lua;
-using Lua.Runtime;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
@@ -8,6 +7,7 @@ using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit;
 
@@ -156,14 +156,13 @@ public class Workspace
     /// <returns></returns>
     public ResourceContext LoadArchive(string archivePath, string contextName, int priority = 1000)
     {
-
         ResourceContext context = CreateResourceContext(contextName, priority);
-        
+
         var archiveProvider = new ArchiveProvider(
             archivePath,
             this
         );
-        
+
         context.AddProvider(archiveProvider);
 
         return context;
@@ -318,8 +317,8 @@ public class Workspace
         var context = new ResourceContext(name, priority, this);
 
         LuaValue archives = resdesc["gameDataArchives"];
-        
-        if(archives.TryRead(out LuaTable table))
+
+        if (archives.TryRead(out LuaTable table))
         {
             _addGameDataArchives(descPath, table, context);
         }
@@ -330,7 +329,7 @@ public class Workspace
 
         //idea for this bit, make it so that they're only added to one context in the Workspace,
         //  not every ResourceContext this generates - Gamma
-        
+
         // Add loose files from the base folder
         string? baseFolder = Path.GetDirectoryName(descPath);
         if (baseFolder != null)
@@ -377,7 +376,7 @@ public class Workspace
     private const string LEoHeader = "\eLEo";
 
     //todo (gamma): try executing compiled resdescs (through decomp)
-    // and return null if they're not actually resdescs 
+    // and return null if they're not actually resdescs
     private async Task<LuaTable> ParseResourceDescription(string descPath)
     {
         FileStream luaFile = File.OpenRead(descPath);
@@ -420,9 +419,8 @@ public class Workspace
             //it does not, working on it
             // string tempFilePath = Path.GetTempFileName();
             // File.WriteAllBytes(tempFilePath, newLua);
-            
+
             throw new ArgumentException("Compiled Resdesc file");
-            
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
@@ -440,10 +438,20 @@ public class Workspace
 
     public T? LoadAsset<T>(string name) where T : class, new()
     {
-        return LoadAsset<T>(Symbol.GetCrc64(name));
+        return LoadAsset<T>(Crc64.Compute(name));
     }
 
     public T? LoadAsset<T>(ulong crc64) where T : class, new()
+    {
+        return LoadAsset<T>(crc64, out _);
+    }
+
+    public T? LoadAsset<T>(string name, out MetaStreamConfiguration? config) where T : class, new()
+    {
+        return LoadAsset<T>(Crc64.Compute(name), out config);
+    }
+
+    public T? LoadAsset<T>(ulong crc64, out MetaStreamConfiguration? config) where T : class, new()
     {
         // Search from highest priority to lowest (so highest overrides)
         foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
@@ -454,20 +462,22 @@ public class Workspace
 
             try
             {
-                return LoadObject<T>(stream, out MetaStreamConfiguration? _);
+                return LoadObject<T>(stream, out config);
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                config = null;
                 return null;
             }
         }
 
+        config = null;
         return null;
     }
 
     public Stream? ExtractFile(string name)
     {
-        return ExtractFile(Symbol.GetCrc64(name));
+        return ExtractFile(Crc64.Compute(name));
     }
 
     public Stream? ExtractFile(ulong crc64)
@@ -542,7 +552,7 @@ public class Workspace
         if (symbol == null)
             throw new ArgumentNullException(nameof(symbol));
 
-        if (symbol.HasString())
+        if (symbol.DebugString is not null)
             return true;
 
         if (_toolkit.ResolveSymbol(symbol))
@@ -558,7 +568,7 @@ public class Workspace
         TelltaleFileEntry? fileEntry = FindFileEntry(symbol.Crc64);
         if (fileEntry?.Name != null)
         {
-            symbol.SymbolName = fileEntry.Name;
+            symbol.Resolve(fileEntry.Name);
             return true;
         }
 

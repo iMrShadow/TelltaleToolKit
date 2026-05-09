@@ -6,7 +6,7 @@ namespace TelltaleToolKit.Serialization.Binary;
 
 /// <summary>
 /// Stream wrapper used for serializing telltale assets.
-/// A single Telltale Tool file has 1-3 stream sections (Main, Debug, Async) depending on its meta version.
+/// A single Telltale Tool file has 1-3 stream sections (Main, Debug, Async) depending on its metastream version.
 /// </summary>
 public abstract class MetaStream : IDisposable
 {
@@ -27,7 +27,7 @@ public abstract class MetaStream : IDisposable
     ];
 
     public MetaStreamConfiguration Configuration { get; set; } = new();
-    
+
     protected Stream UnderlyingStream { get; set; } = null!;
 
     protected Stream CurrentSubstream => GetCurrentSection().Stream;
@@ -93,7 +93,7 @@ public abstract class MetaStream : IDisposable
         => GetCurrentSection().Stream.Length == 0;
 
     public bool IsClassSerialized(string typeName)
-        => Configuration.SerializedClasses.Any(id => id.ClassType.Symbol.SymbolName == typeName);
+        => Configuration.SerializedClasses.Any(id => id.ClassType.Symbol.DebugString == typeName);
 
     public abstract MetaClass? GetMetaClass(Type type);
 
@@ -226,7 +226,7 @@ public abstract class MetaStream : IDisposable
         {
             symbolResolver.ResolveSymbol(entry);
 
-            if (!entry.HasString())
+            if (entry.DebugString is null)
             {
                 Console.WriteLine($"Could not resolve symbol for hash: {entry.Crc64}");
             }

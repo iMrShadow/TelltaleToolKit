@@ -22,19 +22,19 @@ public class DependencyLoader
             {
                 bool hasResourceNames = streamReader.ReadBoolean();
 
-                if (!hasResourceNames) 
+                if (!hasResourceNames)
                     return;
-                
+
                 // This is a little bit weird.
                 // In the real serialization function, the object is base-casted to DCArray<String>. (base-casting is casting to a parent class).
                 // Which leads to the question - which type does inherit DCArray<String>? It does not make any sense.
                 MetaClassType type = streamReader.ReadMetaClassType();
 
-                if (type.Symbol.SymbolName != null && !type.Symbol.SymbolName.Equals("DCArray<String>"))
+                if (type.Symbol.DebugString != null && !type.Symbol.DebugString.Equals("DCArray<String>"))
                 {
                     Console.WriteLine("Type `DepedencyLoader` does not serialize DCArray<String>!");
                 }
-                
+
                 List<string> objResourceNames = obj.ResourceNames;
                 stream.PreSerialize(ref objResourceNames);
                 stream.Serialize(ref objResourceNames);

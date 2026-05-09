@@ -53,7 +53,7 @@ public class SoundEventName
                 throw new NullReferenceException($"{nameof(SoundEventName)} cannot be null.");
             }
 
-            obj = type.Symbol.SymbolName switch
+            obj = type.Symbol.DebugString switch
             {
                 "SoundEventName<0>" => new SoundEventName(SoundEventNameBase.NameType.Default),
                 "SoundEventName<1>" => new SoundEventName(SoundEventNameBase.NameType.Snapshot),

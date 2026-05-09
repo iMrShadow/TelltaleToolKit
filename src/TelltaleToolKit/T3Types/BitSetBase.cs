@@ -23,7 +23,7 @@ public class BitSetBase
                 throw new ArgumentNullException(nameof(type), "BitSetBase requires a metaclass type!");
             }
 
-            int? bitSetSize = type.Symbol.SymbolName switch
+            int? bitSetSize = type.Symbol.DebugString switch
             {
                 "BitSetBase<1>" => 1,
                 "BitSetBase<2>" => 2,
@@ -34,7 +34,7 @@ public class BitSetBase
                 "BitSetBase<7>" => 7,
                 "BitSetBase<8>" => 8,
                 "BitSetBase<9>" => 9,
-                _ => throw new InvalidDataException($"Unexpected BitSetBase type: {type.Symbol.SymbolName}")
+                _ => throw new InvalidDataException($"Unexpected BitSetBase type: {type.Symbol.DebugString}")
             };
 
             if (obj?.Values == null || obj.Values.Length != bitSetSize.Value)

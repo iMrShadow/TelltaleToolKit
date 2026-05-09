@@ -5,7 +5,7 @@ namespace TelltaleToolKit.Reflection;
 
 /// <summary>
 /// Provides custom serialization and deserialization for <see cref="MetaClass"/> objects.
-/// Handles conversion between JSON and strongly-typed reflection metadata.
+/// Handles conversion between JSON and strongly typed reflection metadata.
 /// </summary>
 public class MetaClassJsonConverter : JsonConverter<MetaClass>
 {
@@ -71,14 +71,14 @@ public class MetaClassJsonConverter : JsonConverter<MetaClass>
     public override void Write(Utf8JsonWriter writer, MetaClass value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteString("type", value.ClassType.Symbol.SymbolName);
+        writer.WriteString("type", value.ClassType.Symbol.DebugString);
         writer.WriteNumber("crc32", value.Crc32);
         writer.WriteStartArray("members");
         foreach (MetaMember prop in value.Members)
         {
             writer.WriteStartObject();
             writer.WriteString("name", prop.MemberName);
-            writer.WriteString("type", prop.Type.Symbol.SymbolName);
+            writer.WriteString("type", prop.Type.Symbol.DebugString);
             writer.WriteNumber("flags", (int)prop.Flags);
             writer.WriteEndObject();
         }

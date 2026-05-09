@@ -14,7 +14,7 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ReadBoolean(this MetaStreamReader stream)
     {
-        var value = false;
+        bool value = false;
         stream.Serialize(ref value);
         return value;
     }
@@ -27,20 +27,20 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ReadSingle(this MetaStreamReader stream)
     {
-        var value = 0.0f;
+        float value = 0.0f;
         stream.Serialize(ref value);
         return value;
     }
 
     /// <summary>
-    /// Reads a 8-byte floating point value from the stream.
+    /// Reads an 8-byte floating point value from the stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    /// <returns>A 8-byte floating point value read from the stream.</returns>
+    /// <returns>An 8-byte floating point value read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double ReadDouble(this MetaStreamReader stream)
     {
-        var value = 0.0;
+        double value = 0.0;
         stream.Serialize(ref value);
         return value;
     }
@@ -66,16 +66,16 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ReadInt32(this MetaStreamReader stream)
     {
-        var value = 0;
+        int value = 0;
         stream.Serialize(ref value);
         return value;
     }
 
     /// <summary>
-    /// Reads a 8-byte signed integer from the stream.
+    /// Reads an 8-byte signed integer from the stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    /// <returns>A 8-byte signed integer read from the stream.</returns>
+    /// <returns>An 8-byte signed integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ReadInt64(this MetaStreamReader stream)
     {
@@ -111,10 +111,10 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Reads a 8-byte unsigned integer from the stream.
+    /// Reads an 8-byte unsigned integer from the stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    /// <returns>A 8-byte unsigned integer read from the stream.</returns>
+    /// <returns>An 8-byte unsigned integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong ReadUInt64(this MetaStreamReader stream)
     {
@@ -137,20 +137,20 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Reads a unicode character from the stream.
+    /// Reads a Unicode character from the stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    /// <returns>A unicode character read from the stream.</returns>
+    /// <returns>A Unicode character read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char ReadChar(this MetaStreamReader stream)
     {
-        var value = '\0';
+        char value = '\0';
         stream.Serialize(ref value);
         return value;
     }
 
     /// <summary>
-    /// Reads a unsigned byte integer from the stream.
+    /// Reads an unsigned byte integer from the stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <returns>An unsigned byte read from the stream.</returns>
@@ -184,7 +184,7 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static byte[] ReadBytes(this MetaStreamReader stream, int count)
     {
-        var value = new byte[count];
+        byte[] value = new byte[count];
         stream.Serialize(value, 0, count);
         return value;
     }
@@ -197,7 +197,7 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Symbol ReadSymbol(this MetaStreamReader stream)
     {
-        var value = Symbol.DefaultSymbol;
+        var value = Symbol.Empty;
         stream.Serialize(ref value);
         return value;
     }
@@ -243,7 +243,7 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Writes a 8-byte floating point value to the specified stream.
+    /// Writes an 8-byte floating point value to the specified stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="value">The 8-byte floating point value to write.</param>
@@ -282,7 +282,7 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Writes a 8-byte signed integer to the specified stream.
+    /// Writes an 8-byte signed integer to the specified stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="value">The 8-byte signed integer to write.</param>
@@ -321,7 +321,7 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Writes a 8-byte unsigned integer to the specified stream.
+    /// Writes an 8-byte unsigned integer to the specified stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="value">The 8-byte unsigned integer to write.</param>
@@ -347,10 +347,10 @@ public static class MetaStreamExtensions
     }
 
     /// <summary>
-    /// Writes a unicode character to the specified stream.
+    /// Writes a Unicode character to the specified stream.
     /// </summary>
     /// <param name="stream">The stream.</param>
-    /// <param name="value">The unicode character to write.</param>
+    /// <param name="value">The Unicode character to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MetaStreamWriter Write(this MetaStreamWriter stream, char value)
@@ -442,7 +442,7 @@ public static class MetaStreamExtensions
     /// Performs the first step of serialization or deserialization using the Telltale ToolKit context.
     /// </summary>
     /// <remarks>
-    /// Typically, it will instantiate the object if [null], and if it's a collection clear it.
+    /// Typically, it will instantiate the object if [null], and if it's a collection, clear it.
     /// </remarks>
     /// <param name="obj">The object to process.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>

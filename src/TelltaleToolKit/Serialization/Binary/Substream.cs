@@ -26,7 +26,7 @@ public class Substream : Stream
             throw new NotSupportedException("Stream does not support seeking.");
         }
 
-        this.stream = stream;
+        this._stream = stream;
 
         if (offset < 0)
         {
@@ -45,7 +45,7 @@ public class Substream : Stream
     /// <inheritdoc />
     public override int Read(byte[] buffer, int offset, int count)
     {
-        if (!stream.CanRead)
+        if (!_stream.CanRead)
         {
             throw new NotSupportedException("Underlying stream does not support reading.");
         }
@@ -55,8 +55,8 @@ public class Substream : Stream
             throw new ArgumentOutOfRangeException(nameof(count), "Count cannot be less than zero.");
         }
 
-        stream.Seek(_offset + _position, SeekOrigin.Begin);
-        stream.Read(buffer, offset, count = Convert.ToInt32(Math.Min(count, _length - _position)));
+        _stream.Seek(_offset + _position, SeekOrigin.Begin);
+        _stream.Read(buffer, offset, count = Convert.ToInt32(Math.Min(count, _length - _position)));
 
         _position += count;
 
@@ -66,7 +66,7 @@ public class Substream : Stream
     /// <inheritdoc />
     public override void Write(byte[] buffer, int offset, int count)
     {
-        if (!stream.CanWrite)
+        if (!_stream.CanWrite)
         {
             throw new NotSupportedException("Underlying stream does not support writing.");
         }
@@ -76,8 +76,8 @@ public class Substream : Stream
             throw new ArgumentOutOfRangeException(nameof(count), "Count cannot be less than zero.");
         }
 
-        stream.Seek(_offset + _position, SeekOrigin.Begin);
-        stream.Write(buffer, offset, count = Convert.ToInt32(Math.Min(count, _length - _position)));
+        _stream.Seek(_offset + _position, SeekOrigin.Begin);
+        _stream.Write(buffer, offset, count = Convert.ToInt32(Math.Min(count, _length - _position)));
 
         _position += count;
     }
@@ -100,7 +100,7 @@ public class Substream : Stream
                         "Offset cannot be greater than the length of the substream.");
                 }
 
-                stream.Seek(_offset + (_position = offset), SeekOrigin.Begin);
+                _stream.Seek(_offset + (_position = offset), SeekOrigin.Begin);
 
                 break;
             case SeekOrigin.End:
@@ -116,7 +116,7 @@ public class Substream : Stream
                         "Offset cannot be less than the length of the substream.");
                 }
 
-                stream.Seek(_position = (_length + offset), SeekOrigin.End);
+                _stream.Seek(_position = (_length + offset), SeekOrigin.End);
 
                 break;
             case SeekOrigin.Current:
@@ -130,7 +130,7 @@ public class Substream : Stream
                     throw new NotSupportedException("Attempted to seek beyond the end of the substream.");
                 }
 
-                stream.Seek(_position += offset, SeekOrigin.Current);
+                _stream.Seek(_position += offset, SeekOrigin.Current);
 
                 break;
         }
@@ -141,41 +141,41 @@ public class Substream : Stream
     /// <inheritdoc />
     public override void SetLength(long value)
     {
-        // While other Stream implementations allow the caller to set the length, this does not make much sense in the context of a substream.
-        // Perhaps, in the future, we can allow callers to reduce the length, but not expand the length.
+        // While other Stream implementations allow the caller to set the length, this makes little sense in the context of a substream.
+        // Perhaps, in the future, we can allow callers to reduce the length but not expand the length.
 
         throw new NotSupportedException("Cannot set the length of a fixed substream.");
     }
 
     /// <inheritdoc />
-    public override void Flush() => stream.Flush();
+    public override void Flush() => _stream.Flush();
 
     /// <inheritdoc />
     public override long Length => _length;
 
     /// <inheritdoc />
-    public override bool CanRead => stream.CanRead;
+    public override bool CanRead => _stream.CanRead;
 
     /// <inheritdoc />
-    public override bool CanSeek => stream.CanSeek;
+    public override bool CanSeek => _stream.CanSeek;
 
     /// <inheritdoc />
-    public override bool CanWrite => stream.CanWrite;
+    public override bool CanWrite => _stream.CanWrite;
 
     /// <inheritdoc />
-    public override bool CanTimeout => stream.CanTimeout;
+    public override bool CanTimeout => _stream.CanTimeout;
 
     /// <inheritdoc />
     public override int ReadTimeout
     {
-        get => stream.ReadTimeout;
+        get => _stream.ReadTimeout;
         set => throw new NotSupportedException("Cannot set the read timeout of a substream.");
     }
 
     /// <inheritdoc />
     public override int WriteTimeout
     {
-        get => stream.WriteTimeout;
+        get => _stream.WriteTimeout;
         set => throw new NotSupportedException("Cannot set the write timeout of a substream.");
     }
 
@@ -195,11 +195,11 @@ public class Substream : Stream
                 throw new ArgumentOutOfRangeException("Position cannot be greater than the length.");
             }
 
-            stream.Position = _offset + (_position = value);
+            _stream.Position = _offset + (_position = value);
         }
     }
 
-    private readonly Stream stream;
+    private readonly Stream _stream;
 
     private readonly long _offset;
     private readonly long _length;

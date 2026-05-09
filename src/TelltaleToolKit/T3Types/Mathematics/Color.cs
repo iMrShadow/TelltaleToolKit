@@ -2,8 +2,6 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
-using TelltaleToolKit.T3Types.Meshes.T3Types;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 

@@ -6,7 +6,7 @@ namespace TelltaleToolKit.T3Types;
 
 public class HandleObjectInfo
 {
-    public Symbol ObjectName = new(0);
+    public Symbol ObjectName = Symbol.Empty;
     public Flags Flags;
     public MetaClassType Type;
     public object HandleObject;
@@ -44,7 +44,7 @@ public class HandleBase
             {
                 var name = string.Empty;
                 stream.Serialize(ref name);
-                obj.ObjectInfo.ObjectName = new Symbol(name);
+                obj.ObjectInfo.ObjectName = Symbol.FromName(name);
             }
         }
     }
