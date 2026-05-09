@@ -31,12 +31,10 @@ public sealed class Symbol : IEquatable<Symbol>
         Crc64 = crc64;
     }
 
-    private static readonly Symbol s_empty = new(string.Empty, 0);
-
     /// <summary>
     /// Gets the empty symbol (CRC64 = 0, empty debug string).
     /// </summary>
-    public static Symbol Empty => s_empty;
+    public static Symbol Empty { get; } = new(string.Empty, 0);
 
     /// <summary>
     /// Gets the CRC64 hash that uniquely identifies this symbol.
@@ -79,7 +77,7 @@ public sealed class Symbol : IEquatable<Symbol>
     /// <summary>Creates an unresolved symbol from a raw CRC64 value.</summary>
     /// <remarks>Use <see cref="Resolve"/> later to attach a debug string.</remarks>
     public static Symbol FromCrc64(ulong crc64)
-        => crc64 == 0 ? s_empty : new Symbol(crc64);
+        => crc64 == 0 ? Empty : new Symbol(crc64);
 
     /// <summary>
     /// Creates a symbol with an explicitly provided name and CRC64, bypassing normal calculation.
@@ -129,7 +127,12 @@ public sealed class Symbol : IEquatable<Symbol>
     /// <remarks>Based solely on <see cref="Crc64"/>, which is immutable.</remarks>
     public override int GetHashCode() => Crc64.GetHashCode();
 
-    public static bool operator ==(Symbol? left, Symbol? right) => EqualityComparer<Symbol>.Default.Equals(left, right);
+    public static bool operator ==(Symbol? left, Symbol? right)
+    {
+        if (ReferenceEquals(left, right)) return true;
+        if (left is null || right is null) return false;
+        return left.Crc64 == right.Crc64;
+    }
 
     public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
 }
