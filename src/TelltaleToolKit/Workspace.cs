@@ -156,7 +156,6 @@ public class Workspace
     /// <returns></returns>
     public ResourceContext LoadArchive(string archivePath, string contextName, int priority = 1000)
     {
-
         ResourceContext context = CreateResourceContext(contextName, priority);
 
         var archiveProvider = new ArchiveProvider(
@@ -319,7 +318,7 @@ public class Workspace
 
         LuaValue archives = resdesc["gameDataArchives"];
 
-        if(archives.TryRead(out LuaTable table))
+        if (archives.TryRead(out LuaTable table))
         {
             _addGameDataArchives(descPath, table, context);
         }
@@ -422,7 +421,6 @@ public class Workspace
             // File.WriteAllBytes(tempFilePath, newLua);
 
             throw new ArgumentException("Compiled Resdesc file");
-
         }
 
         string lua = Encoding.ASCII.GetString(fileBytes);
@@ -445,6 +443,16 @@ public class Workspace
 
     public T? LoadAsset<T>(ulong crc64) where T : class, new()
     {
+        return LoadAsset<T>(crc64, out _);
+    }
+
+    public T? LoadAsset<T>(string name, out MetaStreamConfiguration? config) where T : class, new()
+    {
+        return LoadAsset<T>(Crc64.Compute(name), out config);
+    }
+
+    public T? LoadAsset<T>(ulong crc64, out MetaStreamConfiguration? config) where T : class, new()
+    {
         // Search from highest priority to lowest (so highest overrides)
         foreach (ResourceContext? context in _contexts.AsReadOnly().Reverse())
         {
@@ -454,14 +462,16 @@ public class Workspace
 
             try
             {
-                return LoadObject<T>(stream, out MetaStreamConfiguration? _);
+                return LoadObject<T>(stream, out config);
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                config = null;
                 return null;
             }
         }
 
+        config = null;
         return null;
     }
 
