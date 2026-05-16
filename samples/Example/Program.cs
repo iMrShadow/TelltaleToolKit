@@ -1,43 +1,42 @@
 ﻿using TelltaleToolKit;
-using TelltaleToolKit.Resource;
 using TelltaleToolKit.T3Types.Textures;
 using TelltaleToolKit.T3Types.Textures.T3Types;
 
-// Set up the context from a folder.
-var toolkitConfiguration = new Toolkit.Configuration
-{
-    DataFolder = "../../../../../data",
-};
+// 1. Initialize once — loads game profiles, hash databases, and MetaClass registry.
+Toolkit.Initialize();
 
-// Initialize the library.
-Toolkit.Initialize(toolkitConfiguration);
+// 2. Create a workspace for the target game.
+Workspace workspace = Toolkit.Instance.CreateWorkspace(
+    "The Walking Dead Workspace",
+    gameProfile: "The Walking Dead: Definitive Series");
 
-// (Recommended) Create a workspace if you want to work with a specific game.
-Workspace workspace = Toolkit.Instance.CreateWorkspace("The Walking Dead", "The Walking Dead: Definitive Series");
+// 3. Mount the game data.
+//
+//    Version 2 game — load via a resource description (.resdesc) Lua script.
+//    The script supplies archive paths, a context name, and a priority automatically.
+//
+//    await workspace.LoadResourceDescriptionAsync("C:/GameData/WalkingDead.resdesc");
+//
+//    Version 1 game — mount folders directly.
+//    Add a patch folder at a higher priority so it overrides the base data.
+//
+//    workspace.MountGameFolder("C:/GameData",       priority: 0);
+//    workspace.MountGameFolder("C:/GameData/Patch", priority: 10);
+//
+//    Or mount a single archive by itself:
+workspace.LoadArchive("WDC_pc_WalkingDead404_txmesh.ttarch2", contextName: "WalkingDead404 Textures");
 
-// Create a resource context.
-ResourceContext resourceContext = workspace.CreateResourceContext("Texture Archives", 100);
-
-// Add an archive to the resource context.
-resourceContext.AddProvider(new ArchiveProvider("WDC_pc_WalkingDead404_txmesh.ttarch2", workspace));
-
-// Replace the path with a valid one.
-var texture = workspace.LoadAsset<T3Texture>("obj_backpackClementine400.d3dtx");
-
-// Alternatively, load the texture directly from the filesystem without a workspace and a resource context.
-// var textureDisk = Toolkit.Instance.LoadObject<T3Texture>("obj_backpackClementine400.d3dtx", out MetaStreamConfiguration  _);
+// 4. Load an asset.
+T3Texture? texture = workspace.LoadAsset<T3Texture>("obj_backpackClementine400.d3dtx");
 
 if (texture != null)
 {
-    // Modify the texture.
-    texture.Name = "My new modified texture!";
+    // 5. Modify it.
+    texture.Name = "obj_backpackClementine400_modified";
     texture.SurfaceFormat = T3SurfaceFormat.ARGB8;
     texture.Width = 1024;
     texture.Height = 1024;
-    
-    // Save the modified texture on the filesystem.
-    workspace.SaveObject(texture, "new_modified.d3dtx");
+
+    // 6. Export it back to disk.
+    workspace.ExportAsset(texture, "obj_backpackClementine400_modified.d3dtx");
 }
-
-
-

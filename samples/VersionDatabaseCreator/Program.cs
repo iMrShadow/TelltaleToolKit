@@ -61,7 +61,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
     try
     {
-        using ArchiveBase archive = Toolkit.Instance.Load(filePath, blowfishKey, false);
+        using ArchiveBase archive = Toolkit.Instance.LoadArchive(filePath, blowfishKey, false);
         ttarchVersion = archive.Info.Version;
 
         if (archive.FileEntries.Length > 0)
@@ -191,7 +191,7 @@ File.WriteAllText(Path.Join(dataFolderPath, "versiondb", sluggedName + "-NEW.vdb
 
 if (unregisteredMetaClasses.Count > 0)
 {
-    Toolkit.Instance.DumpMetaClassDescriptions(unregisteredMetaClasses,
+    Toolkit.Instance.ExportMetaClassDescriptions(unregisteredMetaClasses,
         Path.Join(dataFolderPath, "versiondb", sluggedName + "-UNSUPPORTED.vdb.json"));
 }
 
