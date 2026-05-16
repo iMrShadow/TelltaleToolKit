@@ -151,8 +151,8 @@ internal static class Program
                     Log($"Reading {filePath}");
 
                     using ArchiveBase archive = customKey != null
-                        ? Toolkit.Instance.Load(filePath, customKey, false)
-                        : Toolkit.Instance.Load(filePath, key!.Value, false);
+                        ? Toolkit.Instance.LoadArchive(filePath, customKey, false)
+                        : Toolkit.Instance.LoadArchive(filePath, key!.Value, false);
 
                     ttarchVersion = archive.Info.Version;
 
@@ -245,7 +245,7 @@ internal static class Program
             {
                 string unsupportedPath = Path.Join(versionDbPath, $"{slug}-UNSUPPORTED.vdb.json");
 
-                Toolkit.Instance.DumpMetaClassDescriptions(unregisteredMetaClasses, unsupportedPath);
+                Toolkit.Instance.ExportMetaClassDescriptions(unregisteredMetaClasses, unsupportedPath);
 
                 PrintWarning($"Unsupported metaclasses written: {unsupportedPath}", logWriter);
             }
