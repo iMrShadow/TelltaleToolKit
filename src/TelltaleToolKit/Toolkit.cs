@@ -10,19 +10,34 @@ using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;
 
+/// <summary>
+/// The central singleton that owns global state: game profiles, the MetaClass registry,
+/// the global hash database, and all active workspaces.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Call <see cref="Initialize"/> once at application start before accessing
+/// <see cref="Instance"/> or any other member.
+/// </para>
+/// <para>
+/// For game-specific work (loading assets, mounting archives) prefer creating a
+/// <see cref="Workspace"/> via <see cref="CreateWorkspace"/>.
+/// </para>
+/// <para>
+/// The methods on
+/// <c>Toolkit</c> itself operate without a game context and require callers to explicitly supply configurations.
+/// </para>
+/// </remarks>
 public class Toolkit
 {
-    private static Toolkit? _instance;
-    private readonly Dictionary<string, Workspace> _workspaces = new(StringComparer.OrdinalIgnoreCase);
+    private static Toolkit? s_instance;
     private readonly Dictionary<string, GameProfile> _gameProfiles = new(StringComparer.OrdinalIgnoreCase);
-
-    public static bool IsInitialized => _instance != null;
+    private readonly Dictionary<string, Workspace> _workspaces = new(StringComparer.OrdinalIgnoreCase);
 
     private Toolkit(Configuration config)
     {
         Config = config ?? throw new ArgumentNullException(nameof(config));
 
-        // Initialize components
         ClassRegistry = new MetaClassRegistry();
         SerializerSelector = new MetaClassSerializerSelector();
         GlobalHashDatabase = new HashDatabase.HashDatabase();
@@ -33,62 +48,94 @@ public class Toolkit
     }
 
     /// <summary>
-    /// Gets the singleton instance of TelltaleToolkit.
-    /// Must be initialized first using <see cref="Initialize"/>.
+    /// Gets whether <see cref="Initialize"/> has been called.
     /// </summary>
+    public static bool IsInitialized => s_instance != null;
+
+    /// <summary>
+    /// Gets the singleton toolkit instance.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when accessed before <see cref="Initialize"/> has been called.
+    /// </exception>
     public static Toolkit Instance
-    {
-        get
-        {
-            if (_instance == null)
-                throw new InvalidOperationException(
-                    "TelltaleToolkit must be initialized first. Call TelltaleToolkit.Initialize()");
-            return _instance;
-        }
-    }
+        => s_instance ?? throw new InvalidOperationException(
+            "TelltaleToolkit must be initialized first. Call Toolkit.Initialize().");
 
     /// <summary>
-    /// Gets the configuration used to initialize the toolkit.
+    /// Gets the configuration supplied at <see cref="Initialize"/> time.
     /// </summary>
-    public Configuration Config { get; private set; }
+    public Configuration Config { get; }
 
     /// <summary>
-    /// Gets the global MetaClass registry.
+    /// Gets the global metaclass registry shared across all workspaces.
     /// </summary>
-    public MetaClassRegistry ClassRegistry { get; private set; }
+    public MetaClassRegistry ClassRegistry { get; }
 
     /// <summary>
-    /// Gets the global hash database for symbol resolution.
+    /// Gets the global hash database used for symbol resolution.
+    /// Workspace-local databases are checked after this one.
     /// </summary>
-    public HashDatabase.HashDatabase GlobalHashDatabase { get; private set; }
+    public HashDatabase.HashDatabase GlobalHashDatabase { get; }
 
     /// <summary>
-    /// Gets the serializer selector for object serialization.
+    /// Gets the serializer selector used to pick the right serializer for a given type.
     /// </summary>
-    public MetaClassSerializerSelector SerializerSelector { get; private set; }
+    public MetaClassSerializerSelector SerializerSelector { get; }
 
     /// <summary>
-    /// Gets all registered game profiles.
+    /// Gets all registered game profiles, keyed by profile name (case-insensitive).
     /// </summary>
     public IReadOnlyDictionary<string, GameProfile> GameProfiles => _gameProfiles;
 
     /// <summary>
-    /// Initializes the TelltaleToolkit with the specified configuration.
-    /// Must be called once before using the toolkit.
+    /// Gets all workspaces currently registered with this toolkit, keyed by the workspace name
+    /// (case-insensitive).
     /// </summary>
+    public IReadOnlyDictionary<string, Workspace> Workspaces => _workspaces;
+
+    // -------------------------------------------------------------------------
+    // Initialization
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Initializes the toolkit with an optional custom <see cref="Configuration"/>.
+    /// Must be called exactly once before using any other API.
+    /// </summary>
+    /// <param name="config">
+    /// Optional configuration. When <see langword="null"/>, defaults are used
+    /// (<c>DataFolder</c> = <c>"ttk-data"</c>).
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when called a second time after the toolkit is already initialized.
+    /// </exception>
     public static void Initialize(Configuration? config = null)
     {
-        if (_instance != null)
+        if (s_instance != null)
             throw new InvalidOperationException("TelltaleToolkit is already initialized");
 
         config ??= new Configuration();
 
-        _instance = new Toolkit(config);
+        s_instance = new Toolkit(config);
     }
 
+    // -------------------------------------------------------------------------
+    // Workspace Management
+    // -------------------------------------------------------------------------
+
     /// <summary>
-    /// Creates a game workspace for the specified game.
+    /// Creates a new <see cref="Workspace"/> for the specified game profile and registers it.
     /// </summary>
+    /// <param name="workspaceName">
+    /// Unique display name for the workspace (used as the key in <see cref="GetWorkspace"/>).
+    /// </param>
+    /// <param name="gameProfile">
+    /// The name of a registered <see cref="GameProfile"/> (case-insensitive).
+    /// </param>
+    /// <returns>The newly created <see cref="Workspace"/>.</returns>
+    /// <exception cref="KeyNotFoundException">
+    /// Thrown when no profile with the given name has been registered.
+    /// </exception>
     public Workspace CreateWorkspace(string workspaceName, string gameProfile)
     {
         if (!_gameProfiles.TryGetValue(gameProfile, out GameProfile? profile))
@@ -100,165 +147,315 @@ public class Toolkit
     }
 
     /// <summary>
-    /// Gets an existing workspace, or creates one if it doesn't exist.
+    /// Returns the workspace registered under <paramref name="workspaceName"/>,
+    /// or <see langword="null"/> if no such workspace exists.
     /// </summary>
-    public Workspace? GetWorkspace(string gameProfileName)
-    {
-        return _workspaces.GetValueOrDefault(gameProfileName);
-    }
+    /// <param name="workspaceName">The name supplied to <see cref="CreateWorkspace"/>.</param>
+    public Workspace? GetWorkspace(string workspaceName)
+        => _workspaces.GetValueOrDefault(workspaceName);
+
+    // -------------------------------------------------------------------------
+    // Game Profile Management
+    // -------------------------------------------------------------------------
 
     /// <summary>
-    /// Registers a game profile.
+    /// Registers a game profile and loads its associated MetaClass version database.
     /// </summary>
+    /// <param name="profile">The profile to register; must not be <see langword="null"/>.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="profile"/> is <see langword="null"/>.</exception>
     public void RegisterGameProfile(GameProfile profile)
     {
-        if (profile == null)
+        if (profile is null)
             throw new ArgumentNullException(nameof(profile));
 
         _gameProfiles[profile.Name] = profile;
-
-        // Load associated meta class descriptions
         LoadMetaClassDescriptionsForGame(profile);
     }
 
     /// <summary>
-    /// Resolves a symbol using the configured hash resolution strategy.
+    /// Attempts to resolve the debug string for <paramref name="symbol"/> using the
+    /// global hash database.
     /// </summary>
+    /// <param name="symbol">The symbol to resolve must not be <see langword="null"/>.</param>
+    /// <returns>
+    /// <see langword="true"/> if a debug string was found and assigned to the symbol;
+    /// <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="symbol"/> is <see langword="null"/>.
+    /// </exception>
     public bool ResolveSymbol(Symbol symbol)
-    {
-        if (symbol == null)
-            throw new ArgumentNullException(nameof(symbol));
-
-        return GlobalHashDatabase.ResolveSymbol(symbol);
-    }
+        => symbol is null ? throw new ArgumentNullException(nameof(symbol)) : GlobalHashDatabase.ResolveSymbol(symbol);
 
     /// <summary>
-    /// Resolves multiple symbols in batch.
+    /// Resolves multiple symbols in batch by calling <see cref="ResolveSymbol"/> on each.
     /// </summary>
+    /// <param name="symbols">The symbols to resolve. Silently ignored if <see langword="null"/>.</param>
     public void ResolveSymbols(IEnumerable<Symbol> symbols)
     {
         foreach (Symbol? symbol in symbols)
-        {
             ResolveSymbol(symbol);
-        }
     }
 
+    // -------------------------------------------------------------------------
+    // Serialization — Deserialize
+    // -------------------------------------------------------------------------
+
     /// <summary>
-    /// Loads an object from a file using the specified configuration.
+    /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a file,
+    /// also returning the <see cref="MetaStreamConfiguration"/> that was embedded in the stream.
     /// </summary>
-    public T LoadObject<T>(string fileName, out MetaStreamConfiguration config) where T : class, new()
+    /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
+    /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <returns>
+    /// A tuple containing the deserialized object and the configuration embedded in the stream,
+    /// or <c>(null, null)</c> if reading or parsing fails.
+    /// </returns>
+    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(string fileName)
+        where T : class, new()
     {
         using FileStream stream = File.OpenRead(fileName);
-        return LoadObject<T>(stream, out config);
+        return DeserializeInternal<T>(stream);
     }
 
     /// <summary>
-    /// Loads an object from a stream using the specified configuration.
+    /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a stream,
+    /// also returning the <see cref="MetaStreamConfiguration"/> that was embedded in the stream.
     /// </summary>
-    public T LoadObject<T>(Stream stream, out MetaStreamConfiguration config) where T : class, new()
+    /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
+    /// <param name="stream">
+    /// A readable stream positioned at the start of a MetaStream file.
+    /// Not disposed by this method.
+    /// </param>
+    /// <returns>
+    /// A tuple containing the deserialized object and the configuration embedded in the stream,
+    /// or <c>(null, null)</c> if parsing fails.
+    /// </returns>
+    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(Stream stream)
+        where T : class, new()
     {
-        var reader = new MetaStreamReader(stream);
-        var obj = default(T);
-        reader.PreSerialize(ref obj);
-        reader.Serialize(ref obj);
-
-        if (obj == null)
-            throw new InvalidOperationException($"Failed to deserialize object of type {typeof(T).Name}");
-
-        config = reader.Configuration;
-        return obj;
+        var result = DeserializeInternal<T>(stream);
+        return (result.Asset, result.Config);
     }
 
     /// <summary>
-    /// Loads an object from a file using the specified configuration.
+    /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a file,
+    /// discarding the embedded configuration.
     /// </summary>
-    public object LoadObject(string fileName, out MetaStreamConfiguration config)
+    /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
+    /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <returns>
+    /// The deserialized object, or <see langword="null"/> if reading or parsing fails.
+    /// </returns>
+    public T Deserialize<T>(string fileName) where T : class, new()
     {
         using FileStream stream = File.OpenRead(fileName);
-        return LoadObject(stream, out config);
+        return DeserializeInternal<T>(stream).Asset;
     }
 
     /// <summary>
-    /// Loads an object from a stream using the specified configuration.
+    /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a stream,
+    /// discarding the embedded configuration.
     /// </summary>
-    public object LoadObject(Stream stream, out MetaStreamConfiguration config)
+    /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
+    /// <param name="stream">
+    /// A readable stream positioned at the start of a MetaStream file.
+    /// Not disposed by this method.
+    /// </param>
+    /// <returns>
+    /// The deserialized object, or <see langword="null"/> if parsing fails.
+    /// </returns>
+    public T Deserialize<T>(Stream stream) where T : class, new()
+        => DeserializeInternal<T>(stream).Asset;
+
+    // -------------------------------------------------------------------------
+    // Serialization — Serialize
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Serializes <paramref name="obj"/> to a MetaStream file.
+    /// The file is created or overwritten.
+    /// </summary>
+    /// <typeparam name="T">The object type. It must have a parameterless constructor.</typeparam>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="fileName">Destination file path. The file is overwritten if it exists.</param>
+    /// <param name="config">
+    /// The <see cref="MetaStreamConfiguration"/> controlling format version, class list, and so on.
+    /// </param>
+    public void Serialize<T>(T obj, string fileName, MetaStreamConfiguration config) where T : class, new()
     {
-        var reader = new MetaStreamReader(stream);
-        Type type = reader.Configuration.SerializedClasses.First().ClassType.LinkingType;
-
-        object? obj = Activator.CreateInstance(type);
-
-        MetaClassSerializer serializer = Instance.GetSerializer(obj.GetType());
-        serializer.PreSerialize(ref obj, reader);
-        serializer.Serialize(ref obj, reader);
-
-        if (obj == null)
-            throw new InvalidOperationException($"Failed to deserialize object of type {type.Name}");
-
-        config = reader.Configuration;
-        return obj;
+        using FileStream stream = File.Create(fileName);
+        SerializeInternal(obj, stream, config);
     }
 
     /// <summary>
-    /// Saves an object to a file using the specified configuration.
+    /// Serializes <paramref name="obj"/> to a writable stream.
     /// </summary>
-    public void SaveObject<T>(T obj, string fileName, MetaStreamConfiguration config) where T : class, new()
-    {
-        using FileStream stream = File.OpenWrite(fileName);
-        SaveObject(obj, stream, config);
-    }
+    /// <typeparam name="T">The object type. It must have a parameterless constructor.</typeparam>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="stream">
+    /// A writable stream. Not disposed by this method.
+    /// </param>
+    /// <param name="config">The MetaStream configuration to embed in the output.</param>
+    public void Serialize<T>(T obj, Stream stream, MetaStreamConfiguration config) where T : class, new()
+        => SerializeInternal(obj, stream, config);
+
+    // -------------------------------------------------------------------------
+    // Archive Loading
+    // -------------------------------------------------------------------------
 
     /// <summary>
-    /// Saves an object to a stream using the specified configuration.
+    /// Loads a Telltale archive file (.ttarch or .ttarch2) using a <see cref="T3BlowfishKey"/>
+    /// enum value to supply the decryption key.
     /// </summary>
-    public void SaveObject<T>(T obj, Stream stream, MetaStreamConfiguration config) where T : class, new()
-    {
-        var writer = new MetaStreamWriter(stream, config);
-        T refObj = obj;
-        writer.PreSerialize(ref refObj);
-        writer.Serialize(ref refObj);
-        writer.Save();
-    }
+    /// <param name="archivePath">Path to the archive file.</param>
+    /// <param name="game">Enum value identifying the game's blowfish key.</param>
+    /// <param name="sort">When <see langword="true"/>, sorts entries for faster binary search.</param>
+    /// <param name="debugPrint">When <see langword="true"/>, prints diagnostic output to stdout.</param>
+    /// <returns>The loaded <see cref="ArchiveBase"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the file extension is not recognized.</exception>
+    public ArchiveBase LoadArchive(string archivePath, T3BlowfishKey game, bool sort = true, bool debugPrint = false)
+        => LoadArchive(archivePath, game.GetBlowfishKey(), sort, debugPrint);
 
     /// <summary>
-    /// Saves an object to a file using the specified configuration.
+    /// Loads a Telltale archive file (.ttarch or .ttarch2) using a raw blowfish key string.
     /// </summary>
-    public void SaveObject(object obj, string fileName, MetaStreamConfiguration config)
-    {
-        using FileStream stream = File.OpenWrite(fileName);
-        SaveObject(obj, stream, config);
-    }
-
-    /// <summary>
-    /// Saves an object to a stream using the specified configuration.
-    /// </summary>
-    public void SaveObject(object obj, Stream stream, MetaStreamConfiguration config)
-    {
-        var writer = new MetaStreamWriter(stream, config);
-
-        MetaClassSerializer serializer = Instance.GetSerializer(obj.GetType());
-        serializer.PreSerialize(ref obj, writer);
-        serializer.Serialize(ref obj, writer);
-        writer.Save();
-    }
-
-    /// <summary>
-    /// Loads an archive with the specified blowfish key.
-    /// </summary>
+    /// <param name="archivePath">Path to the archive file.</param>
+    /// <param name="blowfishKey">The decryption key for this game's archives.</param>
+    /// <param name="sort">When <see langword="true"/>, sorts entries for faster binary search.</param>
+    /// <param name="debugPrint">When <see langword="true"/>, prints diagnostic output to stdout.</param>
+    /// <returns>The loaded <see cref="ArchiveBase"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when the file extension is not <c>.ttarch</c> or <c>.ttarch2</c>.</exception>
     public ArchiveBase LoadArchive(string archivePath, string blowfishKey, bool sort = true, bool debugPrint = false)
     {
         if (archivePath.EndsWith(".ttarch2", StringComparison.OrdinalIgnoreCase))
-        {
             return ArchiveBase.Load<T3Archive2>(archivePath, blowfishKey, sort, debugPrint);
-        }
 
         if (archivePath.EndsWith(".ttarch", StringComparison.OrdinalIgnoreCase))
-        {
             return ArchiveBase.Load<T3Archive>(archivePath, blowfishKey, sort, debugPrint);
-        }
 
-        throw new NotSupportedException($"Unsupported archive format: {Path.GetExtension(archivePath)}");
+        throw new NotSupportedException(
+            $"Unsupported archive format '{Path.GetExtension(archivePath)}'. Expected .ttarch or .ttarch2.");
     }
+
+    // -------------------------------------------------------------------------
+    // MetaStream Detection
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Returns <see langword="true"/> if the file at <paramref name="fileName"/> is a
+    /// valid Telltale MetaStream file (checked by reading the four-byte version header).
+    /// </summary>
+    /// <param name="fileName">Path to the file to check.</param>
+    /// <returns>
+    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamVersion"/>;
+    /// <see langword="false"/> otherwise.
+    /// </returns>
+    public bool IsMetaStreamFile(string fileName)
+    {
+        // Use a using block so the file handle is released immediately after the check.
+        using FileStream stream = File.OpenRead(fileName);
+        return MetaStreamReader.IsValidMetaStream(stream);
+    }
+
+    /// <summary>
+    /// Returns <see langword="true"/> if the stream contains a valid Telltale MetaStream
+    /// (checked by reading the four-byte version header).
+    /// </summary>
+    /// <param name="stream">
+    /// A readable, seekable stream. The stream position is restored after the check.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamVersion"/>;
+    /// <see langword="false"/> otherwise.
+    /// </returns>
+    public bool IsMetaStreamFile(Stream stream)
+        => MetaStreamReader.IsValidMetaStream(stream);
+
+    /// <summary>
+    /// Returns <see langword="true"/> if <paramref name="fileName"/> has an extension
+    /// associated with a Telltale MetaStream asset type
+    /// (<c>.d3dtx</c>, <c>.d3dmesh</c>, <c>.scene</c>, <c>.chore</c>).
+    /// </summary>
+    /// <param name="fileName">The filename or archive-entry name to inspect.</param>
+    /// <returns>
+    /// <see langword="true"/> if the extension is a known MetaStream asset extension;
+    /// <see langword="false"/> otherwise.
+    /// </returns>
+    /// <remarks>
+    /// This check is extension-based only and does not read the file.
+    /// Use <see cref="IsMetaStreamFile(string)"/> to validate the actual file header.
+    /// <!-- TODO: add .t3fxpreloadpack and others -->
+    /// </remarks>
+    public static bool IsMetaFile(string fileName)
+        => Path.GetExtension(fileName) switch
+        {
+            ".d3dtx" or ".d3dmesh" or ".scene" or ".chore" => true,
+            _ => false,
+        };
+
+    /// <summary>
+    /// Returns <see langword="true"/> if the stream's header matches a known
+    /// <see cref="MetaStreamVersion"/> value.
+    /// </summary>
+    /// <param name="stream">
+    /// A readable, seekable stream. The stream position is restored after the check.
+    /// </param>
+    public static bool IsMetaFile(Stream stream)
+    {
+        long savedPosition = stream.Position;
+        stream.Position = 0;
+
+        try
+        {
+            byte[] header = new byte[4];
+            if (stream.Read(header, 0, 4) < 4)
+                return false;
+
+            var version = (MetaStreamVersion)BitConverter.ToInt32(header);
+            return Enum.IsDefined(typeof(MetaStreamVersion), version);
+        }
+        finally
+        {
+            // Restore position even when Read throws.
+            stream.Position = savedPosition;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Serializer Access
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Returns the typed serializer for <typeparamref name="T"/>.
+    /// </summary>
+    public MetaClassSerializer<T> GetSerializer<T>() where T : new()
+        => SerializerSelector.GetSerializer<T>();
+
+    /// <summary>
+    /// Returns the serializer for the given runtime <paramref name="type"/>.
+    /// </summary>
+    public MetaClassSerializer GetSerializer(Type type)
+        => SerializerSelector.GetSerializer(type);
+
+    // -------------------------------------------------------------------------
+    // MetaClass Description Export
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Serializes the given MetaClass descriptions to a JSON file at <paramref name="path"/>.
+    /// </summary>
+    /// <param name="metaClassDescriptions">The descriptions to export.</param>
+    /// <param name="path">Destination file path. Overwritten if it already exists.</param>
+    public void ExportMetaClassDescriptions(IEnumerable<MetaClass> metaClassDescriptions, string path)
+    {
+        string json = JsonSerializer.Serialize(metaClassDescriptions, Config.JsonOptions);
+        File.WriteAllText(path, json, Encoding.ASCII);
+    }
+
+    // -------------------------------------------------------------------------
+    // Private helpers
+    // -------------------------------------------------------------------------
 
     private void LoadGameProfiles(string dataFolder)
     {
@@ -266,9 +463,7 @@ public class Toolkit
         if (!Directory.Exists(profilesPath))
             return;
 
-        string[] files = Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly);
-
-        foreach (string file in files)
+        foreach (string file in Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
         {
             try
             {
@@ -283,7 +478,7 @@ public class Toolkit
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load game profile from {file}: {ex.Message}");
+                Console.WriteLine($"[Toolkit] Failed to load game profile '{file}': {ex.Message}");
             }
         }
     }
@@ -296,12 +491,11 @@ public class Toolkit
 
         try
         {
-            // Load global symbols
             GlobalHashDatabase.ImportFromDirectory(hashDbDir, recursive: true);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load hash databases: {ex.Message}");
+            Console.WriteLine($"[Toolkit] Failed to load hash databases: {ex.Message}");
         }
     }
 
@@ -318,7 +512,7 @@ public class Toolkit
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load meta class descriptions for {profile.Id}: {ex.Message}");
+            Console.WriteLine($"[Toolkit] Failed to load MetaClass descriptions for '{profile.Id}': {ex.Message}");
         }
     }
 
@@ -327,8 +521,7 @@ public class Toolkit
         if (!Directory.Exists(Config.DataFolder))
             return;
 
-        string globalDbPath = Path.Combine(Config.DataFolder, "versiondb", $"global.vdb.json");
-
+        string globalDbPath = Path.Combine(Config.DataFolder, "versiondb", "global.vdb.json");
         if (!File.Exists(globalDbPath))
             return;
 
@@ -336,226 +529,66 @@ public class Toolkit
         var metaClasses = JsonSerializer.Deserialize<List<MetaClass>>(json, Config.JsonOptions);
 
         if (metaClasses != null)
-        {
             ClassRegistry.Register(metaClasses);
-        }
     }
 
-    public MetaClassSerializer<T> GetSerializer<T>() where T : new()
-        => SerializerSelector.GetSerializer<T>();
-
-    public MetaClassSerializer GetSerializer(Type type)
-        => SerializerSelector.GetSerializer(type);
-
-    // Utility to sanitize file names
-    private static string SanitizeFileName(string name)
+    private (T Asset, MetaStreamConfiguration Config) DeserializeInternal<T>(Stream stream)
+        where T : class, new()
     {
-        foreach (char c in Path.GetInvalidFileNameChars())
-            name = name.Replace(c, '_');
-        return name;
+        var result = new T();
+
+        var reader = new MetaStreamReader(stream);
+
+        reader.PreSerialize(ref result);
+        reader.Serialize(ref result);
+
+        MetaStreamConfiguration config = reader.Configuration;
+
+        if (Config.AutoResolveSymbols)
+            ResolveSymbols(config.SerializedSymbols);
+
+        return (result, config);
     }
 
-    public void DumpMetaClassDescriptions(IEnumerable<MetaClass> metaClassDescriptions, string path)
+    private void SerializeInternal<T>(T obj, Stream stream, MetaStreamConfiguration config)
+        where T : class, new()
     {
-        string json = JsonSerializer.Serialize(metaClassDescriptions, Config.JsonOptions);
-        File.WriteAllText(path, json, Encoding.ASCII);
+        var writer = new MetaStreamWriter(stream, config);
+        T refObj = obj;
+        writer.PreSerialize(ref refObj);
+        writer.Serialize(ref refObj);
+        writer.Save();
     }
 
     /// <summary>
-    /// Loads and parses a Telltale archive file (.ttarch or .ttarch2) using the specified blowfish key for decryption.
-    /// </summary>
-    /// <param name="ttarch">The path to the archive file.</param>
-    /// <param name="game">The blowfish key for the game.</param>
-    /// <param name="sort">Whether to sort archive entries.</param>
-    /// <param name="debugPrint">Whether to print debug information during loading.</param>
-    /// <returns>An <see cref="ArchiveBase"/> representing the loaded archive.</returns>
-    /// <exception cref="NotSupportedException">Thrown if the archive type is unsupported.</exception>
-    public ArchiveBase Load(string ttarch, T3BlowfishKey game, bool sort = true, bool debugPrint = false)
-    {
-        return Load(ttarch, game.GetBlowfishKey(), sort, debugPrint);
-    }
-
-    /// <summary>
-    /// Loads and parses a Telltale archive file (.ttarch or .ttarch2) using the specified blowfish key for decryption.
-    /// </summary>
-    /// <param name="ttarch">The path to the archive file.</param>
-    /// <param name="key">The blowfish key for the game.</param>
-    /// <param name="sort">Whether to sort archive entries.</param>
-    /// <param name="debugPrint">Whether to print debug information during loading.</param>
-    /// <returns>An <see cref="ArchiveBase"/> representing the loaded archive.</returns>
-    /// <exception cref="NotSupportedException">Thrown if the archive type is unsupported.</exception>
-    public ArchiveBase Load(string ttarch, string key, bool sort = true, bool debugPrint = false)
-    {
-        if (ttarch.EndsWith(".ttarch2"))
-        {
-            return ArchiveBase.Load<T3Archive2>(ttarch, key, sort, debugPrint);
-        }
-
-        if (ttarch.EndsWith(".ttarch"))
-        {
-            return ArchiveBase.Load<T3Archive>(ttarch, key, sort, debugPrint);
-        }
-
-        throw new NotSupportedException($"Unsupported archive type: {ttarch}");
-    }
-
-    /// <summary>
-    /// Determines if a file is a valid Telltale MetaStream file.
-    /// </summary>
-    public bool IsMetaStreamFile(string fileName)
-    {
-        return IsMetaStreamFile(File.OpenRead(fileName));
-    }
-
-    /// <summary>
-    /// Determines if a file is a valid Telltale MetaStream file.
-    /// </summary>
-    public bool IsMetaStreamFile(Stream stream)
-    {
-        return MetaStreamReader.IsValidMetaStream(stream);
-    }
-
-    /// <summary>
-    /// Attempts to open and validate a Telltale file, returning configuration if successful.
-    /// </summary>
-    public bool TryOpenFile(string fileName, out MetaStreamConfiguration? config)
-    {
-        config = null;
-
-        try
-        {
-            using FileStream stream = File.OpenRead(fileName);
-            return TryOpenFile(stream, out config);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Attempts to open and validate a Telltale file from stream, returning configuration if successful.
-    /// </summary>
-    public bool TryOpenFile(Stream stream, out MetaStreamConfiguration? config)
-    {
-        config = null;
-
-        try
-        {
-            // Quick validation using the fourcc check
-            if (!MetaStreamReader.IsValidMetaStream(stream))
-                return false;
-
-            // If we need the actual configuration, parse it fully
-            using var reader = new MetaStreamReader(stream);
-            config = reader.Configuration;
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-
-    /// <summary>
-    /// Attempts to load an object from a file, returning null if validation fails.
-    /// </summary>
-    public T? TryOpenObject<T>(string fileName, out MetaStreamConfiguration? config) where T : class, new()
-    {
-        try
-        {
-            using FileStream stream = File.OpenRead(fileName);
-            return TryOpenObject<T>(stream, out config);
-        }
-        catch
-        {
-            config = null;
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Attempts to load an object from a stream, returning null if validation fails.
-    /// </summary>
-    public T? TryOpenObject<T>(Stream stream, out MetaStreamConfiguration config) where T : class, new()
-    {
-        try
-        {
-            // First do quick validation
-            if (!MetaStreamReader.IsValidMetaStream(stream))
-            {
-                config = null;
-                return null;
-            }
-
-            // Reset and load
-            stream.Position = 0;
-            return LoadObject<T>(stream, out config);
-        }
-        catch
-        {
-            config = null;
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Determines whether a file with the specified name should be considered a Meta file (Telltale Tool asset format)
-    /// based on its extension.
-    /// </summary>
-    /// <param name="fileName">The name of the file or archive entry.</param>
-    /// <returns><c>true</c> if the file is a meta file; otherwise, <c>false</c>.</returns>
-    public static bool IsMetaFile(string fileName)
-    {
-        return Path.GetExtension(fileName) switch
-        {
-            ".d3dtx" or ".d3dmesh" or ".scene" or ".chore" => true,
-            _ => false
-            // TODO: Check for .t3fxpreloadpack
-        };
-    }
-
-    /// <summary>
-    /// Determines whether a stream is a Meta file (Telltale Tool asset format)
-    /// by its version header.
-    /// </summary>
-    /// <param name="stream">The stream to check. The stream must be seekable and readable.
-    /// The stream position is restored after the check.</param>
-    /// <returns>
-    /// <c>true</c> if the stream's first 4 bytes represent a valid MetaStreamVersion value;
-    /// otherwise, <c>false</c>.
-    /// </returns>
-    public static bool IsMetaFile(Stream stream)
-    {
-        long oldPosition = stream.Position;
-        stream.Position = 0;
-
-        var header = new byte[4];
-        if (stream.Read(header, 0, 4) < 4)
-        {
-            stream.Position = oldPosition;
-            return false;
-        }
-
-        stream.Position = oldPosition;
-
-        var version = (MetaStreamVersion)BitConverter.ToInt32(header);
-        return Enum.IsDefined(typeof(MetaStreamVersion), version);
-    }
-
-    /// <summary>
-    /// Configuration for TelltaleToolkit initialization.
+    /// Configuration supplied to <see cref="Initialize"/>.
     /// </summary>
     public class Configuration
     {
         /// <summary>
-        /// Path to the data folder containing game profiles, hash databases, etc.
+        /// Path to the data folder that contains <c>game_profiles/</c>, <c>hashdb/</c>,
+        /// and <c>versiondb/</c> subdirectories
+        /// Defaults to <c>"ttk-data"</c> (relative to the working directory).
         /// </summary>
         public string DataFolder { get; set; } = "ttk-data";
 
         /// <summary>
-        /// Custom JSON serializer options for loading/saving profiles.
+        /// Gets or sets a value indicating whether symbols found in the
+        /// <see cref="MetaStreamConfiguration.SerializedSymbols"/> table are automatically
+        /// resolved against the global hash database after every successful
+        /// <see cref="Deserialize{T}(string)"/> call.
+        /// <para>
+        /// Individual call sites can override this with the <c>autoResolveSymbols</c>
+        /// parameter: <see langword="true"/> forces resolution, <see langword="false"/>
+        /// suppresses it, and <see langword="null"/> (the default) defers to this flag.
+        /// </para>
+        /// Defaults to <see langword="true"/>.
+        /// </summary>
+        public bool AutoResolveSymbols { get; set; } = true;
+
+        /// <summary>
+        /// JSON serializer options used when reading game profiles and MetaClass version databases.
+        /// Override to customize converters, indentation, or encoding.
         /// </summary>
         public JsonSerializerOptions JsonOptions { get; set; } = new()
         {
