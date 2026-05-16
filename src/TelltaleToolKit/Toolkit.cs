@@ -214,8 +214,15 @@ public class Toolkit
     public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(string fileName)
         where T : class, new()
     {
-        using FileStream stream = File.OpenRead(fileName);
-        return DeserializeInternal<T>(stream);
+        try
+        {
+            using FileStream stream = File.OpenRead(fileName);
+            return DeserializeInternal<T>(stream);
+        }
+        catch (Exception)
+        {
+            return (null, null);
+        }
     }
 
     /// <summary>
@@ -247,10 +254,17 @@ public class Toolkit
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if reading or parsing fails.
     /// </returns>
-    public T Deserialize<T>(string fileName) where T : class, new()
+    public T? Deserialize<T>(string fileName) where T : class, new()
     {
-        using FileStream stream = File.OpenRead(fileName);
-        return DeserializeInternal<T>(stream).Asset;
+        try
+        {
+            using FileStream stream = File.OpenRead(fileName);
+            return DeserializeInternal<T>(stream).Asset;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     /// <summary>
@@ -265,7 +279,7 @@ public class Toolkit
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if parsing fails.
     /// </returns>
-    public T Deserialize<T>(Stream stream) where T : class, new()
+    public T? Deserialize<T>(Stream stream) where T : class, new()
         => DeserializeInternal<T>(stream).Asset;
 
     // -------------------------------------------------------------------------
@@ -532,22 +546,29 @@ public class Toolkit
             ClassRegistry.Register(metaClasses);
     }
 
-    private (T Asset, MetaStreamConfiguration Config) DeserializeInternal<T>(Stream stream)
+    private (T? Asset, MetaStreamConfiguration? Config) DeserializeInternal<T>(Stream stream)
         where T : class, new()
     {
-        var result = new T();
+        try
+        {
+            var result = new T();
 
-        var reader = new MetaStreamReader(stream);
+            var reader = new MetaStreamReader(stream);
 
-        reader.PreSerialize(ref result);
-        reader.Serialize(ref result);
+            reader.PreSerialize(ref result);
+            reader.Serialize(ref result);
 
-        MetaStreamConfiguration config = reader.Configuration;
+            MetaStreamConfiguration config = reader.Configuration;
 
-        if (Config.AutoResolveSymbols)
-            ResolveSymbols(config.SerializedSymbols);
+            if (Config.AutoResolveSymbols)
+                ResolveSymbols(config.SerializedSymbols);
 
-        return (result, config);
+            return (result, config);
+        }
+        catch (Exception)
+        {
+            return (null, null);
+        }
     }
 
     private void SerializeInternal<T>(T obj, Stream stream, MetaStreamConfiguration config)
