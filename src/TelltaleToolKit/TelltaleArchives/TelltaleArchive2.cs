@@ -35,7 +35,7 @@ public class T3Archive2 : ArchiveBase
 
         if (IsCompressed())
         {
-            Info.ChunkSize = reader.ReadInt32(); // Also known as window size. This is the size per page.
+            Info.ChunkSize = reader.ReadUInt32(); // Also known as window size. This is the size per page.
             if (Info.ChunkSize < 0)
             {
                 throw new InvalidDataException("Invalid chunk size");
@@ -43,12 +43,12 @@ public class T3Archive2 : ArchiveBase
 
             Info.ChunkCount = reader.ReadUInt32(); // Number of chunks in the archive
 
-            Info.ChunkBlockSizes = new long[Info.ChunkCount];
+            Info.ChunkBlockSizes = new ulong[Info.ChunkCount];
 
-            long previousChunkOffset = reader.ReadInt64(); // Read the first chunk block
+            ulong previousChunkOffset = reader.ReadUInt64(); // Read the first chunk block
             for (var i = 0; i < Info.ChunkCount; i++)
             {
-                long nextChunkOffset = reader.ReadInt64();
+                ulong nextChunkOffset = reader.ReadUInt64();
 
                 Info.ChunkBlockSizes[i] =
                     nextChunkOffset - previousChunkOffset; // Calculate the offset of the chunk block
@@ -70,7 +70,7 @@ public class T3Archive2 : ArchiveBase
 
         ReadContainer(mainReader); // Read the container header
         Info.ArchiveOffset =
-            mainReader.BaseStream
+            (ulong)mainReader.BaseStream
                 .Position; // Set the file offset to the current position in the stream (Where TTA4/TTA3 starts)
 
         byte[] finalFullHeader = [];
@@ -105,20 +105,20 @@ public class T3Archive2 : ArchiveBase
                 throw new  ArgumentOutOfRangeException(nameof(Info.FileCount));
             }
 
-            FileEntries = new TelltaleFileEntry[Info.FileCount]; // Initialize the file entries dictionary
+            FileEntries = new ResourceEntry[Info.FileCount]; // Initialize the file entries dictionary
 
-            Info.FilesOffset = headerReader.BaseStream.Position + (28 * Info.FileCount) + fileNameBufferSize;
+            Info.FilesOffset = (ulong)(headerReader.BaseStream.Position + (28 * Info.FileCount) + fileNameBufferSize);
 
             // Read all needed chunk blocks for the header
-            if (Info.FilesOffset > headerReader.BaseStream.Length)
+            if (Info.FilesOffset > (ulong)headerReader.BaseStream.Length)
             {
-                mainReader.BaseStream.Seek(Info.ArchiveOffset,
+                mainReader.BaseStream.Seek((long)Info.ArchiveOffset,
                     SeekOrigin.Begin); // Reset the stream position to the beginning
-                long chunksToIterate = Info.FilesOffset / Info.ChunkSize + 1;
+                ulong chunksToIterate = Info.FilesOffset / Info.ChunkSize + 1;
 
                 using MemoryStream ms = new();
 
-                for (var i = 0; i < chunksToIterate; i++)
+                for (ulong i = 0; i < chunksToIterate; i++)
                 {
                     byte[] chunk = DecodeBlock(
                         mainReader.ReadBytes((int)Info.ChunkBlockSizes[i]),
@@ -157,9 +157,9 @@ public class T3Archive2 : ArchiveBase
 
         Info.FilesOffset = IsCompressed()
             ? Info.FilesOffset
-            : fullHeader.BaseStream.Position + (28 * Info.FileCount) + fileNameBufferSize;
+            : (ulong)(fullHeader.BaseStream.Position + (28 * Info.FileCount) + fileNameBufferSize);
 
-        FileEntries = new TelltaleFileEntry[Info.FileCount]; // Initialize the file entries dictionary
+        FileEntries = new ResourceEntry[Info.FileCount]; // Initialize the file entries dictionary
 
         var filesAndNamesTotalSize =
             (int)((Info.FileCount * 28) + fileNameBufferSize); // Calculate the total size of files and names
@@ -169,10 +169,10 @@ public class T3Archive2 : ArchiveBase
 
         for (var i = 0; i < FileCount(); i++)
         {
-            FileEntries[i] = new TelltaleFileEntry
+            FileEntries[i] = new ResourceEntry
             {
-                Crc64 = fullHeader.ReadUInt64(),
-                FileOffset = fullHeader.ReadInt64(),
+                NameCrc = fullHeader.ReadUInt64(),
+                Offset = fullHeader.ReadUInt64(),
             };
 
             if (Info.Version is ArchiveVersion.Tta2)
@@ -180,7 +180,7 @@ public class T3Archive2 : ArchiveBase
                 uint unused = fullHeader.ReadUInt32(); // Read an unused value (possibly a version CRC)
             }
 
-            FileEntries[i].FileSize = fullHeader.ReadInt32();
+            FileEntries[i].Size = fullHeader.ReadUInt32();
             int unknown = fullHeader.ReadInt32(); // Read an unknown value (possibly a folder index)
             ushort nameBlock = fullHeader.ReadUInt16(); // Read the name block offset
             ushort nameOffset = fullHeader.ReadUInt16(); // Read the name offset
@@ -207,7 +207,7 @@ public class T3Archive2 : ArchiveBase
         }
     }
 
-    public byte[] DecodeBlock(byte[] data, int expectedBufferSize, string key, ContainerFlags flags)
+    public byte[] DecodeBlock(byte[] data, uint expectedBufferSize, string key, ContainerFlags flags)
     {
         if (!IsEncrypted() && !IsCompressed())
         {
@@ -226,7 +226,7 @@ public class T3Archive2 : ArchiveBase
     /// <returns>A MemoryStream for the file at the hash or null if the file is not found</returns>
     public override MemoryStream? ExtractFile(ulong crc64)
     {
-        TelltaleFileEntry? entry = FindEntry(crc64);
+        ResourceEntry? entry = FindEntry(crc64);
 
         return entry == null ? null : ExtractFile(entry);
     }
@@ -238,30 +238,30 @@ public class T3Archive2 : ArchiveBase
     /// <returns>A MemoryStream for the file at the file name or null if the file is not found</returns>
     public override MemoryStream? ExtractFile(string name)
     {
-        TelltaleFileEntry? entry = FindEntry(name);
+        ResourceEntry? entry = FindEntry(name);
 
         return entry == null ? null : ExtractFile(entry);
     }
-    
+
     public override void ExtractAll(string destinationPath)
     {
         throw new NotImplementedException();
     }
 
-    public MemoryStream ExtractFile(TelltaleFileEntry entry)
+    public MemoryStream ExtractFile(ResourceEntry entry)
     {
         using BinaryReader reader = new(ArchiveStream, Encoding.UTF8, true);
 
-        long fileOffset = Info.FilesOffset + entry.FileOffset; // Calculate the file offset
-        int fileSize = entry.FileSize; // Get the file size
+        ulong fileOffset = Info.FilesOffset + entry.Offset; // Calculate the file offset
+        uint fileSize = entry.Size; // Get the file size
 
-        MemoryStream result = new(fileSize);
+        MemoryStream result = new((int)fileSize);
         BinaryWriter resultWriter = new(result);
 
         if (IsCompressed())
         {
-            var blockStartIndex = (int)(fileOffset / Info.ChunkSize);
-            var blockEndIndex = (int)((fileOffset + fileSize) / Info.ChunkSize);
+            var blockStartIndex = (uint)(fileOffset / Info.ChunkSize);
+            var blockEndIndex = (uint)((fileOffset + fileSize) / Info.ChunkSize);
 
             if (blockStartIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(blockStartIndex), "Block start index is less than 0.");
@@ -272,7 +272,7 @@ public class T3Archive2 : ArchiveBase
                 throw new ArgumentOutOfRangeException(nameof(blockEndIndex),
                     "Block end index is greater than chunk count.");
 
-            long blockStartOffset = 0;
+            ulong blockStartOffset = 0;
 
             for (var i = 0; i < blockStartIndex; i++)
             {
@@ -280,11 +280,11 @@ public class T3Archive2 : ArchiveBase
             }
 
             // Seek to the block start offset
-            reader.BaseStream.Seek(Info.ArchiveOffset + blockStartOffset, SeekOrigin.Begin);
+            reader.BaseStream.Seek((long)(Info.ArchiveOffset + blockStartOffset), SeekOrigin.Begin);
 
             using MemoryStream ms = new();
             using BinaryWriter blockWriter = new(ms);
-            for (int blockIndex = blockStartIndex; blockIndex <= blockEndIndex; blockIndex++)
+            for (uint blockIndex = blockStartIndex; blockIndex <= blockEndIndex; blockIndex++)
             {
                 byte[] chunk = DecodeBlock(
                     reader.ReadBytes((int)Info.ChunkBlockSizes[blockIndex]),
@@ -297,25 +297,25 @@ public class T3Archive2 : ArchiveBase
             }
 
             // This is relative to the blocks themselves
-            long startIndex = fileOffset - (Info.ChunkSize * blockStartIndex);
-            resultWriter.Write(ms.ToArray(), (int)startIndex, fileSize); // Write the data to the result stream
+            ulong startIndex = fileOffset - (Info.ChunkSize * blockStartIndex);
+            resultWriter.Write(ms.ToArray(), (int)startIndex, (int)fileSize); // Write the data to the result stream
         }
         else
         {
-            reader.BaseStream.Seek(fileOffset, SeekOrigin.Begin);
-        
+            reader.BaseStream.Seek((long)fileOffset, SeekOrigin.Begin);
+
             // Read in chunks to avoid LOH allocations
             const int bufferSize = 81920; // 80KB - under LOH threshold
-            int bytesRemaining = fileSize;
+            int bytesRemaining = (int)fileSize;
             var buffer = new byte[Math.Min(bufferSize, bytesRemaining)];
 
             while (bytesRemaining > 0)
             {
                 int bytesToRead = Math.Min(buffer.Length, bytesRemaining);
                 int bytesRead = reader.Read(buffer, 0, bytesToRead);
-            
+
                 if (bytesRead == 0) break;
-            
+
                 result.Write(buffer, 0, bytesRead);
                 bytesRemaining -= bytesRead;
             }

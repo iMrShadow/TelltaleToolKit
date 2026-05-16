@@ -104,7 +104,7 @@ public sealed class FolderProvider : IFileProvider
         => _providers.Any(p => p.ContainsFile(crc64));
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(ulong crc64)
+    public ResourceEntry? GetFileEntry(ulong crc64)
     {
         foreach (var provider in _providers)
         {
@@ -123,11 +123,11 @@ public sealed class FolderProvider : IFileProvider
         => ContainsFile(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(string fileName)
+    public ResourceEntry? GetFileEntry(string fileName)
         => GetFileEntry(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    public IEnumerable<ResourceEntry> GetAllEntries()
         => _providers.SelectMany(p => p.GetAllEntries());
 
     /// <summary>

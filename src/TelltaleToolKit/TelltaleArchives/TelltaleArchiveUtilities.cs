@@ -75,7 +75,7 @@ public static class TelltaleArchiveUtilities
         }
     }
 
-    public static byte[] DecompressBlock(byte[] compressedData, int expectedSize, ref ContainerFlags flags)
+    public static byte[] DecompressBlock(byte[] compressedData, uint expectedSize, ref ContainerFlags flags)
     {
         // This is a hack? In TWD:DE, 401_txmesh, there's a page which is the same size as the expected size (65535)
         // C#'s raw deflate fails.
@@ -136,7 +136,7 @@ public static class TelltaleArchiveUtilities
         // Local function to handle decompression
         byte[] Decompress(Func<Stream, Stream> streamFactory)
         {
-            using var outputStream = new MemoryStream(expectedSize);
+            using var outputStream = new MemoryStream((int)expectedSize);
             using Stream decompressStream = streamFactory(new MemoryStream(compressedData));
             decompressStream.CopyTo(outputStream);
             return outputStream.ToArray();

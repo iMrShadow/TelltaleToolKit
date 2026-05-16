@@ -168,7 +168,7 @@ internal static class Program
                         }
                     }
 
-                    foreach (TelltaleFileEntry entry in archive.FileEntries)
+                    foreach (ResourceEntry entry in archive.FileEntries)
                     {
                         using MemoryStream? file = archive.ExtractFile(entry.Name);
 

@@ -32,11 +32,11 @@ public interface IFileProvider
     bool ContainsFile(ulong crc64);
 
     /// <summary>
-    /// Returns the <see cref="TelltaleFileEntry"/> for the file whose CRC-64 matches
+    /// Returns the <see cref="ResourceEntry"/> for the file whose CRC-64 matches
     /// <paramref name="crc64"/>, or <see langword="null"/> if not found.
     /// </summary>
     /// <param name="crc64">Pre-computed CRC-64 of the filename.</param>
-    TelltaleFileEntry? GetFileEntry(ulong crc64);
+    ResourceEntry? GetFileEntry(ulong crc64);
 
     /// <summary>
     /// Opens a read-only stream for the file with the given name.
@@ -62,10 +62,10 @@ public interface IFileProvider
     /// <param name="fileName">
     /// The bare filename (e.g. <c>obj_clementine.d3dtx</c>), not a full path.
     /// </param>
-    TelltaleFileEntry? GetFileEntry(string fileName);
+    ResourceEntry? GetFileEntry(string fileName);
 
     /// <summary>
-    /// Enumerates every <see cref="TelltaleFileEntry"/> accessible through this provider,
+    /// Enumerates every <see cref="ResourceEntry"/> accessible through this provider,
     /// without duplicates.
     /// </summary>
     /// <remarks>
@@ -75,5 +75,5 @@ public interface IFileProvider
     /// child providers' entries.
     /// </remarks>
     /// <returns>An enumerable of file entries; never <see langword="null"/>.</returns>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries();
+    public IEnumerable<ResourceEntry> GetAllEntries();
 }

@@ -698,13 +698,13 @@ public class Workspace
     /// searching enabled contexts from the highest priority to lowest.
     /// </summary>
     /// <returns>The entry, or <see langword="null"/> if not found.</returns>
-    public TelltaleFileEntry? FindFileEntry(ulong crc64)
+    public ResourceEntry? FindFileEntry(ulong crc64)
     {
         for (int i = _contexts.Count - 1; i >= 0; i--)
         {
             if (!_contexts[i].IsEnabled) continue;
 
-            TelltaleFileEntry? entry = _contexts[i].GetFileEntry(crc64);
+            ResourceEntry? entry = _contexts[i].GetFileEntry(crc64);
             if (entry != null) return entry;
         }
 
@@ -745,7 +745,7 @@ public class Workspace
     /// <returns>
     /// A flat sequence of <see cref="TelltaleFileEntry"/> objects from all enabled contexts.
     /// </returns>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    public IEnumerable<ResourceEntry> GetAllEntries()
         => _contexts.Where(c => c.IsEnabled).SelectMany(c => c.GetAllEntries());
 
     #endregion
@@ -797,7 +797,7 @@ public class Workspace
         if (_toolkit.ResolveSymbol(symbol)) return true;
         if (LocalHashDatabase.ResolveSymbol(symbol)) return true;
 
-        TelltaleFileEntry? fileEntry = FindFileEntry(symbol.Crc64);
+        ResourceEntry? fileEntry = FindFileEntry(symbol.Crc64);
         if (fileEntry?.Name != null)
         {
             symbol.Resolve(fileEntry.Name);

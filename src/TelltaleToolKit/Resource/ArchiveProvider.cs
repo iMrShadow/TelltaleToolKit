@@ -56,7 +56,7 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
     public bool ContainsFile(ulong crc64) => _archive.ContainsFile(crc64);
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(ulong crc64) => _archive.FindEntry(crc64);
+    public ResourceEntry? GetFileEntry(ulong crc64) => _archive.FindEntry(crc64);
 
     /// <inheritdoc/>
     public Stream? ExtractFile(string fileName)
@@ -67,9 +67,9 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
         => ContainsFile(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(string fileName)
+    public ResourceEntry? GetFileEntry(string fileName)
         => GetFileEntry(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries() => _archive.FileEntries;
+    public IEnumerable<ResourceEntry> GetAllEntries() => _archive.FileEntries;
 }
