@@ -1,4 +1,5 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using System.Diagnostics;
+using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 
@@ -32,7 +33,7 @@ public class DependencyLoader
 
                 if (type.Symbol.DebugString != null && !type.Symbol.DebugString.Equals("DCArray<String>"))
                 {
-                    Console.WriteLine("Type `DepedencyLoader` does not serialize DCArray<String>!");
+                    Toolkit.Instance.Logger.LogWarning($"[DependencyLoader] Unknown type `{type.Symbol.DebugString}`!");
                 }
 
                 List<string> objResourceNames = obj.ResourceNames;

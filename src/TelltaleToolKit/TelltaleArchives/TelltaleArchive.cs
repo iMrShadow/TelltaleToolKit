@@ -23,7 +23,7 @@ public abstract class ArchiveBase : IDisposable
 
         if (debugPrint)
         {
-            Console.WriteLine($"Loading {Path.GetFileName(filePath)} from {filePath}");
+            Toolkit.Instance.Logger.LogInfo($"[TelltaleArchive] Loading {Path.GetFileName(filePath)} from {filePath}");
         }
 
         return Load<T>(stream, blowFishKey, debugPrint);

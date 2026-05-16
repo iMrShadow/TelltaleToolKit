@@ -53,7 +53,8 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         if (description is null || !description.ClassType.IsSerialized())
         {
             if (description is null)
-                Console.WriteLine("No description available");
+                Toolkit.Instance.Logger.LogWarning($"[DefaultClassSerializer] No description available for {typeof(T).Name}.");
+
             return;
         }
 
@@ -98,7 +99,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="propDesc"></param>
     /// <returns></returns>
@@ -167,7 +168,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         }
 
         // Final: First available
-        
+
         if (propDesc.Type.LinkingType == typeof(int) || propDesc.Type.LinkingType == typeof(uint))
         {
             CachedMember? cachedAltFinal = MemberCache

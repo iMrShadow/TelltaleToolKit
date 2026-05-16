@@ -90,6 +90,16 @@ public class HashDatabase : ISymbolResolver
     }
 
     /// <summary>
+    /// Attempts to get the debug string from a CRC64.
+    /// </summary>
+    /// <param name="crc64">The CRC64 hash of the symbol to resolve.</param>
+    /// <returns>
+    /// The debug string if found; otherwise, <see langword="null"/>.
+    /// </returns>
+    public string? GetDebugString(ulong crc64)
+        => _symbols.GetValueOrDefault(crc64);
+
+    /// <summary>
     /// Adds a symbol from its string representation.
     /// </summary>
     public void AddSymbol(Symbol symbol)

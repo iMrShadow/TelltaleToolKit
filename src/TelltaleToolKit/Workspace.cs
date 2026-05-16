@@ -214,6 +214,8 @@ public class Workspace
         }
         else
         {
+            _toolkit.Config.Logger.LogWarning(
+                $"[Workspace:{Name}] Resource description '{descPath}' has no 'gameDataArchives' table - context not created.");
             return null;
         }
 
@@ -567,14 +569,27 @@ public class Workspace
             Stream? stream = _contexts[i].ExtractFile(crc64);
             if (stream == null) continue;
 
+            string? assetName = GetDebugString(crc64);
+
+            _toolkit.Config.Logger.LogInfo(assetName != null
+                ? $"[Workspace:{Name}] Found asset '{assetName}' in context: {_contexts[i].Name}"
+                : $"[Workspace:{Name}] Found asset 0x{crc64:X16} in context: {_contexts[i].Name}");
+
             var asset = _toolkit.DeserializeWithConfig<T>(stream);
 
-            if (AutoResolveSymbols)
-                ResolveSymbols(asset.MetaConfig?.SerializedSymbols);
+            if (asset.Asset == null)
+            {
+                _toolkit.Config.Logger.LogWarning($"[Workspace:{Name}] Asset {(assetName ?? $"0x{crc64:X16}")} found but failed to load in context: {_contexts[i].Name}");
+                return (null, null);
+            }
+
+            if (AutoResolveSymbols && asset.MetaConfig != null)
+                ResolveSymbols(asset.MetaConfig.SerializedSymbols);
 
             return asset;
         }
 
+        _toolkit.Config.Logger.LogInfo($"[Workspace:{Name}] Asset 0x{crc64:X16} not found in any enabled context");
         return (null, null);
     }
 
@@ -736,6 +751,34 @@ public class Workspace
     #endregion
 
     #region Symbol Resolution
+
+    /// <summary>
+    /// Attempts to get the debug string for a CRC64 using the workspace's symbol database.
+    /// </summary>
+    /// <param name="crc64">The CRC64 hash of the symbol to resolve.</param>
+    /// <returns>
+    /// The debug string if found; otherwise, <see langword="null"/>.
+    /// </returns>
+    public string? GetDebugString(ulong crc64)
+    {
+        string? debugString = _toolkit.GetDebugString(crc64);
+        if (debugString != null)
+            return debugString;
+
+        debugString = LocalHashDatabase.GetDebugString(crc64);
+        if (debugString != null)
+            return debugString;
+
+        var fileEntry = FindFileEntry(crc64);
+        if (fileEntry?.Name != null)
+        {
+            _toolkit.Config.Logger.LogInfo($"[Workspace:{Name}] Resolved 0x{crc64:X16} as '{fileEntry.Name}' from archive");
+            return fileEntry.Name;
+        }
+
+        _toolkit.Config.Logger.LogInfo($"[Workspace:{Name}] Failed to resolve 0x{crc64:X16}");
+        return null;
+    }
 
     /// <summary>
     /// Attempts to resolve the debug string for <paramref name="symbol"/> by checking,
