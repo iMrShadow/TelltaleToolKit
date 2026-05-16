@@ -228,7 +228,7 @@ public abstract class MetaStream : IDisposable
 
             if (entry.DebugString is null)
             {
-                Console.WriteLine($"Could not resolve symbol for hash: {entry.Crc64}");
+                Toolkit.Instance.Logger.LogWarning($"[MetaStream] Symbol not resolved: {entry.Crc64}");
             }
         }
     }

@@ -160,9 +160,8 @@ public sealed class MetaStreamReader : MetaStream
         // I have no idea how they got there in the first place, but I saw one such file (ui_mainmenu_background.scene) which benefits from this.
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
+        Toolkit.Instance.Logger.LogWarning($"[MetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
         GetCurrentSection().Stream.Position = expectedPosition;
-        Console.WriteLine(
-            $"Warning: Invalid data position! Current Position:{currentPosition}. Expected Position:{expectedPosition}");
     }
 
     /// <summary>
@@ -255,7 +254,7 @@ public sealed class MetaStreamReader : MetaStream
 
             if (type == null)
             {
-                Console.WriteLine($"Unknown MetaClassType!: {hash:X}");
+                Toolkit.Instance.Logger.LogWarning($"[MetaStreamReader] Unknown MetaClassType: {hash:X16})");
                 Configuration.UnregisteredTypes.Add((hash, 0));
             }
             else
@@ -267,7 +266,7 @@ public sealed class MetaStreamReader : MetaStream
         {
             string fullType = this.ReadString();
             value = MetaClassTypeRegistry.GetByName(MetaClassType.GetStrippedTypeName(fullType));
-            // I don't check for unregistered types in old games. Due to the fact that types are unhashed, they are probably all registered. :)
+            // I don't check for unregistered types in old games. Since types are unhashed, they are probably all registered. :)
         }
     }
 

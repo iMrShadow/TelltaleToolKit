@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.Logging;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
@@ -66,6 +67,11 @@ public class Toolkit
     /// Gets the configuration supplied at <see cref="Initialize"/> time.
     /// </summary>
     public Configuration Config { get; }
+
+    /// <summary>
+    /// Gets the logger supplied from <see cref="Config"/>.
+    /// </summary>
+    public IToolkitLogger Logger => Config.Logger;
 
     /// <summary>
     /// Gets the global metaclass registry shared across all workspaces.
@@ -197,6 +203,16 @@ public class Toolkit
             ResolveSymbol(symbol);
     }
 
+    /// <summary>
+    /// Attempts to get the debug string for a CRC64 using the global hash database.
+    /// </summary>
+    /// <param name="crc64">The CRC64 hash of the symbol to resolve.</param>
+    /// <returns>
+    /// The debug string if found; otherwise, <see langword="null"/>.
+    /// </returns>
+    public string? GetDebugString(ulong crc64)
+        => GlobalHashDatabase.GetDebugString(crc64);
+
     // -------------------------------------------------------------------------
     // Serialization — Deserialize
     // -------------------------------------------------------------------------
@@ -217,10 +233,27 @@ public class Toolkit
         try
         {
             using FileStream stream = File.OpenRead(fileName);
-            return DeserializeInternal<T>(stream);
+            var result = DeserializeInternal<T>(stream);
+
+            if (result.Asset == null)
+            {
+                Config.Logger.LogWarning($"[Toolkit] Deserialization failed for file: {fileName}");
+            }
+            else
+            {
+                Config.Logger.LogInfo($"[Toolkit] Deserialized {typeof(T).Name} from: {fileName}");
+            }
+
+            return result;
         }
-        catch (Exception)
+        catch (FileNotFoundException)
         {
+            Config.Logger.LogWarning($"[Toolkit] File not found: {fileName}");
+            return (null, null);
+        }
+        catch (Exception ex)
+        {
+            Config.Logger.LogError($"[Toolkit] Failed to deserialize {fileName}. {ex.GetType()}: {ex.Message}");
             return (null, null);
         }
     }
@@ -242,7 +275,13 @@ public class Toolkit
         where T : class, new()
     {
         var result = DeserializeInternal<T>(stream);
-        return (result.Asset, result.Config);
+
+        if (result.Asset == null)
+        {
+            Config.Logger.LogWarning($"[Toolkit] Deserialization failed from stream (type: {typeof(T).Name})");
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -259,10 +298,23 @@ public class Toolkit
         try
         {
             using FileStream stream = File.OpenRead(fileName);
-            return DeserializeInternal<T>(stream).Asset;
+            var result = DeserializeInternal<T>(stream);
+
+            if (result.Asset == null)
+            {
+                Config.Logger.LogWarning($"[Toolkit] Deserialization failed for file: {fileName}");
+            }
+
+            return result.Asset;
         }
-        catch (Exception)
+        catch (FileNotFoundException)
         {
+            Config.Logger.LogWarning($"[Toolkit] File not found: {fileName}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Config.Logger.LogError($"[Toolkit] Failed to deserialize {fileName}. {ex.GetType()}: {ex.Message}");
             return null;
         }
     }
@@ -280,7 +332,16 @@ public class Toolkit
     /// The deserialized object, or <see langword="null"/> if parsing fails.
     /// </returns>
     public T? Deserialize<T>(Stream stream) where T : class, new()
-        => DeserializeInternal<T>(stream).Asset;
+    {
+        var result = DeserializeInternal<T>(stream);
+
+        if (result.Asset == null)
+        {
+            Config.Logger.LogWarning($"[Toolkit] Deserialization failed from stream (type: {typeof(T).Name})");
+        }
+
+        return result.Asset;
+    }
 
     // -------------------------------------------------------------------------
     // Serialization — Serialize
@@ -492,7 +553,7 @@ public class Toolkit
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Toolkit] Failed to load game profile '{file}': {ex.Message}");
+                Config.Logger?.LogWarning($"[Toolkit] Failed to load game profile '{file}': {ex.Message}");
             }
         }
     }
@@ -509,7 +570,7 @@ public class Toolkit
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Toolkit] Failed to load hash databases: {ex.Message}");
+            Config.Logger.LogWarning($"[Toolkit] Failed to load hash databases: {ex.Message}");
         }
     }
 
@@ -526,7 +587,8 @@ public class Toolkit
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Toolkit] Failed to load MetaClass descriptions for '{profile.Id}': {ex.Message}");
+            Config.Logger.LogWarning(
+                $"[Toolkit] Failed to load MetaClass descriptions for '{profile.Id}': {ex.Message}");
         }
     }
 
@@ -552,7 +614,6 @@ public class Toolkit
         try
         {
             var result = new T();
-
             var reader = new MetaStreamReader(stream);
 
             reader.PreSerialize(ref result);
@@ -560,13 +621,20 @@ public class Toolkit
 
             MetaStreamConfiguration config = reader.Configuration;
 
+            Config.Logger.LogInfo(
+                $"[Toolkit] Successfully read {typeof(T).Name}, version: {config.Version}, symbols: {config.SerializedSymbols.Count}");
+
             if (Config.AutoResolveSymbols)
+            {
                 ResolveSymbols(config.SerializedSymbols);
+            }
 
             return (result, config);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            // Internal method only logs debug details, doesn't warn/error
+            Config.Logger.LogError($"[Toolkit] Deserialization internal error: {ex.Message}");
             return (null, null);
         }
     }
@@ -617,5 +685,12 @@ public class Toolkit
             Converters = { new MetaClassJsonConverter(), new GameRegistryJsonConverter() },
             WriteIndented = true
         };
+
+        /// <summary>
+        /// Gets or sets the logger used for internal warnings and diagnostics.
+        /// When <see langword="null"/>, messages are silently discarded.
+        /// Assign an instance such as <see cref="ToolkitLogger.ConsoleLoggerInstance"/> to see output.
+        /// </summary>
+        public IToolkitLogger Logger { get; set; } = ToolkitLogger.Null;
     }
 }
