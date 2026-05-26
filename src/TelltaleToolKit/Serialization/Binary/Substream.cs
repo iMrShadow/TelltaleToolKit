@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a substream of an underlying <see cref="Stream" />.
 /// </summary>
-public class Substream : Stream
+public class SubStream : Stream
 {
     /// <summary>
     /// Creates a new substream instance using the specified underlying stream at the specified offset with the specified length.
@@ -11,7 +11,7 @@ public class Substream : Stream
     /// <param name="stream">The underlying stream.</param>
     /// <param name="offset">The offset.</param>
     /// <param name="length">The length.</param>
-    public Substream(Stream stream, long offset, long length)
+    public SubStream(Stream stream, long offset, long length)
     {
         if (stream == null)
         {

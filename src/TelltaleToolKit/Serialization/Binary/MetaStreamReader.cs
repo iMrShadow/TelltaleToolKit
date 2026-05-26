@@ -53,6 +53,9 @@ public sealed class MetaStreamReader : MetaStream
         // Read the number of serialized classes
         uint metaClassNum = this.ReadUInt32();
 
+        if (metaClassNum >= 1000)
+            throw new InvalidDataException("Too many classes in the meta stream.");
+
         for (var i = 0; i < metaClassNum; i++)
         {
             uint size = this.ReadUInt32();
@@ -94,10 +97,10 @@ public sealed class MetaStreamReader : MetaStream
         long currentPosition = Reader.BaseStream.Position;
         if (Configuration.Version is MetaStreamVersion.Msv6 or MetaStreamVersion.Msv5)
         {
-            Sections[(int)SectionType.Main].Stream = new Substream(UnderlyingStream, currentPosition, mainSize);
+            Sections[(int)SectionType.Main].Stream = new SubStream(UnderlyingStream, currentPosition, mainSize);
             Sections[(int)SectionType.Debug].Stream =
-                new Substream(UnderlyingStream, currentPosition + mainSize, debugSize);
-            Sections[(int)SectionType.Async].Stream = new Substream(
+                new SubStream(UnderlyingStream, currentPosition + mainSize, debugSize);
+            Sections[(int)SectionType.Async].Stream = new SubStream(
                 UnderlyingStream,
                 currentPosition + mainSize + debugSize,
                 asyncSize
@@ -106,13 +109,13 @@ public sealed class MetaStreamReader : MetaStream
         else
         {
             // For older versions, the entire stream is the main section
-            Sections[(int)SectionType.Main].Stream = new Substream(
+            Sections[(int)SectionType.Main].Stream = new SubStream(
                 UnderlyingStream,
                 currentPosition,
                 UnderlyingStream.Length - currentPosition
             );
-            Sections[(int)SectionType.Debug].Stream = new Substream(UnderlyingStream, 0, 0);
-            Sections[(int)SectionType.Async].Stream = new Substream(UnderlyingStream, 0, 0);
+            Sections[(int)SectionType.Debug].Stream = new SubStream(UnderlyingStream, 0, 0);
+            Sections[(int)SectionType.Async].Stream = new SubStream(UnderlyingStream, 0, 0);
         }
 
         InitSerializer();

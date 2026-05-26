@@ -7,6 +7,7 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.TelltaleArchives.Formats;
 using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;
@@ -385,29 +386,25 @@ public class Toolkit
     /// </summary>
     /// <param name="archivePath">Path to the archive file.</param>
     /// <param name="game">Enum value identifying the game's blowfish key.</param>
-    /// <param name="sort">When <see langword="true"/>, sorts entries for faster binary search.</param>
-    /// <param name="debugPrint">When <see langword="true"/>, prints diagnostic output to stdout.</param>
-    /// <returns>The loaded <see cref="ArchiveBase"/>.</returns>
+    /// <returns>The loaded <see cref="Archive"/>.</returns>
     /// <exception cref="NotSupportedException">Thrown when the file extension is not recognized.</exception>
-    public ArchiveBase LoadArchive(string archivePath, T3BlowfishKey game, bool sort = true, bool debugPrint = false)
-        => LoadArchive(archivePath, game.GetBlowfishKey(), sort, debugPrint);
+    public Archive LoadArchive(string archivePath, T3BlowfishKey game)
+        => LoadArchive(archivePath, game.GetBlowfishKey());
 
     /// <summary>
     /// Loads a Telltale archive file (.ttarch or .ttarch2) using a raw blowfish key string.
     /// </summary>
     /// <param name="archivePath">Path to the archive file.</param>
     /// <param name="blowfishKey">The decryption key for this game's archives.</param>
-    /// <param name="sort">When <see langword="true"/>, sorts entries for faster binary search.</param>
-    /// <param name="debugPrint">When <see langword="true"/>, prints diagnostic output to stdout.</param>
-    /// <returns>The loaded <see cref="ArchiveBase"/>.</returns>
+    /// <returns>The loaded <see cref="Archive"/>.</returns>
     /// <exception cref="NotSupportedException">Thrown when the file extension is not <c>.ttarch</c> or <c>.ttarch2</c>.</exception>
-    public ArchiveBase LoadArchive(string archivePath, string blowfishKey, bool sort = true, bool debugPrint = false)
+    public Archive LoadArchive(string archivePath, string blowfishKey)
     {
         if (archivePath.EndsWith(".ttarch2", StringComparison.OrdinalIgnoreCase))
-            return ArchiveBase.Load<T3Archive2>(archivePath, blowfishKey, sort, debugPrint);
+            return Archive.Load<TTArchive2>(archivePath, blowfishKey);
 
         if (archivePath.EndsWith(".ttarch", StringComparison.OrdinalIgnoreCase))
-            return ArchiveBase.Load<T3Archive>(archivePath, blowfishKey, sort, debugPrint);
+            return Archive.Load<TTArchive>(archivePath, blowfishKey);
 
         throw new NotSupportedException(
             $"Unsupported archive format '{Path.GetExtension(archivePath)}'. Expected .ttarch or .ttarch2.");

@@ -11,14 +11,26 @@ public static class TelltaleArchiveUtilities
     public static void DecryptFile(byte[] file, string blowfishKey, int archiveVersion)
     {
         if (file.Length < 4)
+        {
             return;
+        }
 
-        var magicFourCc = (MetaStreamVersion)BitConverter.ToUInt32(file, 0);
+        DecryptFile(file, new Blowfish(blowfishKey, archiveVersion));
+    }
+
+    public static void DecryptFile(byte[] file, Blowfish blowfish)
+    {
+        if (file.Length < 4)
+        {
+            return;
+        }
+
+        MetaStreamVersion magicFourCc = (MetaStreamVersion)BitConverter.ToUInt32(file, 0);
         BlockConfiguration config = GetBlockConfiguration(magicFourCc);
 
         if (config.blockSize > 0)
         {
-            DecryptFileHelper(file, blowfishKey, archiveVersion, config);
+            DecryptFileHelper(file, blowfish, config);
         }
     }
 
@@ -29,13 +41,11 @@ public static class TelltaleArchiveUtilities
             MetaStreamVersion.Unknown1 or MetaStreamVersion.Unknown2 or MetaStreamVersion.Unknown3 => (128, 32, 80),
             MetaStreamVersion.Unknown4 => (256, 8, 24),
             MetaStreamVersion.Mbes => (64, 64, 100),
-            _ => (0, 0, 0),
+            _ => (0, 0, 0)
         };
 
-    private static void DecryptFileHelper(byte[] fileData, string key, int archiveVersion, BlockConfiguration config)
+    private static void DecryptFileHelper(byte[] fileData, Blowfish blowFish, BlockConfiguration config)
     {
-        var blowFish = new Blowfish(key, archiveVersion);
-
         // If the blocksize is 0 (Stream version is not existent), use regular blowfish
         if (config.blockSize == 0)
         {
@@ -48,9 +58,9 @@ public static class TelltaleArchiveUtilities
 
         long blocks = (fileData.Length - 4) / config.blockSize;
 
-        for (var i = 0; i < blocks; i++)
+        for (int i = 0; i < blocks; i++)
         {
-            var block = new Span<byte>(fileData, 4 + i * config.blockSize, config.blockSize);
+            Span<byte> block = new(fileData, 4 + i * config.blockSize, config.blockSize);
 
             if (i % config.cryptInterval == 0)
             {
@@ -69,77 +79,42 @@ public static class TelltaleArchiveUtilities
 
     public static void XorBlock(Span<byte> block, byte xor)
     {
-        for (var i = 0; i < block.Length; i++)
+        for (int i = 0; i < block.Length; i++)
         {
             block[i] ^= xor;
         }
     }
 
-    public static byte[] DecompressBlock(byte[] compressedData, uint expectedSize, ref ContainerFlags flags)
+    private static CompressionAlgorithm DetectCompressionAlgorithm(byte[] chunk)
     {
-        // This is a hack? In TWD:DE, 401_txmesh, there's a page which is the same size as the expected size (65535)
-        // C#'s raw deflate fails.
-        // ttarchext returns the same data:
-        // https://github.com/infernokun/TelltaleGamesExtractionGUI/blob/fec9fc1a70b545bcc67062fedc3fe3f7cd0d3e1b/bin/Debug/net6.0-windows/ttarchext/ttarchext.c#L1512
-        if (compressedData.Length == expectedSize)
-            return compressedData;
-
-        // Try both Deflate and Zlib if both flags are set
-        // TODO: Investigate ttarch
-        // CSI games use zlib compression instead of the regular raw deflate.
-        // According to TTG Tools, version 8 archives use zlib (presumably for the files themselves)
-        if (flags.HasFlag(ContainerFlags.IsRawDeflateCompressed) && flags.HasFlag(ContainerFlags.IsZlibCompressed))
+        // Zlib header: first byte 0x78, second byte in {0x9C, 0xDA, 0x01, 0x5E, 0x9E, ...}
+        if (chunk[0] == 0x78 && (chunk[1] & 0xF0) == 0xC0) // 0x78 0x9C, 0x78 0xDA, etc.
         {
-            try
-            {
-                byte[] result = Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress));
-                flags &= ~ContainerFlags.IsZlibCompressed;
-                return result;
-            }
-            catch (Exception)
-            {
-                //  flags &= ~ContainerFlags.IsRawDeflateCompressed;
-            }
-
-            try
-            {
-                byte[] result = Decompress(ms => new InflaterInputStream(ms));
-                return result;
-            }
-            catch (Exception)
-            {
-                // flags &= ~ContainerFlags.IsZlibCompressed;
-            }
-
-            throw new InvalidDataException("Compresion not supported");
+            return CompressionAlgorithm.Zlib;
         }
 
-        if (flags.HasFlag(ContainerFlags.IsRawDeflateCompressed))
+        return CompressionAlgorithm.Deflate; // raw Deflate has no header
+    }
+
+    /// <summary>
+    ///     Compresses a single chunk using the specified algorithm.
+    /// </summary>
+    /// <returns>Number of compressed bytes written into <paramref name="outputBuffer" />.</returns>
+    public static int CompressBlock(ReadOnlySpan<byte> input, CompressionAlgorithm algorithm, byte[] outputBuffer)
+    {
+        using MemoryStream ms = new(outputBuffer, true);
+        if (algorithm == CompressionAlgorithm.Zlib)
         {
-            return Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress));
+            using DeflaterOutputStream zlib = new(ms);
+            zlib.Write(input);
+            zlib.Finish();
+        }
+        else // Deflate (raw)
+        {
+            using DeflateStream deflate = new(ms, CompressionLevel.Optimal, true);
+            deflate.Write(input);
         }
 
-        if (flags.HasFlag(ContainerFlags.IsZlibCompressed))
-        {
-            return Decompress(ms => new InflaterInputStream(ms));
-        }
-
-        if (flags.HasFlag(ContainerFlags.IsOodleCompressed))
-        {
-            // TODO: Add Oodle compression.
-            throw new NotSupportedException("Oodle compression is not supported yet.");
-        }
-
-        // No compression, return the original data
-        return compressedData;
-
-        // Local function to handle decompression
-        byte[] Decompress(Func<Stream, Stream> streamFactory)
-        {
-            using var outputStream = new MemoryStream((int)expectedSize);
-            using Stream decompressStream = streamFactory(new MemoryStream(compressedData));
-            decompressStream.CopyTo(outputStream);
-            return outputStream.ToArray();
-        }
+        return (int)ms.Position;
     }
 }

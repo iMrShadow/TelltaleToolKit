@@ -12,6 +12,6 @@ public static class StreamExtensions
     /// <param name="offset">The offset.</param>
     /// <param name="length">The length.</param>
     /// <returns>A substream.</returns>
-    public static Substream Substream(this Stream stream, long offset, long length) =>
-        new Substream(stream, offset, length);
+    public static SubStream Substream(this Stream stream, long offset, long length) =>
+        new SubStream(stream, offset, length);
 }

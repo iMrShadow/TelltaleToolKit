@@ -54,21 +54,21 @@ ConcurrentDictionary<(ulong typeHash, uint crc32), byte> unregisteredTypes = [];
 // It takes a couple of minutes to scan TWD:DE with a stock Ryzen 5 2600.
 var areSymbolsHashed = false;
 var msv = MetaStreamVersion.Mbin;
-ArchiveVersion ttarchVersion = 0;
+TTArchiveVersion ttarchVersion = 0;
 await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 {
     Console.WriteLine($"Start reading {filePath}.");
 
     try
     {
-        using ArchiveBase archive = Toolkit.Instance.LoadArchive(filePath, blowfishKey, false);
+        using Archive archive = Toolkit.Instance.LoadArchive(filePath, blowfishKey);
         ttarchVersion = archive.Info.Version;
 
-        if (archive.FileEntries.Length > 0)
+        if (archive.Entries.Values.Any())
         {
-            MemoryStream firstFile = archive.ExtractFile(archive.FileEntries[0].Name);
+            Stream firstFile = archive.OpenResource(archive.Entries[0].Name);
 
-            if (Toolkit.IsMetaFile(archive.FileEntries[0].Name))
+            if (Toolkit.IsMetaFile(archive.Entries[0].Name))
             {
                 MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
 
@@ -77,11 +77,11 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
             }
         }
 
-        foreach (TelltaleFileEntry entry in archive.FileEntries)
+        foreach (ResourceEntry entry in archive.Entries.Values)
         {
             // Console.WriteLine($"Reading {entry.Name}");
 
-            using MemoryStream file = archive.ExtractFile(entry.Name);
+            using Stream file = archive.OpenResource(entry.Name);
 
             if (!Toolkit.IsMetaFile(file))
                 continue;

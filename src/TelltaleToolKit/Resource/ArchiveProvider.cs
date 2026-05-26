@@ -7,14 +7,14 @@ namespace TelltaleToolKit.Resource;
 /// Wraps a single Telltale archive (.ttarch or .ttarch2) as an <see cref="IFileProvider"/>.
 /// </summary>
 /// <remarks>
-/// The underlying <see cref="ArchiveBase"/> is loaded through the workspace so that the
+/// The underlying <see cref="Archive"/> is loaded through the workspace so that the
 /// workspace's <c>ArchiveLoaded</c> event fires and blowfish decryption is applied
 /// consistently. Dispose this provider when the archive is no longer needed to release
 /// the file handle held by the archive.
 /// </remarks>
 public sealed class ArchiveProvider : IFileProvider, IDisposable
 {
-    private readonly ArchiveBase _archive;
+    private readonly Archive _archive;
 
     /// <summary>
     /// Loads the archive at <paramref name="path"/> using the blowfish key embedded in
@@ -45,18 +45,18 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
     public string Path { get; }
 
     /// <summary>
-    /// Disposes the underlying <see cref="ArchiveBase"/>, releasing any held file handles.
+    /// Disposes the underlying <see cref="Archive"/>, releasing any held file handles.
     /// </summary>
     public void Dispose() => _archive.Dispose();
 
     /// <inheritdoc/>
-    public Stream? ExtractFile(ulong crc64) => _archive.ExtractFile(crc64);
+    public Stream? ExtractFile(ulong crc64) => _archive.OpenResource(crc64);
 
     /// <inheritdoc/>
-    public bool ContainsFile(ulong crc64) => _archive.ContainsFile(crc64);
+    public bool ContainsFile(ulong crc64) => _archive.Entries.ContainsKey(crc64);
 
     /// <inheritdoc/>
-    public ResourceEntry? GetFileEntry(ulong crc64) => _archive.FindEntry(crc64);
+    public ResourceEntry? GetFileEntry(ulong crc64) => _archive.FindResource(crc64);
 
     /// <inheritdoc/>
     public Stream? ExtractFile(string fileName)
@@ -71,5 +71,5 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
         => GetFileEntry(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public IEnumerable<ResourceEntry> GetAllEntries() => _archive.FileEntries;
+    public IEnumerable<ResourceEntry> GetAllEntries() => _archive.Entries.Values;
 }
