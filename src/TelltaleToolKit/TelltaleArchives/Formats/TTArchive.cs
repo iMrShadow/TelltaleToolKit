@@ -215,15 +215,15 @@ public class TTArchive : Archive
             ArchiveFlags archiveFlags = Info.Flags;
             header = ChunkDecoder.DecompressBlock(header, infoHeaderSize, ref archiveFlags);
             Info.Flags = archiveFlags;
-
-            if (decryptionMode == 1)
-            {
-                _blowfish.Decipher(header, header.Length);
-            }
         }
         else
         {
             header = reader.ReadBytes(infoHeaderSize);
+        }
+
+        if (decryptionMode == 1)
+        {
+            _blowfish.Decipher(header, header.Length);
         }
 
         Info.FilesOffset = (ulong)reader.BaseStream.Position;
