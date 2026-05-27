@@ -37,6 +37,7 @@ public class TTArchive : Archive
     {
         reader.BaseStream.Seek(0, SeekOrigin.Begin);
         Info.Version = TTArchiveVersion.Legacy;
+        _blowfish = new Blowfish(Info.BlowfishKey, (int)Info.Version);
 
         uint headerSize = reader.ReadUInt32();
 
@@ -50,6 +51,7 @@ public class TTArchive : Archive
 
             ParseEntries(new MemoryStream(header));
             Info.FilesOffset = (ulong)reader.BaseStream.Position;
+            _dataStream = BuildFileDataStream(0, 0, 1);
         }
         else
         {
@@ -58,6 +60,7 @@ public class TTArchive : Archive
             ParseEntries(reader.BaseStream);
             Info.FilesOffset = reader.ReadUInt32();
             _ = reader.ReadUInt32(); // file size
+            _dataStream = BuildFileDataStream(0, 0, 0);
         }
     }
 
@@ -110,8 +113,6 @@ public class TTArchive : Archive
         Info.Version = (TTArchiveVersion)reader.ReadUInt32();
         int version = (int)Info.Version;
 
-        _blowfish = new Blowfish(Info.BlowfishKey, (int)Info.Version);
-
         // Anything outside 1–9 falls back to the legacy reader
         // (version 0, or a number so large it wrapped - both indicate the old format).
         if (version is < 1 or > 9)
@@ -119,6 +120,8 @@ public class TTArchive : Archive
             ReadLegacyStream(reader);
             return;
         }
+
+        _blowfish = new Blowfish(Info.BlowfishKey, (int)Info.Version);
 
         // ---- Version 1+ header ----
         uint decryptionMode = reader.ReadUInt32();
