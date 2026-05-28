@@ -138,12 +138,12 @@ public class Workspace
     /// Raised after an archive has been loaded and is ready for use.
     /// Subscribe to track which archives are open, e.g., for progress reporting.
     /// </summary>
-    public event Action<ArchiveBase>? ArchiveLoaded;
+    public event Action<Archive>? ArchiveLoaded;
 
     /// <summary>
     /// Raised just before an archive is unloaded and its resources released.
     /// </summary>
-    public event Action<ArchiveBase>? ArchiveUnloaded;
+    public event Action<Archive>? ArchiveUnloaded;
 
     #region Version 1: Game Folder Mounting
 
@@ -343,7 +343,7 @@ public class Workspace
 
     /// <summary>
     /// Loads a Telltale archive from disk, fires the <see cref="ArchiveLoaded"/> event,
-    /// and returns the raw <see cref="ArchiveBase"/>.
+    /// and returns the raw <see cref="Archive"/>.
     /// </summary>
     /// <remarks>
     /// Prefer the overload that returns a <see cref="ResourceContext"/> when you want the
@@ -351,12 +351,10 @@ public class Workspace
     /// need to pass the raw archive to a lower-level API.
     /// </remarks>
     /// <param name="archivePath">Absolute or relative path to the .ttarch / .ttarch2 file.</param>
-    /// <param name="sort">Whether to sort the archive's entry table for faster binary search.</param>
-    /// <param name="debugPrint">When <see langword="true"/>, prints loading diagnostics to stdout.</param>
-    /// <returns>The loaded <see cref="ArchiveBase"/>.</returns>
-    public ArchiveBase LoadArchive(string archivePath, bool sort = true, bool debugPrint = false)
+    /// <returns>The loaded <see cref="Archive"/>.</returns>
+    public Archive LoadArchive(string archivePath)
     {
-        ArchiveBase archive = _toolkit.LoadArchive(archivePath, BlowfishKey, sort, debugPrint);
+        Archive archive = _toolkit.LoadArchive(archivePath, BlowfishKey);
         ArchiveLoaded?.Invoke(archive);
         return archive;
     }
@@ -698,13 +696,13 @@ public class Workspace
     /// searching enabled contexts from the highest priority to lowest.
     /// </summary>
     /// <returns>The entry, or <see langword="null"/> if not found.</returns>
-    public TelltaleFileEntry? FindFileEntry(ulong crc64)
+    public ResourceEntry? FindFileEntry(ulong crc64)
     {
         for (int i = _contexts.Count - 1; i >= 0; i--)
         {
             if (!_contexts[i].IsEnabled) continue;
 
-            TelltaleFileEntry? entry = _contexts[i].GetFileEntry(crc64);
+            ResourceEntry? entry = _contexts[i].GetFileEntry(crc64);
             if (entry != null) return entry;
         }
 
@@ -745,7 +743,7 @@ public class Workspace
     /// <returns>
     /// A flat sequence of <see cref="TelltaleFileEntry"/> objects from all enabled contexts.
     /// </returns>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    public IEnumerable<ResourceEntry> GetAllEntries()
         => _contexts.Where(c => c.IsEnabled).SelectMany(c => c.GetAllEntries());
 
     #endregion
@@ -797,7 +795,7 @@ public class Workspace
         if (_toolkit.ResolveSymbol(symbol)) return true;
         if (LocalHashDatabase.ResolveSymbol(symbol)) return true;
 
-        TelltaleFileEntry? fileEntry = FindFileEntry(symbol.Crc64);
+        ResourceEntry? fileEntry = FindFileEntry(symbol.Crc64);
         if (fileEntry?.Name != null)
         {
             symbol.Resolve(fileEntry.Name);

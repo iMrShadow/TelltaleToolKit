@@ -42,8 +42,8 @@ public sealed class GameProfile
     /// <summary>
     /// Gets the version of the TTARCH archive format used by the game.
     /// </summary>
-    /// <seealso cref="ArchiveVersion"/>
-    public ArchiveVersion TtarchVersion { get; set; }
+    /// <seealso cref="TTArchiveVersion"/>
+    public TTArchiveVersion TtarchVersion { get; set; }
 
     /// <summary>
     /// Gets the Lua scripting engine version used by the game.

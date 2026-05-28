@@ -122,13 +122,13 @@ public class ResourceContext : IFileProvider
 
     /// <inheritdoc/>
     /// <remarks>Returns <see langword="null"/> immediately when the context is disabled.</remarks>
-    public TelltaleFileEntry? GetFileEntry(ulong crc64)
+    public ResourceEntry? GetFileEntry(ulong crc64)
     {
         if (!IsEnabled) return null;
 
         foreach (IFileProvider provider in _providers)
         {
-            TelltaleFileEntry? entry = provider.GetFileEntry(crc64);
+            ResourceEntry? entry = provider.GetFileEntry(crc64);
             if (entry != null) return entry;
         }
 
@@ -144,10 +144,10 @@ public class ResourceContext : IFileProvider
         => ContainsFile(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(string fileName)
+    public ResourceEntry? GetFileEntry(string fileName)
         => GetFileEntry(Crc64.Compute(fileName));
 
     /// <inheritdoc/>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    public IEnumerable<ResourceEntry> GetAllEntries()
         => _providers.SelectMany(p => p.GetAllEntries());
 }

@@ -136,7 +136,7 @@ internal static class Program
 
             var areSymbolsHashed = true;
             var msv = MetaStreamVersion.Mtre;
-            ArchiveVersion ttarchVersion = 0;
+            TTArchiveVersion ttarchVersion = 0;
 
             var processed = 0;
             int total = archivePaths.Length;
@@ -150,17 +150,17 @@ internal static class Program
                     // PrintInfo($"Processing... {Path.GetFileName(filePath)}");
                     Log($"Reading {filePath}");
 
-                    using ArchiveBase archive = customKey != null
-                        ? Toolkit.Instance.LoadArchive(filePath, customKey, false)
-                        : Toolkit.Instance.LoadArchive(filePath, key!.Value, false);
+                    using Archive archive = customKey != null
+                        ? Toolkit.Instance.LoadArchive(filePath, customKey)
+                        : Toolkit.Instance.LoadArchive(filePath, key!.Value);
 
                     ttarchVersion = archive.Info.Version;
 
-                    if (archive.FileEntries.Length > 0)
+                    if (archive.Entries.Count > 0)
                     {
-                        using MemoryStream? firstFile = archive.ExtractFile(archive.FileEntries[0].Name);
+                        await using Stream? firstFile = archive.OpenResource(archive.Entries[0].Name);
 
-                        if (Toolkit.IsMetaFile(archive.FileEntries[0].Name))
+                        if (Toolkit.IsMetaFile(archive.Entries[0].Name))
                         {
                             MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
                             areSymbolsHashed = config.AreSymbolsHashed;
@@ -168,9 +168,9 @@ internal static class Program
                         }
                     }
 
-                    foreach (TelltaleFileEntry entry in archive.FileEntries)
+                    foreach (ResourceEntry entry in archive.Entries.Values)
                     {
-                        using MemoryStream? file = archive.ExtractFile(entry.Name);
+                        await using Stream? file = archive.OpenResource(entry.Name);
 
                         if (!Toolkit.IsMetaFile(file))
                             continue;

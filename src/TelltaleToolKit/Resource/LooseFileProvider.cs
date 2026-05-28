@@ -50,13 +50,13 @@ public class LooseFileProvider : IFileProvider
         => crc64 == Crc64;
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(ulong crc64)
+    public ResourceEntry? GetFileEntry(ulong crc64)
     {
         if (crc64 != Crc64) return null;
 
-        return new TelltaleFileEntry
+        return new ResourceEntry
         {
-            Crc64 = crc64, Name = Name, FileOffset = 0, FileSize = (int)Size,
+            NameCrc = crc64, Name = Name, Offset = 0, Size = (uint)Size,
         };
     }
 
@@ -69,15 +69,15 @@ public class LooseFileProvider : IFileProvider
         => IsMatch(fileName);
 
     /// <inheritdoc/>
-    public TelltaleFileEntry? GetFileEntry(string fileName)
+    public ResourceEntry? GetFileEntry(string fileName)
         => IsMatch(fileName) ? GetFileEntry(Crc64) : null;
 
     /// <inheritdoc/>
-    public IEnumerable<TelltaleFileEntry> GetAllEntries()
+    public IEnumerable<ResourceEntry> GetAllEntries()
     {
-        yield return new TelltaleFileEntry
+        yield return new ResourceEntry
         {
-            Crc64 = Crc64, Name = Name, FileOffset = 0, FileSize = (int)Size,
+            NameCrc = Crc64, Name = Name, Offset = 0, Size = (uint)Size,
         };
     }
 
