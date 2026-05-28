@@ -23,11 +23,12 @@
 
 ## Features
 
-- Open and extract files from `.ttarch` and `.ttarch2` archives.
-- Open, edit, and save file formats (textures, meshes, sounds, and more).
+- Extract and create archive files (`.ttarch` and `.ttarch2`).
+- Open, edit, and save assets (textures, meshes, sounds, and more).
+- Create environments for working with assets of a specific Telltale game with resource contexts.
 - Modular and flexible registration system (types, metaclasses, serializers, per-game configs).
 - Create and manage simple hash databases.
-- Cross-platform: Windows, Linux, Mac (requires .NET 8.0 or later).
+- Cross-platform: Windows, Linux, Mac (requires .NET 8.0 or later, or .NET Standard 2.1).
 - For more details, check the [documentation folder](docs/README.md).
 
 ## Installation
@@ -39,48 +40,43 @@ Install-Package TelltaleToolKit
 ```
 Or add it to your .csproj file:
 ```xml
-<PackageReference Include="TelltaleToolKit" Version="0.1.0" />
+<PackageReference Include="TelltaleToolKit" Version="0.2.0" />
 ```
 
-You must also download the latest database from the data folder. You can use [this link](https://downgit.github.io/#/home?url=https://github.com/iMrShadow/TelltaleToolKit/tree/main/data).
+The Nuget package ships a default database, but if you want the latest one - you can download it from [this link](https://downgit.github.io/#/home?url=https://github.com/iMrShadow/TelltaleToolKit/tree/main/data).
 
 ## Usage
 
 ```csharp
 using TelltaleToolKit;
-using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types.Textures;
 using TelltaleToolKit.T3Types.Textures.T3Types;
-using TelltaleToolKit.Utility;
 
-// Set up the context from a folder.
-TTKContext.Instance().Load("../../../../../data");
+// 1. Initialize the library.
+Toolkit.Initialize();
 
-// (Recommended) Set the active game for default configuration.
-// This is not required, if you only read files.
-TTKContext.Instance().SetActiveGame("the-walking-dead-definitive-series-2019");
+// 2. Create a workspace for the target game.
+Workspace workspace = Toolkit.Instance.CreateWorkspace(
+    "The Walking Dead Workspace",
+    gameProfile: "The Walking Dead: Definitive Series");
 
-// Load a Telltale archive. 
-using var archive = TTK.Load("WDC_pc_WalkingDead404_txmesh.ttarch2", T3BlowfishKey.Twdc);
+// 3. Mount the game data.
+workspace.LoadArchive("WDC_pc_WalkingDead404_txmesh.ttarch2", contextName: "WalkingDead404 Textures");
 
-// Extract a file from the archive in a stream.
-var blob = archive.ExtractFile("obj_backpackClementine400.d3dtx");
+// 4. Load an asset.
+T3Texture? texture = workspace.LoadAsset<T3Texture>("obj_backpackClementine400.d3dtx");
 
-// Load the d3dtx from a stream.
-var d3dtxObj = TTK.Load<T3Texture>(blob, out MetaStreamConfiguration config);
+if (texture != null)
+{
+    // 5. Modify it.
+    texture.Name = "obj_backpackClementine400_modified";
+    texture.SurfaceFormat = T3SurfaceFormat.ARGB8;
+    texture.Width = 1024;
+    texture.Height = 1024;
 
-// Alternatively, load the texture directly from the filesystem.
-// Replace the path with a valid one.
-// TTK.Load<T3Texture>("obj_backpackClementine400.d3dtx", out config);
-
-// Modify the texture.
-d3dtxObj.Name = "My new modified texture!";
-d3dtxObj.SurfaceFormat = T3SurfaceFormat.ARGB8;
-d3dtxObj.Width = 1024;
-d3dtxObj.Height = 1024;
-
-// Save the modified texture on the filesystem.
-TTK.Save(d3dtxObj, "new_modified.d3dtx", config);
+    // 6. Export it back to disk.
+    workspace.ExportAsset(texture, "obj_backpackClementine400_modified.d3dtx");
+}
 ```
 
 ## API Documentation
@@ -101,7 +97,9 @@ Thanks to [Gamma_02](https://github.com/gamma-02) for contributing a lot to this
 
 Thanks to [Knollad Knolladious](https://github.com/LBPHaxMods) for adding `D3DMesh` serialization support.
 
-Thanks to [Plague](https://x.com/QueenPlagueCure) for providing version databases for Borderlands 2021 PC and Nintendo Switch.
+Thanks to [Plague](https://x.com/QueenPlagueCure) for providing version databases for "Borderlands" (2021, PC and Nintendo Switch).
+
+Thanks to Pumba for providing version databases for "The Wolf Among Us".
 
 Thanks to [Lucas Saragosa](https://github.com/LucasSaragosa) for his outstanding work on [`TelltaleToolLib`](https://github.com/LucasSaragosa/TelltaleToolLib/tree/main), [`Telltale Inspector`](https://github.com/LucasSaragosa/TelltaleInspector) and [`Telltale Editor`](https://github.com/Telltale-Modding-Group/Telltale-Editor), which made me understand Telltale's meta system.
 
