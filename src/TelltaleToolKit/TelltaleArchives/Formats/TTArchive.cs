@@ -26,7 +26,7 @@ public class TTArchive : Archive
 
      protected override void Activate()
     {
-        using BinaryReader reader = new(ArchiveStream!, Encoding.UTF8, true);
+        using BinaryReader reader = new(BaseStream!, Encoding.UTF8, true);
 
         Info.Version = (TTArchiveVersion)reader.ReadUInt32();
         int version = (int)Info.Version;
@@ -240,12 +240,12 @@ public class TTArchive : Archive
         // No compression → raw substream (may still need per-file decryption later)
         if (Info.ChunkCount == 0 || filesMode != 2)
         {
-            return new SubStream(ArchiveStream!, (long)Info.FilesOffset, long.MaxValue);
+            return new SubStream(BaseStream!, (long)Info.FilesOffset, long.MaxValue);
         }
 
         // Compressed chunked region → on-demand decompression
         return new TtarchiveChunkedDataStream(
-            ArchiveStream!,
+            BaseStream!,
             (long)Info.FilesOffset,
             Info.ChunkSize,
             Info.ChunkBlockSizes,

@@ -11,11 +11,6 @@ namespace TelltaleToolKit.TelltaleArchives;
 public class ArchiveInfo
 {
     /// <summary>
-    ///     Gets or sets the container magic (TTCN, TTCE, etc.) read from the file header.
-    /// </summary>
-    public ContainerMagic ContainerMagic { get; set; }
-
-    /// <summary>
     ///     Gets or sets the inner archive version (Legacy, 1-9, TTA2, TTA3, TTA4).
     /// </summary>
     public TTArchiveVersion Version { get; set; }

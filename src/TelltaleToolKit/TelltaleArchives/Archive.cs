@@ -36,7 +36,25 @@ public abstract class Archive : IDisposable
     private readonly Dictionary<ulong, ResourceEntry> _entries = new();
 
     // The raw underlying stream for the archive file. Subclasses read from this directly.
-    internal Stream? ArchiveStream { get; set; }
+    protected Stream? BaseStream { get; private set; }
+
+    /// <summary>
+    ///     Gets the original file path of the archive, if it was loaded from a file.
+    ///     <see langword="null"/> when the archive was opened from a <see cref="Stream"/>.
+    /// </summary>
+    public string? FilePath { get; private set; }
+
+    /// <summary>
+    ///     Gets the length of the underlying stream in bytes, if the stream supports seeking.
+    ///     <see langword="null"/> when the stream is not seekable (e.g., a network stream).
+    /// </summary>
+    public long? Length => BaseStream?.CanSeek == true ? BaseStream.Length : null;
+
+    /// <summary>
+    ///     Gets the file name (without directory) of the archive, if a file path is available.
+    ///     <see langword="null"/> when <see cref="FilePath"/> is <see langword="null"/>.
+    /// </summary>
+    public string? FileName => FilePath is not null ? Path.GetFileName(FilePath) : null;
 
     /// <summary>
     ///     Gets or sets archive metadata, including version, flags, Blowfish key, and chunk layout.
@@ -58,7 +76,7 @@ public abstract class Archive : IDisposable
 
     public virtual void Dispose()
     {
-        ArchiveStream?.Dispose();
+        BaseStream?.Dispose();
         GC.SuppressFinalize(this);
     }
 
@@ -81,7 +99,9 @@ public abstract class Archive : IDisposable
     public static T Load<T>(string filePath, string blowFishKey) where T : Archive, new()
     {
         FileStream stream = File.OpenRead(filePath);
-        return Load<T>(stream, blowFishKey);
+        T archive = Load<T>(stream, blowFishKey);
+        archive.FilePath = filePath;
+        return archive;
     }
 
     /// <summary>
@@ -95,12 +115,12 @@ public abstract class Archive : IDisposable
     /// <param name="blowFishKey">Raw Blowfish key string. Pass <see cref="string.Empty" /> for unencrypted archives.</param>
     /// <returns>A fully loaded archive instance.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="stream" /> is <see langword="null" />.</exception>
-    /// <exception cref="InvalidDataException">Thrown if the archive header is corrupt or unrecognised.</exception>
+    /// <exception cref="InvalidDataException">Thrown if the archive header is corrupt or unrecognized.</exception>
     public static T Load<T>(Stream stream, string blowFishKey) where T : Archive, new()
     {
         T archive = new();
-        archive.ArchiveStream = stream ?? throw new ArgumentNullException(nameof(stream));
-        archive.ArchiveStream.Position = 0;
+        archive.BaseStream = stream ?? throw new ArgumentNullException(nameof(stream));
+        archive.BaseStream.Position = 0;
         archive.Info.BlowfishKey = blowFishKey;
         archive.Activate();
         return archive;
@@ -127,7 +147,7 @@ public abstract class Archive : IDisposable
         => Load<T>(stream, gameKey.GetBlowfishKey());
 
     /// <summary>
-    ///     Parses the archive header from <see cref="ArchiveStream" /> and populates the entry table.
+    ///     Parses the archive header from <see cref="BaseStream" /> and populates the entry table.
     ///     Called exactly once, immediately after the stream and <see cref="Info" /> are initialised.
     /// </summary>
     protected abstract void Activate();

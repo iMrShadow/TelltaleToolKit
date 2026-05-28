@@ -30,10 +30,9 @@ public class TTArchive2 : Archive
         // Open a ContainerStream over the raw file stream.
         // ContainerStream reads the TTCN/TTCE/TTCZ/etc. header, sets up chunk tables,
         // and then exposes a seekable view of the decrypted+decompressed payload.
-        _containerStream = new ContainerStream(ArchiveStream!, Info.BlowfishKey);
+        _containerStream = new ContainerStream(BaseStream!, Info.BlowfishKey);
         // Copy container state back to Info so the rest of the code (and callers
         // that inspect Info) see the right values.
-        Info.ContainerMagic = _containerStream.ContainerMagic;
         Info.Flags = _containerStream.Flags;
         Info.ChunkSize = _containerStream.ChunkSize;
         Info.ChunkCount = _containerStream.ChunkCount;
