@@ -6,12 +6,12 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>13</LangVersion>
     <RootNamespace>TelltaleToolKit</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Title>TelltaleToolKit</Title>
     <Authors>Ivan Panayotov</Authors>
     <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iMrShadow/TelltaleToolKit</RepositoryUrl>
-    <PackageTags>telltale; ttarch; ttarch2; modding;</PackageTags>
+    <PackageTags>telltale; ttarch; ttarch2; modding; d3dtx; d3dmesh; lenc; dlog; skunkape; langdb; prop; skl; chore</PackageTags>
     <Description>A .NET library for modding games running on the Telltale Tool engine, providing an API to read and write assets and archives.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>https://github.com/iMrShadow/TelltaleToolKit/releases</PackageReleaseNotes>

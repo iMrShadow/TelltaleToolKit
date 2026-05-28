@@ -66,9 +66,9 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
         if (archive.Entries.Values.Any())
         {
-            Stream firstFile = archive.OpenResource(archive.Entries[0].Name);
+            Stream? firstFile = archive.OpenResource(archive.GetAllEntries().First().Name);
 
-            if (Toolkit.IsMetaFile(archive.Entries[0].Name))
+            if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
             {
                 MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
 
@@ -81,7 +81,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
         {
             // Console.WriteLine($"Reading {entry.Name}");
 
-            using Stream file = archive.OpenResource(entry.Name);
+            using Stream? file = archive.OpenResource(entry.Name);
 
             if (!Toolkit.IsMetaFile(file))
                 continue;

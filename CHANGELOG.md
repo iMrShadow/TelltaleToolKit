@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## Unreleased
+
+### Added
+
+### Changed
+
+### Removed
+
+## [0.2.0] - 2026-05-28
 
 ### Added
 - `Toolkit` singleton class that acts as an entry point to the library. 
@@ -12,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Centralized archive loading with automatic format detection.
   - Object serialization/deserialization for MetaStream files.
   - Must be initialized with `Toolkit.Initialize()` before use.
+  - Logging support.
 - `HashDatabase` class - Thread-safe, in-memory symbol resolution database.
   - Stores CRC64 -> Symbol name mappings with concurrent dictionary.
   - Supports batch imports from text files and directories.
@@ -23,7 +32,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Manages prioritized resource contexts, similar to Telltale Tool.
   - Handles file extraction with proper override order (higher priority wins).
   - Provides game-specific metaclass lookup and symbol resolution.
-  - Default MetaStream configuration derived from the game profile.
+  - Default `MetaStream` configuration derived from the game profile.
+  - Can create resource contexts from Lua resdesc files.
 - `IFileProvider` interface - Common abstraction for file sources.
   - Implemented by `ArchiveProvider`, `FolderProvider`, and `LooseFileProvider`.
   - Supports lookup by both CRC64 and filename.
@@ -36,19 +46,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Workspace-level `LocalHashDatabase` for game-specific symbols.
   - Automatic fallback: global DB -> workspace DB -> mounted file names.
   - Batch resolution with `ResolveSymbols()`.
-- Various new T3Types for compatibility with MSV5 and MSV6 games.
+- Various new T3Types for compatibility with MTRE, MSV5 and MSV6 games.
+- Support for `resdesc` (#1).
+- Support for container streams (#18).
+- Experimental support creating archives. (#18)
 - Experimental `PropertySet` serializer.
 - Helper methods for `T3Texture` and `PropertySet`.
+- Serializers for `D3DMesh` related classes.
 - Some animation/skeleton related types in the type registry.
-- New contributor in README.md.
+- New contributors in README.md.
 
 ### Changed
 - `GameDescriptor` renamed to `GameProfile` to better reflect its purpose.
 - `GameContext` renamed to `Workspace` for clarity.
-
-- Moved `Lua` relate
-- Some `T3Texture` members now have default values.
+- Some class members now have default values.
+- Renamed `TelltaleFileEntry` to `ResourceEntry` to match Telltale's naming.
+- Renamed, reorganized and refactored various classes in `TelltaleArchives`. (#18)
+- Refactored `Symbol`. (#14)
 - NuGet related metadata in `TelltaleToolKit.csproj`.
+- Package the data folder as `ttk-data`.
 
 ### Removed
 - `TTKContext` singleton class. It has been replaced by `Toolkit`.
@@ -58,7 +74,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 - Due to the heavy refactoring, most old bugs do not apply to this version.
 - Various bugs regarding loading and saving have been fixed.
-- `Save<T>` without a configuration now works properly.
 
 ## [0.1.0] - 2025-09-30
 
@@ -67,6 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Initial support for the following file formats: `.aam`, `.amap`, `.anm`, `.aud`, `.chore`, `.d3dmesh`, `.d3dtx`, `.dlg`, `.dlog`, `.dss`, `.font`, `.imap`, `.landb`, `.lanreg`, `.lang`, `.langdb`, `.langres`, `.ldb`, `.locreg`, `.look`, `.note`, `.overlay`, `.ptable`, `.prop`, `.rules`, `.save`, `.scene`, `.skl`, `.style`, `.tmap`, `.vox`, `.wbox`. Currently most serializers are **unfinished and unreliable, especially in writing mode**. Over time, they will get polished and refined.
 - Registration system for types, metaclasses, type serializers and game descriptors (game configurations).
 
-[unreleased]: https://github.com/iMrShadow/TelltaleToolKit/compare/0.1.0...HEAD
+[unreleased]: https://github.com/iMrShadow/TelltaleToolKit/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/iMrShadow/TelltaleToolKit/releases/tag/0.2.0
 [0.1.0]: https://github.com/iMrShadow/TelltaleToolKit/releases/tag/0.1.0
   

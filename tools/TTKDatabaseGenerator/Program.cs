@@ -158,9 +158,9 @@ internal static class Program
 
                     if (archive.Entries.Count > 0)
                     {
-                        await using Stream? firstFile = archive.OpenResource(archive.Entries[0].Name);
+                        await using Stream? firstFile = archive.OpenResource(archive.GetAllEntries().First().Name);
 
-                        if (Toolkit.IsMetaFile(archive.Entries[0].Name))
+                        if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
                         {
                             MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
                             areSymbolsHashed = config.AreSymbolsHashed;
