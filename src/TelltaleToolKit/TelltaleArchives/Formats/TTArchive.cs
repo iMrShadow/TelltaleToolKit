@@ -164,6 +164,7 @@ public class TTArchive : Archive
             if (Info.ChunkCount > 0)
             {
                 // Both flags are set; DecompressBlock sorts out which algorithm is active.
+                Info.ChunkSize = 0x10000;
                 Info.Flags |= ArchiveFlags.IsRawDeflateCompressed | ArchiveFlags.IsZlibCompressed;
             }
 
