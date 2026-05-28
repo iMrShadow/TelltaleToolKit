@@ -24,6 +24,133 @@ public class TTArchive : Archive
 
     private Stream? _dataStream; // decompressed view of the entire file-data region
 
+     protected override void Activate()
+    {
+        using BinaryReader reader = new(ArchiveStream!, Encoding.UTF8, true);
+
+        Info.Version = (TTArchiveVersion)reader.ReadUInt32();
+        int version = (int)Info.Version;
+
+        // Anything outside 1–9 falls back to the legacy reader
+        // (version 0, or a number so large it wrapped - both indicate the old format).
+        // The only issue with this is the folder number - if the folders are between 1 and 9, this fails.
+        if (version is < 1 or > 9)
+        {
+            ReadLegacyStream(reader);
+            return;
+        }
+
+        _blowfish = new Blowfish(Info.BlowfishKey, (int)Info.Version);
+
+        // ---- Version 1+ header ----
+        uint decryptionMode = reader.ReadUInt32();
+        if (decryptionMode > 1)
+        {
+            Toolkit.Instance.Logger.LogWarning(
+                $"Decryption mode {decryptionMode} is not supported. Falling back to encrypted.");
+        }
+
+        Info.Flags |= decryptionMode == 1 ? ArchiveFlags.IsEncrypted : ArchiveFlags.None;
+
+        if (version >= 2)
+        {
+            _ = reader.ReadUInt32(); // unknown field
+        }
+
+        // files_mode: 2 = compressed, 1 - normal
+        uint filesMode = 1;
+
+        // ---- Compression (version 3+) ----
+        if (version >= 3)
+        {
+            filesMode = reader.ReadUInt32();
+
+            if (filesMode > 2)
+            {
+                Toolkit.Instance.Logger.LogWarning(
+                    $"Files mode {filesMode} is not supported. Falling back to uncompressed.");
+            }
+
+            Info.ChunkCount = reader.ReadUInt32();
+
+            Info.ChunkBlockSizes = new ulong[Info.ChunkCount];
+
+            for (int i = 0; i < Info.ChunkCount; i++)
+            {
+                Info.ChunkBlockSizes[i] = reader.ReadUInt32();
+            }
+
+            if (Info.ChunkCount > 0)
+            {
+                // Both flags are set; DecompressBlock sorts out which algorithm is active.
+                Info.ChunkSize = 0x10000;
+                Info.Flags |= ArchiveFlags.IsRawDeflateCompressed | ArchiveFlags.IsZlibCompressed;
+            }
+
+            _ = reader.ReadUInt32(); // total file-data region size AFTER the ttarch header is read (and the name)
+        }
+
+        if (version >= 4)
+        {
+            _ = reader.ReadUInt32(); // unknown (possibly priority)
+            _ = reader.ReadUInt32(); // unknown
+        }
+
+        if (version >= 5)
+        {
+            uint xMode1 = reader.ReadUInt32(); // unknown
+            uint xMode2 = reader.ReadUInt32(); // unknown
+            Info.Flags |= xMode1 == 1 || xMode2 == 1 ? ArchiveFlags.IsXMode : ArchiveFlags.None;
+        }
+
+        if (version >= 7)
+        {
+            const uint blockSizeFactor = 1024;
+            Info.ChunkSize = reader.ReadUInt32() * blockSizeFactor;
+        }
+
+        if (version >= 8)
+        {
+            // This is a boolean value that indicates whether a symbol table should be created or not.
+            byte createSymbolTable = reader.ReadByte();
+
+            if (createSymbolTable > 0)
+            {
+                _ = reader.ReadInt32(); // no idea if this is true
+            }
+        }
+
+        if (version >= 9)
+        {
+            _ = reader.ReadUInt32(); // crc32 for checksum of the header (decompressed and decrypted)
+        }
+
+        int infoHeaderSize = reader.ReadInt32();
+
+        // This is compressed
+        byte[] header;
+        if (version >= 6 && filesMode == 2)
+        {
+            int compressedHeaderSize = reader.ReadInt32();
+            header = reader.ReadBytes(compressedHeaderSize);
+            ArchiveFlags archiveFlags = Info.Flags;
+            header = ChunkDecoder.DecompressBlock(header, infoHeaderSize, ref archiveFlags);
+            Info.Flags = archiveFlags;
+        }
+        else
+        {
+            header = reader.ReadBytes(infoHeaderSize);
+        }
+
+        if (decryptionMode == 1)
+            _blowfish.Decipher(header, header.Length);
+
+        Info.FilesOffset = (ulong)reader.BaseStream.Position;
+        ParseEntries(new MemoryStream(header));
+
+        _dataStream = BuildFileDataStream(version, filesMode, decryptionMode);
+    }
+
     /// <summary>
     ///     Reads the oldest encrypted format where the file begins with a raw header-size
     ///     field rather than a version number.
@@ -41,6 +168,8 @@ public class TTArchive : Archive
 
         uint headerSize = reader.ReadUInt32();
 
+        // This is a lame work-around, because Telltale had stopped reading the original archives.
+        // There shouldn't be archives with more than 128 folders
         if (headerSize > 128)
         {
             // Encrypted legacy archive — header block is Blowfish-decrypted in place.
@@ -106,136 +235,6 @@ public class TTArchive : Archive
         SetEntries(entries);
     }
 
-    protected override void Activate()
-    {
-        using BinaryReader reader = new(ArchiveStream!, Encoding.UTF8, true);
-
-        Info.Version = (TTArchiveVersion)reader.ReadUInt32();
-        int version = (int)Info.Version;
-
-        // Anything outside 1–9 falls back to the legacy reader
-        // (version 0, or a number so large it wrapped - both indicate the old format).
-        if (version is < 1 or > 9)
-        {
-            ReadLegacyStream(reader);
-            return;
-        }
-
-        _blowfish = new Blowfish(Info.BlowfishKey, (int)Info.Version);
-
-        // ---- Version 1+ header ----
-        uint decryptionMode = reader.ReadUInt32();
-        if (decryptionMode > 1)
-        {
-            Toolkit.Instance.Logger.LogWarning(
-                $"Decryption mode {decryptionMode} is not supported. Falling back to encrypted.");
-        }
-
-        Info.Flags |= decryptionMode == 1 ? ArchiveFlags.IsEncrypted : ArchiveFlags.None;
-
-        if (version >= 2)
-        {
-            _ = reader.ReadUInt32(); // unknown field
-        }
-
-        // files_mode: 2 = compressed, 0 or 1 - no idea.
-        uint filesMode = 0;
-
-        // ---- Compression (version 3+) ----
-        if (version >= 3)
-        {
-            filesMode = reader.ReadUInt32();
-
-            if (filesMode > 2)
-            {
-                Toolkit.Instance.Logger.LogWarning(
-                    $"Files mode {filesMode} is not supported. Falling back to uncompressed.");
-            }
-
-            Info.ChunkCount = reader.ReadUInt32();
-
-            Info.ChunkBlockSizes = new ulong[Info.ChunkCount];
-
-            for (int i = 0; i < Info.ChunkCount; i++)
-            {
-                Info.ChunkBlockSizes[i] = reader.ReadUInt32();
-            }
-
-            if (Info.ChunkCount > 0)
-            {
-                // Both flags are set; DecompressBlock sorts out which algorithm is active.
-                Info.ChunkSize = 0x10000;
-                Info.Flags |= ArchiveFlags.IsRawDeflateCompressed | ArchiveFlags.IsZlibCompressed;
-            }
-
-            _ = reader.ReadUInt32(); // total file-data region size AFTER the ttarch header is read (and the name)
-        }
-
-        if (version >= 4)
-        {
-            _ = reader.ReadUInt32(); // unknown (possibly priority)
-            _ = reader.ReadUInt32(); // unknown
-        }
-
-        if (version >= 5)
-        {
-            uint xMode1 = reader.ReadUInt32(); // unknown
-            uint xMode2 = reader.ReadUInt32(); // unknown
-            Info.Flags |= xMode1 == 1 || xMode2 == 1 ? ArchiveFlags.IsXMode : ArchiveFlags.None;
-        }
-
-        if (version >= 7)
-        {
-            const uint blockSizeFactor = 1024;
-            Info.ChunkSize = reader.ReadUInt32() * blockSizeFactor;
-        }
-
-        if (version >= 8)
-        {
-            // This is a boolean value that indicates whether a symbol table should be created or not.
-            byte createSymbolTable = reader.ReadByte();
-
-            if (createSymbolTable > 0)
-            {
-                _ = reader.ReadInt32(); // no idea if this is true
-            }
-        }
-
-        // FilesMode 2 = compressed
-        // FilesMode 1 = normal
-        if (version >= 9)
-        {
-            _ = reader.ReadUInt32(); // crc32 for checksum of the header (decompressed and decrypted)
-        }
-
-        int infoHeaderSize = reader.ReadInt32();
-
-        // This is compressed
-        byte[] header;
-        if (version >= 6 && filesMode == 2)
-        {
-            int compressedHeaderSize = reader.ReadInt32();
-            header = reader.ReadBytes(compressedHeaderSize);
-            ArchiveFlags archiveFlags = Info.Flags;
-            header = ChunkDecoder.DecompressBlock(header, infoHeaderSize, ref archiveFlags);
-            Info.Flags = archiveFlags;
-        }
-        else
-        {
-            header = reader.ReadBytes(infoHeaderSize);
-        }
-
-        if (decryptionMode == 1)
-        {
-            _blowfish.Decipher(header, header.Length);
-        }
-
-        Info.FilesOffset = (ulong)reader.BaseStream.Position;
-        ParseEntries(new MemoryStream(header));
-
-        _dataStream = BuildFileDataStream(version, filesMode, decryptionMode);
-    }
-
     private Stream BuildFileDataStream(int version, uint filesMode, uint decryptionMode)
     {
         // No compression → raw substream (may still need per-file decryption later)
@@ -263,19 +262,8 @@ public class TTArchive : Archive
             throw new InvalidOperationException("Archive not loaded.");
         }
 
-        if (entry is null)
-        {
-            return null;
-        }
-
-        // TODO: Implement this in MetaStream
-        // // Uncompressed + encrypted per-file → apply streaming decryption
-        // if (Info.Flags.HasFlag(ArchiveFlags.IsEncrypted))
-        // {
-        //     return new PerFileDecryptStream(slice, _blowfish);
-        // }
-
-        return new SubStream(_dataStream, (long)entry.Offset, entry.Size);
+        // TODO: Implement decrypting in MetaStream
+        return entry is null ? null : new SubStream(_dataStream, (long)entry.Offset, entry.Size);
     }
 
     /// <summary>
