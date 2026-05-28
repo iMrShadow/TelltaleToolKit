@@ -49194,5 +49194,21 @@
                 "flags": 32
             }
         ]
+    },
+    {
+        "type": "ResourceGroupInfo",
+        "crc32": 4203717822,
+        "members": [
+            {
+                "name": "mColor",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mPriority",
+                "type": "int",
+                "flags": 0
+            }
+        ]
     }
 ]

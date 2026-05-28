@@ -1,5 +1,13 @@
 ## Database Changelog
 
+### 28th of May, 2026
+
+#### Game Profiles
+- Added initial game profile for The Wolf Among Us (2013) (Thank you Pumba)
+
+#### Version Database
+- Added initial version database for The Wolf Among Us (2013)
+
 ### 24th of April, 2026
 
 #### Game Profiles
@@ -30,7 +38,7 @@
   - Added over 3700 property keys, 2/3rds imported from Telltale Inspector.
   - Added bone names from RTB's 3ds Max Script repository.
   - Added bone groups from Telltale Inspector.
---- 
+---
 
 ### 30th of September, 2025
 
@@ -75,4 +83,3 @@
 
 #### Hash Database
 - Not implemented yet.
-  
