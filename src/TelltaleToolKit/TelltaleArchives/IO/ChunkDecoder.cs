@@ -33,7 +33,9 @@ internal static class ChunkDecoder
         }
 
         ArchiveFlags flags = info.Flags;
-        return DecompressBlock(compressed, (int)expectedSize, ref flags);
+        byte[] arr = DecompressBlock(compressed, (int)expectedSize, ref flags);
+        info.Flags = flags;
+        return arr;
     }
 
     // -------------------------------------------------------------------------
@@ -94,6 +96,7 @@ internal static class ChunkDecoder
             try
             {
                 byte[] result = Decompress(ms => new InflaterInputStream(ms));
+                flags &= ~ArchiveFlags.IsRawDeflateCompressed;
                 return result;
             }
             catch (Exception)

@@ -15,7 +15,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
     private readonly uint _chunkSize;
     private readonly ulong[] _chunkSizes;
     private readonly long _dataStart;
-    private readonly ArchiveFlags _flags;
+    private ArchiveFlags _flags;
     private readonly bool _isEncrypted;
     private readonly Stream _source;
     private long _position;
@@ -126,7 +126,9 @@ internal sealed class TtarchiveChunkedDataStream : Stream
 
         // Decompress the chunk
         ArchiveFlags flags = _flags;
-        return ChunkDecoder.DecompressBlock(compressed, (int)_chunkSize, ref flags);
+        var res = ChunkDecoder.DecompressBlock(compressed, (int)_chunkSize, ref flags);
+        _flags = flags;
+        return res;
     }
 
     public override long Seek(long offset, SeekOrigin origin)
