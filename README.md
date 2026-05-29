@@ -7,7 +7,7 @@
 `TelltaleToolKit` is a .NET library created to allow modding games which run on the [Telltale Tool](https://www.pcgamingwiki.com/wiki/Engine:Telltale_Tool) game engine.
 
 <!-- omit in toc -->
-## Table of contents: 
+## Table of contents:
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
@@ -40,7 +40,7 @@ Install-Package TelltaleToolKit
 ```
 Or add it to your .csproj file:
 ```xml
-<PackageReference Include="TelltaleToolKit" Version="0.2.0" />
+<PackageReference Include="TelltaleToolKit" Version="0.2.1" />
 ```
 
 The Nuget package ships a default database, but if you want the latest one - you can download it from [this link](https://downgit.github.io/#/home?url=https://github.com/iMrShadow/TelltaleToolKit/tree/main/data).
@@ -85,7 +85,7 @@ The API is currently **unstable** and may change. For now, refer to the source c
 
 ## Supported Games
 
-See the [data folder](data/README.md) for more information regarding supported games. 
+See the [data folder](data/README.md) for more information regarding supported games.
 
 ## License
 
