@@ -533,7 +533,13 @@ public class Toolkit
     {
         string profilesPath = Path.Combine(dataFolder, "game_profiles");
         if (!Directory.Exists(profilesPath))
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"[Toolkit] Game profiles directory not found: {profilesPath}, from config data folder: {dataFolder}");
+            Console.ResetColor();
+            
             return;
+        }
 
         foreach (string file in Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
         {
