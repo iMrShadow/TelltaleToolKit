@@ -1,0 +1,13 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CopyTelltaleToolKitData" BeforeTargets="Build">
+    <ItemGroup>
+      <_TTKDataFiles Include="$(MSBuildThisFileDirectory)..\contentFiles\any\any\ttk-data\**\*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_TTKDataFiles)"
+          DestinationFiles="$(OutputPath)ttk-data\%(RecursiveDir)%(Filename)%(Extension)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>
