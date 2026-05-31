@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Lua;
 
 namespace TelltaleToolKit.GamesDatabase;
 

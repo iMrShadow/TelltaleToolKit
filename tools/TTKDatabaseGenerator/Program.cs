@@ -12,6 +12,7 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Lua;
 
 namespace DatabaseGenerator;
 
