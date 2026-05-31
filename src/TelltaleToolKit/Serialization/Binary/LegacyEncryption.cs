@@ -11,9 +11,6 @@ namespace TelltaleToolKit.Serialization.Binary;
 /// </summary>
 public static class LegacyEncryption
 {
-    // -------------------------------------------------------------------------
-    // Public API — Decrypt
-    // -------------------------------------------------------------------------
 
     /// <inheritdoc cref="Decrypt(Stream, Blowfish)" />
     public static void Decrypt(Stream stream, string blowfishKey, int archiveVersion = 7)
@@ -100,10 +97,6 @@ public static class LegacyEncryption
         ProcessBlocks(stream, blowfish, config, true);
     }
 
-    // -------------------------------------------------------------------------
-    // Core block processing — O(blockSize) memory
-    // -------------------------------------------------------------------------
-
 
     private static void ProcessBlocks(Stream stream, Blowfish blowfish,
         (int BlockSize, int CryptInterval, int CleanInterval) config, bool encrypt)
@@ -154,10 +147,6 @@ public static class LegacyEncryption
             ArrayPool<byte>.Shared.Return(buffer);
         }
     }
-
-    // -------------------------------------------------------------------------
-    // Stream helpers
-    // -------------------------------------------------------------------------
 
     private static void ReadExactly(Stream stream, long offset, Span<byte> buffer)
     {
@@ -212,10 +201,6 @@ public static class LegacyEncryption
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Configuration tables
-    // -------------------------------------------------------------------------
-
     private static void XorBlock(Span<byte> block, byte mask)
     {
         for (int i = 0; i < block.Length; i++)
@@ -243,20 +228,4 @@ public static class LegacyEncryption
         MetaStreamMagic.EncryptedMcom => MetaStreamMagic.Mcom,
         _ => encrypted
     };
-
-    internal static void ReadExact(Stream stream, Span<byte> buffer)
-    {
-        int total = 0;
-        while (total < buffer.Length)
-        {
-            int read = stream.Read(buffer[total..]);
-            if (read == 0)
-            {
-                throw new EndOfStreamException(
-                    $"Unexpected end of stream after {total} / {buffer.Length} bytes.");
-            }
-
-            total += read;
-        }
-    }
 }

@@ -2,7 +2,7 @@ using System.IO.Compression;
 using System.IO.Hashing;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.TelltaleArchives.IO;
 using TelltaleToolKit.Utility.Blowfish;
 using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
@@ -24,7 +24,7 @@ public class TTArchive : Archive
 
     private Stream? _dataStream; // decompressed view of the entire file-data region
 
-     protected override void Activate()
+    protected override void Activate()
     {
         using BinaryReader reader = new(BaseStream!, Encoding.UTF8, true);
 
@@ -262,7 +262,6 @@ public class TTArchive : Archive
             throw new InvalidOperationException("Archive not loaded.");
         }
 
-        // TODO: Implement decrypting in MetaStream
         return entry is null ? null : new SubStream(_dataStream, (long)entry.Offset, entry.Size);
     }
 
