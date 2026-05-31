@@ -1,225 +1,270 @@
 ﻿using System.Text;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.T3Types;
+using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamReader : MetaStream
 {
-    public MetaStreamReader(Stream inputStream)
+    private BinaryReader Reader = null!;
+
+    public MetaStreamReader(Stream inputStream, Workspace? workspace)
     {
-        Reader = new BinaryReader(inputStream, Encoding.UTF8, true);
-        UnderlyingStream = inputStream;
-        SerializeMetaHeader();
-    }
+        BaseStream = inputStream;
+        Configuration.Workspace = workspace;
 
-    private BinaryReader Reader { get; set; }
+        bool isValid = ReadHeader();
 
-    private void ValidateMetaHeader()
-    {
-        if (UnderlyingStream.Length < 4)
-            throw new InvalidDataException("Invalid MetaHeader: Stream too short.");
-
-        UnderlyingStream.Position = 0;
-        Configuration.Version = (MetaStreamVersion)this.ReadUInt32();
-
-        if (!Enum.IsDefined(typeof(MetaStreamVersion), Configuration.Version))
-            throw new InvalidDataException($"Not a valid meta stream version: {Configuration.Version}");
-    }
-
-    public override void SerializeMetaHeader()
-    {
-        ValidateMetaHeader();
-
-        uint mainSize = 0, debugSize = 0, asyncSize = 0;
-
-        switch (Configuration.Version)
+        if (!isValid)
         {
-            case MetaStreamVersion.Mbes:
-                throw new NotSupportedException("MBES is not supported yet.");
-            // TODO optional compressed sections (set top bit of size to 1)
-            case MetaStreamVersion.Msv4:
-                mainSize = this.ReadUInt32();
-                asyncSize = this.ReadUInt32();
-                break;
-            case MetaStreamVersion.Msv6
-                or MetaStreamVersion.Msv5:
-                mainSize = this.ReadUInt32();
-                debugSize = this.ReadUInt32();
-                asyncSize = this.ReadUInt32();
-                break;
+            throw new InvalidDataException("Invalid MetaStream.");
         }
 
-        // Read the number of serialized classes
-        uint metaClassNum = this.ReadUInt32();
-
-        if (metaClassNum >= 1000)
-            throw new InvalidDataException("Too many classes in the meta stream.");
-
-        for (var i = 0; i < metaClassNum; i++)
+        long offset = Sections[0].CompressedSize;
+        for (int i = 1; i <= 3; i++)
         {
-            uint size = this.ReadUInt32();
-
-            // Read the type hash or name (256 is a good number to use for the size of the name)
-            Configuration.AreSymbolsHashed = size > 255;
-
-            Reader.BaseStream.Seek(-4, SeekOrigin.Current);
-
-            MetaClassType type = this.ReadMetaClassType();
-            uint crc32 = this.ReadUInt32();
-
-            // If the type is not recognized at all
-            if (type.FullTypeName == string.Empty)
+            //for each section (default,async,debug)
+            SectionInfo currentSect = Sections[i];
+            if (currentSect.CompressedSize > 0)
             {
-                if (Configuration.UnregisteredTypes.Count > 0)
+                currentSect.Stream = new SubStream(Sections[0].Stream, offset, currentSect.CompressedSize);
+                if (currentSect.IsCompressed)
                 {
-                    int lastIndex = Configuration.UnregisteredTypes.Count - 1;
-                    (ulong, uint) lastTuple = Configuration.UnregisteredTypes[lastIndex];
-                    Configuration.UnregisteredTypes[lastIndex] = (lastTuple.Item1, crc32);
+                    if (Configuration.Workspace is null)
+                    {
+                        throw new InvalidOperationException("[MetaStream] Workspace is not set for encrypted streams.");
+                    }
+
+                    ContainerStream cs = new(currentSect.Stream, Configuration.Workspace.BlowfishKey);
+                    currentSect.Stream = cs;
+                    SetSection((SectionType)i);
+
+                    // No idea why this is skipped
+                    this.ReadUInt64();
                 }
 
-                continue;
-            }
-
-            MetaClass? mcs = Toolkit.Instance.ClassRegistry.GetClass(type.Symbol, crc32);
-
-            if (mcs is not null)
-            {
-                // If the class description exists, add it. Otherwise TODO
-                Configuration.SerializedClasses.Add(mcs);
-            }
-            else
-            {
-                Configuration.UnregisteredClasses.Add((type, crc32));
+                offset += currentSect.CompressedSize;
             }
         }
 
-        long currentPosition = Reader.BaseStream.Position;
-        if (Configuration.Version is MetaStreamVersion.Msv6 or MetaStreamVersion.Msv5)
+        SetSection(SectionType.Default);
+    }
+
+    public override MetaStreamMode Mode => MetaStreamMode.Read;
+
+    private bool ReadHeader()
+    {
+        if (BaseStream.Length < 4)
         {
-            Sections[(int)SectionType.Main].Stream = new SubStream(UnderlyingStream, currentPosition, mainSize);
-            Sections[(int)SectionType.Debug].Stream =
-                new SubStream(UnderlyingStream, currentPosition + mainSize, debugSize);
-            Sections[(int)SectionType.Async].Stream = new SubStream(
-                UnderlyingStream,
-                currentPosition + mainSize + debugSize,
-                asyncSize
-            );
+            Toolkit.Instance.Logger.LogError("Invalid MetaHeader: Stream too short.");
+            return false;
+        }
+
+        Sections[(int)SectionType.Header].Stream = BaseStream;
+        Reader = new BinaryReader(Sections[(int)SectionType.Header].Stream, Encoding.UTF8, true);
+        SetSection(SectionType.Header);
+
+        var magic = (MetaStreamMagic)this.ReadUInt32();
+        Configuration.StreamVersion = magic.GetMetaStreamVersion();
+        uint streamVersion = Configuration.StreamVersion;
+
+        if (Configuration.StreamVersion == 0)
+        {
+            Toolkit.Instance.Logger.LogError($"Not a valid meta stream version: {magic}");
+            return false;
+        }
+
+        long defaultSize = 0, debugSize = 0, asyncSize = 0;
+
+        if (streamVersion >= 4)
+        {
+            if (streamVersion >= 5)
+            {
+                defaultSize = this.ReadUInt32();
+            }
+
+            debugSize = this.ReadUInt32();
+            asyncSize = this.ReadUInt32();
+
+            if ((defaultSize & 0x80000000) != 0)
+            {
+                defaultSize &= 0x7FFFFFFF;
+                Sections[1].IsCompressed = true;
+            }
+
+            if ((debugSize & 0x80000000) != 0)
+            {
+                debugSize &= 0x7FFFFFFF;
+                Sections[2].IsCompressed = true;
+            }
+
+            if ((asyncSize & 0x80000000) != 0)
+            {
+                asyncSize &= 0x7FFFFFFF;
+                Sections[3].IsCompressed = true;
+            }
         }
         else
         {
-            // For older versions, the entire stream is the main section
-            Sections[(int)SectionType.Main].Stream = new SubStream(
-                UnderlyingStream,
-                currentPosition,
-                UnderlyingStream.Length - currentPosition
-            );
-            Sections[(int)SectionType.Debug].Stream = new SubStream(UnderlyingStream, 0, 0);
-            Sections[(int)SectionType.Async].Stream = new SubStream(UnderlyingStream, 0, 0);
+            Configuration.Encrypt = true;
+            // For MCOM, there is an extra 4-byte field to skip
+            if (magic is MetaStreamMagic.Mcom or MetaStreamMagic.EncryptedMcom)
+            {
+                _ = this.ReadUInt32(); // Actually, this might be the fully decompressed data size.
+
+                if (magic is MetaStreamMagic.Mcom)
+                {
+                    Configuration.Encrypt = false;
+                    /* TODO: This is not a priority, because Telltale haven't shipped any games with MCOM or encrypted MCOM.
+                      But it would be nice to support them in the future.
+                      In TWDS1, there's a function called "ReadUncompressAndStoreInMemory" which reads and decompresses the whole stream in memory.
+                      It uses zlib compression.
+                      This means MCOM is just a compressed version of the entire file.
+                      While the encrypted version is still compressed, but the decompressed data is encrypted.
+                   */
+                }
+
+                Toolkit.Instance.Logger.LogError("[MetaStream] Mcom or EncryptedMcom is not supported.");
+                return false;
+            }
+
+            if (Configuration.Workspace is null)
+            {
+                Toolkit.Instance.Logger.LogError("[MetaStream] Workspace is not set for encrypted streams.");
+                return false;
+            }
+
+            // Create a LegacyEncryptedStream that starts after the magic (and possible extra)
+            LegacyEncryptedStream encryptedStream = new(BaseStream, magic.GetMetaStreamVersion(),
+                GetPosition(),
+                Configuration.Workspace.Blowfish);
+
+            // Replace the underlying stream and reinitialize the BinaryReader
+            Sections[0].Stream = encryptedStream;
+            Reader = new BinaryReader(Sections[0].Stream, Encoding.UTF8, true);
         }
 
-        InitSerializer();
-    }
+        // Read the number of serialized classes
+        uint numVers = this.ReadUInt32();
 
-    public static bool IsValidMetaStream(Stream stream)
-    {
-        if (stream.Length < 4)
+        if (numVers >= 1024)
+        {
+            Toolkit.Instance.Logger.LogError("[MetaStream] Too many serialized classes.");
             return false;
-
-        long originalPosition = stream.Position;
-
-        try
-        {
-            using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
-            uint version = reader.ReadUInt32();
-
-            // Check if it's a valid MetaStream version
-            return Enum.IsDefined(typeof(MetaStreamVersion), version);
         }
-        finally
+
+        Configuration.VersionInfo.Capacity = (int)numVers;
+        for (int i = 0; i < numVers; i++)
         {
-            stream.Position = originalPosition;
+            MetaVersionInfo verInfo = new();
+
+            if (magic.GetMetaStreamVersion() >= 3) // mStreamVersion >= 3 uses hashed symbols
+            {
+                verInfo.TypeSymbolCrc = this.ReadUInt64();
+            }
+            else
+            {
+                string typeName = this.ReadString();
+                verInfo.TypeSymbolCrc = Crc64.Compute(MetaClassType.GetStrippedTypeName(typeName));
+            }
+
+            verInfo.VersionCrc = this.ReadUInt32();
+            Configuration.VersionInfo.Add(verInfo);
         }
+
+        long headerSize = Sections[(int)SectionType.Header].Stream!.Position;
+
+        defaultSize = Configuration.StreamVersion >= 5
+            ? defaultSize
+            : BaseStream.Length - headerSize - debugSize - asyncSize;
+
+        // The encrypted header is lost in the process, so we need to add it back
+        if(Configuration.Encrypt)
+            defaultSize -= 4;
+
+        Sections[0].CompressedSize = headerSize;
+        Sections[1].CompressedSize = defaultSize;
+        Sections[2].CompressedSize = debugSize;
+        Sections[3].CompressedSize = asyncSize;
+
+        return true;
     }
 
-    protected override void InitSerializer() => Reader = new BinaryReader(CurrentSubstream, Encoding.UTF8, true);
+
+    protected override void SetSection(SectionType newSection)
+    {
+        if (_currentSection == newSection)
+        {
+            return;
+        }
+
+        _currentSection = newSection;
+        Reader = new BinaryReader(Sections[(int)_currentSection].Stream, Encoding.UTF8, true);
+    }
+
 
     public override void BeginBlock()
     {
         int size = this.ReadInt32();
-        long expectedPosition = GetCurrentSection().Stream.Position + size - sizeof(int);
-        GetCurrentSection().Blocks.Push(expectedPosition);
+        long expectedPosition = Sections[(int)_currentSection].Stream!.Position + size - sizeof(int);
+        Sections[(int)_currentSection].Blocks.Push(expectedPosition);
     }
 
-    /// <inheritdoc />
+
     public override void EndBlock()
     {
-        MetaSection currentSection = GetCurrentSection();
-        long expectedPosition = currentSection.Blocks.Pop();
-        long currentPosition = currentSection.Stream.Position;
+        SectionInfo currentSectionInfo = Sections[(int)_currentSection];
+        long expectedPosition = currentSectionInfo.Blocks.Pop();
+        long currentPosition = currentSectionInfo.Stream!.Position;
         if (expectedPosition == currentPosition)
+        {
             return;
+        }
+
         // Telltale Tool skips the block if it's not read fully.
         // I have no idea how they got there in the first place, but I saw one such file (ui_mainmenu_background.scene) which benefits from this.
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
-        Toolkit.Instance.Logger.LogWarning($"[MetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
-        GetCurrentSection().Stream.Position = expectedPosition;
+        Toolkit.Instance.Logger.LogWarning(
+            $"[MetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        currentSectionInfo.Stream.Position = expectedPosition;
     }
 
-    /// <summary>
-    /// Skip a block.
-    /// This is internally used, even by Telltale themselves.
-    /// </summary>
-    public void SkipToEndOfCurrentBlock()
-    {
-        MetaSection currentSection = GetCurrentSection();
-        long expectedPosition = currentSection.Blocks.Pop();
-        currentSection.Stream.Seek(expectedPosition, SeekOrigin.Begin);
-    }
 
-    public override MetaClass? GetMetaClass(Type type) =>
-        Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.LinkingType == type);
-
-    public override MetaClass? GetMetaClass(Symbol symbol) =>
-        Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.Symbol.Crc64 == symbol.Crc64);
-
-    /// <inheritdoc />
-    public override void Serialize(ref bool value)
-    {
+    public override void Serialize(ref bool value) =>
         value = Reader.ReadChar() switch
         {
             '1' => true,
             '0' => false,
             _ => throw new InvalidBooleanException($"Invalid boolean at position: {Reader.BaseStream.Position}!")
         };
-    }
 
-    /// <inheritdoc />
+
     public override void Serialize(ref float value) => value = Reader.ReadSingle();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref double value) => value = Reader.ReadDouble();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref short value) => value = Reader.ReadInt16();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref int value) => value = Reader.ReadInt32();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref long value) => value = Reader.ReadInt64();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref ushort value) => value = Reader.ReadUInt16();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref uint value) => value = Reader.ReadUInt32();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref ulong value) => value = Reader.ReadUInt64();
 
-    /// <inheritdoc />
+
     public override void Serialize(ref string value)
     {
         int strLength = Reader.ReadInt32();
@@ -229,17 +274,26 @@ public sealed class MetaStreamReader : MetaStream
             throw new ArgumentOutOfRangeException(nameof(strLength));
         }
 
-        var buffer = new byte[strLength];
+        byte[] buffer = new byte[strLength];
         int realLength = Reader.Read(buffer, 0, strLength);
+
+        if (realLength != strLength)
+        {
+            throw new EndOfStreamException($"Expected {strLength} bytes but read {realLength}.");
+        }
 
         value = Encoding.UTF8.GetString(buffer, 0, realLength);
     }
 
+
     public override void Serialize(ref char value) => value = Reader.ReadChar();
+
 
     public override void Serialize(ref byte value) => value = Reader.ReadByte();
 
+
     public override void Serialize(ref sbyte value) => value = Reader.ReadSByte();
+
 
     public override void Serialize(ref Symbol value)
     {
@@ -248,30 +302,9 @@ public sealed class MetaStreamReader : MetaStream
         Configuration.SerializedSymbols.Add(value);
     }
 
-    public override void Serialize(ref MetaClassType value)
-    {
-        if (Configuration.AreSymbolsHashed)
-        {
-            ulong hash = this.ReadUInt64();
-            MetaClassType? type = MetaClassTypeRegistry.GetByHash(hash);
-
-            if (type == null)
-            {
-                Toolkit.Instance.Logger.LogWarning($"[MetaStreamReader] Unknown MetaClassType: {hash:X16})");
-                Configuration.UnregisteredTypes.Add((hash, 0));
-            }
-            else
-            {
-                value = type;
-            }
-        }
-        else
-        {
-            string fullType = this.ReadString();
-            value = MetaClassTypeRegistry.GetByName(MetaClassType.GetStrippedTypeName(fullType));
-            // I don't check for unregistered types in old games. Since types are unhashed, they are probably all registered. :)
-        }
-    }
 
     public override void Serialize(byte[] values, int offset, int count) => Reader.Read(values, offset, count);
+
+
+    public override void Close() => Dispose(true);
 }

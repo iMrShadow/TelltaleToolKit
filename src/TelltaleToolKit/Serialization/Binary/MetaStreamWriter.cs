@@ -1,114 +1,113 @@
 ﻿using System.Text;
-using TelltaleToolKit.Reflection;
 using TelltaleToolKit.T3Types;
+using TelltaleToolKit.TelltaleArchives;
 
 namespace TelltaleToolKit.Serialization.Binary;
 
 public sealed class MetaStreamWriter : MetaStream
 {
-    public MetaStreamWriter(Stream inputStream, MetaStreamConfiguration configuration)
+    private readonly Stream _outputStream;
+    private bool _closed;
+
+    public MetaStreamWriter(Stream outputStream, MetaStreamConfiguration configuration)
     {
-        UnderlyingStream = inputStream;
-
-        Sections[(int)SectionType.Main].Stream = new MemoryStream();
-        Sections[(int)SectionType.Debug].Stream = new MemoryStream();
-        Sections[(int)SectionType.Async].Stream = new MemoryStream();
+        _outputStream = outputStream;
         Configuration = configuration;
+        Configuration.SerializedSymbols.Clear();
 
-        InitSerializer();
+        Sections[0].Stream = new MemoryStream(0x100);
+        SetSection(SectionType.Default);
     }
 
     private BinaryWriter Writer { get; set; } = null!;
 
-    public void Save()
-    {
-        SerializeMetaHeader();
+    public override MetaStreamMode Mode => MetaStreamMode.Write;
 
-        foreach (MetaSection section in Sections)
+    private void WriteHeader()
+    {
+        SetSection(SectionType.Header);
+        this.Write((uint)Configuration.ResolveMagic());
+        uint streamVersion = Configuration.StreamVersion;
+
+        if (streamVersion >= 4)
         {
-            section.Stream.Seek(0, SeekOrigin.Begin);
-            section.Stream.CopyTo(UnderlyingStream);
+            uint defaultSize = (uint)(GetSection(SectionType.Default).Stream?.Length ?? 0);
+            uint debugSize = (uint)(GetSection(SectionType.Debug).Stream?.Length ?? 0);
+            uint asyncSize = (uint)(GetSection(SectionType.Async).Stream?.Length ?? 0);
+
+            if (GetSection(SectionType.Default).IsCompressed)
+            {
+                defaultSize |= 0x80000000;
+            }
+
+            if (GetSection(SectionType.Debug).IsCompressed)
+            {
+                debugSize |= 0x80000000;
+            }
+
+            if (GetSection(SectionType.Async).IsCompressed)
+            {
+                asyncSize |= 0x80000000;
+            }
+
+            if (streamVersion >= 5)
+            {
+                this.Write(defaultSize);
+            }
+
+            this.Write(debugSize);
+            this.Write(asyncSize);
         }
 
-        // Truncate, otherwise there are some leftover bytes.
-        UnderlyingStream.SetLength(UnderlyingStream.Position);
+        Configuration.VersionInfo = Configuration.VersionInfo.Distinct().ToList();
+
+        this.Write(Configuration.VersionInfo.Count);
+
+        foreach (MetaVersionInfo? versionInfo in Configuration.VersionInfo)
+        {
+            if (streamVersion >= 3)
+            {
+                this.Write(versionInfo.TypeSymbolCrc);
+            }
+            else
+            {
+                this.Write(versionInfo.GetMetaClassType()!.FullTypeName);
+            }
+
+            this.Write(versionInfo.VersionCrc);
+        }
     }
 
-    public override void SerializeMetaHeader()
+    protected override void SetSection(SectionType newSection)
     {
-        Writer = new BinaryWriter(UnderlyingStream);
-        Writer.BaseStream.Seek(0, SeekOrigin.Begin);
-
-        if (!Enum.IsDefined(typeof(MetaStreamVersion), Configuration.Version))
-            throw new InvalidDataException("Version not defined");
-
-        this.Write((uint)Configuration.Version);
-
-        switch (Configuration.Version)
+        if (_currentSection == newSection)
         {
-            case MetaStreamVersion.Mbes:
-                throw new NotSupportedException("MBES is not supported yet.");
-            // TODO: optional compressed sections (set top bit of size to 1)
-            case MetaStreamVersion.Msv6
-                or MetaStreamVersion.Msv5:
-                this.Write((int)Sections[(int)SectionType.Main].Stream.Length);
-                this.Write((int)Sections[(int)SectionType.Debug].Stream.Length);
-                this.Write((int)Sections[(int)SectionType.Async].Stream.Length);
-                break;
+            return;
         }
 
-        Configuration.SerializedClasses = Configuration.SerializedClasses.Distinct().ToList();
-
-        this.Write(Configuration.SerializedClasses.Count);
-
-        foreach (MetaClass t in Configuration.SerializedClasses)
-        {
-            MetaClassType metaClassType = t.ClassType;
-            Serialize(ref metaClassType);
-            this.Write(t.Crc32);
-        }
+        _currentSection = newSection;
+        Stream sectionStream = CurrentSection.Stream ?? new MemoryStream(0x4000);
+        Writer = new BinaryWriter(sectionStream, Encoding.UTF8, true);
+        CurrentSection.Stream ??= sectionStream;
     }
-
-    protected override void InitSerializer() => Writer = new BinaryWriter(CurrentSubstream, Encoding.UTF8, true);
 
     public override void BeginBlock()
     {
-        GetCurrentSection().Blocks.Push(GetCurrentSection().Stream.Position);
+        long position = CurrentSection.Stream!.Position;
+        CurrentSection.Blocks.Push(position);
         this.Write(0);
     }
 
     public override void EndBlock()
     {
-        long position = GetCurrentSection().Blocks.Pop();
+        long position = CurrentSection.Blocks.Pop();
 
-        var blockSize = (int)(GetCurrentSection().Stream.Position - position);
-        long currentPosition = GetCurrentSection().Stream.Position;
+        long currentPosition = CurrentSection.Stream!.Position;
+        int blockSize = (int)(currentPosition - position);
 
-        GetCurrentSection().Stream.Seek(position, SeekOrigin.Begin);
+        CurrentSection.Stream.Seek(position, SeekOrigin.Begin);
         this.Write(blockSize);
-        GetCurrentSection().Stream.Seek(currentPosition, SeekOrigin.Begin);
-    }
-
-    public override MetaClass? GetMetaClass(Type type)
-    {
-        // Do not modify the metaclass descriptions. This operation is not recommended for complex types, especially those which have PropertySet (properties).
-        if (!Configuration.CanModifySerializedClassesList)
-        {
-            return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.LinkingType == type);
-        }
-
-        return Configuration.Workspace?.GetMetaClassDescription(type);
-    }
-
-    public override MetaClass? GetMetaClass(Symbol symbol)
-    {
-        // Do not modify the metaclass descriptions. This operation is not recommended for complex types, especially those which have PropertySet (properties).
-        if (!Configuration.CanModifySerializedClassesList)
-        {
-            return Configuration.SerializedClasses.FirstOrDefault(tc => tc.ClassType.Symbol.Crc64 == symbol.Crc64);
-        }
-
-        return Configuration.Workspace?.GetMetaClassDescription(symbol);
+        CurrentSection.Stream.Seek(currentPosition, SeekOrigin.Begin);
     }
 
     public override void Serialize(ref bool value) => Writer.Write(value ? '1' : '0');
@@ -142,42 +141,80 @@ public sealed class MetaStreamWriter : MetaStream
 
     public override void Serialize(ref sbyte value) => Writer.Write(value);
 
-    public override void Serialize(ref MetaClassType value)
-    {
-        if (Configuration.AreSymbolsHashed)
-        {
-            this.Write(value.Symbol.Crc64);
-        }
-        else
-        {
-            this.Write(value.FullTypeName);
-        }
-    }
-
     public override void Serialize(byte[] values, int offset, int count) => Writer.Write(values, offset, count);
 
-    public override void Serialize(ref Symbol value)
+    private void FinalizeStream()
     {
-        if (Configuration.AreSymbolsHashed)
+        if (_closed)
         {
-            MetaClass? description = GetMetaClass(typeof(Symbol));
-            AddVersionInfo(description);
-            Writer.Write(value.Crc64);
+            throw new ObjectDisposedException(nameof(MetaStreamWriter));
         }
-        else
+
+        uint streamVersion = Configuration.StreamVersion;
+        bool canCompress = streamVersion >= 4;
+        // Telltale does not process the
+        for (int i = 1; i <= 3; i++)
         {
-            string valueSymbolName = value.DebugString;
-            Serialize(ref valueSymbolName);
+            SectionInfo section = Sections[i];
+            if (section.Stream is { Length: > 0 } && Configuration.Compress && canCompress)
+            {
+                ArchiveWriteOptions options = new() { Algorithm = CompressionAlgorithm.Deflate };
+                MemoryStream outStream = new(0x10000);
+                ContainerStream.Create(outStream, section.Stream, options);
+                section.Stream.Dispose();
+                section.Stream = outStream;
+                section.CompressedSize = outStream.Length;
+                section.IsCompressed = true;
+            }
+            else
+            {
+                section.CompressedSize = section.Stream?.Length ?? 0;
+                section.IsCompressed = false;
+            }
         }
     }
 
-    public void AddVersionInfo(MetaClass? desc)
+    public override void Close()
     {
-        if (desc is null || Configuration.SerializedClasses.Contains(desc))
+        if (_closed)
         {
             return;
         }
 
-        Configuration.SerializedClasses.Add(desc);
+        FinalizeStream();
+        WriteHeader();
+
+        // Iterate each section (header, default, debug, async) and copy its data to the output stream.
+        foreach (SectionInfo section in Sections)
+        {
+            if (section.Stream is null)
+            {
+                continue;
+            }
+
+            section.Stream.Seek(0, SeekOrigin.Begin);
+            section.Stream.CopyTo(_outputStream);
+        }
+
+        if (Configuration is { Encrypt: true, StreamVersion: <= 3 })
+        {
+            MetaStreamMagic targetMagic = Configuration.ResolveMagic();
+
+            if (!_outputStream.CanRead || !_outputStream.CanSeek)
+                throw new InvalidOperationException(
+                    "Legacy encryption requires a readable and seekable output stream (e.g. MemoryStream or FileStream opened with FileAccess.ReadWrite). " +
+                    "The encryption is applied in-place after writing.");
+
+            LegacyEncryption.Encrypt(_outputStream, targetMagic, Configuration.Workspace!.Blowfish);
+        }
+
+        _closed = true;
+        Dispose(true);
+    }
+
+    public override void Serialize(ref Symbol value)
+    {
+        Writer.Write(value.Crc64);
+        Configuration.SerializedSymbols.Add(value);
     }
 }
