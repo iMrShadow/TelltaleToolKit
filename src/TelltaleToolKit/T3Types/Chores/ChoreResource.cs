@@ -110,10 +110,10 @@ public class ChoreResource
 
             MetaClass? description = stream.GetMetaClass(typeof(ChoreResource));
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 if (description != null && description.ContainsMember("mbEmbedded") && obj.HasEmbedded)
                 {

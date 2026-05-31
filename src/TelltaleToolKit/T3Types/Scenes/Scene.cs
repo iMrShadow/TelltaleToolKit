@@ -32,12 +32,12 @@ public class Scene
 
             stream.BeginBlock();
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numAgents = streamReader.ReadInt32();
 

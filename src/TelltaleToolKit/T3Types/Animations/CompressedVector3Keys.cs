@@ -21,10 +21,10 @@ public class CompressedVector3Keys
         {
             // TODO: Test this type.
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 obj.Name = streamReader.ReadString();
                 obj.Flags = streamReader.ReadInt32();

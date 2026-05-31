@@ -16,12 +16,12 @@ public class BinaryBuffer
         
         public override void Serialize(ref BinaryBuffer obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 streamWriter.Write(obj.Data.Length);
                 streamWriter.Write(obj.Data);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 int bufferSize = streamReader.ReadInt32();
                 obj.Data = streamReader.ReadBytes(bufferSize);

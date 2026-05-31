@@ -23,7 +23,7 @@ public class RectClassSerializer<T> : MetaClassSerializer<Rect<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref Rect<T> obj, MetaStream stream, MetaClassType? type)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream is BinaryMetaStreamReader streamReader)
         {
             if (obj is null)
                 obj = new Rect<T>();

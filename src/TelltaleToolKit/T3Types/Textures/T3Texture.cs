@@ -356,7 +356,7 @@ public class T3Texture
             // The default serializer will throw if there is no serialized T3Texture.
             MetaClass classDescription = stream.GetMetaClass(typeof(T3Texture))!;
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 if (classDescription.ContainsMember("mVersion"))
                 {
@@ -404,7 +404,7 @@ public class T3Texture
                     }
                 }
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 // This is easier than checking for region stream headers. That can also work.
                 if (classDescription.ContainsMember("mVersion"))

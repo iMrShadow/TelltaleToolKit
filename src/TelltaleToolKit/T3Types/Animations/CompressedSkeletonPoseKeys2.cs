@@ -59,10 +59,10 @@ public class CompressedSkeletonPoseKeys2 : IAnimatedValueInterface
         public override void Serialize(ref CompressedSkeletonPoseKeys2 obj, MetaStream stream)
         {
             // TODO: Test this type.
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 // TODO: Try experimenting with Marshall.
                 obj.DataSize = streamReader.ReadInt32(); // this is the size of struct

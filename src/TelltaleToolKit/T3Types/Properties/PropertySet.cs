@@ -55,7 +55,7 @@ public class PropertySet
 
             stream.BeginBlock();
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 // Write ParentList when PropVersion > 0
                 if (obj.PropVersion > 0)
@@ -144,7 +144,7 @@ public class PropertySet
                     }
                 }
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 if (obj.PropVersion > 1)
                 {

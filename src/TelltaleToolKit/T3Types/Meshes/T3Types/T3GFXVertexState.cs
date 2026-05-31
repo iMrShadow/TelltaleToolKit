@@ -37,7 +37,7 @@ public class T3GFXVertexState
 
             MetaClass? desc = stream.GetMetaClass(typeof(T3GFXVertexState));
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");
@@ -87,7 +87,7 @@ public class T3GFXVertexState
                 }
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");

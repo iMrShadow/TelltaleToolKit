@@ -47,12 +47,12 @@ namespace TelltaleToolKit.T3Types.Textures;
 //             // Default Serializer
 //             new DefaultClassSerializer<D3DTexture>().Serialize(ref obj, stream, desc);
 //
-//             if (stream is MetaStreamWriter streamWriter)
+//             if (stream is BinaryMetaStreamWriter streamWriter)
 //             {
 //                 streamWriter.Write(obj.DdsTextureData.Length);
 //                 streamWriter.Write(obj.DdsTextureData);
 //             }
-//             else if (stream is MetaStreamReader streamReader)
+//             else if (stream is BinaryMetaStreamReader streamReader)
 //             {
 //                 if (!obj.HasTextureData)
 //                 {

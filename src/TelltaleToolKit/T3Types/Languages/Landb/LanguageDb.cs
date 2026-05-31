@@ -41,7 +41,7 @@ public class LanguageDb
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 // There should be things in the debug section that I would like to parse.
                 // It's not required, but it may contain useful information.

@@ -34,7 +34,7 @@ public class Vers
         {
             PreSerialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 streamWriter.Write(obj.FileName);
                 streamWriter.Write(obj.ClassName);
@@ -53,7 +53,7 @@ public class Vers
                     streamWriter.Write(obj.Registries[i].Crc32);
                 }
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 obj.FileName = streamReader.ReadString();
                 obj.ClassName = streamReader.ReadString();

@@ -14,12 +14,12 @@ public class DependencyLoader
     {
         public override void Serialize(ref DependencyLoader obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter)
+            if (stream is BinaryMetaStreamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 bool hasResourceNames = streamReader.ReadBoolean();
 

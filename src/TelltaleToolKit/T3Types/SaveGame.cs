@@ -53,12 +53,12 @@ public class SaveGame
         {
             DefaultSaveGameSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter)
+            if (stream is BinaryMetaStreamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 if (stream.GetMetaClass(typeof(PropertySet)) != null)
                 {

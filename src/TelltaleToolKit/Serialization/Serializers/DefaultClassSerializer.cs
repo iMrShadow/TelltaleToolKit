@@ -59,7 +59,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         }
 
         // Add this class to the metaclass header.
-        if (stream is MetaStreamWriter { Params: { CanModifySerializedClassesList: true } } streamWriter)
+        if (stream is BinaryMetaStreamWriter { Params: { CanModifySerializedClassesList: true } } streamWriter)
         {
             streamWriter.AddVersionInfo(description);
         }
@@ -80,7 +80,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
             // Console.WriteLine($"{propDesc.MemberName} - {value}");
 
-            if (stream is MetaStreamReader)
+            if (stream is BinaryMetaStreamReader)
                 cached.Setter(ref obj, value);
 
             if (propDesc.Type.IsBlocked())
@@ -92,7 +92,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
     public override void PreSerialize(ref T obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader && obj == null)
+        if (stream is BinaryMetaStreamReader && obj == null)
         {
             obj = new T();
         }

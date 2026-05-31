@@ -19,12 +19,12 @@ public class DlgConditionSet
 
         public override void Serialize(ref DlgConditionSet obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numChildren = streamReader.ReadInt32();
 

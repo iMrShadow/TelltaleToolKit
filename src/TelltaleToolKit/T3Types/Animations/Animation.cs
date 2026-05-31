@@ -61,12 +61,12 @@ public class Animation
                 return;
             }
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numTotalValues = streamReader.ReadInt32();
                 obj.Values = new List<IAnimatedValueInterface>(numTotalValues);
@@ -140,12 +140,12 @@ public class Animation
 
         public void SerializeOldAnimation(ref Animation obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numTotalValues = streamReader.ReadInt32();
                 int numValueTypes = streamReader.ReadInt32();

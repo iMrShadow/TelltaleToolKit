@@ -22,13 +22,13 @@ public class ToolProps
 
         public override void Serialize(ref ToolProps obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 // Quoting Lucas: "we are not in the tool engine, runtime engine. would normally be a #ifdef COMPILING_AS_TOOL etc"
                 obj.HasProps = false;
                 streamWriter.Write(obj.HasProps);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 obj.HasProps = streamReader.ReadBoolean();
                 

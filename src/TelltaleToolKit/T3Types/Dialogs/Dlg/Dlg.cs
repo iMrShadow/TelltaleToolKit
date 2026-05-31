@@ -68,12 +68,12 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
 
             MetaClass metaClass = stream.GetMetaClass(typeof(Dlg))!;
 
-            if (stream is MetaStreamWriter)
+            if (stream is BinaryMetaStreamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int folderCount = streamReader.ReadInt32();
                 obj.Folders.Capacity = folderCount;

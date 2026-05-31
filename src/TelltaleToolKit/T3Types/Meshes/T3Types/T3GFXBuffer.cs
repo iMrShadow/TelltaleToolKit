@@ -46,11 +46,11 @@ public class T3GFXBuffer
             // I assume it's done like for better performance
             // This requires further testing
             stream.BeginAsyncSection();
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 streamWriter.Write(obj.Buffer);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 obj.Buffer = streamReader.ReadBytes((int)(obj.Count * obj.Stride));
             }

@@ -72,7 +72,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
             if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
             {
-                MetaStreamParams config = new MetaStreamReader(firstFile, null).Params;
+                MetaStreamParams config = new BinaryMetaStreamReader(firstFile, null).Params;
 
                 msv = config.StreamVersion;
             }
@@ -87,7 +87,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
             if (!Toolkit.IsMetaFile(file))
                 continue;
 
-            MetaStreamParams config = new MetaStreamReader(file).Params;
+            MetaStreamParams config = new BinaryMetaStreamReader(file).Params;
 
             foreach (MetaClass desc in config.GetRegisteredClasses())
                 serializedMetaClasses.TryAdd(desc, 0);

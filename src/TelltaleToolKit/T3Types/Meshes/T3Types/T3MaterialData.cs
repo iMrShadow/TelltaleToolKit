@@ -64,7 +64,7 @@ public class T3MaterialData
             if (classDescription == null || classDescription.ContainsMember("mCompiledData2"))
                 return;
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 obj.CompiledData2 ??= [];
 
@@ -86,7 +86,7 @@ public class T3MaterialData
                 return;
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numCompiledData = streamReader.ReadInt32();
 

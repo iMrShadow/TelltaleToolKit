@@ -85,10 +85,10 @@ public class Chore
             DefaultSerializer.Serialize(ref obj, stream);
             MetaClass? choreMetaClassDescription = stream.GetMetaClass(typeof(Chore));
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 if (obj.NumResources > 0 && !choreMetaClassDescription.ContainsMember("mResourcesChore"))
                 {

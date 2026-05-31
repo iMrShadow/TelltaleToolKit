@@ -60,12 +60,12 @@ public class DialogResource
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotImplementedException($"Serializer is not implement for {SerializationType}");
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 // Console.WriteLine("Current position: " + stream.GetPosition());
                 int dialogsCount = streamReader.ReadInt32();
@@ -87,10 +87,10 @@ public class DialogResource
         private static void SerializeDialogBaseArray<T>(List<T> list, int count, MetaStream stream)
             where T : IDialogBase, new()
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 // Console.WriteLine(count);
                 if (count <= 0)

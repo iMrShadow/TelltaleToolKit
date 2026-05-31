@@ -77,10 +77,10 @@ public class Rule
             }
 
             stream.BeginBlock();
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 // var numAgents = streamReader.ReadInt32();
 

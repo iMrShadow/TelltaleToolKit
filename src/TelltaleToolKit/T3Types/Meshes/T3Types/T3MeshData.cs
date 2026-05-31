@@ -102,7 +102,7 @@ public class T3MeshData
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 uint uvTransformCount = 0;
                 // Referenced from Lucas Saragosa's serialization code
@@ -149,7 +149,7 @@ public class T3MeshData
                 }
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 uint uvTransforms = streamReader.ReadUInt32();
 

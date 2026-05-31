@@ -69,12 +69,12 @@ namespace TelltaleToolKit.T3Types.Common
 
         public override void Serialize(ref ActingOverridablePropOwner obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 long currPos = streamReader.GetPosition();
                 uint value = streamReader.ReadUInt32();

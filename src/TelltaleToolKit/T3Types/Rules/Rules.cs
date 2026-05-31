@@ -30,12 +30,12 @@ public class Rules
             DefaultSerializer.Serialize(ref obj, stream);
             stream.BeginBlock();
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 HashSet<string> rulesSet = obj.RulesSet;
 

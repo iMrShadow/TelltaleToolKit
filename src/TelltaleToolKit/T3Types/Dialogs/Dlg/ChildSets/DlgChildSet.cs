@@ -25,12 +25,12 @@ public class DlgChildSet
 
         public override void Serialize(ref DlgChildSet obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numChildren = streamReader.ReadInt32();
 

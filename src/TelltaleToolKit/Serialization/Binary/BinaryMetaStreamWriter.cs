@@ -3,12 +3,12 @@ using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Serialization.Binary;
 
-public sealed class MetaStreamWriter : MetaStream
+public sealed class BinaryMetaStreamWriter : MetaStream
 {
     private readonly Stream _outputStream;
     private bool _closed;
 
-    public MetaStreamWriter(Stream outputStream, MetaStreamParams @params)
+    public BinaryMetaStreamWriter(Stream outputStream, MetaStreamParams @params)
     {
         _outputStream = outputStream;
         Params = @params;
@@ -146,7 +146,7 @@ public sealed class MetaStreamWriter : MetaStream
     {
         if (_closed)
         {
-            throw new ObjectDisposedException(nameof(MetaStreamWriter));
+            throw new ObjectDisposedException(nameof(BinaryMetaStreamWriter));
         }
 
         uint streamVersion = Params.StreamVersion;

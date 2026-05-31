@@ -30,12 +30,12 @@ public class JiraRecordManager
                 return;
             }
 
-            if (stream is MetaStreamWriter)
+            if (stream is BinaryMetaStreamWriter)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 int numRecords = streamReader.ReadInt32();
                 

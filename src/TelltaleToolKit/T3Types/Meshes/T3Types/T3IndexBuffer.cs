@@ -40,10 +40,10 @@ public class T3IndexBuffer
         {
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 int bufferBytes = obj.Format switch
                 {
@@ -108,10 +108,10 @@ public class T3VertexComponent
 //         {
 //             new DefaultClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
 //
-//             if (stream is MetaStreamWriter streamWriter)
+//             if (stream is BinaryMetaStreamWriter streamWriter)
 //             {
 //             }
-//             else if (stream is MetaStreamReader streamReader)
+//             else if (stream is BinaryMetaStreamReader streamReader)
 //             {
 //                 var bufferBytes = 2;
 //                 if (obj.Format != 101)

@@ -5,11 +5,11 @@ using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.Serialization.Binary;
 
-public sealed class MetaStreamReader : MetaStream
+public sealed class BinaryMetaStreamReader : MetaStream
 {
     private BinaryReader Reader = null!;
 
-    public MetaStreamReader(Stream inputStream, Workspace? workspace = null)
+    public BinaryMetaStreamReader(Stream inputStream, Workspace? workspace = null)
     {
         BaseStream = inputStream;
         Params.Workspace = workspace;
@@ -227,7 +227,7 @@ public sealed class MetaStreamReader : MetaStream
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
         Toolkit.Instance.Logger.LogWarning(
-            $"[MetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+            $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
         currentSectionInfo.Stream.Position = expectedPosition;
     }
 

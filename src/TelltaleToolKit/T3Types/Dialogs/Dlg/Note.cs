@@ -51,12 +51,12 @@ public class Note : IGenerator, IOwner
             DefaultClassSerializer.PreSerialize(ref obj, stream);
             DefaultClassSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream is BinaryMetaStreamReader streamReader)
             {
                 // mEntries is not serialized.
                 int numEntries = streamReader.ReadInt32();

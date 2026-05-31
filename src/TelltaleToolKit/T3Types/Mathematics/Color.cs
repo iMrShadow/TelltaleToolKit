@@ -26,7 +26,7 @@ public struct Color
     {
         public override void Serialize(ref Color obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream is BinaryMetaStreamWriter streamWriter)
             {
                 if (streamWriter.Params.CanModifySerializedClassesList)
                 {
@@ -39,7 +39,7 @@ public struct Color
                 streamWriter.Write(obj.B);
                 streamWriter.Write(obj.A);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream is BinaryMetaStreamReader streamReader)
             {
                 obj.R = streamReader.ReadSingle();
                 obj.G = streamReader.ReadSingle();

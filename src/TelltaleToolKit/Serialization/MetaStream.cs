@@ -56,7 +56,7 @@ public abstract class MetaStream : IDisposable
     /// <param name="workspace">Optional workspace required for legacy decryption.</param>
     /// <returns>A MetaStream configured for reading.</returns>
     public static MetaStream OpenRead(Stream inputStream, Workspace? workspace = null)
-        => new MetaStreamReader(inputStream, workspace);
+        => new BinaryMetaStreamReader(inputStream, workspace);
 
     /// <summary>
     ///     Opens a MetaStream for writing to the specified output stream.
@@ -65,7 +65,7 @@ public abstract class MetaStream : IDisposable
     /// <param name="configuration">Parameters that define the version, registered classes, etc.</param>
     /// <returns>A MetaStream configured for writing.</returns>
     public static MetaStream OpenWrite(Stream outputStream, MetaStreamParams configuration)
-        => new MetaStreamWriter(outputStream, configuration);
+        => new BinaryMetaStreamWriter(outputStream, configuration);
 
 
     public void BeginAsyncSection()

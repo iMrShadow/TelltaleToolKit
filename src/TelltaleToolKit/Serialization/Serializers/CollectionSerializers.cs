@@ -17,7 +17,7 @@ public sealed class ListSerializer<T> : MetaClassSerializer<List<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref List<T> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream is BinaryMetaStreamReader streamReader)
         {
             if (obj is null)
                 obj = [];
@@ -29,7 +29,7 @@ public sealed class ListSerializer<T> : MetaClassSerializer<List<T>>
     /// <inheritdoc/>
     public override void Serialize(ref List<T> obj, MetaStream stream)
     {
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream is BinaryMetaStreamWriter streamWriter)
         {
             streamWriter.Write(obj.Count);
 
@@ -38,7 +38,7 @@ public sealed class ListSerializer<T> : MetaClassSerializer<List<T>>
                 _itemDataClassSerializer.Serialize(entry, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream is BinaryMetaStreamReader streamReader)
         {
             int count = streamReader.ReadInt32();
             obj.Capacity = count;
@@ -68,7 +68,7 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref HashSet<T> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream is BinaryMetaStreamReader streamReader)
         {
             if (obj is null)
                 obj = [];
@@ -80,7 +80,7 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
     /// <inheritdoc/>
     public override void Serialize(ref HashSet<T> obj, MetaStream stream)
     {
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream is BinaryMetaStreamWriter streamWriter)
         {
             streamWriter.Write(obj.Count);
 
@@ -89,7 +89,7 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
                 _itemDataClassSerializer.Serialize(entry, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream is BinaryMetaStreamReader streamReader)
         {
             int count = streamReader.ReadInt32();
 
@@ -115,7 +115,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
     /// <inheritdoc/>
     public override void PreSerialize(ref Dictionary<TKey, TValue> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream is BinaryMetaStreamReader streamReader)
         {
             if (obj is null)
                 obj = new Dictionary<TKey, TValue>();
@@ -135,7 +135,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
     {
         PreSerialize(ref obj, stream);
 
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream is BinaryMetaStreamWriter streamWriter)
         {
             streamWriter.Write(obj.Count);
 
@@ -145,7 +145,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
                 _valueClassSerializer.Serialize(item.Value, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream is BinaryMetaStreamReader streamReader)
         {
             int count = streamReader.ReadInt32();
 

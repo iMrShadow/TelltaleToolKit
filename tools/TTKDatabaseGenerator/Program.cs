@@ -164,7 +164,7 @@ internal static class Program
 
                         if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
                         {
-                            MetaStreamParams config = new MetaStreamReader(firstFile, null).Params;
+                            MetaStreamParams config = new BinaryMetaStreamReader(firstFile, null).Params;
                             msv = config.StreamVersion;
                         }
                     }
@@ -176,7 +176,7 @@ internal static class Program
                         if (!Toolkit.IsMetaFile(file))
                             continue;
 
-                        MetaStreamParams config = new MetaStreamReader(file, null).Params;
+                        MetaStreamParams config = new BinaryMetaStreamReader(file, null).Params;
 
                         foreach (MetaClass desc in config.GetRegisteredClasses())
                             serializedMetaClasses.TryAdd(desc, 0);
