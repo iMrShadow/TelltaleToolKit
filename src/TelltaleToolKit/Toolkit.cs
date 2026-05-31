@@ -534,9 +534,7 @@ public class Toolkit
         string profilesPath = Path.Combine(dataFolder, "game_profiles");
         if (!Directory.Exists(profilesPath))
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"[Toolkit] Game profiles directory not found: {profilesPath}, from config data folder: {dataFolder}");
-            Console.ResetColor();
+            ToolkitLogger.ConsoleLoggerInstance.LogError($"Game profiles directory not found: {profilesPath}, from config data folder: {dataFolder}");
             
             return;
         }
