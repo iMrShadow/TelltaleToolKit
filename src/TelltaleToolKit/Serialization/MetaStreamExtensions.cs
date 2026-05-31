@@ -2,7 +2,7 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.T3Types;
 
-namespace TelltaleToolKit.Serialization.Binary;
+namespace TelltaleToolKit.Serialization;
 
 public static class MetaStreamExtensions
 {
@@ -12,7 +12,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A boolean value read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool ReadBoolean(this MetaStreamReader stream)
+    public static bool ReadBoolean(this MetaStream stream)
     {
         bool value = false;
         stream.Serialize(ref value);
@@ -25,7 +25,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A 4-byte floating point value read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float ReadSingle(this MetaStreamReader stream)
+    public static float ReadSingle(this MetaStream stream)
     {
         float value = 0.0f;
         stream.Serialize(ref value);
@@ -38,7 +38,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>An 8-byte floating point value read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double ReadDouble(this MetaStreamReader stream)
+    public static double ReadDouble(this MetaStream stream)
     {
         double value = 0.0;
         stream.Serialize(ref value);
@@ -51,7 +51,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A 2-byte signed integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static short ReadInt16(this MetaStreamReader stream)
+    public static short ReadInt16(this MetaStream stream)
     {
         short value = 0;
         stream.Serialize(ref value);
@@ -64,7 +64,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A 4-byte signed integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ReadInt32(this MetaStreamReader stream)
+    public static int ReadInt32(this MetaStream stream)
     {
         int value = 0;
         stream.Serialize(ref value);
@@ -77,7 +77,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>An 8-byte signed integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long ReadInt64(this MetaStreamReader stream)
+    public static long ReadInt64(this MetaStream stream)
     {
         long value = 0;
         stream.Serialize(ref value);
@@ -90,7 +90,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A 2-byte unsigned integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ushort ReadUInt16(this MetaStreamReader stream)
+    public static ushort ReadUInt16(this MetaStream stream)
     {
         ushort value = 0;
         stream.Serialize(ref value);
@@ -103,7 +103,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A 4-byte unsigned integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint ReadUInt32(this MetaStreamReader stream)
+    public static uint ReadUInt32(this MetaStream stream)
     {
         uint value = 0;
         stream.Serialize(ref value);
@@ -116,7 +116,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>An 8-byte unsigned integer read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ReadUInt64(this MetaStreamReader stream)
+    public static ulong ReadUInt64(this MetaStream stream)
     {
         ulong value = 0;
         stream.Serialize(ref value);
@@ -129,7 +129,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A string read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ReadString(this MetaStreamReader stream)
+    public static string ReadString(this MetaStream stream)
     {
         string value = null!;
         stream.Serialize(ref value);
@@ -142,7 +142,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A Unicode character read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static char ReadChar(this MetaStreamReader stream)
+    public static char ReadChar(this MetaStream stream)
     {
         char value = '\0';
         stream.Serialize(ref value);
@@ -155,7 +155,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>An unsigned byte read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte ReadByte(this MetaStreamReader stream)
+    public static byte ReadByte(this MetaStream stream)
     {
         byte value = 0;
         stream.Serialize(ref value);
@@ -168,7 +168,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A signed byte read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static sbyte ReadSByte(this MetaStreamReader stream)
+    public static sbyte ReadSByte(this MetaStream stream)
     {
         sbyte value = 0;
         stream.Serialize(ref value);
@@ -182,7 +182,7 @@ public static class MetaStreamExtensions
     /// <param name="count"></param>
     /// <returns>A byte array containing the data read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static byte[] ReadBytes(this MetaStreamReader stream, int count)
+    public static byte[] ReadBytes(this MetaStream stream, int count)
     {
         byte[] value = new byte[count];
         stream.Serialize(value, 0, count);
@@ -195,7 +195,7 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A string read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Symbol ReadSymbol(this MetaStreamReader stream)
+    public static Symbol ReadSymbol(this MetaStream stream)
     {
         var value = Symbol.Empty;
         stream.Serialize(ref value);
@@ -209,10 +209,23 @@ public static class MetaStreamExtensions
     /// <param name="stream">The stream.</param>
     /// <returns>A string read from the stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaClassType ReadMetaClassType(this MetaStreamReader stream)
+    public static MetaClassType? ReadMetaClassType(this MetaStream stream)
     {
-        MetaClassType value = MetaClassType.UninitializedClassType;
-        stream.Serialize(ref value);
+        MetaClassType? value;
+        if (stream.Configuration.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
+        {
+            ulong typeSymbolCrc = stream.ReadUInt64();
+            value = MetaClassTypeRegistry.GetByHash(typeSymbolCrc);
+
+            if (value == null)
+                Toolkit.Instance.Logger.LogWarning($"Unknown type symbol CRC64: {typeSymbolCrc}");
+        }
+        else
+        {
+            string typeName = stream.ReadString();
+            value = MetaClassTypeRegistry.GetByName(typeName);
+        }
+
         return value;
     }
 
@@ -223,7 +236,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The boolean value to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, bool value)
+    public static MetaStream Write(this MetaStream stream, bool value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -236,7 +249,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 4-byte floating point value to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, float value)
+    public static MetaStream Write(this MetaStream stream, float value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -249,7 +262,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 8-byte floating point value to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, double value)
+    public static MetaStream Write(this MetaStream stream, double value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -262,7 +275,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 2-byte signed integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, short value)
+    public static MetaStream Write(this MetaStream stream, short value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -275,7 +288,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 4-byte signed integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, int value)
+    public static MetaStream Write(this MetaStream stream, int value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -288,7 +301,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 8-byte signed integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, long value)
+    public static MetaStream Write(this MetaStream stream, long value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -301,7 +314,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 2-byte unsigned integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, ushort value)
+    public static MetaStream Write(this MetaStream stream, ushort value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -314,7 +327,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 4-byte unsigned integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, uint value)
+    public static MetaStream Write(this MetaStream stream, uint value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -327,7 +340,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The 8-byte unsigned integer to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, ulong value)
+    public static MetaStream Write(this MetaStream stream, ulong value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -340,7 +353,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The string to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, string value)
+    public static MetaStream Write(this MetaStream stream, string value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -353,7 +366,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The Unicode character to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, char value)
+    public static MetaStream Write(this MetaStream stream, char value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -366,7 +379,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The unsigned byte to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, byte value)
+    public static MetaStream Write(this MetaStream stream, byte value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -379,7 +392,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The signed byte to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, sbyte value)
+    public static MetaStream Write(this MetaStream stream, sbyte value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -392,7 +405,7 @@ public static class MetaStreamExtensions
     /// <param name="value">The signed byte to write.</param>
     /// <returns>The stream.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, Symbol value)
+    public static MetaStream Write(this MetaStream stream, Symbol value)
     {
         stream.Serialize(ref value);
         return stream;
@@ -409,7 +422,7 @@ public static class MetaStreamExtensions
     /// The stream.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, byte[] values, int offset, int count)
+    public static MetaStream Write(this MetaStream stream, byte[] values, int offset, int count)
     {
         stream.Serialize(values, offset, count);
         return stream;
@@ -424,7 +437,7 @@ public static class MetaStreamExtensions
     /// The stream.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, byte[] values)
+    public static MetaStream Write(this MetaStream stream, byte[] values)
     {
         stream.Serialize(values, 0, values.Length);
         return stream;
@@ -432,24 +445,18 @@ public static class MetaStreamExtensions
 
     // TODO: Fix documentation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MetaStreamWriter Write(this MetaStreamWriter stream, MetaClassType value)
+    public static MetaStream Write(this MetaStream stream, MetaClassType value)
     {
-        stream.Serialize(ref value);
-        return stream;
-    }
+        if (stream.Configuration.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
+        {
+            stream.Write(value.Symbol.Crc64);
+        }
+        else
+        {
+            stream.Write(value.FullTypeName);
+        }
 
-    /// <summary>
-    /// Performs the first step of serialization or deserialization using the Telltale ToolKit context.
-    /// </summary>
-    /// <remarks>
-    /// Typically, it will instantiate the object if [null], and if it's a collection, clear it.
-    /// </remarks>
-    /// <param name="obj">The object to process.</param>
-    /// <param name="stream">The stream to serialize or deserialize to.</param>
-    /// <param name="type"></param>
-    public static void PreSerialize<T>(this MetaStream stream, ref T obj, MetaClassType? type = null) where T : new()
-    {
-        Toolkit.Instance.GetSerializer<T>().PreSerialize(ref obj, stream, type);
+        return stream;
     }
 
     /// <summary>
@@ -457,8 +464,12 @@ public static class MetaStreamExtensions
     /// </summary>
     /// <param name="obj">The object to serialize or deserialize.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
-    public static void Serialize<T>(this MetaStream stream, ref T obj) where T : new()
+    /// <param name="type"></param>
+    public static void Serialize<T>(this MetaStream stream, ref T obj, MetaClassType? type = null) where T : new()
     {
-        Toolkit.Instance.GetSerializer<T>().Serialize(ref obj, stream);
+        var serializer = Toolkit.Instance.GetSerializer<T>();
+
+        serializer.PreSerialize(ref obj, stream, type);
+        serializer.Serialize(ref obj, stream);
     }
 }

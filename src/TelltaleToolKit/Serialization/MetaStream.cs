@@ -1,0 +1,411 @@
+﻿using System.Text;
+using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.T3Types;
+
+namespace TelltaleToolKit.Serialization;
+
+/// <summary>
+///     Stream wrapper used for serializing telltale assets.
+///     A single Telltale Tool file has 1-4 stream sections (Header, Default, Debug, Async) depending on its metastream
+///     version.
+/// </summary>
+public abstract class MetaStream : IDisposable
+{
+    public enum SectionType
+    {
+        Header,
+        Default,
+        Debug,
+        Async
+    }
+
+    protected readonly SectionInfo[] Sections =
+    [
+        new(), // Header section
+        new(), // Default section
+        new(), // Debug section
+        new() // Async section
+    ];
+
+    /// <summary>Gets the currently active section (Header, Default, Debug, Async).</summary>
+    protected SectionType _currentSection = SectionType.Header;
+
+    public MetaStreamConfiguration Configuration { get; set; } = new();
+
+    protected Stream BaseStream { get; set; } = null!;
+
+    /// <summary>
+    ///     Gets the mode of this stream (read or write).
+    /// </summary>
+    public abstract MetaStreamMode Mode { get; }
+
+    /// <summary>Gets the currently active section.</summary>
+    protected SectionInfo CurrentSection => Sections[(int)_currentSection];
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Opens a MetaStream for reading from the specified input stream.
+    /// </summary>
+    /// <param name="inputStream">The stream containing the Telltale asset.</param>
+    /// <param name="workspace">Optional workspace required for legacy decryption.</param>
+    /// <returns>A MetaStream configured for reading.</returns>
+    public static MetaStream OpenRead(Stream inputStream, Workspace? workspace = null)
+        => new MetaStreamReader(inputStream, workspace);
+
+    /// <summary>
+    ///     Opens a MetaStream for writing to the specified output stream.
+    /// </summary>
+    /// <param name="outputStream">The stream that will receive the serialized data.</param>
+    /// <param name="configuration">Configuration that defines version, registered classes, etc.</param>
+    /// <returns>A MetaStream configured for writing.</returns>
+    public static MetaStream OpenWrite(Stream outputStream, MetaStreamConfiguration configuration)
+        => new MetaStreamWriter(outputStream, configuration);
+
+
+    public void BeginAsyncSection()
+    {
+        if (_currentSection is SectionType.Async || Configuration.StreamVersion < 4)
+        {
+            return;
+        }
+
+        SetSection(SectionType.Async);
+    }
+
+    public void EndAsyncSection()
+    {
+        if (_currentSection is not SectionType.Async || Configuration.StreamVersion < 4)
+        {
+            return;
+        }
+
+        SetSection(SectionType.Default);
+    }
+
+    public void BeginDebugSection()
+    {
+        if (_currentSection is SectionType.Debug || Configuration.StreamVersion < 4)
+        {
+            return;
+        }
+
+        SetSection(SectionType.Debug);
+    }
+
+    public void EndDebugSection()
+    {
+        if (_currentSection is not SectionType.Debug || Configuration.StreamVersion < 4)
+        {
+            return;
+        }
+
+        SetSection(SectionType.Default);
+    }
+
+    /// <summary>
+    ///     Called when the current section changes. Implementations should set up their reader/writer
+    ///     to point to the new section's stream.
+    /// </summary>
+    /// <param name="section">The section that is now active.</param>
+    protected abstract void SetSection(SectionType section);
+
+    public abstract void BeginBlock();
+
+    public abstract void EndBlock();
+
+    public bool IsSectionEmpty()
+        => Sections[(int)_currentSection].Stream?.Length == 0;
+
+    public bool IsClassSerialized(string typeName)
+        => Configuration.GetRegisteredClasses().Any(id => id.ClassType.Symbol.DebugString == typeName);
+
+    public MetaClass? GetMetaClass(Type type)
+    {
+        if (!Configuration.CanModifySerializedClassesList)
+        {
+            return Configuration.VersionInfo
+                .FirstOrDefault(versionInfo => versionInfo.GetMetaClassType()?.LinkingType == type)?.GetMetaClass();
+        }
+
+        return Configuration.Workspace?.GetMetaClassDescription(type);
+    }
+
+    public MetaClass? GetMetaClass(Symbol symbol)
+    {
+        if (!Configuration.CanModifySerializedClassesList)
+        {
+            return Configuration.VersionInfo.FirstOrDefault(versionInfo => versionInfo.TypeSymbolCrc == symbol.Crc64)
+                ?.GetMetaClass();
+        }
+
+        return Configuration.Workspace?.GetMetaClassDescription(symbol);
+    }
+
+    /// <summary>
+    ///     Serializes the specified boolean value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref bool value);
+
+    /// <summary>
+    ///     Serializes the specified float value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref float value);
+
+    /// <summary>
+    ///     Serializes the specified double value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref double value);
+
+    /// <summary>
+    ///     Serializes the specified short value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref short value);
+
+    /// <summary>
+    ///     Serializes the specified integer value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref int value);
+
+    /// <summary>
+    ///     Serializes the specified long value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref long value);
+
+    /// <summary>
+    ///     Serializes the specified ushort value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref ushort value);
+
+    /// <summary>
+    ///     Serializes the specified unsigned integer value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref uint value);
+
+    /// <summary>
+    ///     Serializes the specified unsigned long value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref ulong value);
+
+    /// <summary>
+    ///     Serializes the specified string value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref string value);
+
+    /// <summary>
+    ///     Serializes the specified char value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref char value);
+
+    /// <summary>
+    ///     Serializes the specified byte value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref byte value);
+
+    /// <summary>
+    ///     Serializes the specified signed byte value.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref sbyte value);
+
+    /// <summary>
+    ///     Serializes the Symbol class.
+    /// </summary>
+    /// <param name="value">The value to serialize</param>
+    public abstract void Serialize(ref Symbol value);
+
+    /// <summary>
+    ///     Serializes the specified byte array.
+    /// </summary>
+    /// <param name="values">The buffer to serialize.</param>
+    /// <param name="offset">The starting offset in the buffer to begin serializing.</param>
+    /// <param name="count">The size, in bytes, to serialize.</param>
+    public abstract void Serialize(byte[] values, int offset, int count);
+
+    public bool IsEndOfStream()
+    {
+        if (Mode is not MetaStreamMode.Read)
+        {
+            return false;
+        }
+
+        for (int i = 1; i <= 3; i++)
+        {
+            //for each section (default,async,debug)
+            SectionInfo currentSect = Sections[i];
+            if (currentSect.Stream == null)
+            {
+                continue;
+            }
+
+            if (currentSect.Stream.Position != currentSect.Stream.Length)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    ///     Skip a block.
+    ///     This is internally used, even by Telltale themselves.
+    /// </summary>
+    public void SkipToEndOfCurrentBlock()
+    {
+        if (Mode is not MetaStreamMode.Read)
+        {
+            return;
+        }
+
+        SectionInfo currentSectionInfo = Sections[(int)_currentSection];
+        if (currentSectionInfo.Blocks.Count == 0)
+        {
+            return;
+        }
+
+        long expectedPosition = currentSectionInfo.Blocks.Pop();
+        currentSectionInfo.Stream?.Seek(expectedPosition, SeekOrigin.Begin);
+    }
+
+    /// <summary>Gets the underlying stream for the specified section.</summary>
+    /// <param name="type">The section type (Header, Default, Debug, Async).</param>
+    /// <returns>The stream if the section exists and is initialized; otherwise null.</returns>
+    public SectionInfo GetSection(SectionType type)
+        => Sections[(int)type];
+
+    // If there are assets larger than 2GBs, I need to rethink my life.
+    public long GetRemainingSectionBytes()
+    {
+        Stream? stream = Sections[(int)_currentSection].Stream;
+        if (stream == null)
+        {
+            return 0;
+        }
+
+        return stream.Length - stream.Position;
+    }
+
+    public long GetRemainingSectionBytes(SectionType section)
+    {
+        Stream? stream = Sections[(int)section].Stream;
+        if (stream == null)
+        {
+            return 0;
+        }
+
+        return stream.Length - stream.Position;
+    }
+
+    public long GetPosition()
+    {
+        Stream? stream = Sections[(int)_currentSection].Stream;
+        if (stream == null)
+        {
+            return 0;
+        }
+
+        return stream.Position;
+    }
+
+    public void SetPosition(long position)
+    {
+        Stream? stream = Sections[(int)_currentSection].Stream;
+        if (stream == null)
+        {
+            throw new InvalidOperationException("Cannot set position on a null section stream.");
+        }
+
+        stream.Position = position;
+    }
+
+    public void AddVersionInfo(MetaClass? desc)
+    {
+        if (desc is null)
+        {
+            return;
+        }
+
+        foreach (MetaVersionInfo? versInfo in Configuration.VersionInfo)
+        {
+            if (versInfo.TypeSymbolCrc == desc.ClassType.Symbol.Crc64)
+            {
+                if (versInfo.VersionCrc != desc.Crc32)
+                {
+                    throw new InvalidOperationException("Version CRC mismatch");
+                }
+
+                return;
+            }
+        }
+
+        MetaVersionInfo versionInfo = new() { TypeSymbolCrc = desc.ClassType.Symbol.Crc64, VersionCrc = desc.Crc32 };
+        Configuration.VersionInfo.Add(versionInfo);
+    }
+
+    /// <summary>
+    ///     Closes the stream and finalizes writing (if in write mode).
+    /// </summary>
+    public abstract void Close();
+
+    public static bool IsValidMetaStream(Stream stream)
+    {
+        if (stream.Length < 4)
+        {
+            return false;
+        }
+
+        long originalPosition = stream.Position;
+
+        try
+        {
+            using BinaryReader reader = new(stream, Encoding.UTF8, true);
+            uint version = reader.ReadUInt32();
+            return Enum.IsDefined(typeof(MetaStreamMagic), version);
+        }
+        finally
+        {
+            stream.Position = originalPosition;
+        }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            foreach (SectionInfo section in Sections)
+            {
+                section.Stream?.Dispose();
+            }
+        }
+    }
+
+    public class SectionInfo
+    {
+        // For blocks. In read, stores the sizes, in write stores the block offset initial.
+        public readonly Stack<long> Blocks = [];
+
+        public long CompressedSize = 0;
+        public bool IsCompressed = false;
+
+        // Section data stream
+        public Stream? Stream = null;
+    }
+}

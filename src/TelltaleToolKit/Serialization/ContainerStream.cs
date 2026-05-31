@@ -1,9 +1,11 @@
 ﻿using System.Text;
+using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.TelltaleArchives.Caching;
 using TelltaleToolKit.TelltaleArchives.Formats;
+using TelltaleToolKit.TelltaleArchives.IO;
 using TelltaleToolKit.Utility.Blowfish;
 
-namespace TelltaleToolKit.TelltaleArchives.IO;
+namespace TelltaleToolKit.Serialization;
 
 /// <summary>
 ///     A forward-readable, seekable <see cref="Stream" /> that decodes the outer
