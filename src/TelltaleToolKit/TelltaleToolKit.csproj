@@ -30,15 +30,18 @@
     <None Include="..\..\data\game_profiles\**\*"
           Pack="true"
           Link="ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
     <None Include="..\..\data\hashdb\**\*"
           Pack="true"
           Link="ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
     <None Include="..\..\data\versiondb\**\*"
           Pack="true"
           Link="ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 
   <ItemGroup>
