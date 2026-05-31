@@ -5,6 +5,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.TelltaleArchives.IO;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Compression;
 using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
 
 namespace TelltaleToolKit.TelltaleArchives.Formats;
@@ -143,7 +144,9 @@ public class TTArchive : Archive
         }
 
         if (decryptionMode == 1)
+        {
             _blowfish.Decipher(header, header.Length);
+        }
 
         Info.FilesOffset = (ulong)reader.BaseStream.Position;
         ParseEntries(new MemoryStream(header));

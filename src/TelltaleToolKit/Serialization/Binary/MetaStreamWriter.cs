@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.TelltaleArchives;
 
 namespace TelltaleToolKit.Serialization.Binary;
 
@@ -158,7 +157,7 @@ public sealed class MetaStreamWriter : MetaStream
             SectionInfo section = Sections[i];
             if (section.Stream is { Length: > 0 } && Params.Compress && canCompress)
             {
-                ArchiveWriteOptions options = new() { Algorithm = CompressionAlgorithm.Deflate };
+                ContainerStreamParams options = new();
                 MemoryStream outStream = new(0x10000);
                 ContainerStream.Create(outStream, section.Stream, options);
                 section.Stream.Dispose();

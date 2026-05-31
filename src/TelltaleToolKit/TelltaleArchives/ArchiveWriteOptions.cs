@@ -1,4 +1,7 @@
-﻿namespace TelltaleToolKit.TelltaleArchives;
+﻿using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Utility.Compression;
+
+namespace TelltaleToolKit.TelltaleArchives;
 
 /// <summary>
 ///     Controls how an archive is written or repacked.
@@ -50,20 +53,4 @@ public sealed class ArchiveWriteOptions
     public string BlowfishKey { get; set; } = string.Empty;
 }
 
-/// <summary>Compression algorithm to use when writing archive chunks.</summary>
-public enum CompressionAlgorithm
-{
-    /// <summary>No compression.</summary>
-    None,
 
-    /// <summary>Raw DEFLATE (no zlib header). Used by most Telltale games.</summary>
-    Deflate,
-
-    /// <summary>Zlib-wrapped DEFLATE. Used by some CSI and earlier titles.</summary>
-    Zlib,
-
-    /// <summary>
-    ///     Oodle compression.
-    /// </summary>
-    Oodle
-}

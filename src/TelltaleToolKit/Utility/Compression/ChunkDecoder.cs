@@ -1,43 +1,22 @@
 ﻿using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using TelltaleToolKit.TelltaleArchives.Caching;
-using TelltaleToolKit.TelltaleArchives.Formats;
-using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Serialization;
+using TelltaleToolKit.TelltaleArchives;
 
-namespace TelltaleToolKit.TelltaleArchives.IO;
+namespace TelltaleToolKit.Utility.Compression;
 
 /// <summary>
-///     Provides chunk-level decrypt + decompress logic shared by both
-///     <see cref="TTArchive" /> and <see cref="TTArchive2" /> extraction paths.
+///     Provides chunk-level decrypt + decompress logic.
 /// </summary>
 /// <remarks>
 ///     <para>
 ///         All methods are thread-safe with respect to the archive stream as long as each
-///         concurrent caller holds its own <see cref="IChunkCache" /> instance and does not
+///         concurrent caller holds its own <see cref="Utility.Caching.IChunkCache" /> instance and does not
 ///         share a <see cref="Stream" /> reference.
 ///     </para>
 /// </remarks>
 internal static class ChunkDecoder
 {
-    /// <summary>
-    ///     Decrypts (if encrypted) and decompresses a raw compressed chunk read from disk.
-    ///     Returns the decoded byte array.
-    /// </summary>
-    public static byte[] DecryptAndDecompress(byte[] compressed, uint expectedSize, ArchiveInfo info)
-    {
-        // Decrypt in place when the archive uses chunk-level encryption.
-        if (info.Flags.IsEncrypted())
-        {
-            Blowfish bf = new(info.BlowfishKey, 7);
-            bf.Decipher(compressed.AsSpan(), compressed.Length);
-        }
-
-        ArchiveFlags flags = info.Flags;
-        byte[] arr = DecompressBlock(compressed, (int)expectedSize, ref flags);
-        info.Flags = flags;
-        return arr;
-    }
-
     // -------------------------------------------------------------------------
     // Build a block-offset table for the range [blockStart, blockEnd]
     // -------------------------------------------------------------------------
@@ -134,5 +113,38 @@ internal static class ChunkDecoder
             decompressStream.CopyTo(outputStream);
             return outputStream.ToArray();
         }
+    }
+
+    private static CompressionAlgorithm DetectCompressionAlgorithm(byte[] chunk)
+    {
+        // Zlib header: first byte 0x78, second byte in {0x9C, 0xDA, 0x01, 0x5E, 0x9E, ...}
+        if (chunk[0] == 0x78 && (chunk[1] & 0xF0) == 0xC0) // 0x78 0x9C, 0x78 0xDA, etc.
+        {
+            return CompressionAlgorithm.Zlib;
+        }
+
+        return CompressionAlgorithm.Deflate; // raw Deflate has no header
+    }
+
+    /// <summary>
+    ///     Compresses a single chunk using the specified algorithm.
+    /// </summary>
+    /// <returns>Number of compressed bytes written into <paramref name="outputBuffer" />.</returns>
+    public static int CompressBlock(ReadOnlySpan<byte> input, CompressionAlgorithm algorithm, byte[] outputBuffer)
+    {
+        using MemoryStream ms = new(outputBuffer, true);
+        if (algorithm == CompressionAlgorithm.Zlib)
+        {
+            using DeflaterOutputStream zlib = new(ms);
+            zlib.Write(input);
+            zlib.Finish();
+        }
+        else // Deflate (raw)
+        {
+            using DeflateStream deflate = new(ms, CompressionLevel.Optimal, true);
+            deflate.Write(input);
+        }
+
+        return (int)ms.Position;
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace TelltaleToolKit.TelltaleArchives.Caching;
+﻿namespace TelltaleToolKit.Utility.Caching;
 
 /// <summary>
 ///     Cache strategy that retains the <em>N</em> most-recently-used decoded chunks.
 /// </summary>
 /// <remarks>
 ///     <para>
-///         Memory overhead: up to <c>N × ChunkSize</c> bytes (e.g., N=8, ChunkSize=64 KiB → 512 KiB).
+///         Memory overhead: up to <c>N * WindowSize</c> bytes (e.g., N=8, WindowSize=64 KiB -> 512 KiB).
 ///     </para>
 ///     <para>
 ///         Not thread-safe. Each concurrent extraction path should use its own instance.
@@ -25,7 +25,7 @@ public sealed class LruChunkCache : IChunkCache
     /// <param name="capacity">
     ///     Maximum number of decoded chunks to retain simultaneously.
     ///     Typical values: 4 (conservative), 8 (balanced), 16 (aggressive).
-    ///     Must be ≥ 1.
+    ///     Must be >= 1.
     /// </param>
     public LruChunkCache(int capacity = 8) =>
         // ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);

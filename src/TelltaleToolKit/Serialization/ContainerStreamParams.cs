@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.TelltaleArchives;
+﻿using TelltaleToolKit.Utility.Compression;
 
 namespace TelltaleToolKit.Serialization;
 
@@ -12,7 +12,7 @@ public sealed class ContainerStreamParams
     public uint ChunkSize { get; init; } = 0x10000;
 
     /// <summary>Whether to compress the payload chunks.</summary>
-    public bool Compress { get; init; }
+    public bool Compress { get; init; } = true;
 
     /// <summary>Whether to encrypt compressed chunks with Blowfish.</summary>
     public bool Encrypt { get; init; }

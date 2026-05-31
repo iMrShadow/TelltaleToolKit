@@ -1,5 +1,6 @@
 using System.Text;
 using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Utility.Compression;
 using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.TelltaleArchives.Formats;
@@ -32,9 +33,15 @@ public class TTArchive2 : Archive
         _containerStream = new ContainerStream(BaseStream!, Info.BlowfishKey);
         // Copy container state back to Info so the rest of the code (and callers
         // that inspect Info) see the right values.
-        Info.Flags = _containerStream.Flags;
-        Info.ChunkSize = _containerStream.ChunkSize;
-        Info.ChunkCount = _containerStream.ChunkCount;
+        Info.Flags |= _containerStream.Params.Encrypt ? ArchiveFlags.IsEncrypted : 0;
+        Info.Flags |= _containerStream.Params.Algorithm == CompressionAlgorithm.Deflate
+            ? ArchiveFlags.IsRawDeflateCompressed
+            : 0;
+        Info.Flags |= _containerStream.Params.Algorithm == CompressionAlgorithm.Oodle
+            ? ArchiveFlags.IsOodleCompressed
+            : 0;
+        Info.ChunkSize = _containerStream.WindowSize;
+        Info.ChunkCount = _containerStream.NumPages;
         Info.ChunkBlockSizes = _containerStream.ChunkBlockSizes;
 
         ReadTtaHeader(_containerStream);
@@ -310,7 +317,15 @@ public class TTArchive2 : Archive
             using (FileStream innerReader = new(tempFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
                        FileOptions.DeleteOnClose | FileOptions.SequentialScan))
             {
-                ContainerStream.Create(output, innerReader, options);
+                ContainerStreamParams containerOptions = new()
+                {
+                    Encrypt = options.Encrypt,
+                    ChunkSize = options.ChunkSize,
+                    Algorithm = options.Algorithm,
+                    BlowfishKey = options.BlowfishKey
+                };
+
+                ContainerStream.Create(output, innerReader, containerOptions);
             }
         }
         finally
