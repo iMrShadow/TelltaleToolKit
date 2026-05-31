@@ -59,7 +59,7 @@ internal static class ChunkDecoder
         // According to TTG Tools, version 8 archives use zlib (presumably for the files themselves)
         if (flags.HasFlag(ArchiveFlags.IsRawDeflateCompressed) && flags.HasFlag(ArchiveFlags.IsZlibCompressed))
         {
-            // CompressionAlgorithm compressionAlgorithm = DetectCompressionAlgorithm(compressedData);
+            // Compression compressionAlgorithm = DetectCompressionAlgorithm(compressedData);
 
             try
             {
@@ -115,25 +115,25 @@ internal static class ChunkDecoder
         }
     }
 
-    private static CompressionAlgorithm DetectCompressionAlgorithm(byte[] chunk)
+    private static Compression DetectCompressionAlgorithm(byte[] chunk)
     {
         // Zlib header: first byte 0x78, second byte in {0x9C, 0xDA, 0x01, 0x5E, 0x9E, ...}
         if (chunk[0] == 0x78 && (chunk[1] & 0xF0) == 0xC0) // 0x78 0x9C, 0x78 0xDA, etc.
         {
-            return CompressionAlgorithm.Zlib;
+            return Compression.Zlib;
         }
 
-        return CompressionAlgorithm.Deflate; // raw Deflate has no header
+        return Compression.Deflate; // raw Deflate has no header
     }
 
     /// <summary>
     ///     Compresses a single chunk using the specified algorithm.
     /// </summary>
     /// <returns>Number of compressed bytes written into <paramref name="outputBuffer" />.</returns>
-    public static int CompressBlock(ReadOnlySpan<byte> input, CompressionAlgorithm algorithm, byte[] outputBuffer)
+    public static int CompressBlock(ReadOnlySpan<byte> input, Compression algorithm, byte[] outputBuffer)
     {
         using MemoryStream ms = new(outputBuffer, true);
-        if (algorithm == CompressionAlgorithm.Zlib)
+        if (algorithm == Compression.Zlib)
         {
             using DeflaterOutputStream zlib = new(ms);
             zlib.Write(input);

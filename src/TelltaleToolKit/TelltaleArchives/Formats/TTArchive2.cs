@@ -34,10 +34,10 @@ public class TTArchive2 : Archive
         // Copy container state back to Info so the rest of the code (and callers
         // that inspect Info) see the right values.
         Info.Flags |= _containerStream.Params.Encrypt ? ArchiveFlags.IsEncrypted : 0;
-        Info.Flags |= _containerStream.Params.Algorithm == CompressionAlgorithm.Deflate
+        Info.Flags |= _containerStream.Params.Algorithm == Compression.Deflate
             ? ArchiveFlags.IsRawDeflateCompressed
             : 0;
-        Info.Flags |= _containerStream.Params.Algorithm == CompressionAlgorithm.Oodle
+        Info.Flags |= _containerStream.Params.Algorithm == Compression.Oodle
             ? ArchiveFlags.IsOodleCompressed
             : 0;
         Info.ChunkSize = _containerStream.WindowSize;

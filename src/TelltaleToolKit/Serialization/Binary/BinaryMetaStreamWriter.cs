@@ -151,7 +151,7 @@ public sealed class BinaryMetaStreamWriter : MetaStream
 
         uint streamVersion = Params.StreamVersion;
         bool canCompress = streamVersion >= 4;
-        // Telltale does not process the
+        // Telltale does not compress the header section, so we can skip it.
         for (int i = 1; i <= 3; i++)
         {
             SectionInfo section = Sections[i];

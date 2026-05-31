@@ -27,9 +27,9 @@ public sealed class ArchiveWriteOptions
 
     /// <summary>
     ///     Gets or sets the compression algorithm to use.
-    ///     Defaults to <see cref="CompressionAlgorithm.Deflate" />.
+    ///     Defaults to <see cref="Compression.Deflate" />.
     /// </summary>
-    public CompressionAlgorithm Algorithm { get; set; } = CompressionAlgorithm.Deflate;
+    public Compression Algorithm { get; set; } = Compression.Deflate;
 
     /// <summary>
     ///     Gets or sets the decompressed size of each chunk in bytes.

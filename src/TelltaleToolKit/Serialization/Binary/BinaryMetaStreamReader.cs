@@ -65,7 +65,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         Reader = new BinaryReader(Sections[(int)SectionType.Header].Stream, Encoding.UTF8, true);
         SetSection(SectionType.Header);
 
-        var magic = (MetaStreamMagic)this.ReadUInt32();
+        MetaStreamMagic magic = (MetaStreamMagic)this.ReadUInt32();
         Params.StreamVersion = magic.GetMetaStreamVersion();
         uint streamVersion = Params.StreamVersion;
 
@@ -180,8 +180,10 @@ public sealed class BinaryMetaStreamReader : MetaStream
             : BaseStream.Length - headerSize - debugSize - asyncSize;
 
         // The encrypted header is lost in the process, so we need to add it back
-        if(Params.Encrypt)
+        if (Params.Encrypt)
+        {
             defaultSize -= 4;
+        }
 
         Sections[0].CompressedSize = headerSize;
         Sections[1].CompressedSize = defaultSize;
@@ -190,7 +192,6 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         return true;
     }
-
 
     protected override void SetSection(SectionType newSection)
     {
@@ -203,14 +204,12 @@ public sealed class BinaryMetaStreamReader : MetaStream
         Reader = new BinaryReader(Sections[(int)_currentSection].Stream, Encoding.UTF8, true);
     }
 
-
     public override void BeginBlock()
     {
         int size = this.ReadInt32();
         long expectedPosition = Sections[(int)_currentSection].Stream!.Position + size - sizeof(int);
         Sections[(int)_currentSection].Blocks.Push(expectedPosition);
     }
-
 
     public override void EndBlock()
     {
@@ -231,7 +230,6 @@ public sealed class BinaryMetaStreamReader : MetaStream
         currentSectionInfo.Stream.Position = expectedPosition;
     }
 
-
     public override void Serialize(ref bool value) =>
         value = Reader.ReadChar() switch
         {
@@ -240,30 +238,21 @@ public sealed class BinaryMetaStreamReader : MetaStream
             _ => throw new InvalidBooleanException($"Invalid boolean at position: {Reader.BaseStream.Position}!")
         };
 
-
     public override void Serialize(ref float value) => value = Reader.ReadSingle();
-
 
     public override void Serialize(ref double value) => value = Reader.ReadDouble();
 
-
     public override void Serialize(ref short value) => value = Reader.ReadInt16();
-
 
     public override void Serialize(ref int value) => value = Reader.ReadInt32();
 
-
     public override void Serialize(ref long value) => value = Reader.ReadInt64();
-
 
     public override void Serialize(ref ushort value) => value = Reader.ReadUInt16();
 
-
     public override void Serialize(ref uint value) => value = Reader.ReadUInt32();
 
-
     public override void Serialize(ref ulong value) => value = Reader.ReadUInt64();
-
 
     public override void Serialize(ref string value)
     {
@@ -285,15 +274,11 @@ public sealed class BinaryMetaStreamReader : MetaStream
         value = Encoding.UTF8.GetString(buffer, 0, realLength);
     }
 
-
     public override void Serialize(ref char value) => value = Reader.ReadChar();
-
 
     public override void Serialize(ref byte value) => value = Reader.ReadByte();
 
-
     public override void Serialize(ref sbyte value) => value = Reader.ReadSByte();
-
 
     public override void Serialize(ref Symbol value)
     {
@@ -302,9 +287,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         Params.SerializedSymbols.Add(value);
     }
 
-
     public override void Serialize(byte[] values, int offset, int count) => Reader.Read(values, offset, count);
-
 
     public override void Close() => Dispose(true);
 }

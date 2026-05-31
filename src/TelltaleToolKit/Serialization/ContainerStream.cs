@@ -67,22 +67,21 @@ public sealed class ContainerStream : Stream
             throw new NotSupportedException($"[ContainerStream] Unknown container magic {ContainerMagic}.");
         }
 
-        CompressionAlgorithm algorithm = ContainerMagic switch
+        Compression algorithm = ContainerMagic switch
         {
-            ContainerMagic.TTCN => CompressionAlgorithm.None,
+            ContainerMagic.TTCN => Compression.None,
             ContainerMagic.TTCe or ContainerMagic.TTCz => ReadCompressionType(reader),
-            _ => CompressionAlgorithm.Deflate
+            _ => Compression.Deflate
         };
 
         Params = new ContainerStreamParams
         {
-            Compress = algorithm != CompressionAlgorithm.None,
             Encrypt = ContainerMagic is ContainerMagic.TTCE or ContainerMagic.TTCe,
             BlowfishKey = blowfishKey,
             Algorithm = algorithm
         };
 
-        if (Params.Algorithm != CompressionAlgorithm.None)
+        if (Params.Algorithm != Compression.None)
         {
             WindowSize = reader.ReadUInt32();
 
@@ -115,13 +114,13 @@ public sealed class ContainerStream : Stream
         PayloadStart = source.Position; // first byte of TTA2/3/4 payload
     }
 
-    private static CompressionAlgorithm ReadCompressionType(BinaryReader reader)
+    private static Compression ReadCompressionType(BinaryReader reader)
     {
         uint compressionType = reader.ReadUInt32();
         return compressionType switch
         {
-            0 => CompressionAlgorithm.Deflate,
-            1 => CompressionAlgorithm.Oodle,
+            0 => Compression.Deflate,
+            1 => Compression.Oodle,
             _ => throw new NotSupportedException(
                 $"[ContainerStream] Unknown compression type {compressionType}.")
         };
@@ -209,7 +208,7 @@ public sealed class ContainerStream : Stream
         }
 
         // ---- Uncompressed — backed by MemoryStream ----
-        if (Params.Algorithm is CompressionAlgorithm.None)
+        if (Params.Algorithm is Compression.None)
         {
             _source.Position = PayloadStart + _position;
             int bytesToRead = (int)Math.Min(buffer.Length, Length - _position);
@@ -287,7 +286,7 @@ public sealed class ContainerStream : Stream
     }
 
     public static byte[] DecompressBlock(byte[] compressedData, int expectedSize,
-        CompressionAlgorithm compressionAlgorithm)
+        Compression compression)
     {
         // This is a hack? In TWD:DE, 401_txmesh, there's a page which is the same size as the expected size (65535)
         // C#'s raw deflate fails.
@@ -298,11 +297,11 @@ public sealed class ContainerStream : Stream
             return compressedData;
         }
 
-        return compressionAlgorithm switch
+        return compression switch
         {
-            CompressionAlgorithm.Deflate => Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress)),
-            CompressionAlgorithm.Zlib => Decompress(ms => new InflaterInputStream(ms)),
-            CompressionAlgorithm.Oodle => throw new NotSupportedException("Oodle compression is not supported yet."),
+            Compression.Deflate => Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress)),
+            Compression.Zlib => Decompress(ms => new InflaterInputStream(ms)),
+            Compression.Oodle => throw new NotSupportedException("Oodle compression is not supported yet."),
             // No compression, return the original data
             _ => compressedData
         };
@@ -380,7 +379,7 @@ public sealed class ContainerStream : Stream
     /// <param name="options">Archive options (compression, encryption, chunk size, key).</param>
     public static void Create(Stream destination, Stream payloadStream, ContainerStreamParams options)
     {
-        if (options.Algorithm == CompressionAlgorithm.Oodle)
+        if (options.Algorithm == Compression.Oodle)
         {
             throw new NotSupportedException("Oodle compression not yet implemented.");
         }
@@ -388,12 +387,12 @@ public sealed class ContainerStream : Stream
         // Choose magic automatically
         ContainerMagic magic = (options.Encrypt, options.Algorithm) switch
         {
-            (false, CompressionAlgorithm.None) => ContainerMagic.TTCN,
-            (true, CompressionAlgorithm.Deflate) => ContainerMagic.TTCE,
-            (false, CompressionAlgorithm.Deflate) => ContainerMagic.TTCZ,
-            (true, CompressionAlgorithm.Oodle) => ContainerMagic
+            (false, Compression.None) => ContainerMagic.TTCN,
+            (true, Compression.Deflate) => ContainerMagic.TTCE,
+            (false, Compression.Deflate) => ContainerMagic.TTCZ,
+            (true, Compression.Oodle) => ContainerMagic
                 .TTCe, // encryption without compression? Rare, but fallback
-            (false, CompressionAlgorithm.Oodle) => ContainerMagic
+            (false, Compression.Oodle) => ContainerMagic
                 .TTCz, // encryption without compression? Rare, but fallback
             _ => throw new NotSupportedException(
                 $"Unsupported combination: Encrypt={options.Encrypt}, Algorithm={options.Algorithm}")
@@ -404,11 +403,11 @@ public sealed class ContainerStream : Stream
 
         if (magic is ContainerMagic.TTCe or ContainerMagic.TTCz)
         {
-            uint comprType = options.Algorithm == CompressionAlgorithm.Deflate ? 0u : 1u; // 1 = Oodle
+            uint comprType = options.Algorithm == Compression.Deflate ? 0u : 1u; // 1 = Oodle
             writer.Write(comprType);
         }
 
-        bool compress = options.Algorithm != CompressionAlgorithm.None;
+        bool compress = options.Algorithm != Compression.None;
         Blowfish blowfish = new(options.BlowfishKey, 7);
 
         if (!compress)

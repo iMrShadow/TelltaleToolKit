@@ -1,7 +1,7 @@
 ﻿namespace TelltaleToolKit.Utility.Compression;
 
 /// <summary>Compression algorithm to use when writing archive chunks.</summary>
-public enum CompressionAlgorithm
+public enum Compression
 {
     /// <summary>No compression.</summary>
     None,

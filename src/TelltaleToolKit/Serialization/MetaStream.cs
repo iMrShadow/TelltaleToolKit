@@ -294,7 +294,7 @@ public abstract class MetaStream : IDisposable
     // If there are assets larger than 2GBs, I need to rethink my life.
     public long GetRemainingSectionBytes()
     {
-        Stream? stream = Sections[(int)_currentSection].Stream;
+        Stream? stream = CurrentSection.Stream;
         if (stream == null)
         {
             return 0;
@@ -316,7 +316,7 @@ public abstract class MetaStream : IDisposable
 
     public long GetPosition()
     {
-        Stream? stream = Sections[(int)_currentSection].Stream;
+        Stream? stream = CurrentSection.Stream;
         if (stream == null)
         {
             return 0;
@@ -327,7 +327,7 @@ public abstract class MetaStream : IDisposable
 
     public void SetPosition(long position)
     {
-        Stream? stream = Sections[(int)_currentSection].Stream;
+        Stream? stream = CurrentSection.Stream;
         if (stream == null)
         {
             throw new InvalidOperationException("Cannot set position on a null section stream.");

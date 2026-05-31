@@ -698,7 +698,7 @@ public class Workspace
         => ContainsFile(Crc64.Compute(name));
 
     /// <summary>
-    /// Finds and returns the <see cref="TelltaleFileEntry"/> for the given CRC-64,
+    /// Finds and returns the <see cref="ResourceEntry"/> for the given CRC-64,
     /// searching enabled contexts from the highest priority to lowest.
     /// </summary>
     /// <returns>The entry, or <see langword="null"/> if not found.</returns>
@@ -747,7 +747,7 @@ public class Workspace
     /// specific file.
     /// </remarks>
     /// <returns>
-    /// A flat sequence of <see cref="TelltaleFileEntry"/> objects from all enabled contexts.
+    /// A flat sequence of <see cref="ResourceEntry"/> objects from all enabled contexts.
     /// </returns>
     public IEnumerable<ResourceEntry> GetAllEntries()
         => _contexts.Where(c => c.IsEnabled).SelectMany(c => c.GetAllEntries());

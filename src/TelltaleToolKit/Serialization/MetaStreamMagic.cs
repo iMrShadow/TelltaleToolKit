@@ -92,7 +92,7 @@ public enum MetaStreamMagic : uint
 
     /// <summary>
     ///     MetaStream version 5 (optional compression).<br />
-    /// Expansion: "Meta Stream Version 5".<br />
+    ///     Expansion: "Meta Stream Version 5".<br />
     ///     ASCII value: "MSV5" in big-Endian, or "5VSM" in little-Endian.<br />
     ///     Version info is hashed.
     /// </summary>
@@ -100,7 +100,7 @@ public enum MetaStreamMagic : uint
 
     /// <summary>
     ///     MetaStream version 6 (optional compression).<br />
-    /// Expansion: "Meta Stream Version 6".<br />
+    ///     Expansion: "Meta Stream Version 6".<br />
     ///     ASCII value: "MSV6" in big-Endian, or "6VSM" in little-Endian.<br />
     ///     Version info is hashed.
     /// </summary>

@@ -294,7 +294,7 @@ public class TTArchive : Archive
         }
 
         bool encrypt = options.Encrypt;
-        bool compressFileData = options.Algorithm != CompressionAlgorithm.None && version >= 3;
+        bool compressFileData = options.Algorithm != Compression.None && version >= 3;
         bool compressHeader = compressFileData && version >= 6; // compressed entry table block (filesMode=2)
 
         Blowfish bf = new(options.BlowfishKey, version);
@@ -352,7 +352,7 @@ public class TTArchive : Archive
         byte[] CompressBlock(byte[] data)
         {
             using MemoryStream ms = new();
-            if (options.Algorithm == CompressionAlgorithm.Zlib)
+            if (options.Algorithm == Compression.Zlib)
             {
                 using DeflaterOutputStream zlib = new(ms);
                 zlib.Write(data, 0, data.Length);

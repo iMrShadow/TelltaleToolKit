@@ -31,7 +31,7 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
         bool isTtarch2 = obj.GetProperty("isTtarch2").GetBoolean();
         int ttarchVersion = obj.GetProperty("ttarchVersion").GetInt32();
         string luaVersion = obj.GetProperty("luaVersion").GetString() ?? string.Empty;
-        uint metaStreamVersion = obj.GetProperty("streamVersion").GetUInt32();
+        uint streamVersion = obj.GetProperty("streamVersion").GetUInt32();
         bool enableOodleCompression = obj.GetProperty("enableOodleCompression").GetBoolean();
 
         // Attempt to resolve the blowfish key from known enum values. If not, use the string as a key.
@@ -48,7 +48,7 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
             IsTtarch2 = isTtarch2,
             TtarchVersion = ttarchVersion.TtarchVersionFromNumber(isTtarch2),
             LuaVersion = luaVersion.ParseLuaVersion(),
-            StreamVersion = metaStreamVersion,
+            StreamVersion = streamVersion,
             EnableOodleCompression = enableOodleCompression
         };
     }
@@ -68,7 +68,7 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
         writer.WriteBoolean("isTtarch2", value.IsTtarch2);
         writer.WriteNumber("ttarchVersion", value.TtarchVersion.ToJsonNumber());
         writer.WriteString("luaVersion", value.LuaVersion.ToVersionString());
-        writer.WriteNumber("metaStreamVersion", value.StreamVersion);
+        writer.WriteNumber("streamVersion", value.StreamVersion);
         writer.WriteBoolean("enableOodleCompression", value.EnableOodleCompression);
         writer.WriteEndObject();
     }

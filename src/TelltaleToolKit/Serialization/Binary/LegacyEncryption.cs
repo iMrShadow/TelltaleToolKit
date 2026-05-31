@@ -11,7 +11,6 @@ namespace TelltaleToolKit.Serialization.Binary;
 /// </summary>
 public static class LegacyEncryption
 {
-
     /// <inheritdoc cref="Decrypt(Stream, Blowfish)" />
     public static void Decrypt(Stream stream, string blowfishKey, int archiveVersion = 7)
         => Decrypt(stream, new Blowfish(blowfishKey, archiveVersion));
