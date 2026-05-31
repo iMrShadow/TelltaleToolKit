@@ -1,4 +1,5 @@
 using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
@@ -54,8 +55,13 @@ public sealed class GameProfile
     /// <summary>
     /// Gets the version of the <see cref="MetaStream"/> stream format used in the game.
     /// </summary>
-    /// <seealso cref="TelltaleToolKit.Serialization.Binary.MetaStreamVersion"/>
-    public MetaStreamVersion MetaStreamVersion { get; set; }
+    /// <seealso cref="MetaStreamMagic"/>
+    public MetaStreamMagic MetaStreamMagic { get; set; }
+
+    /// <summary>
+    /// Gets the version of the <see cref="MetaStream"/> stream format used in the game.
+    /// </summary>
+    public uint StreamVersion { get; set; }
 
     // TODO: Automatically assign false if MetaStreamVersion is MBIN.
     public bool AreSymbolsHashed { get; set; }
@@ -64,7 +70,7 @@ public sealed class GameProfile
     /// Gets a value indicating whether Oodle compression is enabled for game archives.
     /// </summary>
     public bool EnableOodleCompression { get; init; }
-    
+
     /// <summary>
     /// Identifier (name) of the metaclass database used for resolving MetaClass definitions for this game.
     /// The value is a slug title from the already existing game profiles.

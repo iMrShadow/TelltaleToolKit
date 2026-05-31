@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
@@ -61,7 +62,7 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
             IsTtarch2 = isTtarch2,
             TtarchVersion = ttarchVersion.TtarchVersionFromNumber(isTtarch2),
             LuaVersion = luaVersion.ParseLuaVersion(),
-            MetaStreamVersion = metaStreamVersion.StreamVersionFromString(),
+            MetaStreamMagic = metaStreamVersion.StreamVersionFromString(),
             EnableOodleCompression = enableOodleCompression,
             AreSymbolsHashed = areSymbolsHashed
         };
@@ -82,7 +83,7 @@ public class GameRegistryJsonConverter : JsonConverter<GameProfile>
         writer.WriteBoolean("isTtarch2", value.IsTtarch2);
         writer.WriteNumber("ttarchVersion", value.TtarchVersion.ToJsonNumber());
         writer.WriteString("luaVersion", value.LuaVersion.ToVersionString());
-        writer.WriteString("metaStreamVersion", value.MetaStreamVersion.ToJsonString());
+        writer.WriteString("metaStreamVersion", value.MetaStreamMagic.ToJsonString());
         writer.WriteBoolean("enableOodleCompression", value.EnableOodleCompression);
         writer.WriteEndObject();
     }
