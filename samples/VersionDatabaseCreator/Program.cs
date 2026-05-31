@@ -54,7 +54,6 @@ ConcurrentDictionary<(ulong typeHash, uint crc32), byte> unregisteredTypes = [];
 // The reason being is that when extracting a single entry directly from a ttarch, that entry is directly loaded in memory.
 // And sometimes...there are huge assets.
 // It takes a couple of minutes to scan TWD:DE with a stock Ryzen 5 2600.
-var areSymbolsHashed = false;
 uint msv = 2;
 TTArchiveVersion ttarchVersion = 0;
 await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
@@ -234,12 +233,11 @@ if (!File.Exists(jsonFilePath))
     {
         Id = sluggedName,
         Name = sluggedName,
-        AreSymbolsHashed = areSymbolsHashed,
         BlowfishKey = blowfishKey.ToString(),
         EnableOodleCompression = false,
         IsTtarch2 = filter == "*.ttarch2",
         LuaVersion = LuaVersion.Lua502, // Determining lua versions is too much for me, sorry.
-        MetaStreamMagic = msv,
+        StreamVersion = msv,
         TtarchVersion = ttarchVersion,
     };
 
