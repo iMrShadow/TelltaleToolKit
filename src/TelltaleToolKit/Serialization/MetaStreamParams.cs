@@ -4,12 +4,12 @@ using TelltaleToolKit.T3Types;
 namespace TelltaleToolKit.Serialization;
 
 /// <summary>
-/// Holds configuration parameters and metadata for a MetaStream during serialization or deserialization.
+/// Holds parameters and metadata for a MetaStream during serialization or deserialization.
 /// </summary>
-public class MetaStreamConfiguration
+public class MetaStreamParams
 {
     /// <summary>
-    /// Gets or sets the MetaStream version associated with this configuration.
+    /// Gets or sets the MetaStream version associated with this stream.
     /// </summary>
     public uint StreamVersion { get; set; }
 
@@ -122,8 +122,8 @@ public class MetaStreamConfiguration
         };
     }
 
-    private static readonly Random s_random = new Random();
-    private static readonly object s_lock = new object();
+    private static readonly Random s_random = new();
+    private static readonly object s_lock = new();
 
     private static MetaStreamMagic GetRandomEncryptedMbinMagic()
     {

@@ -91,7 +91,7 @@ public class ProceduralLookAt
             // TODO: Check with meta stream version.
             if (stream is MetaStreamWriter)
             {
-                if (stream.Configuration.StreamVersion >= 5)
+                if (stream.Params.StreamVersion >= 5)
                 {
                     return;
                 }
@@ -101,7 +101,7 @@ public class ProceduralLookAt
             }
             else if (stream is MetaStreamReader)
             {
-                if (stream.Configuration.StreamVersion >= 5)
+                if (stream.Params.StreamVersion >= 5)
                 {
                     return;
                 }

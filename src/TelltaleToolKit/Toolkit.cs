@@ -64,7 +64,7 @@ public class Toolkit
             "TelltaleToolkit must be initialized first. Call Toolkit.Initialize().");
 
     /// <summary>
-    /// Gets the configuration supplied at <see cref="Initialize"/> time.
+    /// Gets the @params supplied at <see cref="Initialize"/> time.
     /// </summary>
     public Configuration Config { get; }
 
@@ -109,7 +109,7 @@ public class Toolkit
     /// Must be called exactly once before using any other API.
     /// </summary>
     /// <param name="config">
-    /// Optional configuration. When <see langword="null"/>, defaults are used
+    /// Optional @params. When <see langword="null"/>, defaults are used
     /// (<c>DataFolder</c> = <c>"ttk-data"</c>).
     /// </param>
     /// <exception cref="InvalidOperationException">
@@ -219,15 +219,15 @@ public class Toolkit
 
     /// <summary>
     /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a file,
-    /// also returning the <see cref="MetaStreamConfiguration"/> that was embedded in the stream.
+    /// also returning the <see cref="MetaStreamParams"/> that was embedded in the stream.
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
     /// <returns>
-    /// A tuple containing the deserialized object and the configuration embedded in the stream,
+    /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if reading or parsing fails.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(string fileName, Workspace? workspace = null)
+    public (T? Asset, MetaStreamParams? MetaConfig) DeserializeWithConfig<T>(string fileName, Workspace? workspace = null)
         where T : class, new()
     {
         try
@@ -260,7 +260,7 @@ public class Toolkit
 
     /// <summary>
     /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a stream,
-    /// also returning the <see cref="MetaStreamConfiguration"/> that was embedded in the stream.
+    /// also returning the <see cref="MetaStreamParams"/> that was embedded in the stream.
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="stream">
@@ -268,10 +268,10 @@ public class Toolkit
     /// Not disposed by this method.
     /// </param>
     /// <returns>
-    /// A tuple containing the deserialized object and the configuration embedded in the stream,
+    /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if parsing fails.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(Stream stream, Workspace? workspace = null)
+    public (T? Asset, MetaStreamParams? MetaConfig) DeserializeWithConfig<T>(Stream stream, Workspace? workspace = null)
         where T : class, new()
     {
         var result = DeserializeInternal<T>(stream, workspace);
@@ -286,7 +286,7 @@ public class Toolkit
 
     /// <summary>
     /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a file,
-    /// discarding the embedded configuration.
+    /// discarding the embedded @params.
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
@@ -321,7 +321,7 @@ public class Toolkit
 
     /// <summary>
     /// Deserializes a MetaStream object of type <typeparamref name="T"/> from a stream,
-    /// discarding the embedded configuration.
+    /// discarding the embedded @params.
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="stream">
@@ -355,9 +355,9 @@ public class Toolkit
     /// <param name="obj">The object to serialize.</param>
     /// <param name="fileName">Destination file path. The file is overwritten if it exists.</param>
     /// <param name="config">
-    /// The <see cref="MetaStreamConfiguration"/> controlling format version, class list, and so on.
+    /// The <see cref="MetaStreamParams"/> controlling format version, class list, and so on.
     /// </param>
-    public void Serialize<T>(T obj, string fileName, MetaStreamConfiguration config) where T : class, new()
+    public void Serialize<T>(T obj, string fileName, MetaStreamParams config) where T : class, new()
     {
         using FileStream stream = File.Create(fileName);
         SerializeInternal(obj, stream, config);
@@ -371,8 +371,8 @@ public class Toolkit
     /// <param name="stream">
     /// A writable stream. Not disposed by this method.
     /// </param>
-    /// <param name="config">The MetaStream configuration to embed in the output.</param>
-    public void Serialize<T>(T obj, Stream stream, MetaStreamConfiguration config) where T : class, new()
+    /// <param name="config">The MetaStream @params to embed in the output.</param>
+    public void Serialize<T>(T obj, Stream stream, MetaStreamParams config) where T : class, new()
         => SerializeInternal(obj, stream, config);
 
     // -------------------------------------------------------------------------
@@ -604,7 +604,7 @@ public class Toolkit
             ClassRegistry.Register(metaClasses);
     }
 
-    private (T? Asset, MetaStreamConfiguration? Config) DeserializeInternal<T>(Stream stream, Workspace? workspace = null)
+    private (T? Asset, MetaStreamParams? Config) DeserializeInternal<T>(Stream stream, Workspace? workspace = null)
         where T : class, new()
     {
         try
@@ -614,7 +614,7 @@ public class Toolkit
 
             metaStream.Serialize(ref result);
 
-            MetaStreamConfiguration config = metaStream.Configuration;
+            MetaStreamParams config = metaStream.Params;
 
             if (metaStream.IsEndOfStream())
             {
@@ -642,7 +642,7 @@ public class Toolkit
         }
     }
 
-    private void SerializeInternal<T>(T obj, Stream stream, MetaStreamConfiguration config)
+    private void SerializeInternal<T>(T obj, Stream stream, MetaStreamParams config)
         where T : class, new()
     {
         var metaStream = MetaStream.OpenWrite(stream, config);
@@ -652,7 +652,7 @@ public class Toolkit
     }
 
     /// <summary>
-    /// Configuration supplied to <see cref="Initialize"/>.
+    /// Params supplied to <see cref="Initialize"/>.
     /// </summary>
     public class Configuration
     {
@@ -665,7 +665,7 @@ public class Toolkit
 
         /// <summary>
         /// Gets or sets a value indicating whether symbols found in the
-        /// <see cref="MetaStreamConfiguration.SerializedSymbols"/> table are automatically
+        /// <see cref="MetaStreamParamsMetaStreamParamsizedSymbols"/> table are automatically
         /// resolved against the global hash database after every successful
         /// <see cref="Deserialize{T}(string)"/> call.
         /// <para>

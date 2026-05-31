@@ -35,7 +35,7 @@ public class HandleBase
 
         public override void Serialize(ref HandleBase obj, MetaStream stream)
         {
-            if (stream.Configuration.StreamVersion  >= 4)
+            if (stream.Params.StreamVersion  >= 4)
             {
                 stream.Serialize(ref obj.ObjectInfo.ObjectName);
             }

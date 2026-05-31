@@ -28,7 +28,7 @@ public struct Color
         {
             if (stream is MetaStreamWriter streamWriter)
             {
-                if (streamWriter.Configuration.CanModifySerializedClassesList)
+                if (streamWriter.Params.CanModifySerializedClassesList)
                 {
                     MetaClass? description = stream.GetMetaClass(typeof(Color));
                     streamWriter.AddVersionInfo(description);

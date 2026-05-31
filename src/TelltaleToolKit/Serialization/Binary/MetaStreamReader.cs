@@ -9,10 +9,10 @@ public sealed class MetaStreamReader : MetaStream
 {
     private BinaryReader Reader = null!;
 
-    public MetaStreamReader(Stream inputStream, Workspace? workspace)
+    public MetaStreamReader(Stream inputStream, Workspace? workspace = null)
     {
         BaseStream = inputStream;
-        Configuration.Workspace = workspace;
+        Params.Workspace = workspace;
 
         bool isValid = ReadHeader();
 
@@ -31,12 +31,12 @@ public sealed class MetaStreamReader : MetaStream
                 currentSect.Stream = new SubStream(Sections[0].Stream, offset, currentSect.CompressedSize);
                 if (currentSect.IsCompressed)
                 {
-                    if (Configuration.Workspace is null)
+                    if (Params.Workspace is null)
                     {
                         throw new InvalidOperationException("[MetaStream] Workspace is not set for encrypted streams.");
                     }
 
-                    ContainerStream cs = new(currentSect.Stream, Configuration.Workspace.BlowfishKey);
+                    ContainerStream cs = new(currentSect.Stream, Params.Workspace.BlowfishKey);
                     currentSect.Stream = cs;
                     SetSection((SectionType)i);
 
@@ -66,10 +66,10 @@ public sealed class MetaStreamReader : MetaStream
         SetSection(SectionType.Header);
 
         var magic = (MetaStreamMagic)this.ReadUInt32();
-        Configuration.StreamVersion = magic.GetMetaStreamVersion();
-        uint streamVersion = Configuration.StreamVersion;
+        Params.StreamVersion = magic.GetMetaStreamVersion();
+        uint streamVersion = Params.StreamVersion;
 
-        if (Configuration.StreamVersion == 0)
+        if (Params.StreamVersion == 0)
         {
             Toolkit.Instance.Logger.LogError($"Not a valid meta stream version: {magic}");
             return false;
@@ -107,7 +107,7 @@ public sealed class MetaStreamReader : MetaStream
         }
         else
         {
-            Configuration.Encrypt = true;
+            Params.Encrypt = true;
             // For MCOM, there is an extra 4-byte field to skip
             if (magic is MetaStreamMagic.Mcom or MetaStreamMagic.EncryptedMcom)
             {
@@ -115,7 +115,7 @@ public sealed class MetaStreamReader : MetaStream
 
                 if (magic is MetaStreamMagic.Mcom)
                 {
-                    Configuration.Encrypt = false;
+                    Params.Encrypt = false;
                     /* TODO: This is not a priority, because Telltale haven't shipped any games with MCOM or encrypted MCOM.
                       But it would be nice to support them in the future.
                       In TWDS1, there's a function called "ReadUncompressAndStoreInMemory" which reads and decompresses the whole stream in memory.
@@ -129,7 +129,7 @@ public sealed class MetaStreamReader : MetaStream
                 return false;
             }
 
-            if (Configuration.Workspace is null)
+            if (Params.Workspace is null)
             {
                 Toolkit.Instance.Logger.LogError("[MetaStream] Workspace is not set for encrypted streams.");
                 return false;
@@ -138,7 +138,7 @@ public sealed class MetaStreamReader : MetaStream
             // Create a LegacyEncryptedStream that starts after the magic (and possible extra)
             LegacyEncryptedStream encryptedStream = new(BaseStream, magic.GetMetaStreamVersion(),
                 GetPosition(),
-                Configuration.Workspace.Blowfish);
+                Params.Workspace.Blowfish);
 
             // Replace the underlying stream and reinitialize the BinaryReader
             Sections[0].Stream = encryptedStream;
@@ -154,7 +154,7 @@ public sealed class MetaStreamReader : MetaStream
             return false;
         }
 
-        Configuration.VersionInfo.Capacity = (int)numVers;
+        Params.VersionInfo.Capacity = (int)numVers;
         for (int i = 0; i < numVers; i++)
         {
             MetaVersionInfo verInfo = new();
@@ -170,17 +170,17 @@ public sealed class MetaStreamReader : MetaStream
             }
 
             verInfo.VersionCrc = this.ReadUInt32();
-            Configuration.VersionInfo.Add(verInfo);
+            Params.VersionInfo.Add(verInfo);
         }
 
         long headerSize = Sections[(int)SectionType.Header].Stream!.Position;
 
-        defaultSize = Configuration.StreamVersion >= 5
+        defaultSize = Params.StreamVersion >= 5
             ? defaultSize
             : BaseStream.Length - headerSize - debugSize - asyncSize;
 
         // The encrypted header is lost in the process, so we need to add it back
-        if(Configuration.Encrypt)
+        if(Params.Encrypt)
             defaultSize -= 4;
 
         Sections[0].CompressedSize = headerSize;
@@ -299,7 +299,7 @@ public sealed class MetaStreamReader : MetaStream
     {
         ulong crc64 = Reader.ReadUInt64();
         value = Symbol.FromCrc64(crc64);
-        Configuration.SerializedSymbols.Add(value);
+        Params.SerializedSymbols.Add(value);
     }
 
 

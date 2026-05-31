@@ -31,7 +31,7 @@ public abstract class MetaStream : IDisposable
     /// <summary>Gets the currently active section (Header, Default, Debug, Async).</summary>
     protected SectionType _currentSection = SectionType.Header;
 
-    public MetaStreamConfiguration Configuration { get; set; } = new();
+    public MetaStreamParams Params { get; set; } = new();
 
     protected Stream BaseStream { get; set; } = null!;
 
@@ -62,15 +62,15 @@ public abstract class MetaStream : IDisposable
     ///     Opens a MetaStream for writing to the specified output stream.
     /// </summary>
     /// <param name="outputStream">The stream that will receive the serialized data.</param>
-    /// <param name="configuration">Configuration that defines version, registered classes, etc.</param>
+    /// <param name="configuration">Parameters that define the version, registered classes, etc.</param>
     /// <returns>A MetaStream configured for writing.</returns>
-    public static MetaStream OpenWrite(Stream outputStream, MetaStreamConfiguration configuration)
+    public static MetaStream OpenWrite(Stream outputStream, MetaStreamParams configuration)
         => new MetaStreamWriter(outputStream, configuration);
 
 
     public void BeginAsyncSection()
     {
-        if (_currentSection is SectionType.Async || Configuration.StreamVersion < 4)
+        if (_currentSection is SectionType.Async || Params.StreamVersion < 4)
         {
             return;
         }
@@ -80,7 +80,7 @@ public abstract class MetaStream : IDisposable
 
     public void EndAsyncSection()
     {
-        if (_currentSection is not SectionType.Async || Configuration.StreamVersion < 4)
+        if (_currentSection is not SectionType.Async || Params.StreamVersion < 4)
         {
             return;
         }
@@ -90,7 +90,7 @@ public abstract class MetaStream : IDisposable
 
     public void BeginDebugSection()
     {
-        if (_currentSection is SectionType.Debug || Configuration.StreamVersion < 4)
+        if (_currentSection is SectionType.Debug || Params.StreamVersion < 4)
         {
             return;
         }
@@ -100,7 +100,7 @@ public abstract class MetaStream : IDisposable
 
     public void EndDebugSection()
     {
-        if (_currentSection is not SectionType.Debug || Configuration.StreamVersion < 4)
+        if (_currentSection is not SectionType.Debug || Params.StreamVersion < 4)
         {
             return;
         }
@@ -123,28 +123,28 @@ public abstract class MetaStream : IDisposable
         => Sections[(int)_currentSection].Stream?.Length == 0;
 
     public bool IsClassSerialized(string typeName)
-        => Configuration.GetRegisteredClasses().Any(id => id.ClassType.Symbol.DebugString == typeName);
+        => Params.GetRegisteredClasses().Any(id => id.ClassType.Symbol.DebugString == typeName);
 
     public MetaClass? GetMetaClass(Type type)
     {
-        if (!Configuration.CanModifySerializedClassesList)
+        if (!Params.CanModifySerializedClassesList)
         {
-            return Configuration.VersionInfo
+            return Params.VersionInfo
                 .FirstOrDefault(versionInfo => versionInfo.GetMetaClassType()?.LinkingType == type)?.GetMetaClass();
         }
 
-        return Configuration.Workspace?.GetMetaClassDescription(type);
+        return Params.Workspace?.GetMetaClassDescription(type);
     }
 
     public MetaClass? GetMetaClass(Symbol symbol)
     {
-        if (!Configuration.CanModifySerializedClassesList)
+        if (!Params.CanModifySerializedClassesList)
         {
-            return Configuration.VersionInfo.FirstOrDefault(versionInfo => versionInfo.TypeSymbolCrc == symbol.Crc64)
+            return Params.VersionInfo.FirstOrDefault(versionInfo => versionInfo.TypeSymbolCrc == symbol.Crc64)
                 ?.GetMetaClass();
         }
 
-        return Configuration.Workspace?.GetMetaClassDescription(symbol);
+        return Params.Workspace?.GetMetaClassDescription(symbol);
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ public abstract class MetaStream : IDisposable
             return;
         }
 
-        foreach (MetaVersionInfo? versInfo in Configuration.VersionInfo)
+        foreach (MetaVersionInfo? versInfo in Params.VersionInfo)
         {
             if (versInfo.TypeSymbolCrc == desc.ClassType.Symbol.Crc64)
             {
@@ -357,7 +357,7 @@ public abstract class MetaStream : IDisposable
         }
 
         MetaVersionInfo versionInfo = new() { TypeSymbolCrc = desc.ClassType.Symbol.Crc64, VersionCrc = desc.Crc32 };
-        Configuration.VersionInfo.Add(versionInfo);
+        Params.VersionInfo.Add(versionInfo);
     }
 
     /// <summary>

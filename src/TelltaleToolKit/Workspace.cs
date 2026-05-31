@@ -65,7 +65,7 @@ public class Workspace
         bool isModifiedBlowfish = Profile.TtarchVersion >= TTArchiveVersion.Seven;
         Blowfish = new Blowfish(profile.BlowfishKey, isModifiedBlowfish);
 
-        DefaultMetaStreamConfig = new MetaStreamConfiguration
+        DefaultMetaStreamConfig = new MetaStreamParams
         {
             StreamVersion = profile.StreamVersion,
             Workspace = this,
@@ -83,11 +83,11 @@ public class Workspace
     public string GameName => Profile.Name;
 
     /// <summary>
-    /// Gets the default <see cref="MetaStreamConfiguration"/> for this workspace,
+    /// Gets the default <see cref="MetaStreamParams"/> for this workspace,
     /// pre-populated from the game profile.
     /// Passed to serialization helpers unless overridden by the caller.
     /// </summary>
-    public MetaStreamConfiguration DefaultMetaStreamConfig { get; }
+    public MetaStreamParams DefaultMetaStreamConfig { get; }
 
     /// <summary>Gets the blowfish key used to decrypt archives and resource descriptions for this game.</summary>
     public string BlowfishKey => Profile.BlowfishKey;
@@ -539,31 +539,31 @@ public class Workspace
 
     /// <summary>
     /// Loads and deserializes an asset of type <typeparamref name="T"/> by filename, also
-    /// returning the <see cref="MetaStreamConfiguration"/> embedded in the stream.
+    /// returning the <see cref="MetaStreamParams"/> embedded in the stream.
     /// </summary>
     /// <typeparam name="T">The target typ. It must have a parameterless constructor.</typeparam>
     /// <param name="name">The bare filename of the asset.</param>
     /// <returns>
-    /// A tuple containing the deserialized asset and its configuration,
+    /// A tuple containing the deserialized asset and its @params,
     /// or <c>(null, null)</c> if not found.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) LoadAssetWithConfig<T>(string name) where T : class, new()
+    public (T? Asset, MetaStreamParams? MetaConfig) LoadAssetWithConfig<T>(string name) where T : class, new()
         => LoadAssetWithConfig<T>(Crc64.Compute(name));
 
     /// <summary>
     /// Loads and deserializes an asset of type <typeparamref name="T"/> by CRC-64, also
-    /// returning the <see cref="MetaStreamConfiguration"/> embedded in the stream.
+    /// returning the <see cref="MetaStreamParams"/> embedded in the stream.
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="crc64">Pre-computed CRC-64 of the asset filename.</param>
     /// <returns>
-    /// A tuple containing the deserialized asset and its configuration,
+    /// A tuple containing the deserialized asset and its @params,
     /// or <c>(null, null)</c> if not found.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) LoadAssetWithConfig<T>(ulong crc64) where T : class, new()
+    public (T? Asset, MetaStreamParams? MetaConfig) LoadAssetWithConfig<T>(ulong crc64) where T : class, new()
         => LoadAssetInternal<T>(crc64);
 
-    private (T? Value, MetaStreamConfiguration? MetaConfig) LoadAssetInternal<T>(ulong crc64) where T : class, new()
+    private (T? Value, MetaStreamParams? MetaConfig) LoadAssetInternal<T>(ulong crc64) where T : class, new()
     {
         for (int i = _contexts.Count - 1; i >= 0; i--)
         {
@@ -620,7 +620,7 @@ public class Workspace
 
     /// <summary>
     /// Serializes <paramref name="obj"/> to a file on disk using a custom
-    /// <see cref="MetaStreamConfiguration"/>.
+    /// <see cref="MetaStreamParams"/>.
     /// </summary>
     /// <remarks>
     /// Use this overload when you need to override the MetaStream version or class-list
@@ -633,8 +633,8 @@ public class Workspace
     /// Destination file path on disk.
     /// The file is created or overwritten.
     /// </param>
-    /// <param name="config">The MetaStream configuration to embed in the output.</param>
-    public void ExportAsset<T>(T obj, string fileName, MetaStreamConfiguration config) where T : class, new()
+    /// <param name="config">The MetaStream @params to embed in the output.</param>
+    public void ExportAsset<T>(T obj, string fileName, MetaStreamParams config) where T : class, new()
         => _toolkit.Serialize(obj, fileName, config);
 
     /// <summary>

@@ -9,11 +9,11 @@ public sealed class MetaStreamWriter : MetaStream
     private readonly Stream _outputStream;
     private bool _closed;
 
-    public MetaStreamWriter(Stream outputStream, MetaStreamConfiguration configuration)
+    public MetaStreamWriter(Stream outputStream, MetaStreamParams @params)
     {
         _outputStream = outputStream;
-        Configuration = configuration;
-        Configuration.SerializedSymbols.Clear();
+        Params = @params;
+        Params.SerializedSymbols.Clear();
 
         Sections[0].Stream = new MemoryStream(0x100);
         SetSection(SectionType.Default);
@@ -26,8 +26,8 @@ public sealed class MetaStreamWriter : MetaStream
     private void WriteHeader()
     {
         SetSection(SectionType.Header);
-        this.Write((uint)Configuration.ResolveMagic());
-        uint streamVersion = Configuration.StreamVersion;
+        this.Write((uint)Params.ResolveMagic());
+        uint streamVersion = Params.StreamVersion;
 
         if (streamVersion >= 4)
         {
@@ -59,11 +59,11 @@ public sealed class MetaStreamWriter : MetaStream
             this.Write(asyncSize);
         }
 
-        Configuration.VersionInfo = Configuration.VersionInfo.Distinct().ToList();
+        Params.VersionInfo = Params.VersionInfo.Distinct().ToList();
 
-        this.Write(Configuration.VersionInfo.Count);
+        this.Write(Params.VersionInfo.Count);
 
-        foreach (MetaVersionInfo? versionInfo in Configuration.VersionInfo)
+        foreach (MetaVersionInfo? versionInfo in Params.VersionInfo)
         {
             if (streamVersion >= 3)
             {
@@ -150,13 +150,13 @@ public sealed class MetaStreamWriter : MetaStream
             throw new ObjectDisposedException(nameof(MetaStreamWriter));
         }
 
-        uint streamVersion = Configuration.StreamVersion;
+        uint streamVersion = Params.StreamVersion;
         bool canCompress = streamVersion >= 4;
         // Telltale does not process the
         for (int i = 1; i <= 3; i++)
         {
             SectionInfo section = Sections[i];
-            if (section.Stream is { Length: > 0 } && Configuration.Compress && canCompress)
+            if (section.Stream is { Length: > 0 } && Params.Compress && canCompress)
             {
                 ArchiveWriteOptions options = new() { Algorithm = CompressionAlgorithm.Deflate };
                 MemoryStream outStream = new(0x10000);
@@ -196,16 +196,16 @@ public sealed class MetaStreamWriter : MetaStream
             section.Stream.CopyTo(_outputStream);
         }
 
-        if (Configuration is { Encrypt: true, StreamVersion: <= 3 })
+        if (Params is { Encrypt: true, StreamVersion: <= 3 })
         {
-            MetaStreamMagic targetMagic = Configuration.ResolveMagic();
+            MetaStreamMagic targetMagic = Params.ResolveMagic();
 
             if (!_outputStream.CanRead || !_outputStream.CanSeek)
                 throw new InvalidOperationException(
                     "Legacy encryption requires a readable and seekable output stream (e.g. MemoryStream or FileStream opened with FileAccess.ReadWrite). " +
                     "The encryption is applied in-place after writing.");
 
-            LegacyEncryption.Encrypt(_outputStream, targetMagic, Configuration.Workspace!.Blowfish);
+            LegacyEncryption.Encrypt(_outputStream, targetMagic, Params.Workspace!.Blowfish);
         }
 
         _closed = true;
@@ -215,6 +215,6 @@ public sealed class MetaStreamWriter : MetaStream
     public override void Serialize(ref Symbol value)
     {
         Writer.Write(value.Crc64);
-        Configuration.SerializedSymbols.Add(value);
+        Params.SerializedSymbols.Add(value);
     }
 }

@@ -212,7 +212,7 @@ public static class MetaStreamExtensions
     public static MetaClassType? ReadMetaClassType(this MetaStream stream)
     {
         MetaClassType? value;
-        if (stream.Configuration.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
+        if (stream.Params.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
         {
             ulong typeSymbolCrc = stream.ReadUInt64();
             value = MetaClassTypeRegistry.GetByHash(typeSymbolCrc);
@@ -447,7 +447,7 @@ public static class MetaStreamExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MetaStream Write(this MetaStream stream, MetaClassType value)
     {
-        if (stream.Configuration.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
+        if (stream.Params.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
         {
             stream.Write(value.Symbol.Crc64);
         }

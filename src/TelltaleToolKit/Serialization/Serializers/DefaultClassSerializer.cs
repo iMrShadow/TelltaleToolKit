@@ -59,7 +59,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         }
 
         // Add this class to the metaclass header.
-        if (stream is MetaStreamWriter { Configuration: { CanModifySerializedClassesList: true } } streamWriter)
+        if (stream is MetaStreamWriter { Params: { CanModifySerializedClassesList: true } } streamWriter)
         {
             streamWriter.AddVersionInfo(description);
         }

@@ -143,7 +143,7 @@ public static class MetaStreamVersionExtensions
     ///     </list>
     /// </returns>
     /// <remarks>
-    ///     The returned version corresponds to the <see cref="MetaStreamConfiguration.StreamVersion" />
+    ///     The returned version corresponds to the <see cref="MetaStreamParams.StreamVersion" />
     ///     that should be used when reading or writing the stream.
     /// </remarks>
     public static uint GetMetaStreamVersion(this MetaStreamMagic magic) =>
