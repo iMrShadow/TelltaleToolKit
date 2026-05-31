@@ -3,7 +3,7 @@ using Lua;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Resource;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
@@ -62,10 +62,12 @@ public class Workspace
         Profile = profile ?? throw new ArgumentNullException(nameof(profile));
         LocalHashDatabase = new HashDatabase.HashDatabase();
 
+        bool isModifiedBlowfish = Profile.TtarchVersion >= TTArchiveVersion.Seven;
+        Blowfish = new Blowfish(profile.BlowfishKey, isModifiedBlowfish);
+
         DefaultMetaStreamConfig = new MetaStreamConfiguration
         {
-            AreSymbolsHashed = profile.AreSymbolsHashed,
-            Version = profile.MetaStreamVersion,
+            StreamVersion = profile.MetaStreamMagic.GetMetaStreamVersion(),
             Workspace = this,
             CanModifySerializedClassesList = true
         };
@@ -89,6 +91,9 @@ public class Workspace
 
     /// <summary>Gets the blowfish key used to decrypt archives and resource descriptions for this game.</summary>
     public string BlowfishKey => Profile.BlowfishKey;
+
+    /// <summary>Gets the blowfish instance used to decrypt archives and resource descriptions for this game.</summary>
+    public Blowfish Blowfish { get; }
 
     /// <summary>
     /// Gets the workspace-local hash database used for symbol resolution.
@@ -573,11 +578,12 @@ public class Workspace
                 ? $"[Workspace:{Name}] Found asset '{assetName}' in context: {_contexts[i].Name}"
                 : $"[Workspace:{Name}] Found asset 0x{crc64:X16} in context: {_contexts[i].Name}");
 
-            var asset = _toolkit.DeserializeWithConfig<T>(stream);
+            var asset = _toolkit.DeserializeWithConfig<T>(stream, this);
 
             if (asset.Asset == null)
             {
-                _toolkit.Config.Logger.LogWarning($"[Workspace:{Name}] Asset {(assetName ?? $"0x{crc64:X16}")} found but failed to load in context: {_contexts[i].Name}");
+                _toolkit.Config.Logger.LogWarning(
+                    $"[Workspace:{Name}] Asset {(assetName ?? $"0x{crc64:X16}")} found but failed to load in context: {_contexts[i].Name}");
                 return (null, null);
             }
 
@@ -770,7 +776,8 @@ public class Workspace
         var fileEntry = FindFileEntry(crc64);
         if (fileEntry?.Name != null)
         {
-            _toolkit.Config.Logger.LogInfo($"[Workspace:{Name}] Resolved 0x{crc64:X16} as '{fileEntry.Name}' from archive");
+            _toolkit.Config.Logger.LogInfo(
+                $"[Workspace:{Name}] Resolved 0x{crc64:X16} as '{fileEntry.Name}' from archive");
             return fileEntry.Name;
         }
 

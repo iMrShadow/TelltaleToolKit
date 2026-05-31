@@ -4,7 +4,6 @@ using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Logging;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.TelltaleArchives.Formats;
@@ -228,13 +227,13 @@ public class Toolkit
     /// A tuple containing the deserialized object and the configuration embedded in the stream,
     /// or <c>(null, null)</c> if reading or parsing fails.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(string fileName)
+    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(string fileName, Workspace? workspace = null)
         where T : class, new()
     {
         try
         {
             using FileStream stream = File.OpenRead(fileName);
-            var result = DeserializeInternal<T>(stream);
+            var result = DeserializeInternal<T>(stream, workspace);
 
             if (result.Asset == null)
             {
@@ -272,10 +271,10 @@ public class Toolkit
     /// A tuple containing the deserialized object and the configuration embedded in the stream,
     /// or <c>(null, null)</c> if parsing fails.
     /// </returns>
-    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(Stream stream)
+    public (T? Asset, MetaStreamConfiguration? MetaConfig) DeserializeWithConfig<T>(Stream stream, Workspace? workspace = null)
         where T : class, new()
     {
-        var result = DeserializeInternal<T>(stream);
+        var result = DeserializeInternal<T>(stream, workspace);
 
         if (result.Asset == null)
         {
@@ -294,12 +293,12 @@ public class Toolkit
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if reading or parsing fails.
     /// </returns>
-    public T? Deserialize<T>(string fileName) where T : class, new()
+    public T? Deserialize<T>(string fileName, Workspace? workspace = null) where T : class, new()
     {
         try
         {
             using FileStream stream = File.OpenRead(fileName);
-            var result = DeserializeInternal<T>(stream);
+            var result = DeserializeInternal<T>(stream, workspace);
 
             if (result.Asset == null)
             {
@@ -332,9 +331,9 @@ public class Toolkit
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if parsing fails.
     /// </returns>
-    public T? Deserialize<T>(Stream stream) where T : class, new()
+    public T? Deserialize<T>(Stream stream, Workspace? workspace = null) where T : class, new()
     {
-        var result = DeserializeInternal<T>(stream);
+        var result = DeserializeInternal<T>(stream, workspace);
 
         if (result.Asset == null)
         {
@@ -420,14 +419,14 @@ public class Toolkit
     /// </summary>
     /// <param name="fileName">Path to the file to check.</param>
     /// <returns>
-    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamVersion"/>;
+    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamMagic"/>;
     /// <see langword="false"/> otherwise.
     /// </returns>
     public bool IsMetaStreamFile(string fileName)
     {
         // Use a using block so the file handle is released immediately after the check.
         using FileStream stream = File.OpenRead(fileName);
-        return MetaStreamReader.IsValidMetaStream(stream);
+        return MetaStream.IsValidMetaStream(stream);
     }
 
     /// <summary>
@@ -438,11 +437,11 @@ public class Toolkit
     /// A readable, seekable stream. The stream position is restored after the check.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamVersion"/>;
+    /// <see langword="true"/> if the header matches a known <see cref="MetaStreamMagic"/>;
     /// <see langword="false"/> otherwise.
     /// </returns>
     public bool IsMetaStreamFile(Stream stream)
-        => MetaStreamReader.IsValidMetaStream(stream);
+        => MetaStream.IsValidMetaStream(stream);
 
     /// <summary>
     /// Returns <see langword="true"/> if <paramref name="fileName"/> has an extension
@@ -468,7 +467,7 @@ public class Toolkit
 
     /// <summary>
     /// Returns <see langword="true"/> if the stream's header matches a known
-    /// <see cref="MetaStreamVersion"/> value.
+    /// <see cref="MetaStreamMagic"/> value.
     /// </summary>
     /// <param name="stream">
     /// A readable, seekable stream. The stream position is restored after the check.
@@ -484,8 +483,8 @@ public class Toolkit
             if (stream.Read(header, 0, 4) < 4)
                 return false;
 
-            var version = (MetaStreamVersion)BitConverter.ToInt32(header);
-            return Enum.IsDefined(typeof(MetaStreamVersion), version);
+            var version = (MetaStreamMagic)BitConverter.ToInt32(header);
+            return Enum.IsDefined(typeof(MetaStreamMagic), version);
         }
         finally
         {
@@ -605,33 +604,40 @@ public class Toolkit
             ClassRegistry.Register(metaClasses);
     }
 
-    private (T? Asset, MetaStreamConfiguration? Config) DeserializeInternal<T>(Stream stream)
+    private (T? Asset, MetaStreamConfiguration? Config) DeserializeInternal<T>(Stream stream, Workspace? workspace = null)
         where T : class, new()
     {
         try
         {
             var result = new T();
-            var reader = new MetaStreamReader(stream);
+            var metaStream = MetaStream.OpenRead(stream, workspace);
 
-            reader.PreSerialize(ref result);
-            reader.Serialize(ref result);
+            metaStream.Serialize(ref result);
 
-            MetaStreamConfiguration config = reader.Configuration;
+            MetaStreamConfiguration config = metaStream.Configuration;
 
-            Config.Logger.LogInfo(
-                $"[Toolkit] Successfully read {typeof(T).Name}, version: {config.Version}, symbols: {config.SerializedSymbols.Count}");
+            if (metaStream.IsEndOfStream())
+            {
+                Config.Logger.LogInfo(
+                    $"[Toolkit] Successfully read {typeof(T).Name}, stream version: {config.StreamVersion}.");
+            }
+            else
+            {
+                Config.Logger.LogWarning($"[Toolkit] Unexpected end of stream while reading {typeof(T).Name}.");
+            }
 
             if (Config.AutoResolveSymbols)
             {
                 ResolveSymbols(config.SerializedSymbols);
             }
 
+            metaStream.Close();
             return (result, config);
         }
         catch (Exception ex)
         {
             // Internal method only logs debug details, doesn't warn/error
-            Config.Logger.LogError($"[Toolkit] Deserialization internal error: {ex.Message}");
+            Config.Logger.LogError($"[Toolkit] Deserialization internal error: {ex.Message} {ex.StackTrace}");
             return (null, null);
         }
     }
@@ -639,11 +645,10 @@ public class Toolkit
     private void SerializeInternal<T>(T obj, Stream stream, MetaStreamConfiguration config)
         where T : class, new()
     {
-        var writer = new MetaStreamWriter(stream, config);
+        var metaStream = MetaStream.OpenWrite(stream, config);
         T refObj = obj;
-        writer.PreSerialize(ref refObj);
-        writer.Serialize(ref refObj);
-        writer.Save();
+        metaStream.Serialize(ref refObj);
+        metaStream.Close();
     }
 
     /// <summary>
