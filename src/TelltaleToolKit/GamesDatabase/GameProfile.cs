@@ -1,89 +1,79 @@
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit.GamesDatabase;
 
 /// <summary>
-/// Represents a registry entry for a Telltale game configuration.
-/// Each entry is identified by its file name following the convention:
-/// <para>[slugified-title]-[year]-[month]-[platform]-[demo]</para>
-/// This registry contains general information about the game, versioning, encryption, and a mapping of metaclasses.
+///     Represents a registry entry for a Telltale game configuration.
+///     Each entry is identified by its file name following the convention:
+///     <para>[slugified-title]-[year]-[month]-[platform]-[demo]</para>
+///     This registry contains general information about the game, versioning, encryption, and a mapping of metaclasses.
 /// </summary>
 public sealed class GameProfile
 {
     /// <summary>
-    /// Gets or sets the unique identifier for the registry entry, derived from the file name.
+    ///     Gets or sets the unique identifier for the registry entry, derived from the file name.
     /// </summary>
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets the display name of the game.
+    ///     Gets the display name of the game.
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets a textual description of the game.
+    ///     Gets a textual description of the game.
     /// </summary>
     public string Description { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets the Blowfish encryption key used for securing game archives.
-    /// In the config file, you can either use the name of <see cref="T3BlowfishKey"/> or a custom string.
+    ///     Gets the Blowfish encryption key used for securing game archives.
+    ///     In the config file, you can either use the name of <see cref="T3BlowfishKey" /> or a custom string.
     /// </summary>
     public string BlowfishKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets a value indicating whether the game uses the TTARCH2 archive format.
+    ///     Gets a value indicating whether the game uses the TTARCH2 archive format.
     /// </summary>
     public bool IsTtarch2 { get; set; }
 
     /// <summary>
-    /// Gets the version of the TTARCH archive format used by the game.
+    ///     Gets the version of the TTARCH archive format used by the game.
     /// </summary>
-    /// <seealso cref="TTArchiveVersion"/>
+    /// <seealso cref="TTArchiveVersion" />
     public TTArchiveVersion TtarchVersion { get; set; }
 
     /// <summary>
-    /// Gets the Lua scripting engine version used by the game.
+    ///     Gets the Lua scripting engine version used by the game.
     /// </summary>
-    /// <seealso cref="LuaVersion"/>
+    /// <seealso cref="LuaVersion" />
     public LuaVersion LuaVersion { get; init; }
 
     /// <summary>
-    /// Gets the version of the <see cref="MetaStream"/> stream format used in the game.
-    /// </summary>
-    /// <seealso cref="MetaStreamMagic"/>
-    public MetaStreamMagic MetaStreamMagic { get; set; }
-
-    /// <summary>
-    /// Gets the version of the <see cref="MetaStream"/> stream format used in the game.
+    ///     Gets the version of the <see cref="MetaStream" /> stream format used in the game.
     /// </summary>
     public uint StreamVersion { get; set; }
 
-    // TODO: Automatically assign false if MetaStreamVersion is MBIN.
-    public bool AreSymbolsHashed { get; set; }
-
     /// <summary>
-    /// Gets a value indicating whether Oodle compression is enabled for game archives.
+    ///     Gets a value indicating whether Oodle compression is enabled for game archives.
     /// </summary>
     public bool EnableOodleCompression { get; init; }
 
     /// <summary>
-    /// Identifier (name) of the metaclass database used for resolving MetaClass definitions for this game.
-    /// The value is a slug title from the already existing game profiles.
-    /// By default, this value is the same as <see cref="Id"/>. Use this property to override the database name
-    /// when multiple games share a common metaclass database, or when the metaclass DB is stored under a different id.
-    /// If empty, resolution should default to <see cref="Id"/>.
-    /// If invalid (no metaclass database exists)
+    ///     Identifier (name) of the metaclass database used for resolving MetaClass definitions for this game.
+    ///     The value is a slug title from the already existing game profiles.
+    ///     By default, this value is the same as <see cref="Id" />. Use this property to override the database name
+    ///     when multiple games share a common metaclass database, or when the metaclass DB is stored under a different id.
+    ///     If empty, resolution should default to <see cref="Id" />.
+    ///     If invalid (no metaclass database exists)
     /// </summary>
     public string MetaClassDatabase { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets a dictionary mapping <see cref="MetaClassType"/> to their corresponding IDs.
-    /// This represents the metaclasses available in the game and their identifiers.
+    ///     Gets a dictionary mapping <see cref="MetaClassType" /> to their corresponding IDs.
+    ///     This represents the metaclasses available in the game and their identifiers.
     /// </summary>
     public Dictionary<MetaClassType, uint> Classes { get; init; } = new();
 }

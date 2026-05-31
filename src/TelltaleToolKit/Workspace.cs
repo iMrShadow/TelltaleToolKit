@@ -67,7 +67,7 @@ public class Workspace
 
         DefaultMetaStreamConfig = new MetaStreamConfiguration
         {
-            StreamVersion = profile.MetaStreamMagic.GetMetaStreamVersion(),
+            StreamVersion = profile.StreamVersion,
             Workspace = this,
             CanModifySerializedClassesList = true
         };

@@ -11,11 +11,6 @@ public class MetaStreamConfiguration
     /// <summary>
     /// Gets or sets the MetaStream version associated with this configuration.
     /// </summary>
-    public MetaStreamMagic Magic { get; set; }
-
-    /// <summary>
-    /// Gets or sets the MetaStream version associated with this configuration.
-    /// </summary>
     public uint StreamVersion { get; set; }
 
     /// <summary>
