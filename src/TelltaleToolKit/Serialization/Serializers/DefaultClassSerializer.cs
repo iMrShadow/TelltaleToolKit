@@ -120,25 +120,6 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
                 return cachedAlt;
         }
 
-        // 3. String<->Symbol fallback
-        if (propDesc.Type.LinkingType == typeof(string) || propDesc.Type.LinkingType == typeof(Symbol))
-        {
-            throw new MetaMemberNotFoundException(
-                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Symbol)), out CachedMember cachedAlt))
-                return cachedAlt;
-        }
-
-        //4. String<->Symbol fallback
-        if (propDesc.Type.LinkingType == typeof(Dictionary<string, float>))
-        {
-            throw new MetaMemberNotFoundException(
-                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Dictionary<Symbol, float>)),
-                    out CachedMember? cachedAlt))
-                return cachedAlt;
-        }
-
         // 5. int<->Flags
         if (propDesc.Type.LinkingType == typeof(int))
         {
@@ -146,29 +127,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
                 return cachedAlt;
         }
 
-        // 6. string<->Symbol (dictionary)
-        if (propDesc.Type.LinkingType == typeof(Dictionary<string, TransitionMap.TransitionMapInfo>))
-        {
-            throw new MetaMemberNotFoundException(
-                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
-            if (MemberCache.TryGetValue(
-                    (propDesc.MemberName, typeof(Dictionary<Symbol, TransitionMap.TransitionMapInfo>)),
-                    out CachedMember? cachedAlt))
-                return cachedAlt;
-        }
-
-        // 7. string<->Symbol (dictionary)
-        if (propDesc.Type.LinkingType == typeof(Dictionary<string, bool>))
-        {
-            throw new MetaMemberNotFoundException(
-                $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Dictionary<Symbol, bool>)),
-                    out CachedMember? cachedAlt))
-                return cachedAlt;
-        }
-
         // Final: First available
-
         if (propDesc.Type.LinkingType == typeof(int) || propDesc.Type.LinkingType == typeof(uint))
         {
             CachedMember? cachedAltFinal = MemberCache

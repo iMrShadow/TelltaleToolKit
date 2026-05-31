@@ -5,7 +5,6 @@ namespace TelltaleToolKit.Serialization.Serializers;
 [MetaClassSerializerGlobal(typeof(ByteArraySerializer))]
 public class ByteArraySerializer : MetaClassSerializer<byte[]>
 {
-    /// <inheritdoc/>
     public override void Serialize(ref byte[] obj, MetaStream stream)
     {
         if (stream is MetaStreamWriter streamWriter)

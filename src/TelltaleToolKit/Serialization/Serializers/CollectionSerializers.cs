@@ -77,7 +77,6 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
         }
     }
 
-
     /// <inheritdoc/>
     public override void Serialize(ref HashSet<T> obj, MetaStream stream)
     {
@@ -173,7 +172,6 @@ public sealed class ArraySerializer<T> : MetaClassSerializer<T[]>
         _itemDataClassSerializer = selector.GetSerializer<T>();
     }
 
-    /// <inheritdoc/>
     public override void Serialize(ref T[] obj, MetaStream stream)
     {
         for (var i = 0; i < obj.Length; ++i)
