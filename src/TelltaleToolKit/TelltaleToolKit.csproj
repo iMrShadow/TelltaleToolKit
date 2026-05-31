@@ -6,7 +6,7 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>13</LangVersion>
     <RootNamespace>TelltaleToolKit</RootNamespace>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Title>TelltaleToolKit</Title>
     <Authors>Ivan Panayotov</Authors>
     <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
