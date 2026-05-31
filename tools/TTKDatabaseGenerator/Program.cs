@@ -8,6 +8,7 @@ using System.Text.Json;
 using TelltaleToolKit;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
@@ -135,7 +136,7 @@ internal static class Program
             var unregisteredTypes = new ConcurrentDictionary<(ulong, uint), byte>();
 
             var areSymbolsHashed = true;
-            var msv = MetaStreamVersion.Mtre;
+            uint msv = 3;
             TTArchiveVersion ttarchVersion = 0;
 
             var processed = 0;
@@ -162,9 +163,8 @@ internal static class Program
 
                         if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
                         {
-                            MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
-                            areSymbolsHashed = config.AreSymbolsHashed;
-                            msv = config.Version;
+                            MetaStreamParams config = new MetaStreamReader(firstFile, null).Params;
+                            msv = config.StreamVersion;
                         }
                     }
 
@@ -175,22 +175,25 @@ internal static class Program
                         if (!Toolkit.IsMetaFile(file))
                             continue;
 
-                        MetaStreamConfiguration config = new MetaStreamReader(file).Configuration;
+                        MetaStreamParams config = new MetaStreamReader(file, null).Params;
 
-                        foreach (MetaClass desc in config.SerializedClasses)
+                        foreach (MetaClass desc in config.GetRegisteredClasses())
                             serializedMetaClasses.TryAdd(desc, 0);
 
-                        foreach ((ulong, uint) t in config.UnregisteredTypes)
+                        var localUnregisteredTypes = config.GetUnregisteredTypes();
+                        var localUnregisteredClasses = config.GetUnregisteredClasses();
+
+                        foreach ((ulong, uint) t in localUnregisteredTypes)
                             unregisteredTypes.TryAdd(t, 0);
 
-                        foreach ((MetaClassType, uint crc32) c in config.UnregisteredClasses)
+                        foreach ((MetaClassType, uint crc32) c in localUnregisteredClasses)
                             unrecognizedMeta.TryAdd(c, 0);
 
-                        if (config.UnregisteredTypes.Count > 0)
-                            PrintWarning($"{entry.Name} -> {config.UnregisteredTypes.Count} unknown types", logWriter);
+                        if (localUnregisteredTypes.Count > 0)
+                            PrintWarning($"{entry.Name} -> {localUnregisteredTypes.Count} unknown types", logWriter);
 
-                        if (config.UnregisteredClasses.Count > 0)
-                            PrintWarning($"{entry.Name} -> {config.UnregisteredClasses.Count} unknown classes",
+                        if (localUnregisteredClasses.Count > 0)
+                            PrintWarning($"{entry.Name} -> {localUnregisteredClasses.Count} unknown classes",
                                 logWriter);
                     }
                 }
@@ -282,12 +285,11 @@ internal static class Program
                 {
                     Id = slug,
                     Name = slug,
-                    AreSymbolsHashed = areSymbolsHashed,
                     BlowfishKey = (key.ToString() ?? customKey) ?? "UNKNOWN",
                     EnableOodleCompression = false,
                     IsTtarch2 = selectedFilter == "*ttarch2",
                     LuaVersion = LuaVersion.Lua512,
-                    MetaStreamVersion = msv,
+                    StreamVersion = msv,
                     TtarchVersion = ttarchVersion,
                 };
 
