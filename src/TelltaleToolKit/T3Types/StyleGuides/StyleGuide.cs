@@ -62,7 +62,6 @@ public class StyleGuide
                     for (var i = 0; i < values; i++)
                     {
                         var child = new ActingPaletteClass();
-                        stream.PreSerialize<ActingPaletteClass>(ref child);
                         stream.Serialize<ActingPaletteClass>(ref child);
                         obj.PaletteClassesPtrs.Add(child);
                     }

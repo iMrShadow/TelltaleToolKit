@@ -41,7 +41,6 @@ public class DlgVisibilityConditions
                     return;
 
                 Rule objRule = obj.Rule;
-                stream.PreSerialize(ref objRule);
                 stream.Serialize(ref objRule);
             }
         }

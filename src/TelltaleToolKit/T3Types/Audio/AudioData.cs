@@ -62,7 +62,7 @@ public class AudioData
             }
             else if (stream is MetaStreamReader streamReader)
             {
-                if (stream.Configuration.Version is MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6)
+                if (stream.Configuration.StreamVersion >= 4)
                 {
                     obj.NumChannels = streamReader.ReadInt16();
                     short bitDepth = streamReader.ReadInt16();
@@ -73,7 +73,7 @@ public class AudioData
                     int always328160 = streamReader.ReadInt32();
                     int bytesPerSecCopy = streamReader.ReadInt32();
 
-                    obj.OggBuffer = streamReader.ReadBytes(stream.GetRemainingSectionBytes());
+                    obj.OggBuffer = streamReader.ReadBytes((int)stream.GetRemainingSectionBytes());
                 }
             }
         }

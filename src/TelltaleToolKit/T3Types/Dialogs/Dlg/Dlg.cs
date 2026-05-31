@@ -81,7 +81,6 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                 for (var i = 0; i < folderCount; i++)
                 {
                     var folder = new DlgFolder();
-                    stream.PreSerialize(ref folder);
                     stream.Serialize(ref folder);
                     obj.Folders.Add(folder);
                 }
@@ -90,7 +89,11 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                 obj.Nodes.Capacity = nodeCount;
                 for (var i = 0; i < nodeCount; i++)
                 {
-                    MetaClassType type = streamReader.ReadMetaClassType();
+                    MetaClassType? type = streamReader.ReadMetaClassType();
+
+                    if (type == null)
+                        throw new InvalidOperationException("[Dlg] Type is not registered.");
+
                     MetaClassSerializer metaClassSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object node = null!;

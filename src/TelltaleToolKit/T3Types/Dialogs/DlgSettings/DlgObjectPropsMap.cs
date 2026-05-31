@@ -45,7 +45,6 @@ public class DlgObjectPropsMap : IGenerator
                 for (var i = 0; i < groupDefinitionSize; i++)
                 {
                     var groupDefinition = new GroupDefinition();
-                    stream.PreSerialize(ref groupDefinition);
                     stream.Serialize(ref groupDefinition);
                     obj.GroupDefinitions.Add(groupDefinition);
                 }

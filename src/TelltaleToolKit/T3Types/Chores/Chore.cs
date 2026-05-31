@@ -14,10 +14,10 @@ public class Chore
 {
     // [MetaMember("mpChore")]
     // public  Name { get; set; } = string.Empty;
-    
+
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
-    
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
 
@@ -65,20 +65,20 @@ public class Chore
 
     [MetaMember("mSynchronizedToLocalization")]
     public LocalizeInfo SynchronizedToLocalization { get; set; }
-    
+
     [MetaMember("mDependencies")]
     public DependencyLoader Dependencies  { get; set; }
 
     [MetaMember("mToolProps")]
     public ToolProps ToolProps  { get; set; }
-    
+
     [MetaMember("mWalkPaths")]
     public Dictionary<Symbol, WalkPath> WalkPaths  { get; set; }
 
     public class Serializer : MetaClassSerializer<Chore>
     {
         private static readonly DefaultClassSerializer<Chore> DefaultSerializer = new();
-        
+
         public override void Serialize(ref Chore obj, MetaStream stream)
         {
             DefaultSerializer.PreSerialize(ref obj, stream);
@@ -97,8 +97,7 @@ public class Chore
                     for (var i = 0; i < obj.NumResources; i++)
                     {
                         var choreResource = new ChoreResource();
-                        Toolkit.Instance.GetSerializer<ChoreResource>().PreSerialize(ref choreResource, stream);
-                        Toolkit.Instance.GetSerializer<ChoreResource>().Serialize(ref choreResource, stream);
+                        stream.Serialize(ref choreResource);
                         obj.ResourcesChore.Add(choreResource);
                     }
                 }

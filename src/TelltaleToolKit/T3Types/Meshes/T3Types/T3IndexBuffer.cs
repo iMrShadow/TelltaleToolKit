@@ -16,10 +16,10 @@ public class T3IndexBuffer
 
     [MetaMember("mFormat")]
     public int Format { get; set; }
-    
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
-    
+
     [MetaMember("mUsage")]
     public int Usage { get; set; }
 
@@ -35,7 +35,7 @@ public class T3IndexBuffer
     public class T3IndexBufferSerializer : MetaClassSerializer<T3IndexBuffer>
     {
         private static readonly DefaultClassSerializer<T3IndexBuffer> DefaultSerializer = new();
-        
+
         public override void Serialize(ref T3IndexBuffer obj, MetaStream stream)
         {
             DefaultSerializer.Serialize(ref obj, stream);
@@ -71,10 +71,10 @@ public class T3VertexComponent
 
     [MetaMember("mCount")]
     public uint Count { get; set; }
-    
+
     [MetaMember("mType")]
     public EnumType Type { get; set; }
-    
+
     [MetaClassSerializerGlobal(typeof(EnumSerializer<EnumType>))]
     public enum EnumType {
         VTypeNone = 0,

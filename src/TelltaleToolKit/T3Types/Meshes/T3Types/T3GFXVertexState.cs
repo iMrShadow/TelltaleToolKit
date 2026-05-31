@@ -53,7 +53,6 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.Attributes.Count; i++)
                 {
                     GFXPlatformAttributeParams attribute = obj.Attributes[i];
-                    stream.PreSerialize(ref attribute);
                     stream.Serialize(ref attribute);
                     obj.Attributes[i] = attribute;
                 }
@@ -63,7 +62,6 @@ public class T3GFXVertexState
                     for (var i = 0; i < obj.IndexBuffer.Count; i++)
                     {
                         T3GFXBuffer indexBuffer = obj.IndexBuffer[i];
-                        stream.PreSerialize(ref indexBuffer);
                         stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer[i] = indexBuffer;
                     }
@@ -76,7 +74,6 @@ public class T3GFXVertexState
                     if (hasIndexBuffer)
                     {
                         T3GFXBuffer indexBuffer = obj.IndexBuffer[0];
-                        stream.PreSerialize(ref indexBuffer);
                         stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer[0] = indexBuffer;
                     }
@@ -85,7 +82,6 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.VertexBuffer.Count; i++)
                 {
                     T3GFXBuffer vertexBuffer = obj.VertexBuffer[i];
-                    stream.PreSerialize(ref vertexBuffer);
                     stream.Serialize(ref vertexBuffer);
                     obj.VertexBuffer[i] = vertexBuffer;
                 }
@@ -105,7 +101,6 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.AttributeCount; i++)
                 {
                     var attribute = new GFXPlatformAttributeParams();
-                    stream.PreSerialize(ref attribute);
                     stream.Serialize(ref attribute);
                     obj.Attributes.Add(attribute);
                 }
@@ -115,7 +110,6 @@ public class T3GFXVertexState
                     for (var i = 0; i < obj.IndexBufferCount; i++)
                     {
                         var indexBuffer = new T3GFXBuffer();
-                        stream.PreSerialize(ref indexBuffer);
                         stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer.Add(indexBuffer);
                     }
@@ -128,7 +122,6 @@ public class T3GFXVertexState
                     if (hasIndexBuffer)
                     {
                         var indexBuffer = new T3GFXBuffer();
-                        stream.PreSerialize(ref indexBuffer);
                         stream.Serialize(ref indexBuffer);
                         obj.IndexBuffer.Add(indexBuffer);
                     }
@@ -137,7 +130,6 @@ public class T3GFXVertexState
                 for (var i = 0; i < obj.VertexBufferCount; i++)
                 {
                     var submesh = new T3GFXBuffer();
-                    stream.PreSerialize(ref submesh);
                     stream.Serialize(ref submesh);
                     obj.VertexBuffer.Add(submesh);
                 }

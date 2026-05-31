@@ -687,14 +687,21 @@ public class D3DMesh
                 {
                     // Handle name?
                     Symbol symbol = streamReader.ReadSymbol();
-                    MetaClassType typeSymbol = streamReader.ReadMetaClassType();
+                    MetaClassType? typeSymbol = streamReader.ReadMetaClassType();
 
                     stream.BeginBlock();
+
+                    if (typeSymbol is null)
+                    {
+                        Toolkit.Instance.Logger.LogError($"[D3DMesh] Internal resource '{symbol}' has no registered type.");
+                        stream.EndBlock();
+                        continue;
+                    }
 
                     object? propertyValue = null;
 
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
-                        .PreSerialize(ref propertyValue, stream, typeSymbol);
+                        .PreSerialize(ref propertyValue!, stream, typeSymbol);
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
                         .Serialize(ref propertyValue, stream);
 

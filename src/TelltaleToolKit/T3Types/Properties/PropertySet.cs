@@ -158,7 +158,7 @@ public class PropertySet
                     }
                 }
 
-                if (obj.PropVersion == 1 && !stream.GetMetaClass(typeof(PropertySet)).ContainsMember("mParentList"))
+                if (obj.PropVersion == 1 && !stream.GetMetaClass(typeof(PropertySet))!.ContainsMember("mParentList"))
                 {
                     stream.EndBlock();
                     stream.BeginBlock();
@@ -168,9 +168,12 @@ public class PropertySet
                 for (var i = 0; i < numTypes; i++)
                 {
                     // The type of the class
-                    MetaClassType typeSymbol = streamReader.ReadMetaClassType();
+                    MetaClassType? typeSymbol = streamReader.ReadMetaClassType();
                     // The number of times that type has been serialized
                     int numOfType = streamReader.ReadInt32();
+
+                    if (typeSymbol is null)
+                        throw new InvalidOperationException("[PropertySet] Type symbol is null");
 
                     MetaClassSerializer classTypeSerializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
@@ -192,7 +195,6 @@ public class PropertySet
 
             if (embeddedParentProps)
             {
-                stream.PreSerialize(ref obj.ParentProperties);
                 stream.Serialize(ref obj.ParentProperties);
             }
 

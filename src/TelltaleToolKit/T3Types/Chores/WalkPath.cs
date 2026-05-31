@@ -10,7 +10,7 @@ public class WalkPath
 {
     [MetaMember("mName")]
     public string Name { get; set; }
-    
+
     public List<PathBase> Paths { get; set; }
     public class Serializer : MetaClassSerializer<WalkPath>
     {
@@ -29,10 +29,13 @@ public class WalkPath
             if (stream is MetaStreamReader streamReader)
             {
                 int count = streamReader.ReadInt32();
-                MetaClassType type = streamReader.ReadMetaClassType();
+                MetaClassType? type = streamReader.ReadMetaClassType();
+                if (type is null)
+                    throw new InvalidOperationException("[WalkPath] Type is not registered.");
+
                 MetaClassSerializer classTypeSerializer =
                     Toolkit.Instance.GetSerializer(type.LinkingType);
-                
+
                 for (var i = 0; i < count; i++)
                 {
                     object? value = null;

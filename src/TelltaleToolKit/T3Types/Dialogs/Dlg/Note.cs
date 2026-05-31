@@ -14,7 +14,7 @@ public class Note : IGenerator, IOwner
 
     [MetaMember("Baseclass_UID::Owner")]
     public Owner Owner { get; set; }
-    
+
     [MetaMember("mEntries")]
     public List<Entry> Entries { get; set; } = [];
 
@@ -63,7 +63,6 @@ public class Note : IGenerator, IOwner
                 for (var i = 0; i < numEntries; i++)
                 {
                     Entry? entry = null;
-                    stream.PreSerialize(ref entry);
                     stream.Serialize(ref entry);
                     obj.Entries.Add(entry);
                 }

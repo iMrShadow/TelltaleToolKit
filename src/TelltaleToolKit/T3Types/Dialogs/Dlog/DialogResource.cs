@@ -54,7 +54,7 @@ public class DialogResource
     public class Serializer : MetaClassSerializer<DialogResource>
     {
         private static readonly DefaultClassSerializer<DialogResource> DefaultSerializer = new();
-        
+
         public override void Serialize(ref DialogResource obj, MetaStream stream)
         {
             DefaultSerializer.PreSerialize(ref obj, stream);
@@ -67,7 +67,7 @@ public class DialogResource
 
             if (stream is MetaStreamReader streamReader)
             {
-                // Console.WriteLine("Current position: " + stream.GetCurrentPosition());
+                // Console.WriteLine("Current position: " + stream.GetPosition());
                 int dialogsCount = streamReader.ReadInt32();
                 int branchesCount = streamReader.ReadInt32();
                 int itemsCount = streamReader.ReadInt32();

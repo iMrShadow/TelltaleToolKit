@@ -36,7 +36,10 @@ public class DlgChildSet
 
                 for (var i = 0; i < numChildren; i++)
                 {
-                    MetaClassType type = streamReader.ReadMetaClassType();
+                    MetaClassType? type = streamReader.ReadMetaClassType();
+                    if (type == null)
+                        throw new InvalidOperationException("[DlgChildSet] Type is not registered.");
+
                     MetaClassSerializer childSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object? dlgChild = null;
