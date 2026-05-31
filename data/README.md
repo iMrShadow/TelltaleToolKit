@@ -58,17 +58,16 @@ For consistency, all database file names are in slug form with the appropriate e
 
 ## Game Profile Fields
 
-| Field                    | Type                 | Description                                                                                                                                                                                    | Example                                       |
-| ------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| `Name`                   | `string`             | Display name of the game.                                                                                                                                                                      | `"The Walking Dead: Season 2"`                |
-| `Description`            | `string`             | A brief description of the game.                                                                                                                                                               | `"The Walking Dead: Season 2 (2013) for PC."` |
-| `BlowfishKey`            | `string` (see below) | Blowfish encryption key for encrypting/decrypting files. Can be a custom key in a string form or an enum name from the [`T3BlowfishKey`](/src/TelltaleToolKit/Utility/T3BlowfishKey.cs) class. | `"Twds2"`                                     |
-| `IsTtarch2`              | `bool`               | Whether the game uses the TTArch2 archive format (`true` for TTArch2, `false` for TTArch).                                                                                                     | `true`                                        |
-| `TtarchVersion`          | `int`                | The version of the archive format used by the game. If `IsTtarch2` is true, use versions 2-4, otherwise - versions 0-9.                                                                        | `3`                                           |
-| `LuaVersion`             | `string`             | Lua scripting engine version used by the game. It can be either `5.0.2`, `5.1.2` or `5.2.3`.                                                                                                   | `"5.1.2"` or `"5.1"`                          |
-| `MetaStreamVersion`      | `string`             | Version of the metastream format used in the game. Can be `MBIN`, `MTRE`, `MSV5` or `MSV6`.                                                                                                    | `"MSV5"`                                      |
-| `AreSymbolsHashed`       | `bool`               | Whether the game's symbols are hashed (`true` or `false`). This should almost always be `true`. Only `MBIN` are allowed to not be hashed.                                                      | `true`                                        |
-| `EnableOodleCompression` | `bool`               | Whether Oodle compression is enabled for game archives.                                                                                                                                        | `false`                                       |
+| Field                    | Type                 | Description                                                                                                                                                                                                                                                                                  | Example                                       |
+| ------------------------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `Name`                   | `string`             | Display name of the game.                                                                                                                                                                                                                                                                    | `"The Walking Dead: Season 2"`                |
+| `Description`            | `string`             | A brief description of the game.                                                                                                                                                                                                                                                             | `"The Walking Dead: Season 2 (2013) for PC."` |
+| `BlowfishKey`            | `string` (see below) | Blowfish encryption key for encrypting/decrypting files. Can be a custom key in a string form or an enum name from the [`T3BlowfishKey`](../src/TelltaleToolKit/Utility/Blowfish/T3BlowfishKey.cs) class.                                                                                    | `"Twds2"`                                     |
+| `IsTtarch2`              | `bool`               | Whether the game uses the TTArch2 archive format (`true` for TTArch2, `false` for TTArch).                                                                                                                                                                                                   | `true`                                        |
+| `TtarchVersion`          | `int`                | The version of the archive format used by the game. If `IsTtarch2` is true, use versions 2-4, otherwise - versions 0-9.                                                                                                                                                                      | `3`                                           |
+| `LuaVersion`             | `string`             | Lua scripting engine version used by the game. It can be either `5.0.2`, `5.1.2` or `5.2.3`.                                                                                                                                                                                                 | `"5.1.2"` or `"5.1"`                          |
+| `streamVersion`          | `uint`               | Version of the metastream format used in the game. This value ranges from 1 to 6. You can determine the version by inspecting the magic (FourCC) of a metastream file and using [this](../src/TelltaleToolKit/Serialization/MetaStreamMagic.cs)                              as a reference. | `5`                                           |
+| `EnableOodleCompression` | `bool`               | Whether Oodle compression is enabled for game archives.                                                                                                                                                                                                                                      | `false`                                       |
 
 ### Game Profile Full Example
 
@@ -80,8 +79,7 @@ For consistency, all database file names are in slug form with the appropriate e
   "IsTtarch2": true,
   "TtarchVersion": 3,
   "LuaVersion": "5.1.2",
-  "MetaStreamVersion": "MSV5",
-  "AreSymbolsHashed": true,
+  "streamVersion": 5,
   "EnableOodleCompression": false,
 }
 ```
