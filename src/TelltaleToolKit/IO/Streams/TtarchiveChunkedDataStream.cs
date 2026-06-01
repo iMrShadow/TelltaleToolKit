@@ -19,7 +19,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
     private readonly long _dataStart;
     private readonly bool _isEncrypted;
     private readonly Stream _source;
-    private Compression.Mode compression;
+    public Compression.Mode Compression { get; private set; }
     private long _position;
 
     public TtarchiveChunkedDataStream(
@@ -39,7 +39,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
         _isEncrypted = isEncrypted;
         _blowfish = new Blowfish(blowfishKey, archiveVersion);
         _cache = cache ?? new SinglePageCache();
-        compression = compressionMode;
+        Compression = compressionMode;
         // Build prefix sums for O(1) chunk offset lookup
         _chunkPrefixSums = new ulong[chunkSizes.Length + 1];
         for (int i = 0; i < chunkSizes.Length; i++)
@@ -117,7 +117,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
         _source.Seek(offset, SeekOrigin.Begin);
 
         byte[] compressed = new byte[_chunkSizes[chunkIdx]];
-        Compression.ReadExact(_source, compressed);
+        IO.Compression.ReadExact(_source, compressed);
 
         // Decrypt chunk if needed (per‑chunk, not per‑file)
         if (_isEncrypted)
@@ -125,13 +125,13 @@ internal sealed class TtarchiveChunkedDataStream : Stream
             _blowfish.Decipher(compressed.AsSpan(), compressed.Length);
         }
 
-        if (compression is Compression.Mode.None)
+        if (Compression is IO.Compression.Mode.None)
         {
             // Detect the compression
-            compression = Compression.DetectMode(compressed);
+            Compression = IO.Compression.DetectMode(compressed);
         }
 
-        return Compression.Decompress(compressed, compression, (int)_chunkSize);
+        return IO.Compression.Decompress(compressed, Compression, (int)_chunkSize);
     }
 
     public override long Seek(long offset, SeekOrigin origin)

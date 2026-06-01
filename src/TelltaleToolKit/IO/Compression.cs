@@ -110,11 +110,8 @@ public class Compression
 
         // Zlib header: first byte = 0x78, second byte's high nibble = 0xC
         // Common values: 0x78 0x9C, 0x78 0xDA, 0x78 0x01, 0x78 0x5E
-        if (data[0] == 0x78 && (data[1] & 0xF0) == 0xC0)
+        if ((data[0] * 256 + data[1]) % 31 == 0)
             return Mode.Zlib;
-
-        // Oodle detection would need a magic signature – add if known
-        // if (data.Length >= 4 && data[0] == 0x?? && data[1] == 0x??) return Mode.Oodle;
 
         // Default: raw DEFLATE has no fixed header
         return Mode.Deflate;

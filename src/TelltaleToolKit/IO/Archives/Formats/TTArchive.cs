@@ -136,14 +136,9 @@ public class TTArchive : Archive
 
             compression = Compression.DetectMode(header);
 
-            if (compression == Compression.Mode.Deflate)
-            {
-                Info.Flags |= ArchiveFlags.IsRawDeflateCompressed;
-            }
-            else
-            {
-                Info.Flags |= ArchiveFlags.IsZlibCompressed;
-            }
+            Info.Flags |= compression is Compression.Mode.Deflate
+                ? ArchiveFlags.IsRawDeflateCompressed
+                : ArchiveFlags.IsZlibCompressed;
 
             header = Compression.Decompress(header, compression);
         }
@@ -161,6 +156,15 @@ public class TTArchive : Archive
         ParseEntries(new MemoryStream(header));
 
         _dataStream = BuildFileDataStream(version, filesMode, decryptionMode, compression);
+
+        if (compression is Compression.Mode.None && _dataStream is TtarchiveChunkedDataStream chunkedStream)
+        {
+            OpenResource(Entries.First().Key)?.ReadByte();
+
+            Info.Flags |= chunkedStream.Compression is Compression.Mode.Deflate
+                ? ArchiveFlags.IsRawDeflateCompressed
+                : ArchiveFlags.IsZlibCompressed;
+        }
     }
 
     /// <summary>
@@ -247,7 +251,8 @@ public class TTArchive : Archive
         SetEntries(entries);
     }
 
-    private Stream BuildFileDataStream(int version, uint filesMode, uint decryptionMode, Compression.Mode compressionMode)
+    private Stream BuildFileDataStream(int version, uint filesMode, uint decryptionMode,
+        Compression.Mode compressionMode)
     {
         // No compression → raw substream (may still need per-file decryption later)
         if (Info.ChunkCount == 0 || filesMode != 2)
