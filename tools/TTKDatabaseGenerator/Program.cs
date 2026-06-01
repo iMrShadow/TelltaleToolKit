@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using TelltaleToolKit;
-using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.Games;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;

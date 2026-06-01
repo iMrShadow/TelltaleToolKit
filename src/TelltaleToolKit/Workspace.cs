@@ -1,6 +1,6 @@
 using System.Text;
 using Lua;
-using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.Games;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.IO.Resources;
 using TelltaleToolKit.Meta;

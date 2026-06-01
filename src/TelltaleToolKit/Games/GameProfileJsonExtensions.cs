@@ -1,7 +1,7 @@
 using System.Text.Json;
 using TelltaleToolKit.Meta;
 
-namespace TelltaleToolKit.GamesDatabase;
+namespace TelltaleToolKit.Games;
 
 public class GameProfileJsonExtensions
 {

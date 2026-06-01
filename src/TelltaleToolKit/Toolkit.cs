@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json;
-using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.Games;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.Logging;

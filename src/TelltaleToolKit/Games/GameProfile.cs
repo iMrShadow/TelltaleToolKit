@@ -4,7 +4,7 @@ using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Lua;
 
-namespace TelltaleToolKit.GamesDatabase;
+namespace TelltaleToolKit.Games;
 
 /// <summary>
 ///     Represents a registry entry for a Telltale game configuration.

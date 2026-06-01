@@ -4,7 +4,7 @@ using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Lua;
 
-namespace TelltaleToolKit.GamesDatabase;
+namespace TelltaleToolKit.Games;
 
 /// <summary>
 ///     Custom JSON converter for <see cref="GameProfile" /> objects.
