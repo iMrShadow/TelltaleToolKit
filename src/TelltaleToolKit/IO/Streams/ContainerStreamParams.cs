@@ -1,6 +1,4 @@
-﻿using TelltaleToolKit.Utility.Compression;
-
-namespace TelltaleToolKit.IO.Streams;
+﻿namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 /// Parameters for creating a Telltale Tool Container stream.
@@ -18,7 +16,7 @@ public sealed class ContainerStreamParams
     /// The compression algorithm used to compress the container.
     /// Defaults to Deflate (ZLIB in Telltale's terms).
     /// </summary>
-    public Compression Algorithm { get; init; } = Compression.Deflate;
+    public Compression.Mode Algorithm { get; init; } = Compression.Mode.Deflate;
 
     /// <summary>
     /// Blowfish key used when <see cref="Encrypt"/> is true.

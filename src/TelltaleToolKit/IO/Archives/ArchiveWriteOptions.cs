@@ -1,5 +1,4 @@
 ﻿using TelltaleToolKit.IO.Streams;
-using TelltaleToolKit.Utility.Compression;
 
 namespace TelltaleToolKit.IO.Archives;
 
@@ -27,9 +26,9 @@ public sealed class ArchiveWriteOptions
 
     /// <summary>
     ///     Gets or sets the compression algorithm to use.
-    ///     Defaults to <see cref="Compression.Deflate" />.
+    ///     Defaults to <see cref="Compression.Mode.Deflate" />.
     /// </summary>
-    public Compression Algorithm { get; set; } = Compression.Deflate;
+    public Compression.Mode Compression { get; set; } = IO.Compression.Mode.Deflate;
 
     /// <summary>
     ///     Gets or sets the decompressed size of each chunk in bytes.

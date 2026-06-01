@@ -1,7 +1,7 @@
-﻿using TelltaleToolKit.IO.Archives;
+﻿using System.IO.Compression;
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Caching;
-using TelltaleToolKit.Utility.Compression;
 
 namespace TelltaleToolKit.IO.Streams;
 
@@ -19,7 +19,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
     private readonly long _dataStart;
     private readonly bool _isEncrypted;
     private readonly Stream _source;
-    private ArchiveFlags _flags;
+    private Compression.Mode compression;
     private long _position;
 
     public TtarchiveChunkedDataStream(
@@ -27,7 +27,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
         long dataStart,
         uint chunkSize,
         ulong[] chunkSizes,
-        ArchiveFlags flags,
+        Compression.Mode compressionMode,
         string blowfishKey,
         int archiveVersion,
         bool isEncrypted, IChunkCache? cache = null)
@@ -36,11 +36,10 @@ internal sealed class TtarchiveChunkedDataStream : Stream
         _dataStart = dataStart;
         _chunkSize = chunkSize;
         _chunkSizes = chunkSizes;
-        _flags = flags;
         _isEncrypted = isEncrypted;
         _blowfish = new Blowfish(blowfishKey, archiveVersion);
         _cache = cache ?? new SinglePageCache();
-
+        compression = compressionMode;
         // Build prefix sums for O(1) chunk offset lookup
         _chunkPrefixSums = new ulong[chunkSizes.Length + 1];
         for (int i = 0; i < chunkSizes.Length; i++)
@@ -118,7 +117,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
         _source.Seek(offset, SeekOrigin.Begin);
 
         byte[] compressed = new byte[_chunkSizes[chunkIdx]];
-        ChunkDecoder.ReadExact(_source, compressed);
+        Compression.ReadExact(_source, compressed);
 
         // Decrypt chunk if needed (per‑chunk, not per‑file)
         if (_isEncrypted)
@@ -126,11 +125,13 @@ internal sealed class TtarchiveChunkedDataStream : Stream
             _blowfish.Decipher(compressed.AsSpan(), compressed.Length);
         }
 
-        // Decompress the chunk
-        ArchiveFlags flags = _flags;
-        byte[] res = ChunkDecoder.DecompressBlock(compressed, (int)_chunkSize, ref flags);
-        _flags = flags;
-        return res;
+        if (compression is Compression.Mode.None)
+        {
+            // Detect the compression
+            compression = Compression.DetectMode(compressed);
+        }
+
+        return Compression.Decompress(compressed, compression, (int)_chunkSize);
     }
 
     public override long Seek(long offset, SeekOrigin origin)

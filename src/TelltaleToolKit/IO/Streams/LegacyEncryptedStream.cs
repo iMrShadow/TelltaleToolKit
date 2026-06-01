@@ -1,6 +1,6 @@
 ﻿using TelltaleToolKit.Utility.Blowfish;
 
-namespace TelltaleToolKit.Serialization.Binary;
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 ///     Stream wrapper that decrypts TTArchive per‑file data on the fly.

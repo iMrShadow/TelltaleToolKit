@@ -3,9 +3,7 @@ using System.IO.Hashing;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.IO.Streams;
-using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Utility.Blowfish;
-using TelltaleToolKit.Utility.Compression;
 using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
 
 namespace TelltaleToolKit.IO.Archives.Formats;
@@ -83,9 +81,8 @@ public class TTArchive : Archive
 
             if (Info.ChunkCount > 0)
             {
-                // Both flags are set; DecompressBlock sorts out which algorithm is active.
+                // Both flags are set; Decompress sorts out which algorithm is active.
                 Info.ChunkSize = 0x10000;
-                Info.Flags |= ArchiveFlags.IsRawDeflateCompressed | ArchiveFlags.IsZlibCompressed;
             }
 
             _ = reader.ReadUInt32(); // total file-data region size AFTER the ttarch header is read (and the name)
@@ -128,15 +125,27 @@ public class TTArchive : Archive
 
         int infoHeaderSize = reader.ReadInt32();
 
+        Compression.Mode compression = Compression.Mode.None;
+
         // This is compressed
         byte[] header;
         if (version >= 6 && filesMode == 2)
         {
             int compressedHeaderSize = reader.ReadInt32();
             header = reader.ReadBytes(compressedHeaderSize);
-            ArchiveFlags archiveFlags = Info.Flags;
-            header = ChunkDecoder.DecompressBlock(header, infoHeaderSize, ref archiveFlags);
-            Info.Flags = archiveFlags;
+
+            compression = Compression.DetectMode(header);
+
+            if (compression == Compression.Mode.Deflate)
+            {
+                Info.Flags |= ArchiveFlags.IsRawDeflateCompressed;
+            }
+            else
+            {
+                Info.Flags |= ArchiveFlags.IsZlibCompressed;
+            }
+
+            header = Compression.Decompress(header, compression);
         }
         else
         {
@@ -151,7 +160,7 @@ public class TTArchive : Archive
         Info.FilesOffset = (ulong)reader.BaseStream.Position;
         ParseEntries(new MemoryStream(header));
 
-        _dataStream = BuildFileDataStream(version, filesMode, decryptionMode);
+        _dataStream = BuildFileDataStream(version, filesMode, decryptionMode, compression);
     }
 
     /// <summary>
@@ -183,7 +192,7 @@ public class TTArchive : Archive
 
             ParseEntries(new MemoryStream(header));
             Info.FilesOffset = (ulong)reader.BaseStream.Position;
-            _dataStream = BuildFileDataStream(0, 0, 1);
+            _dataStream = BuildFileDataStream(0, 0, 1, Compression.Mode.None);
         }
         else
         {
@@ -192,7 +201,7 @@ public class TTArchive : Archive
             ParseEntries(reader.BaseStream);
             Info.FilesOffset = reader.ReadUInt32();
             _ = reader.ReadUInt32(); // file size
-            _dataStream = BuildFileDataStream(0, 0, 0);
+            _dataStream = BuildFileDataStream(0, 0, 0, Compression.Mode.None);
         }
     }
 
@@ -238,7 +247,7 @@ public class TTArchive : Archive
         SetEntries(entries);
     }
 
-    private Stream BuildFileDataStream(int version, uint filesMode, uint decryptionMode)
+    private Stream BuildFileDataStream(int version, uint filesMode, uint decryptionMode, Compression.Mode compressionMode)
     {
         // No compression → raw substream (may still need per-file decryption later)
         if (Info.ChunkCount == 0 || filesMode != 2)
@@ -252,7 +261,7 @@ public class TTArchive : Archive
             (long)Info.FilesOffset,
             Info.ChunkSize,
             Info.ChunkBlockSizes,
-            Info.Flags,
+            compressionMode,
             Info.BlowfishKey,
             version,
             decryptionMode == 1);
@@ -294,7 +303,7 @@ public class TTArchive : Archive
         }
 
         bool encrypt = options.Encrypt;
-        bool compressFileData = options.Algorithm != Compression.None && version >= 3;
+        bool compressFileData = options.Compression != Compression.Mode.None && version >= 3;
         bool compressHeader = compressFileData && version >= 6; // compressed entry table block (filesMode=2)
 
         Blowfish bf = new(options.BlowfishKey, version);
@@ -352,7 +361,7 @@ public class TTArchive : Archive
         byte[] CompressBlock(byte[] data)
         {
             using MemoryStream ms = new();
-            if (options.Algorithm == Compression.Zlib)
+            if (options.Compression == Compression.Mode.Zlib)
             {
                 using DeflaterOutputStream zlib = new(ms);
                 zlib.Write(data, 0, data.Length);

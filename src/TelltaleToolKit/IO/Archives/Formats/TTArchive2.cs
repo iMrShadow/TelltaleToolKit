@@ -1,7 +1,6 @@
 using System.Text;
 using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Utility.Compression;
 using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.IO.Archives.Formats;
@@ -35,10 +34,10 @@ public class TTArchive2 : Archive
         // Copy container state back to Info so the rest of the code (and callers
         // that inspect Info) see the right values.
         Info.Flags |= _containerStream.Params.Encrypt ? ArchiveFlags.IsEncrypted : 0;
-        Info.Flags |= _containerStream.Params.Algorithm == Compression.Deflate
+        Info.Flags |= _containerStream.Params.Algorithm == Compression.Mode.Deflate
             ? ArchiveFlags.IsRawDeflateCompressed
             : 0;
-        Info.Flags |= _containerStream.Params.Algorithm == Compression.Oodle
+        Info.Flags |= _containerStream.Params.Algorithm == Compression.Mode.Oodle
             ? ArchiveFlags.IsOodleCompressed
             : 0;
         Info.ChunkSize = _containerStream.WindowSize;
@@ -322,7 +321,7 @@ public class TTArchive2 : Archive
                 {
                     Encrypt = options.Encrypt,
                     ChunkSize = options.ChunkSize,
-                    Algorithm = options.Algorithm,
+                    Algorithm = options.Compression,
                     BlowfishKey = options.BlowfishKey
                 };
 
