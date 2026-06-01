@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Version identifier for the inner Telltale archive format.

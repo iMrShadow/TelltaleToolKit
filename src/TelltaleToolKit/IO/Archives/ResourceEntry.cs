@@ -2,7 +2,7 @@
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Represents a single file record inside a Telltale archive.

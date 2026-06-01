@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Contains metadata about a Telltale archive, including its container type,

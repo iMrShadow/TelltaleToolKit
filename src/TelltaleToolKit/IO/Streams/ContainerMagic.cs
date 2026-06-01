@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.Serialization;
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 ///     Four‑byte magic numbers identifying the container format of a file.

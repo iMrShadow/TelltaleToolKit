@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.TelltaleArchives;
 
 namespace TelltaleToolKit.Utility.Compression;
 

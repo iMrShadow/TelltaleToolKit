@@ -1,6 +1,6 @@
-using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.IO.Archives;
 
-namespace TelltaleToolKit.Resource;
+namespace TelltaleToolKit.IO.Resources;
 
 /// <summary>
 /// Exposes a single loose file on disk as an <see cref="IFileProvider"/>.

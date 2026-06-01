@@ -1,8 +1,9 @@
-﻿using TelltaleToolKit.Utility.Blowfish;
+﻿using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Caching;
 using TelltaleToolKit.Utility.Compression;
 
-namespace TelltaleToolKit.TelltaleArchives.IO;
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 ///     Presents a continuous, seekable stream of decompressed file data from a

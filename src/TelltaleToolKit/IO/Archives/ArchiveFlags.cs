@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Flags that describe the encryption and compression state of a Telltale archive.

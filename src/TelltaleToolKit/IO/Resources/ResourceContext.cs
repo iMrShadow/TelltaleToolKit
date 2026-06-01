@@ -1,7 +1,7 @@
-using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.Resource;
+namespace TelltaleToolKit.IO.Resources;
 
 /// <summary>
 /// Represents a named, prioritized group of <see cref="IFileProvider"/> instances.

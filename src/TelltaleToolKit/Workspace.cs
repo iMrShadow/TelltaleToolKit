@@ -1,11 +1,11 @@
 using System.Text;
 using Lua;
 using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.IO.Resources;
 using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Resource;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Hashing;
 

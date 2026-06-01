@@ -1,6 +1,6 @@
 ﻿using TelltaleToolKit.Utility.Compression;
 
-namespace TelltaleToolKit.Serialization;
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 /// Parameters for creating a Telltale Tool Container stream.

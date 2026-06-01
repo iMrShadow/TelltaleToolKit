@@ -1,7 +1,7 @@
-﻿using TelltaleToolKit.Serialization;
+﻿using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Utility.Compression;
 
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Controls how an archive is written or repacked.

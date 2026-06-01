@@ -1,11 +1,12 @@
 ﻿using System.IO.Compression;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Caching;
 using TelltaleToolKit.Utility.Compression;
 
-namespace TelltaleToolKit.Serialization;
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 ///     A forward-readable, seekable <see cref="Stream" /> that decodes the outer
@@ -14,7 +15,7 @@ namespace TelltaleToolKit.Serialization;
 /// <remarks>
 ///     <para>
 ///         <strong>Single responsibility:</strong> parse the container header and expose the
-///         inner TTA2/3/4 payload as a readable stream so <see cref="TelltaleArchives.Formats.TTArchive2" /> can walk
+///         inner TTA2/3/4 payload as a readable stream so <see cref="TTArchive2" /> can walk
 ///         the entry table and name-page stream. It is disposed immediately after that forward
 ///         pass — extraction never goes through it.
 ///     </para>

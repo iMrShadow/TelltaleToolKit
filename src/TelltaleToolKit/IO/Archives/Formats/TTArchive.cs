@@ -2,13 +2,13 @@ using System.IO.Compression;
 using System.IO.Hashing;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.TelltaleArchives.IO;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Compression;
 using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
 
-namespace TelltaleToolKit.TelltaleArchives.Formats;
+namespace TelltaleToolKit.IO.Archives.Formats;
 
 /// <summary>
 ///     Reader for the original <c>.ttarch</c> archive format (versions 0–9).

@@ -1,9 +1,10 @@
 using System.Text;
+using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Utility.Compression;
 using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.TelltaleArchives.Formats;
+namespace TelltaleToolKit.IO.Archives.Formats;
 
 /// <summary>
 ///     Reader for the <c>.ttarch2</c> archive format (TTA2 / TTA3 / TTA4).

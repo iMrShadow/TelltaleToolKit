@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Serialization.Binary;

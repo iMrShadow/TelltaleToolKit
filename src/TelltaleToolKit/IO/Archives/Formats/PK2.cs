@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.TelltaleArchives.Formats;
+namespace TelltaleToolKit.IO.Archives.Formats;
 
 // TODO: PK2 for CSI.
 public class Pk2TTArchive : Archive

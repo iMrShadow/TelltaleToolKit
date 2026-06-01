@@ -1,7 +1,7 @@
-using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.Resource;
+namespace TelltaleToolKit.IO.Resources;
 
 /// <summary>
 /// Wraps a single Telltale archive (.ttarch or .ttarch2) as an <see cref="IFileProvider"/>.

@@ -1,6 +1,6 @@
-using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.IO.Archives;
 
-namespace TelltaleToolKit.Resource;
+namespace TelltaleToolKit.IO.Resources;
 
 /// <summary>
 /// Abstracts access to one or more Telltale game files, whether from a loose file on disk,

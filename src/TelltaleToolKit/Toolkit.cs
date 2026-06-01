@@ -1,12 +1,12 @@
 using System.Text;
 using System.Text.Json;
 using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.Logging;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.TelltaleArchives;
-using TelltaleToolKit.TelltaleArchives.Formats;
 using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;

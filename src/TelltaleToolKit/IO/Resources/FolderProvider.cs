@@ -1,7 +1,7 @@
-using TelltaleToolKit.TelltaleArchives;
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.Resource;
+namespace TelltaleToolKit.IO.Resources;
 
 /// <summary>
 /// Recursively exposes a directory tree of loose files and Telltale archives

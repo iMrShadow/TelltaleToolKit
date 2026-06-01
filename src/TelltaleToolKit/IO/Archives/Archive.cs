@@ -1,10 +1,10 @@
 using System.IO.Enumeration;
+using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.TelltaleArchives.Formats;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.TelltaleArchives;
+namespace TelltaleToolKit.IO.Archives;
 
 /// <summary>
 ///     Base class for all Telltale archive formats (<c>.ttarch</c>, <c>.ttarch2</c>, PK2).

@@ -1,6 +1,6 @@
+using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization;
-using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Lua;
 
