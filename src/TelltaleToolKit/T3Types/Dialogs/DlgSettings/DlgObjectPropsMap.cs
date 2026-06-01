@@ -33,14 +33,14 @@ public class DlgObjectPropsMap : IGenerator
     {
         public override void Serialize(ref DlgObjectPropsMap obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int groupDefinitionSize = streamReader.ReadInt32();
+                int groupDefinitionSize = stream.ReadInt32();
 
                 for (var i = 0; i < groupDefinitionSize; i++)
                 {

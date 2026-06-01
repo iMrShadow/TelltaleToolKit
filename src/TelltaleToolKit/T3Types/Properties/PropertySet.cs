@@ -55,13 +55,13 @@ public class PropertySet
 
             stream.BeginBlock();
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 // Write ParentList when PropVersion > 0
                 if (obj.PropVersion > 0)
                 {
                     int parentCount = obj.ParentList.Count;
-                    streamWriter.Write(parentCount);
+                    stream.Write(parentCount);
 
                     MetaClassSerializer<Handle<PropertySet>> parentSerializer =
                         Toolkit.Instance.GetSerializer<Handle<PropertySet>>();
@@ -107,7 +107,7 @@ public class PropertySet
                 }
 
                 // Write number of distinct meta types
-                streamWriter.Write(groups.Count);
+                stream.Write(groups.Count);
 
                 // Stable order: order by the MetaClassType's identity marker (e.g., its symbol or linking-type name)
                 // Use MetaClassType.Symbol if present (prefer preserving the meta-symbol ordering), otherwise LinkingType.FullName
@@ -124,15 +124,15 @@ public class PropertySet
 
                 foreach ((MetaClassType typeSymbol, List<KeyValuePair<Symbol, PropertyEntry>> entries) in ordered)
                 {
-                    streamWriter.Write(typeSymbol);
-                    streamWriter.Write(entries.Count);
+                    stream.Write(typeSymbol);
+                    stream.Write(entries.Count);
 
                     MetaClassSerializer classTypeSerializer =
                         Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     foreach ((Symbol key, PropertyEntry value) in entries)
                     {
-                        streamWriter.Write(key);
+                        stream.Write(key);
 
                         object? propertyValue = value.Value;
 
@@ -144,11 +144,11 @@ public class PropertySet
                     }
                 }
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (obj.PropVersion > 1)
                 {
-                    obj.ParentList.Capacity = streamReader.ReadInt32();
+                    obj.ParentList.Capacity = stream.ReadInt32();
 
                     for (var i = 0; i < obj.ParentList.Capacity; i++)
                     {
@@ -164,13 +164,13 @@ public class PropertySet
                     stream.BeginBlock();
                 }
 
-                int numTypes = streamReader.ReadInt32();
+                int numTypes = stream.ReadInt32();
                 for (var i = 0; i < numTypes; i++)
                 {
                     // The type of the class
-                    MetaClassType? typeSymbol = streamReader.ReadMetaClassType();
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType();
                     // The number of times that type has been serialized
-                    int numOfType = streamReader.ReadInt32();
+                    int numOfType = stream.ReadInt32();
 
                     if (typeSymbol is null)
                         throw new InvalidOperationException("[PropertySet] Type symbol is null");
@@ -180,7 +180,7 @@ public class PropertySet
                     for (var j = 0; j < numOfType; j++)
                     {
                         // The property key
-                        Symbol propertyKey = streamReader.ReadSymbol();
+                        Symbol propertyKey = stream.ReadSymbol();
 
                         object? propertyValue = null;
 

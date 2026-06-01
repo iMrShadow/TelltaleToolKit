@@ -14,14 +14,14 @@ public class DependencyLoader
     {
         public override void Serialize(ref DependencyLoader obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                bool hasResourceNames = streamReader.ReadBoolean();
+                bool hasResourceNames = stream.ReadBoolean();
 
                 if (!hasResourceNames)
                     return;
@@ -29,7 +29,7 @@ public class DependencyLoader
                 // This is a little bit weird.
                 // In the real serialization function, the object is base-casted to DCArray<String>. (base-casting is casting to a parent class).
                 // Which leads to the question - which type does inherit DCArray<String>? It does not make any sense.
-                MetaClassType? type = streamReader.ReadMetaClassType();
+                MetaClassType? type = stream.ReadMetaClassType();
 
                 if (type == null)
                     throw new InvalidOperationException("[DependencyLoader] Type is not registered.");

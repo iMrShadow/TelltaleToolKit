@@ -25,18 +25,18 @@ public class DlgChildSet
 
         public override void Serialize(ref DlgChildSet obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numChildren = streamReader.ReadInt32();
+                int numChildren = stream.ReadInt32();
 
                 for (var i = 0; i < numChildren; i++)
                 {
-                    MetaClassType? type = streamReader.ReadMetaClassType();
+                    MetaClassType? type = stream.ReadMetaClassType();
                     if (type == null)
                         throw new InvalidOperationException("[DlgChildSet] Type is not registered.");
 

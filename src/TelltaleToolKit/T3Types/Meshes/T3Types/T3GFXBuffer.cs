@@ -17,8 +17,8 @@ public class T3GFXBuffer
     public GFXPlatformFormat BufferFormat { get; set; }
 
     // [MetaMember("mBufferUsage")] This fails, because there's no flag set for this.
-    // public GFXPlatformBufferUsage BufferUsage { get; set; }  
-    
+    // public GFXPlatformBufferUsage BufferUsage { get; set; }
+
     [MetaMember("mBufferUsage")]
     public uint BufferUsage { get; set; }
 
@@ -46,13 +46,13 @@ public class T3GFXBuffer
             // I assume it's done like for better performance
             // This requires further testing
             stream.BeginAsyncSection();
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                streamWriter.Write(obj.Buffer);
+                stream.Write(obj.Buffer);
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.Buffer = streamReader.ReadBytes((int)(obj.Count * obj.Stride));
+                obj.Buffer = stream.ReadBytes((int)(obj.Count * obj.Stride));
             }
 
             stream.EndAsyncSection();

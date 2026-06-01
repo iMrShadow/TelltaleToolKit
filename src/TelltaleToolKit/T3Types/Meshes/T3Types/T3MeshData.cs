@@ -102,7 +102,7 @@ public class T3MeshData
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 uint uvTransformCount = 0;
                 // Referenced from Lucas Saragosa's serialization code
@@ -115,7 +115,7 @@ public class T3MeshData
                     }
                 }
 
-                streamWriter.Write(uvTransformCount);
+                stream.Write(uvTransformCount);
 
                 for (var i = 0; i < Math.Min(obj.TexCoordTransform.Length, 4); i++)
                 {
@@ -126,7 +126,7 @@ public class T3MeshData
                         continue;
                     }
 
-                    streamWriter.Write((uint)i);
+                    stream.Write((uint)i);
                     stream.Serialize(ref transform);
                     obj.TexCoordTransform[i] = transform;
                 }
@@ -139,7 +139,7 @@ public class T3MeshData
                     obj.CPUSkinningData = cpuSkinning;
                 }
 
-                streamWriter.Write(obj.VertexStates.Count);
+                stream.Write(obj.VertexStates.Count);
 
                 for (var i = 0; i < obj.VertexStates.Count; i++)
                 {
@@ -149,13 +149,13 @@ public class T3MeshData
                 }
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                uint uvTransforms = streamReader.ReadUInt32();
+                uint uvTransforms = stream.ReadUInt32();
 
                 for (var i = 0; i < uvTransforms; i++)
                 {
-                    int uvLayer = streamReader.ReadInt32();
+                    int uvLayer = stream.ReadInt32();
 
                     // Experimenting with a helper function.
                     stream.Serialize(ref obj.TexCoordTransform[uvLayer]);
@@ -169,7 +169,7 @@ public class T3MeshData
                     obj.CPUSkinningData = t3MeshCpuSkinningData;
                 }
 
-                int vertexStates = streamReader.ReadInt32();
+                int vertexStates = stream.ReadInt32();
 
                 for (var i = 0; i < vertexStates; i++)
                 {

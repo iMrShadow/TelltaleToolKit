@@ -18,15 +18,15 @@ public class NoteCollection : IGenerator
     {
         public override void Serialize(ref NoteCollection obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 // mEntries is not serialized.
-                int numNotes = streamReader.ReadInt32();
+                int numNotes = stream.ReadInt32();
                 for (var i = 0; i < numNotes; i++)
                 {
                     Note? note = null;

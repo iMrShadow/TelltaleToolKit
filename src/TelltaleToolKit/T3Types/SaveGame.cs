@@ -43,8 +43,8 @@ public class SaveGame
         [MetaMember("mAttachedToNode")]
         public string AttachedToNode { get; set; } = string.Empty;
     }
-    
-    
+
+
     public class Serializer : MetaClassSerializer<SaveGame>
     {
         private static readonly DefaultClassSerializer<SaveGame> DefaultSaveGameSerializer = new();
@@ -53,12 +53,12 @@ public class SaveGame
         {
             DefaultSaveGameSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 if (stream.GetMetaClass(typeof(PropertySet)) != null)
                 {

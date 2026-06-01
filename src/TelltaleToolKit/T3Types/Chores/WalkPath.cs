@@ -21,15 +21,15 @@ public class WalkPath
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException($"There is no serializer for {SerializationType}");
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int count = streamReader.ReadInt32();
-                MetaClassType? type = streamReader.ReadMetaClassType();
+                int count = stream.ReadInt32();
+                MetaClassType? type = stream.ReadMetaClassType();
                 if (type is null)
                     throw new InvalidOperationException("[WalkPath] Type is not registered.");
 

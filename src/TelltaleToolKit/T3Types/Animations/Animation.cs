@@ -61,33 +61,33 @@ public class Animation
                 return;
             }
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numTotalValues = streamReader.ReadInt32();
+                int numTotalValues = stream.ReadInt32();
                 obj.Values = new List<IAnimatedValueInterface>(numTotalValues);
 
                 // Runtime buffer (not needed for now)
-                int dataBufferSize = streamReader.ReadInt32();
+                int dataBufferSize = stream.ReadInt32();
                 obj.Buffer = new byte[dataBufferSize];
 
-                int numValueTypes = streamReader.ReadInt32();
+                int numValueTypes = stream.ReadInt32();
                 obj.Descriptors = new List<InterfaceInfo>(numValueTypes);
 
                 for (var i = 0; i < numValueTypes; i++)
                 {
-                    MetaClassType? typeSymbol = streamReader.ReadMetaClassType(); // The type of the class
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
                     if (typeSymbol is null)
                         throw new InvalidOperationException("[Animation] Type symbol is not registered.");
 
-                    int numOfType = streamReader.ReadInt16(); // The number of times that type has been serialized
+                    int numOfType = stream.ReadInt16(); // The number of times that type has been serialized
                     // TODO: Verify what these versions actually represent.
                     // TelltaleToolLib casts to unsigned int and uses it as a CRC32.
-                    var version = (uint)streamReader.ReadInt16();
+                    var version = (uint)stream.ReadInt16();
 
                     var interfaceInfo = new InterfaceInfo
                     {
@@ -120,16 +120,16 @@ public class Animation
                 foreach (IAnimatedValueInterface value in obj.Values)
                 {
                     // TODO: Set other flags?
-                    value.AnimationValueInterfaceBase.Flags = streamReader.ReadInt32();
+                    value.AnimationValueInterfaceBase.Flags = stream.ReadInt32();
                 }
 
-                ushort isNotInterface = streamReader.ReadUInt16();
+                ushort isNotInterface = stream.ReadUInt16();
 
                 if (isNotInterface == 0)
                 {
                     foreach (IAnimatedValueInterface value in obj.Values)
                     {
-                        value.AnimationValueInterfaceBase.Name = streamReader.ReadSymbol();
+                        value.AnimationValueInterfaceBase.Name = stream.ReadSymbol();
                     }
                 }
             }
@@ -140,23 +140,23 @@ public class Animation
 
         public void SerializeOldAnimation(ref Animation obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numTotalValues = streamReader.ReadInt32();
-                int numValueTypes = streamReader.ReadInt32();
+                int numTotalValues = stream.ReadInt32();
+                int numValueTypes = stream.ReadInt32();
 
                 for (var i = 0; i < numValueTypes; i++)
                 {
-                    MetaClassType? typeSymbol = streamReader.ReadMetaClassType(); // The type of the class
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
                     if (typeSymbol is null)
                         throw new InvalidOperationException("[Animation] Type symbol is not registered.");
 
-                    int numOfType = streamReader.ReadInt32(); // The number of times that type has been serialized
+                    int numOfType = stream.ReadInt32(); // The number of times that type has been serialized
 
                     MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 

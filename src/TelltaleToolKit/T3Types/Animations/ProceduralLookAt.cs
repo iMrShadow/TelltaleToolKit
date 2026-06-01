@@ -89,7 +89,7 @@ public class ProceduralLookAt
         public override void Serialize(ref ProceduralLookAt obj, MetaStream stream)
         {
             // TODO: Check with meta stream version.
-            if (stream is BinaryMetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 if (stream.Params.StreamVersion >= 5)
                 {
@@ -99,7 +99,7 @@ public class ProceduralLookAt
                 Animation objAnimation = obj.Animation;
                 Toolkit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
             }
-            else if (stream is BinaryMetaStreamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (stream.Params.StreamVersion >= 5)
                 {

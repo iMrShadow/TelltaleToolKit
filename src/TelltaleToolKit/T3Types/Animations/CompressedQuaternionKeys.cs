@@ -19,19 +19,19 @@ public class CompressedQuaternionKeys
         {
             // TODO: Test this type.
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.Name = streamReader.ReadString();
-                obj.Flags = streamReader.ReadInt32();
-                obj.MinTime = streamReader.ReadSingle();
-                obj.MaxTime = streamReader.ReadSingle();
+                obj.Name = stream.ReadString();
+                obj.Flags = stream.ReadInt32();
+                obj.MinTime = stream.ReadSingle();
+                obj.MaxTime = stream.ReadSingle();
 
-                short numSamples = streamReader.ReadInt16();
+                short numSamples = stream.ReadInt16();
 
-                obj.Buffer = streamReader.ReadBytes(numSamples * 6);
+                obj.Buffer = stream.ReadBytes(numSamples * 6);
             }
         }
     }

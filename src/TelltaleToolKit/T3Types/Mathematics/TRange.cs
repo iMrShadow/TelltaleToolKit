@@ -22,7 +22,7 @@ public class RangeClassSerializer<T> : MetaClassSerializer<Range<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref Range<T> obj, MetaStream stream, MetaClassType? type)
     {
-        if (stream is BinaryMetaStreamReader streamReader)
+        if (stream.Mode is MetaStreamMode.Read)
         {
             if (obj is null)
                 obj = new Range<T>();

@@ -50,14 +50,14 @@ public class StyleGuide
 
             if (classDescription is not null && classDescription.ContainsMember("mFlags"))
             {
-                if (stream is BinaryMetaStreamWriter streamWriter)
+                if (stream.Mode is MetaStreamMode.Write)
                 {
                     throw new NotImplementedException();
                 }
 
-                if (stream is BinaryMetaStreamReader streamReader)
+                if (stream.Mode is MetaStreamMode.Read)
                 {
-                    int values = streamReader.ReadInt32();
+                    int values = stream.ReadInt32();
 
                     for (var i = 0; i < values; i++)
                     {

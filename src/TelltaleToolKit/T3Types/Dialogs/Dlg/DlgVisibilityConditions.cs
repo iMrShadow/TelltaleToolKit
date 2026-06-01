@@ -32,10 +32,10 @@ public class DlgVisibilityConditions
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if ((obj.Flags.Data & 1) == 0)
                     return;

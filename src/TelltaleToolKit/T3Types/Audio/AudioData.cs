@@ -57,23 +57,23 @@ public class AudioData
         {
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (stream.Params.StreamVersion >= 4)
                 {
-                    obj.NumChannels = streamReader.ReadInt16();
-                    short bitDepth = streamReader.ReadInt16();
-                    int sampleRate = streamReader.ReadInt32();
-                    int bytesPerSecond = streamReader.ReadInt32();
-                    obj.SampleSizeBytes = streamReader.ReadInt16();
-                    short always1 = streamReader.ReadInt16();
-                    int always328160 = streamReader.ReadInt32();
-                    int bytesPerSecCopy = streamReader.ReadInt32();
+                    obj.NumChannels = stream.ReadInt16();
+                    short bitDepth = stream.ReadInt16();
+                    int sampleRate = stream.ReadInt32();
+                    int bytesPerSecond = stream.ReadInt32();
+                    obj.SampleSizeBytes = stream.ReadInt16();
+                    short always1 = stream.ReadInt16();
+                    int always328160 = stream.ReadInt32();
+                    int bytesPerSecCopy = stream.ReadInt32();
 
-                    obj.OggBuffer = streamReader.ReadBytes((int)stream.GetRemainingSectionBytes());
+                    obj.OggBuffer = stream.ReadBytes((int)stream.GetRemainingSectionBytes());
                 }
             }
         }

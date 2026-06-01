@@ -34,43 +34,43 @@ public class Vers
         {
             PreSerialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                streamWriter.Write(obj.FileName);
-                streamWriter.Write(obj.ClassName);
-                streamWriter.Write(obj.Crc32);
-                streamWriter.Write(obj.Size);
-                streamWriter.Write(obj.IsBlocked);
-                streamWriter.Write(obj.Crc32);
-                streamWriter.Write(obj.Registries.Count);
+                stream.Write(obj.FileName);
+                stream.Write(obj.ClassName);
+                stream.Write(obj.Crc32);
+                stream.Write(obj.Size);
+                stream.Write(obj.IsBlocked);
+                stream.Write(obj.Crc32);
+                stream.Write(obj.Registries.Count);
 
                 for (int i = 0; i < obj.Registries.Capacity; i++)
                 {
-                    streamWriter.Write(obj.Registries[i].MemberName);
-                    streamWriter.Write(obj.Registries[i].MemberType);
-                    streamWriter.Write(obj.Registries[i].Size);
-                    streamWriter.Write(obj.Registries[i].IsBlocked);
-                    streamWriter.Write(obj.Registries[i].Crc32);
+                    stream.Write(obj.Registries[i].MemberName);
+                    stream.Write(obj.Registries[i].MemberType);
+                    stream.Write(obj.Registries[i].Size);
+                    stream.Write(obj.Registries[i].IsBlocked);
+                    stream.Write(obj.Registries[i].Crc32);
                 }
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.FileName = streamReader.ReadString();
-                obj.ClassName = streamReader.ReadString();
-                obj.Crc32 = streamReader.ReadUInt32();
-                obj.Size = streamReader.ReadUInt32();
-                obj.IsBlocked = streamReader.ReadBoolean();
+                obj.FileName = stream.ReadString();
+                obj.ClassName = stream.ReadString();
+                obj.Crc32 = stream.ReadUInt32();
+                obj.Size = stream.ReadUInt32();
+                obj.IsBlocked = stream.ReadBoolean();
 
-                obj.Registries.Capacity = streamReader.ReadInt32();
+                obj.Registries.Capacity = stream.ReadInt32();
 
                 for (int i = 0; i < obj.Registries.Capacity; i++)
                 {
                     obj.Registries.Add(new MemberRegistry());
-                    obj.Registries[i].MemberName = streamReader.ReadString();
-                    obj.Registries[i].MemberType = streamReader.ReadString();
-                    obj.Registries[i].Size = streamReader.ReadUInt32();
-                    obj.Registries[i].IsBlocked = streamReader.ReadBoolean();
-                    obj.Registries[i].Crc32 = streamReader.ReadUInt32();
+                    obj.Registries[i].MemberName = stream.ReadString();
+                    obj.Registries[i].MemberType = stream.ReadString();
+                    obj.Registries[i].Size = stream.ReadUInt32();
+                    obj.Registries[i].IsBlocked = stream.ReadBoolean();
+                    obj.Registries[i].Crc32 = stream.ReadUInt32();
                 }
             }
         }

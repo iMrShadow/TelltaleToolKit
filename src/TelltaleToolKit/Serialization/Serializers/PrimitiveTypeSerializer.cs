@@ -133,13 +133,13 @@ public sealed class EnumSerializer<TEnum> : MetaClassSerializer<TEnum> where TEn
     /// <inheritdoc/>
     public override void Serialize(ref TEnum obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            streamWriter.Write(Convert.ToInt32(obj));
+            stream.Write(Convert.ToInt32(obj));
         }
-        else if (stream is BinaryMetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            obj = (TEnum)Enum.ToObject(typeof(TEnum), streamReader.ReadInt32());
+            obj = (TEnum)Enum.ToObject(typeof(TEnum), stream.ReadInt32());
         }
     }
 }

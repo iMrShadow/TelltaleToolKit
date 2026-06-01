@@ -41,13 +41,13 @@ public class VoiceData
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                streamWriter.Write(obj.VoiceDataBuffer);
+                stream.Write(obj.VoiceDataBuffer);
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.VoiceDataBuffer = streamReader.ReadBytes(obj.AllPacketsSize);
+                obj.VoiceDataBuffer = stream.ReadBytes(obj.AllPacketsSize);
             }
         }
     }

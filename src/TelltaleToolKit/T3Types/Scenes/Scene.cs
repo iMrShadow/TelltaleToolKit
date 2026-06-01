@@ -32,14 +32,14 @@ public class Scene
 
             stream.BeginBlock();
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numAgents = streamReader.ReadInt32();
+                int numAgents = stream.ReadInt32();
 
                 obj.Agents.Capacity = numAgents;
                 for (var i = 0; i < numAgents; i++)
@@ -53,7 +53,7 @@ public class Scene
             stream.EndBlock();
         }
     }
-    
+
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
     public class AgentInfo
     {

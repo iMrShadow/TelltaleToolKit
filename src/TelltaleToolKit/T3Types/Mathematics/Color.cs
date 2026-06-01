@@ -26,25 +26,25 @@ public struct Color
     {
         public override void Serialize(ref Color obj, MetaStream stream)
         {
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                if (streamWriter.Params.CanModifySerializedClassesList)
+                if (stream.Params.CanModifySerializedClassesList)
                 {
                     MetaClass? description = stream.GetMetaClass(typeof(Color));
-                    streamWriter.AddVersionInfo(description);
+                    stream.AddVersionInfo(description);
                 }
 
-                streamWriter.Write(obj.R);
-                streamWriter.Write(obj.G);
-                streamWriter.Write(obj.B);
-                streamWriter.Write(obj.A);
+                stream.Write(obj.R);
+                stream.Write(obj.G);
+                stream.Write(obj.B);
+                stream.Write(obj.A);
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.R = streamReader.ReadSingle();
-                obj.G = streamReader.ReadSingle();
-                obj.B = streamReader.ReadSingle();
-                obj.A = streamReader.ReadSingle();
+                obj.R = stream.ReadSingle();
+                obj.G = stream.ReadSingle();
+                obj.B = stream.ReadSingle();
+                obj.A = stream.ReadSingle();
             }
         }
     }

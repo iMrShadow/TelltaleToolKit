@@ -9,21 +9,21 @@ public class Vector2Serializer : MetaClassSerializer<Vector2>
 {
     public override void Serialize(ref Vector2 obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            if (streamWriter.Params.CanModifySerializedClassesList)
+            if (stream.Params.CanModifySerializedClassesList)
             {
                 MetaClass? description = stream.GetMetaClass(typeof(Vector2));
-                streamWriter.AddVersionInfo(description);
+                stream.AddVersionInfo(description);
             }
 
-            streamWriter.Write(obj.X);
-            streamWriter.Write(obj.Y);
+            stream.Write(obj.X);
+            stream.Write(obj.Y);
         }
-        else if (stream is BinaryMetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            obj.X = streamReader.ReadSingle();
-            obj.Y = streamReader.ReadSingle();
+            obj.X = stream.ReadSingle();
+            obj.Y = stream.ReadSingle();
         }
     }
 }
@@ -33,23 +33,23 @@ public class Vector3Serializer : MetaClassSerializer<Vector3>
 {
     public override void Serialize(ref Vector3 obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            if (streamWriter.Params.CanModifySerializedClassesList)
+            if (stream.Params.CanModifySerializedClassesList)
             {
                 MetaClass? description = stream.GetMetaClass(typeof(Vector3));
-                streamWriter.AddVersionInfo(description);
+                stream.AddVersionInfo(description);
             }
 
-            streamWriter.Write(obj.X);
-            streamWriter.Write(obj.Y);
-            streamWriter.Write(obj.Z);
+            stream.Write(obj.X);
+            stream.Write(obj.Y);
+            stream.Write(obj.Z);
         }
-        else if (stream is BinaryMetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            obj.X = streamReader.ReadSingle();
-            obj.Y = streamReader.ReadSingle();
-            obj.Z = streamReader.ReadSingle();
+            obj.X = stream.ReadSingle();
+            obj.Y = stream.ReadSingle();
+            obj.Z = stream.ReadSingle();
         }
     }
 }
@@ -59,25 +59,25 @@ public class Vector4Serializer : MetaClassSerializer<Vector4>
 {
     public override void Serialize(ref Vector4 obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            if (streamWriter.Params.CanModifySerializedClassesList)
+            if (stream.Params.CanModifySerializedClassesList)
             {
                 MetaClass? description = stream.GetMetaClass(typeof(Vector4));
-                streamWriter.AddVersionInfo(description);
+                stream.AddVersionInfo(description);
             }
 
-            streamWriter.Write(obj.X);
-            streamWriter.Write(obj.Y);
-            streamWriter.Write(obj.Z);
-            streamWriter.Write(obj.W);
+            stream.Write(obj.X);
+            stream.Write(obj.Y);
+            stream.Write(obj.Z);
+            stream.Write(obj.W);
         }
-        else if (stream is BinaryMetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            obj.X = streamReader.ReadSingle();
-            obj.Y = streamReader.ReadSingle();
-            obj.Z = streamReader.ReadSingle();
-            obj.W = streamReader.ReadSingle();
+            obj.X = stream.ReadSingle();
+            obj.Y = stream.ReadSingle();
+            obj.Z = stream.ReadSingle();
+            obj.W = stream.ReadSingle();
         }
     }
 }
@@ -87,25 +87,25 @@ public class QuaternionSerializer : MetaClassSerializer<Quaternion>
 {
     public override void Serialize(ref Quaternion obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            if (streamWriter.Params.CanModifySerializedClassesList)
+            if (stream.Params.CanModifySerializedClassesList)
             {
                 MetaClass? description = stream.GetMetaClass(typeof(Quaternion));
-                streamWriter.AddVersionInfo(description);
+                stream.AddVersionInfo(description);
             }
 
-            streamWriter.Write(obj.X);
-            streamWriter.Write(obj.Y);
-            streamWriter.Write(obj.Z);
-            streamWriter.Write(obj.W);
+            stream.Write(obj.X);
+            stream.Write(obj.Y);
+            stream.Write(obj.Z);
+            stream.Write(obj.W);
         }
-        else if (stream is BinaryMetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            obj.X = streamReader.ReadSingle();
-            obj.Y = streamReader.ReadSingle();
-            obj.Z = streamReader.ReadSingle();
-            obj.W = streamReader.ReadSingle();
+            obj.X = stream.ReadSingle();
+            obj.Y = stream.ReadSingle();
+            obj.Z = stream.ReadSingle();
+            obj.W = stream.ReadSingle();
         }
     }
 }

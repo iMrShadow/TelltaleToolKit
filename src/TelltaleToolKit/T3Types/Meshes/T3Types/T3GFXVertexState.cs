@@ -37,7 +37,7 @@ public class T3GFXVertexState
 
             MetaClass? desc = stream.GetMetaClass(typeof(T3GFXVertexState));
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");
@@ -69,7 +69,7 @@ public class T3GFXVertexState
                 else
                 {
                     bool hasIndexBuffer = obj.IndexBuffer.Count > 0;
-                    streamWriter.Write(hasIndexBuffer);
+                    stream.Write(hasIndexBuffer);
 
                     if (hasIndexBuffer)
                     {
@@ -87,7 +87,7 @@ public class T3GFXVertexState
                 }
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 if (obj.AttributeCount > 32)
                     throw new InvalidDataException("AttributeCount is too large");
@@ -118,7 +118,7 @@ public class T3GFXVertexState
                 {
                     obj.IndexBufferCount = 1;
 
-                    bool hasIndexBuffer = streamReader.ReadBoolean();
+                    bool hasIndexBuffer = stream.ReadBoolean();
                     if (hasIndexBuffer)
                     {
                         var indexBuffer = new T3GFXBuffer();

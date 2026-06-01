@@ -110,18 +110,18 @@ public class ChoreResource
 
             MetaClass? description = stream.GetMetaClass(typeof(ChoreResource));
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (description != null && description.ContainsMember("mbEmbedded") && obj.HasEmbedded)
                 {
-                    MetaClassType? embeddedClassType = streamReader.ReadMetaClassType();
+                    MetaClassType? embeddedClassType = stream.ReadMetaClassType();
                     if (embeddedClassType is null)
                         throw new InvalidOperationException("[ChoreResource] Embedded type is not registered.");
 
-                    Symbol _ = streamReader.ReadSymbol();
+                    Symbol _ = stream.ReadSymbol();
 
                     object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
 

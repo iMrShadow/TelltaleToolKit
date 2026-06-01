@@ -64,15 +64,15 @@ public class T3MaterialData
             if (classDescription == null || classDescription.ContainsMember("mCompiledData2"))
                 return;
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 obj.CompiledData2 ??= [];
 
-                streamWriter.Write(obj.CompiledData2.Count);
+                stream.Write(obj.CompiledData2.Count);
 
                 for (var i = 0; i < obj.CompiledData2.Count; i++)
                 {
-                    streamWriter.Write(i);
+                    stream.Write(i);
 
                     T3MaterialCompiledData compiledData = obj.CompiledData2[i];
 
@@ -86,9 +86,9 @@ public class T3MaterialData
                 return;
             }
 
-            if (stream is BinaryMetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numCompiledData = streamReader.ReadInt32();
+                int numCompiledData = stream.ReadInt32();
 
                 obj.CompiledData2 = new List<T3MaterialCompiledData>(numCompiledData);
 
@@ -97,7 +97,7 @@ public class T3MaterialData
 
                 for (var i = 0; i < numCompiledData; i++)
                 {
-                    int materialIndex = streamReader.ReadInt32();
+                    int materialIndex = stream.ReadInt32();
 
                     if ((uint)materialIndex >= (uint)numCompiledData)
                         throw new InvalidDataException(

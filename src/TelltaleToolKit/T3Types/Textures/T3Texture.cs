@@ -356,7 +356,7 @@ public class T3Texture
             // The default serializer will throw if there is no serialized T3Texture.
             MetaClass classDescription = stream.GetMetaClass(typeof(T3Texture))!;
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 if (classDescription.ContainsMember("mVersion"))
                 {
@@ -388,23 +388,23 @@ public class T3Texture
                     stream.BeginAsyncSection();
                     foreach (RegionStreamHeader region in obj.RegionHeaders)
                     {
-                        streamWriter.Write(region.RegionData);
+                        stream.Write(region.RegionData);
                     }
 
                     stream.EndAsyncSection();
                 }
                 else
                 {
-                    streamWriter.Write(obj.DdsTextureData.Length);
-                    streamWriter.Write(obj.DdsTextureData);
+                    stream.Write(obj.DdsTextureData.Length);
+                    stream.Write(obj.DdsTextureData);
 
                     if (obj.TplTextureDataSize > 0)
                     {
-                        streamWriter.Write(obj.TplTextureData);
+                        stream.Write(obj.TplTextureData);
                     }
                 }
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 // This is easier than checking for region stream headers. That can also work.
                 if (classDescription.ContainsMember("mVersion"))
@@ -452,7 +452,7 @@ public class T3Texture
                             region.SlicePitch = region.DataSize;
                         }
 
-                        region.RegionData = streamReader.ReadBytes(region.DataSize);
+                        region.RegionData = stream.ReadBytes(region.DataSize);
                     }
 
                     stream.EndAsyncSection();
@@ -464,14 +464,14 @@ public class T3Texture
                         return;
                     }
 
-                    int bufferSize = streamReader.ReadInt32();
-                    obj.DdsTextureData = streamReader.ReadBytes(bufferSize);
+                    int bufferSize = stream.ReadInt32();
+                    obj.DdsTextureData = stream.ReadBytes(bufferSize);
 
                     if (obj.TplTextureDataSize > 0)
                     {
                         obj.TplTextureData = new byte[obj.TplTextureDataSize];
 
-                        obj.TplTextureData = streamReader.ReadBytes(obj.TplTextureDataSize);
+                        obj.TplTextureData = stream.ReadBytes(obj.TplTextureDataSize);
                     }
                 }
             }

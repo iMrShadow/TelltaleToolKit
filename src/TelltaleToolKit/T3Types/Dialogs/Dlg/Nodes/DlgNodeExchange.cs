@@ -50,12 +50,12 @@ public class DlgNodeExchange : IDlgNode
             DefaultClassSerializer.PreSerialize(ref obj, stream);
             DefaultClassSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is BinaryMetaStreamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 if ((obj.DlgNode.Flags.Data & 1) != 0)
                 {

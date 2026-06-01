@@ -7,12 +7,12 @@ public class ByteArraySerializer : MetaClassSerializer<byte[]>
 {
     public override void Serialize(ref byte[] obj, MetaStream stream)
     {
-        if (stream is BinaryMetaStreamWriter streamWriter)
-            streamWriter.Write(obj);
-        else if (stream is BinaryMetaStreamReader streamReader)
+        if (stream.Mode is MetaStreamMode.Write)
+            stream.Write(obj);
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            int size = streamReader.ReadInt32();
-            obj = streamReader.ReadBytes(size);
+            int size = stream.ReadInt32();
+            obj = stream.ReadBytes(size);
         }
     }
 }

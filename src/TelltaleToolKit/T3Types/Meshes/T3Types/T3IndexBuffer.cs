@@ -40,10 +40,10 @@ public class T3IndexBuffer
         {
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is BinaryMetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is BinaryMetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 int bufferBytes = obj.Format switch
                 {
@@ -57,7 +57,7 @@ public class T3IndexBuffer
                     obj.IndexByteSize = bufferBytes;
                 }
 
-                obj.Buffer = streamReader.ReadBytes(bufferBytes * obj.NumIndices);
+                obj.Buffer = stream.ReadBytes(bufferBytes * obj.NumIndices);
             }
         }
     }
@@ -108,10 +108,10 @@ public class T3VertexComponent
 //         {
 //             new DefaultClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
 //
-//             if (stream is BinaryMetaStreamWriter streamWriter)
+//             if (stream.Mode is MetaStreamMode.Write)
 //             {
 //             }
-//             else if (stream is BinaryMetaStreamReader streamReader)
+//             else if (stream.Mode is MetaStreamMode.Read)
 //             {
 //                 var bufferBytes = 2;
 //                 if (obj.Format != 101)
@@ -119,7 +119,7 @@ public class T3VertexComponent
 //                     bufferBytes = 4;
 //                 }
 //
-//                 obj.IndexBufferData = streamReader.ReadBytes(obj.IndexByteSize * obj.NumIndices);
+//                 obj.IndexBufferData = stream.ReadBytes(obj.IndexByteSize * obj.NumIndices);
 //             }
 //         }
 //     }
