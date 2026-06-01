@@ -35,8 +35,7 @@ public class HandleBase
 
         public override void Serialize(ref HandleBase obj, MetaStream stream)
         {
-            if (stream.Configuration.Version is MetaStreamVersion.Msv4 or MetaStreamVersion.Msv5
-                or MetaStreamVersion.Msv6)
+            if (stream.Params.StreamVersion  >= 4)
             {
                 stream.Serialize(ref obj.ObjectInfo.ObjectName);
             }

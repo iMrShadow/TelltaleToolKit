@@ -6,7 +6,7 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <LangVersion>13</LangVersion>
     <RootNamespace>TelltaleToolKit</RootNamespace>
-    <Version>0.2.1</Version>
+    <Version>0.3.0</Version>
     <Title>TelltaleToolKit</Title>
     <Authors>Ivan Panayotov</Authors>
     <PackageProjectUrl>https://github.com/iMrShadow/TelltaleToolKit</PackageProjectUrl>
@@ -30,15 +30,18 @@
     <None Include="..\..\data\game_profiles\**\*"
           Pack="true"
           Link="ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\game_profiles\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
     <None Include="..\..\data\hashdb\**\*"
           Pack="true"
           Link="ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\hashdb\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
     <None Include="..\..\data\versiondb\**\*"
           Pack="true"
           Link="ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"
-          PackagePath="contentFiles\any\any\ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"/>
+          PackagePath="contentFiles\any\any\ttk-data\versiondb\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,10 +67,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="Oodle.NET" Version="2.2.0"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TelltaleArchives\Utilities\"/>
   </ItemGroup>
 
 </Project>

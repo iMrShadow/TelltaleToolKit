@@ -1,12 +1,19 @@
 ## Database Changelog
 
+### 1st of June, 2026
+
+#### Game Profiles
+- Added `StreamVersion` field that matches Telltale Tool. Please refer to the [docs](README.md#game-profile-fields).
+- Removed redundant `MetaStreamVersion` and `AreSymbolsHashed` fields. 
+- Updated database files with the new changes.
+
 ### 28th of May, 2026
 
 #### Game Profiles
-- Added initial game profile for The Wolf Among Us (2013) (Thank you Pumba)
+- Added initial game profile for The Wolf Among Us (2013)(Thank you Pumba!).
 
 #### Version Database
-- Added initial version database for The Wolf Among Us (2013)
+- Added initial version database for The Wolf Among Us (2013).
 
 ### 28th of April, 2026
 
@@ -23,15 +30,15 @@
 ### 24th of April, 2026
 
 #### Game Profiles
-- Added the year to TWDS2 game profile json file name to match other entries (Thank you @gamma-02)
+- Added the year to TWDS2 game profile json file name to match other entries (Thank you @gamma-02!).
 
 ### 17th of March, 2026
 
 #### Game Profiles
-- Added initial game profile for Poker Night at the Inventory Remastered (2026) (Thank you @gamma-02)
+- Added initial game profile for Poker Night at the Inventory Remastered (2026) (Thank you @gamma-02!).
 
 #### Version Database
-- Added initial version database for aforementoned Poker Night at the Inventory Remastered (2026)
+- Added initial version database for aforementoned Poker Night at the Inventory Remastered (2026).
 
 ### 18th of February, 2026
 

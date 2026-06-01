@@ -4,31 +4,32 @@ using System.Text;
 namespace TelltaleToolKit.Utility.Blowfish;
 
 /// <summary>
-/// Class that provides 'Blowfish' encryption.
-/// <para> There are two versions:</para> 
-/// - The regular Blowfish encryption which is used in older games until ttarch version 6.<br />
-/// - The modified Blowfish encryption which is used in all new games.
+///     Class that provides 'Blowfish' encryption.
+///     <para> There are two versions:</para>
+///     - The regular Blowfish encryption, which is used in older games until ttarch version 6.<br />
+///     - The modified Blowfish encryption, which is used in all new games.
 /// </summary>
 public class Blowfish
 {
     private const int N = 16;
+    private readonly bool _isModifiedBlowfishEncryption;
 
     private readonly uint[] _p;
     private readonly uint[,] _s;
-    private readonly bool _isModifiedBlowfishEncryption;
 
     /// <summary>
-    /// Constructs and initializes a blowfish instance with the supplied key.
+    ///     Constructs and initializes a blowfish instance with the supplied key.
     /// </summary>
     /// <param name="key">The key to cipher with.</param>
-    /// <param name="version"></param>
-    public Blowfish(Span<byte> key, int version)
+    /// <param name="isModified">If true, uses the modified Blowfish encryption (version >= 7).</param>
+    public Blowfish(Span<byte> key, bool isModified)
     {
-        _isModifiedBlowfishEncryption = version >= 7;
+        _isModifiedBlowfishEncryption = isModified;
 
         _p = BlowfishConstants.P.Clone() as uint[] ?? throw new InvalidOperationException();
         _s = BlowfishConstants.S.Clone() as uint[,] ?? throw new InvalidOperationException();
 
+        // Key expansion
         for (short i = 0, j = 0; i < N + 2; ++i)
         {
             uint data = 0x00000000;
@@ -46,9 +47,7 @@ public class Blowfish
             _s[0, 118] = BinaryPrimitives.ReverseEndianness(_s[0, 118]);
         }
 
-        uint dataLeft = 0x00000000;
-        uint dataRight = 0x00000000;
-
+        uint dataLeft = 0, dataRight = 0;
         for (short i = 0; i < N + 2; i += 2)
         {
             Encipher(ref dataLeft, ref dataRight);
@@ -57,41 +56,57 @@ public class Blowfish
         }
 
         for (short i = 0; i < 4; ++i)
+        for (short j = 0; j < 256; j += 2)
         {
-            for (short j = 0; j < 256; j += 2)
-            {
-                Encipher(ref dataLeft, ref dataRight);
-
-                _s[i, j] = dataLeft;
-                _s[i, j + 1] = dataRight;
-            }
+            Encipher(ref dataLeft, ref dataRight);
+            _s[i, j] = dataLeft;
+            _s[i, j + 1] = dataRight;
         }
     }
 
     /// <summary>
-    /// Constructs and initializes a blowfish instance with the supplied key.
+    ///     Constructs and initializes a blowfish instance with the supplied key.
     /// </summary>
     /// <param name="key">The key to cipher with.</param>
-    /// <param name="version"></param>
-    public Blowfish(string key, int version)
-        : this(Encoding.GetEncoding("ISO-8859-1").GetBytes(key), version)
+    /// <param name="version">Version number; version >= 7 enables modified encryption.</param>
+    public Blowfish(Span<byte> key, int version)
+        : this(key, version >= 7)
     {
     }
 
     /// <summary>
-    ///
+    ///     Constructs and initializes a blowfish instance with the supplied key.
+    /// </summary>
+    /// <param name="key">The key to cipher with.</param>
+    /// <param name="isModified">If true, uses the modified Blowfish encryption (version >= 7).</param>
+    public Blowfish(string key, bool isModified)
+        : this(Encoding.GetEncoding("ISO-8859-1").GetBytes(key), isModified)
+    {
+    }
+
+    /// <summary>
+    ///     Constructs and initializes a blowfish instance with the supplied key.
+    /// </summary>
+    /// <param name="key">The key to cipher with.</param>
+    /// <param name="version">Version number; version >= 7 enables modified encryption.</param>
+    public Blowfish(string key, int version)
+        : this(key, version >= 7)
+    {
+    }
+
+    /// <summary>
     /// </summary>
     /// <param name="x"></param>
     /// <returns></returns>
     private uint F(uint x)
     {
-        var d = (ushort)(x & 0x00FF);
+        ushort d = (ushort)(x & 0x00FF);
         x >>= 8;
-        var c = (ushort)(x & 0x00FF);
+        ushort c = (ushort)(x & 0x00FF);
         x >>= 8;
-        var b = (ushort)(x & 0x00FF);
+        ushort b = (ushort)(x & 0x00FF);
         x >>= 8;
-        var a = (ushort)(x & 0x00FF);
+        ushort a = (ushort)(x & 0x00FF);
         // y = ((S[0][a] + S[1][b]) ^ S[2][c]) + S[3][d];
         uint y = _s[0, a] + _s[1, b];
         y ^= _s[2, c];
@@ -101,7 +116,7 @@ public class Blowfish
     }
 
     /// <summary>
-    /// Encrypts a byte array in place.
+    ///     Encrypts a byte array in place.
     /// </summary>
     /// <param name="data">The array to encrypt.</param>
     /// <param name="length">The amount to encrypt.</param>
@@ -109,10 +124,10 @@ public class Blowfish
     {
         int fullBlocks = length - length % 8; // Ensure only complete blocks are processed
 
-        for (var i = 0; i < fullBlocks; i += 8)
+        for (int i = 0; i < fullBlocks; i += 8)
         {
-            var xl = (uint)((data[i + 3] << 24) | (data[i + 2] << 16) | (data[i + 1] << 8) | data[i]);
-            var xr = (uint)((data[i + 7] << 24) | (data[i + 6] << 16) | (data[i + 5] << 8) | data[i + 4]);
+            uint xl = (uint)((data[i + 3] << 24) | (data[i + 2] << 16) | (data[i + 1] << 8) | data[i]);
+            uint xr = (uint)((data[i + 7] << 24) | (data[i + 6] << 16) | (data[i + 5] << 8) | data[i + 4]);
 
             if (_isModifiedBlowfishEncryption)
             {
@@ -123,19 +138,19 @@ public class Blowfish
                 Encipher(ref xl, ref xr);
             }
 
-            data[i] = (byte)(xl >> 24);
-            data[i + 1] = (byte)(xl >> 16);
-            data[i + 2] = (byte)(xl >> 8);
-            data[i + 3] = (byte)(xl);
-            data[i + 4] = (byte)(xr >> 24);
-            data[i + 5] = (byte)(xr >> 16);
-            data[i + 6] = (byte)(xr >> 8);
-            data[i + 7] = (byte)(xr);
+            data[i + 3] = (byte)(xl >> 24);
+            data[i + 2] = (byte)(xl >> 16);
+            data[i + 1] = (byte)(xl >> 8);
+            data[i + 0] = (byte)xl;
+            data[i + 7] = (byte)(xr >> 24);
+            data[i + 6] = (byte)(xr >> 16);
+            data[i + 5] = (byte)(xr >> 8);
+            data[i + 4] = (byte)xr;
         }
     }
 
     /// <summary>
-    /// Encrypts 8 bytes of data (1 block)
+    ///     Encrypts 8 bytes of data (1 block)
     /// </summary>
     /// <param name="xl">The left part of the 8 bytes.</param>
     /// <param name="xr">The right part of the 8 bytes.</param>
@@ -162,7 +177,7 @@ public class Blowfish
     }
 
     /// <summary>
-    /// Encrypts 8 bytes of data (1 block)
+    ///     Encrypts 8 bytes of data (1 block)
     /// </summary>
     /// <param name="xl">The left part of the 8 bytes.</param>
     /// <param name="xr">The right part of the 8 bytes.</param>
@@ -199,7 +214,7 @@ public class Blowfish
     }
 
     /// <summary>
-    /// Encrypts a string.
+    ///     Encrypts a string.
     /// </summary>
     /// <param name="data">The string to encrypt</param>
     /// <returns>Encrypted string</returns>
@@ -212,7 +227,7 @@ public class Blowfish
     }
 
     /// <summary>
-    /// Decrypts a byte array in place.
+    ///     Decrypts a byte array in place.
     /// </summary>
     /// <param name="data">The array to decrypt.</param>
     /// <param name="length">The amount to decrypt.</param>
@@ -222,10 +237,10 @@ public class Blowfish
         // Ensure only complete blocks are processed
         int fullBlocks = length - length % 8;
 
-        for (var i = 0; i < fullBlocks; i += 8)
+        for (int i = 0; i < fullBlocks; i += 8)
         {
-            var xl = (uint)((data[i + 3] << 24) | (data[i + 2] << 16) | (data[i + 1] << 8) | data[i]);
-            var xr = (uint)((data[i + 7] << 24) | (data[i + 6] << 16) | (data[i + 5] << 8) | data[i + 4]);
+            uint xl = (uint)((data[i + 3] << 24) | (data[i + 2] << 16) | (data[i + 1] << 8) | data[i]);
+            uint xr = (uint)((data[i + 7] << 24) | (data[i + 6] << 16) | (data[i + 5] << 8) | data[i + 4]);
             Decipher(ref xl, ref xr);
 
             data[i + 3] = (byte)(xl >> 24);
@@ -240,7 +255,7 @@ public class Blowfish
     }
 
     /// <summary>
-    /// Decrypts 8 bytes of data (1 block)
+    ///     Decrypts 8 bytes of data (1 block)
     /// </summary>
     /// <param name="xl">The left part of the 8 bytes.</param>
     /// <param name="xr">The right part of the 8 bytes.</param>

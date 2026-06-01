@@ -15,10 +15,10 @@ public class ProceduralLookAtValue
     {
         public override void Serialize(ref ProceduralLookAtValue obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
             }
         }

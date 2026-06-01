@@ -2,9 +2,10 @@ using System.IO.Compression;
 using System.IO.Hashing;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.TelltaleArchives.IO;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Compression;
 using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
 
 namespace TelltaleToolKit.TelltaleArchives.Formats;
@@ -24,7 +25,7 @@ public class TTArchive : Archive
 
     private Stream? _dataStream; // decompressed view of the entire file-data region
 
-     protected override void Activate()
+    protected override void Activate()
     {
         using BinaryReader reader = new(BaseStream!, Encoding.UTF8, true);
 
@@ -143,7 +144,9 @@ public class TTArchive : Archive
         }
 
         if (decryptionMode == 1)
+        {
             _blowfish.Decipher(header, header.Length);
+        }
 
         Info.FilesOffset = (ulong)reader.BaseStream.Position;
         ParseEntries(new MemoryStream(header));
@@ -262,7 +265,6 @@ public class TTArchive : Archive
             throw new InvalidOperationException("Archive not loaded.");
         }
 
-        // TODO: Implement decrypting in MetaStream
         return entry is null ? null : new SubStream(_dataStream, (long)entry.Offset, entry.Size);
     }
 
@@ -292,7 +294,7 @@ public class TTArchive : Archive
         }
 
         bool encrypt = options.Encrypt;
-        bool compressFileData = options.Algorithm != CompressionAlgorithm.None && version >= 3;
+        bool compressFileData = options.Algorithm != Compression.None && version >= 3;
         bool compressHeader = compressFileData && version >= 6; // compressed entry table block (filesMode=2)
 
         Blowfish bf = new(options.BlowfishKey, version);
@@ -350,7 +352,7 @@ public class TTArchive : Archive
         byte[] CompressBlock(byte[] data)
         {
             using MemoryStream ms = new();
-            if (options.Algorithm == CompressionAlgorithm.Zlib)
+            if (options.Algorithm == Compression.Zlib)
             {
                 using DeflaterOutputStream zlib = new(ms);
                 zlib.Write(data, 0, data.Length);

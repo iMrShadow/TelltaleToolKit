@@ -40,19 +40,19 @@ public abstract class Archive : IDisposable
 
     /// <summary>
     ///     Gets the original file path of the archive, if it was loaded from a file.
-    ///     <see langword="null"/> when the archive was opened from a <see cref="Stream"/>.
+    ///     <see langword="null" /> when the archive was opened from a <see cref="Stream" />.
     /// </summary>
     public string? FilePath { get; private set; }
 
     /// <summary>
     ///     Gets the length of the underlying stream in bytes, if the stream supports seeking.
-    ///     <see langword="null"/> when the stream is not seekable (e.g., a network stream).
+    ///     <see langword="null" /> when the stream is not seekable (e.g., a network stream).
     /// </summary>
     public long? Length => BaseStream?.CanSeek == true ? BaseStream.Length : null;
 
     /// <summary>
     ///     Gets the file name (without directory) of the archive, if a file path is available.
-    ///     <see langword="null"/> when <see cref="FilePath"/> is <see langword="null"/>.
+    ///     <see langword="null" /> when <see cref="FilePath" /> is <see langword="null" />.
     /// </summary>
     public string? FileName => FilePath is not null ? Path.GetFileName(FilePath) : null;
 

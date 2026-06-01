@@ -21,17 +21,17 @@ public struct Polar
     {
         Polar instance = (Polar)obj;
 
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            streamWriter.Write(instance.Radius);
-            streamWriter.Write(instance.Theta);
-            streamWriter.Write(instance.Phi);
+            stream.Write(instance.Radius);
+            stream.Write(instance.Theta);
+            stream.Write(instance.Phi);
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            instance.Radius = streamReader.ReadSingle();
-            instance.Theta = streamReader.ReadSingle();
-            instance.Phi = streamReader.ReadSingle();
+            instance.Radius = stream.ReadSingle();
+            instance.Theta = stream.ReadSingle();
+            instance.Phi = stream.ReadSingle();
         }
     }
 }

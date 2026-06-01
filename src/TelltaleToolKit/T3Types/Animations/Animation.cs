@@ -36,7 +36,7 @@ public class Animation
         public int ValueCount { get; set; }
         public uint Version { get; set; }
     }
-    
+
     public List<InterfaceInfo> Descriptors { get; set; } = [];
 
     public List<IAnimatedValueInterface> Values { get; set; } = [];
@@ -61,31 +61,33 @@ public class Animation
                 return;
             }
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numTotalValues = streamReader.ReadInt32();
+                int numTotalValues = stream.ReadInt32();
                 obj.Values = new List<IAnimatedValueInterface>(numTotalValues);
 
                 // Runtime buffer (not needed for now)
-                int dataBufferSize = streamReader.ReadInt32();
+                int dataBufferSize = stream.ReadInt32();
                 obj.Buffer = new byte[dataBufferSize];
-                
-                int numValueTypes = streamReader.ReadInt32();
+
+                int numValueTypes = stream.ReadInt32();
                 obj.Descriptors = new List<InterfaceInfo>(numValueTypes);
 
                 for (var i = 0; i < numValueTypes; i++)
                 {
-                    MetaClassType typeSymbol = streamReader.ReadMetaClassType(); // The type of the class
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
+                    if (typeSymbol is null)
+                        throw new InvalidOperationException("[Animation] Type symbol is not registered.");
 
-                    int numOfType = streamReader.ReadInt16(); // The number of times that type has been serialized
+                    int numOfType = stream.ReadInt16(); // The number of times that type has been serialized
                     // TODO: Verify what these versions actually represent.
                     // TelltaleToolLib casts to unsigned int and uses it as a CRC32.
-                    var version = (uint)streamReader.ReadInt16();
+                    var version = (uint)stream.ReadInt16();
 
                     var interfaceInfo = new InterfaceInfo
                     {
@@ -103,7 +105,7 @@ public class Animation
                     for (var j = 0; j < desc.ValueCount; j++)
                     {
                         object? propertyValue = null;
-                        
+
                         serializer.PreSerialize(ref propertyValue, stream);
                         serializer.Serialize(ref propertyValue, stream);
 
@@ -111,23 +113,23 @@ public class Animation
                             obj.Values.Add(value);
                     }
                 }
-                
+
                 // These are very weird hacks by Telltale. What an...interesting system
                 // If for some reason the serializer for the baseclass of type `AnimationValueInterfaceBase` is not called,
                 // we read its values - the Symbol (CRC64 in this case) and the flags.
                 foreach (IAnimatedValueInterface value in obj.Values)
                 {
                     // TODO: Set other flags?
-                    value.AnimationValueInterfaceBase.Flags = streamReader.ReadInt32();
+                    value.AnimationValueInterfaceBase.Flags = stream.ReadInt32();
                 }
 
-                ushort isNotInterface = streamReader.ReadUInt16();
+                ushort isNotInterface = stream.ReadUInt16();
 
                 if (isNotInterface == 0)
                 {
                     foreach (IAnimatedValueInterface value in obj.Values)
                     {
-                        value.AnimationValueInterfaceBase.Name = streamReader.ReadSymbol();
+                        value.AnimationValueInterfaceBase.Name = stream.ReadSymbol();
                     }
                 }
             }
@@ -138,20 +140,23 @@ public class Animation
 
         public void SerializeOldAnimation(ref Animation obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numTotalValues = streamReader.ReadInt32();
-                int numValueTypes = streamReader.ReadInt32();
+                int numTotalValues = stream.ReadInt32();
+                int numValueTypes = stream.ReadInt32();
 
                 for (var i = 0; i < numValueTypes; i++)
                 {
-                    MetaClassType typeSymbol = streamReader.ReadMetaClassType(); // The type of the class
-                    int numOfType = streamReader.ReadInt32(); // The number of times that type has been serialized
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
+                    if (typeSymbol is null)
+                        throw new InvalidOperationException("[Animation] Type symbol is not registered.");
+
+                    int numOfType = stream.ReadInt32(); // The number of times that type has been serialized
 
                     MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 

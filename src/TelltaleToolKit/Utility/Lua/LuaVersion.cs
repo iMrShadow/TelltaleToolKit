@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.GamesDatabase;
+namespace TelltaleToolKit.Utility.Lua;
 
 /// <summary>
 /// Specifies the supported Lua scripting engine versions for Telltale games.
