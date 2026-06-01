@@ -395,11 +395,15 @@ public class T3Texture
                 }
                 else
                 {
+                    stream.Key("DDSLength");
                     stream.Write(obj.DdsTextureData.Length);
+
+                    stream.Key("DDSTextureData");
                     stream.Write(obj.DdsTextureData);
 
                     if (obj.TplTextureDataSize > 0)
                     {
+                        stream.Key("TplTextureData");
                         stream.Write(obj.TplTextureData);
                     }
                 }

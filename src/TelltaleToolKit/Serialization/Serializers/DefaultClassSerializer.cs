@@ -20,10 +20,6 @@ namespace TelltaleToolKit.Serialization.Serializers;
 /// <typeparam name="T">The type of the class being serialized.</typeparam>
 public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 {
-    // TODO: For v0.2.0 or v0.3.0 extract this to a database.
-    // This is required for implementing JSON serializers and allow UI libraries to link to those fields in the future.
-    // Explanation: Telltale's JSON serializing is...interesting.
-
     private static readonly Dictionary<(string, Type), CachedMember> MemberCache;
 
     // Initialize the mapping dictionary.
@@ -49,50 +45,79 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
     {
         MetaClass? description = stream.GetMetaClass(typeof(T));
 
-        // Console.WriteLine($"Reading {typeof(T).Name}.");
+        Toolkit.Instance.Logger.LogInfo($"Reading {typeof(T).Name}.");
         if (description is null || !description.ClassType.IsSerialized())
         {
             if (description is null)
-                Toolkit.Instance.Logger.LogWarning($"[DefaultClassSerializer] No description available for {typeof(T).Name}.");
+                Toolkit.Instance.Logger.LogWarning(
+                    $"[DefaultClassSerializer] No description available for {typeof(T).Name}.");
 
             return;
         }
 
+        stream.BeginObject(typeof(T).Name);
         // Add this class to the metaclass header.
-        if (stream is BinaryMetaStreamWriter { Params: { CanModifySerializedClassesList: true } } streamWriter)
+        if (stream is { Mode: MetaStreamMode.Write, Params.CanModifySerializedClassesList: true })
         {
-            streamWriter.AddVersionInfo(description);
+            stream.AddVersionInfo(description);
         }
 
         // Loop through the metaclass's properties/members
         foreach (MetaMember propDesc in description.Members.Where(propDesc => propDesc.IsSerialized()))
         {
-            CachedMember cached = ResolveMember(propDesc);
+            CachedMember? cached = ResolveMember(propDesc);
 
             if (propDesc.Type.IsBlocked())
                 stream.BeginBlock();
 
-            object? value = cached.Getter(ref obj);
 
-            MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(cached.Property.PropertyType);
+            stream.Key(propDesc.MemberName);
+
+            if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
+                                                          propDesc.Type.LinkingType == typeof(byte[]) ||
+                                                          propDesc.Type.LinkingType == typeof(Symbol)))
+            {
+
+            }
+            else
+            {
+                stream.BeginObject(propDesc.MemberName);
+            }
+
+            object? value = cached?.Getter(ref obj);
+
+            MetaClassSerializer serializer =
+                Toolkit.Instance.GetSerializer(cached?.Property.PropertyType ?? propDesc.Type.LinkingType);
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream);
 
-            // Console.WriteLine($"{propDesc.MemberName} - {value}");
+            Toolkit.Instance.Logger.LogInfo($"{propDesc.MemberName} - {value}");
 
-            if (stream is BinaryMetaStreamReader)
-                cached.Setter(ref obj, value);
+            if (stream.Mode is MetaStreamMode.Read)
+                cached?.Setter(ref obj, value);
+
+            if (propDesc.Type.LinkingType.IsPrimitive || propDesc.Type.LinkingType == typeof(string) ||
+                propDesc.Type.LinkingType == typeof(byte[]) ||
+                propDesc.Type.LinkingType == typeof(Symbol))
+            {
+
+            }
+            else
+            {
+                stream.EndObject(propDesc.MemberName);
+            }
 
             if (propDesc.Type.IsBlocked())
                 stream.EndBlock();
         }
 
-        // Console.WriteLine($"Ending {typeof(T).Name}.");
+        stream.EndObject(typeof(T).Name);
+        Toolkit.Instance.Logger.LogInfo($"Ending {typeof(T).Name}.");
     }
 
     public override void PreSerialize(ref T obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is BinaryMetaStreamReader && obj == null)
+        if (stream.Mode is MetaStreamMode.Read && obj == null)
         {
             obj = new T();
         }
@@ -104,7 +129,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
     /// <param name="propDesc"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    private static CachedMember ResolveMember(MetaMember propDesc)
+    private static CachedMember? ResolveMember(MetaMember propDesc)
     {
         // 1. Try direct match
         if (MemberCache.TryGetValue((propDesc.MemberName, propDesc.Type.LinkingType), out CachedMember? cached))
@@ -137,8 +162,9 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
                 return cachedAltFinal;
         }
 
-        throw new MetaMemberNotFoundException(
+        Toolkit.Instance.Logger.LogError(
             $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
+        return null;
     }
 
     // Delegate signatures for ref struct support

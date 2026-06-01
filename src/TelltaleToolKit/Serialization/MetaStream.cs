@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using TelltaleToolKit.Reflection;
 using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Serialization.Json;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Serialization;
@@ -67,8 +68,26 @@ public abstract class MetaStream : IDisposable
     public static MetaStream OpenWrite(Stream outputStream, MetaStreamParams configuration)
         => new BinaryMetaStreamWriter(outputStream, configuration);
 
+    /// <summary>
+    ///     Opens a MetaStream for reading from the specified input stream.
+    /// </summary>
+    /// <param name="inputStream">The stream containing the Telltale asset.</param>
+    /// <param name="configuration">Parameters that define the version, registered classes, etc.</param>
+    /// <returns>A MetaStream configured for writing.</returns>
+    public static MetaStream OpenJsonRead(Stream inputStream, MetaStreamParams configuration)
+        => new JsonMetaStreamReader(inputStream, configuration);
 
-    public void BeginAsyncSection()
+    /// <summary>
+    ///     Opens a MetaStream for writing to the specified output stream.
+    /// </summary>
+    /// <param name="outputStream">The stream that will receive the serialized data.</param>
+    /// <param name="configuration">Parameters that define the version, registered classes, etc.</param>
+    /// <returns>A MetaStream configured for writing.</returns>
+    public static MetaStream OpenJsonWrite(Stream outputStream, MetaStreamParams configuration)
+        => new JsonMetaStreamWriter(outputStream, configuration);
+
+
+    public virtual void BeginAsyncSection()
     {
         if (_currentSection is SectionType.Async || Params.StreamVersion < 4)
         {
@@ -78,7 +97,7 @@ public abstract class MetaStream : IDisposable
         SetSection(SectionType.Async);
     }
 
-    public void EndAsyncSection()
+    public virtual void EndAsyncSection()
     {
         if (_currentSection is not SectionType.Async || Params.StreamVersion < 4)
         {
@@ -88,7 +107,7 @@ public abstract class MetaStream : IDisposable
         SetSection(SectionType.Default);
     }
 
-    public void BeginDebugSection()
+    public virtual void BeginDebugSection()
     {
         if (_currentSection is SectionType.Debug || Params.StreamVersion < 4)
         {
@@ -98,7 +117,7 @@ public abstract class MetaStream : IDisposable
         SetSection(SectionType.Debug);
     }
 
-    public void EndDebugSection()
+    public virtual void EndDebugSection()
     {
         if (_currentSection is not SectionType.Debug || Params.StreamVersion < 4)
         {
@@ -107,6 +126,25 @@ public abstract class MetaStream : IDisposable
 
         SetSection(SectionType.Default);
     }
+
+    /// <summary>
+    ///     Emits a property key for the next value. No-op in binary streams;
+    ///     in JSON streams this labels the next value within an object container.
+    /// </summary>
+    /// <param name="name">The property/field name.</param>
+    public virtual void Key(string name) { }
+
+    /// <summary>
+    ///     Begins a named object or array container.
+    ///     No-op in binary streams. In JSON streams emits the opening brace or bracket.
+    /// </summary>
+    public virtual void BeginObject(string name, bool isArray = false) { }
+
+    /// <summary>
+    ///     Ends the most recently opened named container.
+    ///     No-op in binary streams. In JSON streams emits the closing brace or bracket.
+    /// </summary>
+    public virtual void EndObject(string name) { }
 
     /// <summary>
     ///     Called when the current section changes. Implementations should set up their reader/writer
