@@ -1,6 +1,6 @@
 using TelltaleToolKit.T3Types;
 
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 /// <summary>
 /// Registry for metaclass descriptions, allowing lookup and management by type hash and CRC32.

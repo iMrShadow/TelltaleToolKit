@@ -1,4 +1,4 @@
-﻿namespace TelltaleToolKit.Reflection;
+﻿namespace TelltaleToolKit.Meta;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class MetaMemberAttribute : Attribute

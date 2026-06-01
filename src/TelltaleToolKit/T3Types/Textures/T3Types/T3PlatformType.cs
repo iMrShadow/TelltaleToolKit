@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -15,7 +15,7 @@ public struct EnumPlatformType
 {
     [MetaMember("mVal")]
     public PlatformType Value { get; set; }
-    
+
     [MetaMember("Baseclass_EnumBase")]
     public EnumBase EnumBase { get; set; }
 }

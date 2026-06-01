@@ -1,4 +1,4 @@
-﻿namespace TelltaleToolKit.Reflection;
+﻿namespace TelltaleToolKit.Meta;
 
 public record MetaMember(
     string MemberName,
@@ -7,7 +7,7 @@ public record MetaMember(
 {
     public bool IsFlagType() => Flags.HasFlag(MetaFlags.FlagType);
     public bool IsEnumType() => Flags.HasFlag(MetaFlags.EnumIntType) || Flags.HasFlag(MetaFlags.EnumStringType);
-    
+
     /// <inheritdoc cref="MetaClassType.IsSerialized"/>
     public bool IsSerialized() => !Flags.HasFlag(MetaFlags.MetaSerializeDisable) && Type.IsSerialized();
 }

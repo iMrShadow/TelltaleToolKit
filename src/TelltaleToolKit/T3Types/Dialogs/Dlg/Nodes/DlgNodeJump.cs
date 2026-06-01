@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -33,7 +33,7 @@ public class DlgNodeJump : IDlgNode
 
     [MetaMember("Baseclass_DlgNode")]
     public DlgNode DlgNode { get; set; }
-    
+
     [MetaMember("mJumpToLink")]
     public DlgNodeLink JumpToLink { get; set; }
 

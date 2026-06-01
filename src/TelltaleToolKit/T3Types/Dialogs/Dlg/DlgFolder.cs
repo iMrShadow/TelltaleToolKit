@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
@@ -13,10 +13,10 @@ public class DlgFolder : IDlgObjIdOwner, IDlgObjectPropsOwner, IDlgChildSet, ITa
 
     [MetaMember("Baseclass_DlgObjectPropsOwner")]
     public DlgObjectPropsOwner DlgObjectPropsOwner { get; set; }
-    
+
     [MetaMember("Baseclass_DlgChildSet")]
     public DlgChildSet DlgChildSet { get; set; }
-    
+
     [MetaMember("Baseclass_TaskOwner")]
     public TaskOwner TaskOwner { get; set; }
 

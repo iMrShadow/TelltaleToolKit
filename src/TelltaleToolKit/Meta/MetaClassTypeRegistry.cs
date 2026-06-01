@@ -37,7 +37,7 @@ using TelltaleToolKit.T3Types.Textures.T3Types;
 using TelltaleToolKit.T3Types.Voice;
 using TelltaleToolKit.T3Types.WalkBoxes;
 
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 public static class MetaClassTypeRegistry
 {

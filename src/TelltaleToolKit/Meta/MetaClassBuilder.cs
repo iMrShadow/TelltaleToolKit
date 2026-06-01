@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 /// <summary>
 /// Builder pattern for constructing <see cref="MetaClass"/> instances.
@@ -53,7 +53,7 @@ public class MetaClassBuilder
         _metaClass.Members.Add(member ?? throw new ArgumentNullException(nameof(member)));
         return this;
     }
-    
+
     /// <summary>
     /// Adds a member to the class by name, type, and optional flags.
     /// </summary>

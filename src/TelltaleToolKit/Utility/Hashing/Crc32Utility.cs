@@ -1,6 +1,6 @@
 using System.IO.Hashing;
 using System.Text;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 
 namespace TelltaleToolKit.Utility.Hashing;
 

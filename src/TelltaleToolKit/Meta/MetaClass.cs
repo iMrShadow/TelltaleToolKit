@@ -1,4 +1,4 @@
-﻿namespace TelltaleToolKit.Reflection;
+﻿namespace TelltaleToolKit.Meta;
 // TODO: Maybe Add enum descriptors. Currently we assume that the enums are fixed. It may not be worth it for the extra memory usage.
 
 /// <summary>

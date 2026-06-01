@@ -1,5 +1,5 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -65,7 +65,7 @@ public class Skeleton
 
         [MetaMember("mResourceGroupMembership")]
         public Dictionary<string, float> ResourceGroupMembershipStr { get; set; } = new();
-        
+
         [MetaMember("mConstraints")]
         public BoneConstraints Constraints { get; set; } = new();
 

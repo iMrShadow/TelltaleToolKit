@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization.Binary;
 
 namespace TelltaleToolKit.Serialization;

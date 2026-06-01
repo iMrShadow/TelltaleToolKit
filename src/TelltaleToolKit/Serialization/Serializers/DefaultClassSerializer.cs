@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 using TransitionMap = TelltaleToolKit.T3Types.TransitionMap;

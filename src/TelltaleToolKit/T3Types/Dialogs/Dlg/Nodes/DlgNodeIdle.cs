@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Chores;
@@ -32,7 +32,7 @@ public class DlgNodeIdle : IDlgNode
 
     [MetaMember("mOverrideOptionStyle")]
     public OverrideOption OverrideOptionStyle { get; set; }
-    
+
     [MetaMember("Baseclass_DlgNode")]
     public DlgNode DlgNode { get; set; }
 }

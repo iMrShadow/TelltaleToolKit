@@ -1,5 +1,5 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -10,7 +10,7 @@ public class T3MeshTexCoordTransform
 {
     [MetaMember("mScale")]
     public Vector2 Scale { get; set; } = Vector2.One;
-    
+
     [MetaMember("mOffset")]
     public Vector2 Offset { get; set; } = Vector2.Zero;
 }

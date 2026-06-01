@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 /// <summary>
 /// Provides custom serialization and deserialization for <see cref="MetaClass"/> objects.

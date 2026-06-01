@@ -1,4 +1,4 @@
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -32,11 +32,11 @@ public class PlaceableBallTwistJointKey
     public float mAngleConstraint_MaxTwistAngle { get; set; }
 
     [MetaMember("mPlacementLockToAnimConstraint__Enabled")]
-    public bool mPlacementLockToAnimConstraint__Enabled { get; set; } 
-    
+    public bool mPlacementLockToAnimConstraint__Enabled { get; set; }
+
     [MetaMember("mPlacementLockToAnimConstraint_Offset")]
-    public Transform mPlacementLockToAnimConstraint_Offset { get; set; }  
-    
+    public Transform mPlacementLockToAnimConstraint_Offset { get; set; }
+
     [MetaMember("mPlacementLockToNodeConstraint_Offset")]
     public Transform mPlacementLockToNodeConstraint_Offset { get; set; }
 

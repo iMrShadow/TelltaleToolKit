@@ -1,7 +1,7 @@
 using System.Text;
 using TelltaleToolKit.T3Types;
 
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 /// <summary>
 /// Represents metadata and reflection information for a class/type, including its name, symbol, linking .NET type, and metadata flags.

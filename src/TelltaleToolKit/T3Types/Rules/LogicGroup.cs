@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.Reflection;
+﻿using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
@@ -36,15 +36,15 @@ public class LogicGroup
         public string Name { get; set; } = string.Empty;
 
         [MetaMember("mKeyNegateList")]
-        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol 
-        
+        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol
+
         [MetaMember("mKeyComparisonList")]
-        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol 
+        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol
 
         [MetaMember("mKeyActionList")]
-        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol 
+        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol
 
         [MetaMember("mReferenceKeyList")]
-        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol 
+        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol
     }
 }

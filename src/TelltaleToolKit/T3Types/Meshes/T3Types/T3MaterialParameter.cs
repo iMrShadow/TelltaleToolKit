@@ -1,4 +1,4 @@
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -21,16 +21,16 @@ public class T3MaterialParameter
 
     [MetaMember("mScalarOffset")]
     public int ScalarOffset { get; set; }
-    
+
     [MetaMember("mScalarOffset[0]")]
     public int ScalarOffset0 { get; set; }
-    
+
     [MetaMember("mScalarOffset[1]")]
     public int ScalarOffset1{ get; set; }
-    
+
     [MetaMember("mScalarOffset[2]")]
     public int ScalarOffset2{ get; set; }
-    
+
     [MetaMember("mScalarOffset[3]")]
     public int ScalarOffset3 { get; set; }
 

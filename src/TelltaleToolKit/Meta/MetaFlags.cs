@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.Reflection;
+namespace TelltaleToolKit.Meta;
 
 /// <summary>
 /// Flags to describe metadata properties for classes/types.

@@ -1,5 +1,5 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
@@ -30,10 +30,10 @@ public class ChoreAgent
 
     [MetaMember("mAttachment")]
     public Attachment AttachmentWhat { get; set; } = new(); // ???????/
-    
+
     [MetaMember("mAABinding")]
-    public ActorAgentBinding AABinding { get; set; } 
-    
+    public ActorAgentBinding AABinding { get; set; }
+
     [MetaMember("mAgentEnabledRule")]
     public Rule AgentEnabledRule { get; set; } // Bone only
 

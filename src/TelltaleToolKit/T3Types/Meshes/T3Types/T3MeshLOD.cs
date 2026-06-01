@@ -1,4 +1,4 @@
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
@@ -13,7 +13,7 @@ public class T3MeshLOD
     public List<T3MeshBatch> Batches { get; set; } = []; // Default
 
     [MetaMember("mBatches[0]")]
-    public List<T3MeshBatch> Batches1 { get; set; } = []; // Default 
+    public List<T3MeshBatch> Batches1 { get; set; } = []; // Default
 
     [MetaMember("mBatches[1]")]
     public List<T3MeshBatch> Batches2 { get; set; } = []; //  Shadow

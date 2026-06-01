@@ -1,4 +1,4 @@
-using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Serializers;
 
@@ -11,5 +11,5 @@ public class T3MaterialEnlightenPrecomputeParams
     public float IndirectReflectivity { get; set; }= 1.0f;
 
     [MetaMember("mIndirectTransparency")]
-    public float IndirectTransparency { get; set; } 
+    public float IndirectTransparency { get; set; }
 }
