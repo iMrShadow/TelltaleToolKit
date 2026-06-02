@@ -1,7 +1,7 @@
 ﻿using System.Buffers;
-using TelltaleToolKit.Encryption;
+using TelltaleToolKit.Meta.Serialization;
 
-namespace TelltaleToolKit.Meta.Serialization.Binary;
+namespace TelltaleToolKit.Encryption;
 
 /// <summary>
 ///     Provides static helpers to encrypt and decrypt legacy Telltale MetaStream files
