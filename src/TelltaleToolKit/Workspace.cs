@@ -5,8 +5,8 @@ using TelltaleToolKit.Games;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.IO.Resources;
-using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit;

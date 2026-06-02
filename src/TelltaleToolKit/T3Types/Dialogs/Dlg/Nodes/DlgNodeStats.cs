@@ -1,6 +1,6 @@
-﻿using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Languages.Landb;
 using TelltaleToolKit.T3Types.Textures;
 
@@ -29,7 +29,7 @@ public class DlgNodeStats
 
     [MetaMember("mDisplayText")]
     public LanguageResProxy DisplayText { get; set; }
-    
+
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Cohort>))]
     public class Cohort : IDlgChild

@@ -1,6 +1,6 @@
-using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
@@ -20,7 +20,7 @@ public class T3MaterialPassData
 [MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialPassType>))]
 public enum T3MaterialPassType
 {
-    // 
+    //
     FirstMesh = 0x0,
     Main = 0x0,
     PreZ = 0x1,

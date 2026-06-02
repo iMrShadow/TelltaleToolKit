@@ -1,7 +1,7 @@
 using System.Numerics;
-using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.WalkBoxes;
 
@@ -80,10 +80,10 @@ public class WalkBoxes
     public struct Vert
     {
         [MetaMember("mFlags")]
-        public Flags Flags { get; set; } 
+        public Flags Flags { get; set; }
 
         [MetaMember("mPos")]
-        public Vector3 Position { get; set; } 
+        public Vector3 Position { get; set; }
     }
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Quad>))]

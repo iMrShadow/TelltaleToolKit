@@ -1,6 +1,4 @@
-﻿using System.IO.Compression;
-using TelltaleToolKit.Encryption;
-using TelltaleToolKit.IO.Archives;
+﻿using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Caching;
 
 namespace TelltaleToolKit.IO.Streams;

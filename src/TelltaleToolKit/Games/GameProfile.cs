@@ -1,8 +1,7 @@
 using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Lua;
-using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Meta.Reflection;
 
 namespace TelltaleToolKit.Games;
 

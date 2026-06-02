@@ -1,13 +1,12 @@
-using TelltaleToolKit.Meta;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Chores;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Rules;
 using TelltaleToolKit.T3Types.StyleGuides;
 
-namespace TelltaleToolKit.T3Types.Dialogs;
+namespace TelltaleToolKit.T3Types.Dialogs.Dlog;
 
 [MetaClassSerializerGlobal(typeof(Serializer))]
 public class DialogBase

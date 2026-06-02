@@ -1,5 +1,5 @@
 using System.Text.Json;
-using TelltaleToolKit.Meta;
+using TelltaleToolKit.Meta.Reflection;
 
 namespace TelltaleToolKit.Games;
 

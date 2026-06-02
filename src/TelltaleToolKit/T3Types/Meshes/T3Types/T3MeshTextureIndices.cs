@@ -1,5 +1,4 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 

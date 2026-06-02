@@ -1,4 +1,4 @@
-using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
