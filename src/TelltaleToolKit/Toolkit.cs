@@ -1,13 +1,14 @@
 using System.Text;
 using System.Text.Json;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.Games;
+using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.Logging;
 using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;
 
@@ -41,7 +42,7 @@ public class Toolkit
 
         ClassRegistry = new MetaClassRegistry();
         SerializerSelector = new MetaClassSerializerSelector();
-        GlobalHashDatabase = new HashDatabase.HashDatabase();
+        GlobalHashDatabase = new HashDatabase();
 
         LoadMetaClassDescriptions();
         LoadGameProfiles(config.DataFolder);
@@ -82,7 +83,7 @@ public class Toolkit
     /// Gets the global hash database used for symbol resolution.
     /// Workspace-local databases are checked after this one.
     /// </summary>
-    public HashDatabase.HashDatabase GlobalHashDatabase { get; }
+    public HashDatabase GlobalHashDatabase { get; }
 
     /// <summary>
     /// Gets the serializer selector used to pick the right serializer for a given type.

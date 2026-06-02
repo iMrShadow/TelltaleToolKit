@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.Utility.Lua;
+namespace TelltaleToolKit.Lua;
 
 /// <summary>
 /// Extension methods for <see cref="LuaVersion"/> to handle conversions between string representations and enum values.

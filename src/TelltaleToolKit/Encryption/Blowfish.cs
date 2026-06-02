@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 
-namespace TelltaleToolKit.Utility.Blowfish;
+namespace TelltaleToolKit.Encryption;
 
 /// <summary>
 ///     Class that provides 'Blowfish' encryption.

@@ -1,3 +1,4 @@
+using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Utility.Hashing;
 

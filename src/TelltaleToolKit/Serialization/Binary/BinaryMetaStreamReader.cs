@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Meta;
 using TelltaleToolKit.T3Types;

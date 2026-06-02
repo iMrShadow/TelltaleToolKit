@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TelltaleToolKit.Utility.Hashing;
+namespace TelltaleToolKit.Hashing;
 
 public static class Crc64
 {

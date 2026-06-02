@@ -25,7 +25,7 @@ public class LooseFileProvider : IFileProvider
 
         Path = path;
         Name = System.IO.Path.GetFileName(path);
-        Crc64 = Utility.Hashing.Crc64.Compute(Name);
+        Crc64 = Hashing.Crc64.Compute(Name);
         Size = new FileInfo(path).Length;
     }
 

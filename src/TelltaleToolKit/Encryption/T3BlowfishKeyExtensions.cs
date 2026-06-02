@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace TelltaleToolKit.Utility.Blowfish;
+namespace TelltaleToolKit.Encryption;
 
 public static class T3BlowfishKeyExtensions
 {

@@ -2,9 +2,9 @@ using System.IO.Compression;
 using System.IO.Hashing;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Streams;
-using TelltaleToolKit.Utility.Blowfish;
-using Crc64 = TelltaleToolKit.Utility.Hashing.Crc64;
+using Crc64 = TelltaleToolKit.Hashing.Crc64;
 
 namespace TelltaleToolKit.IO.Archives.Formats;
 

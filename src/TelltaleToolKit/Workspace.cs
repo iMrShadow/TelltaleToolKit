@@ -1,12 +1,13 @@
 using System.Text;
 using Lua;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.Games;
+using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.IO.Resources;
 using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit;
@@ -60,7 +61,7 @@ public class Workspace
         Name = name ?? throw new ArgumentNullException(nameof(name));
         _toolkit = toolkit ?? throw new ArgumentNullException(nameof(toolkit));
         Profile = profile ?? throw new ArgumentNullException(nameof(profile));
-        LocalHashDatabase = new HashDatabase.HashDatabase();
+        LocalHashDatabase = new HashDatabase();
 
         bool isModifiedBlowfish = Profile.TtarchVersion >= TTArchiveVersion.Seven;
         Blowfish = new Blowfish(profile.BlowfishKey, isModifiedBlowfish);
@@ -99,7 +100,7 @@ public class Workspace
     /// Gets the workspace-local hash database used for symbol resolution.
     /// Entries here complement (and are checked after) the global database in <see cref="Toolkit"/>.
     /// </summary>
-    public HashDatabase.HashDatabase LocalHashDatabase { get; }
+    public HashDatabase LocalHashDatabase { get; }
 
     /// <summary>
     /// Gets or sets a value indicating whether symbols are automatically resolved after

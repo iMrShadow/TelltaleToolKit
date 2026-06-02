@@ -9,8 +9,6 @@ using TelltaleToolKit.IO.Archives;
 using TelltaleToolKit.Meta;
 using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Utility.Blowfish;
-using TelltaleToolKit.Utility.Lua;
 
 // !!!IMPORTANT!!!
 // This project creates ONLY the VERSION DATABASE for a specific game.

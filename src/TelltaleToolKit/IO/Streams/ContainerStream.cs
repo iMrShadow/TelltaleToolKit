@@ -1,8 +1,8 @@
 ﻿using System.IO.Compression;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Archives.Formats;
-using TelltaleToolKit.Utility.Blowfish;
 using TelltaleToolKit.Utility.Caching;
 
 namespace TelltaleToolKit.IO.Streams;

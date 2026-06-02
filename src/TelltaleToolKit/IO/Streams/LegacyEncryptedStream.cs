@@ -1,4 +1,4 @@
-﻿using TelltaleToolKit.Utility.Blowfish;
+﻿using TelltaleToolKit.Encryption;
 
 namespace TelltaleToolKit.IO.Streams;
 

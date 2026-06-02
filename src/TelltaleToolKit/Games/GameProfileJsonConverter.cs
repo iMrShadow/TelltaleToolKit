@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Archives;
-using TelltaleToolKit.Utility.Blowfish;
-using TelltaleToolKit.Utility.Lua;
+using TelltaleToolKit.Lua;
 
 namespace TelltaleToolKit.Games;
 

@@ -1,4 +1,4 @@
-namespace TelltaleToolKit.Utility.Blowfish;
+namespace TelltaleToolKit.Encryption;
 
 public static class BlowfishConstants
 {

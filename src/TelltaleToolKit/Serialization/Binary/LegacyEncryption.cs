@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 using System.Buffers.Binary;
-using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Encryption;
 
 namespace TelltaleToolKit.Serialization.Binary;
 

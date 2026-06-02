@@ -1,9 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.Utility.Hashing;
 
-namespace TelltaleToolKit.HashDatabase;
+namespace TelltaleToolKit.Hashing;
 
 /// <summary>
 /// An in-memory, thread-safe hash database for storing and resolving <see cref="Symbol"/> entries.

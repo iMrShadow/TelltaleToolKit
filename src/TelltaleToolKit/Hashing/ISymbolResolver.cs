@@ -1,6 +1,6 @@
 using TelltaleToolKit.T3Types;
 
-namespace TelltaleToolKit.HashDatabase;
+namespace TelltaleToolKit.Hashing;
 
 /// <summary>
 /// Interface for resolving <see cref="Symbol"/> names from CRC64 values.
