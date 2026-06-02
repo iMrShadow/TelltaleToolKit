@@ -8,7 +8,7 @@ namespace TelltaleToolKit.Hashing;
 /// An in-memory, thread-safe hash database for storing and resolving <see cref="Symbol"/> entries.
 /// Supports loading from text files and automatic caching.
 /// </summary>
-public class HashDatabase : ISymbolResolver
+public class HashDatabase
 {
     private readonly ConcurrentDictionary<ulong, string> _symbols = new();
 
@@ -325,20 +325,13 @@ public class HashDatabase : ISymbolResolver
     /// <summary>
     /// Merges another hash database into this one.
     /// </summary>
-    public void Merge(ISymbolResolver other)
+    public void Merge(HashDatabase other)
     {
         if (other == null) throw new ArgumentNullException(nameof(other));
 
-        if (other is HashDatabase memoryDb)
+        foreach (KeyValuePair<ulong, string> kvp in other._symbols)
         {
-            foreach (KeyValuePair<ulong, string> kvp in memoryDb._symbols)
-            {
-                AddSymbol(kvp.Key, kvp.Value);
-            }
-        }
-        else
-        {
-            throw new NotImplementedException("Merging with non-HashDatabase not yet implemented");
+            AddSymbol(kvp.Key, kvp.Value);
         }
     }
 }
