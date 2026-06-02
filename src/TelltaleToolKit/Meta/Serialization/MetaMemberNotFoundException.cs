@@ -1,4 +1,4 @@
-﻿namespace TelltaleToolKit.Meta.Serialization.Serializers;
+﻿namespace TelltaleToolKit.Meta.Serialization;
 
 public class MetaMemberNotFoundException : Exception
 {
