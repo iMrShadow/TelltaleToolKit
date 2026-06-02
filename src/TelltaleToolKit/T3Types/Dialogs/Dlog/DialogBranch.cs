@@ -1,10 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Dialogs.Dlog;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DialogBranch>))]
+[MetaSerializer(typeof(MetaClassSerializer<DialogBranch>))]
 public class DialogBranch : IDialogBase
 {
     [MetaMember("Baseclass_DialogBase")]

@@ -1,13 +1,14 @@
 using System.Text;
 using System.Text.Json;
-using TelltaleToolKit.GamesDatabase;
+using TelltaleToolKit.Encryption;
+using TelltaleToolKit.Games;
+using TelltaleToolKit.Hashing;
+using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.IO.Archives.Formats;
 using TelltaleToolKit.Logging;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.T3Types;
-using TelltaleToolKit.TelltaleArchives;
-using TelltaleToolKit.TelltaleArchives.Formats;
-using TelltaleToolKit.Utility.Blowfish;
 
 namespace TelltaleToolKit;
 
@@ -40,8 +41,8 @@ public class Toolkit
         Config = config ?? throw new ArgumentNullException(nameof(config));
 
         ClassRegistry = new MetaClassRegistry();
-        SerializerSelector = new MetaClassSerializerSelector();
-        GlobalHashDatabase = new HashDatabase.HashDatabase();
+        SerializerSelector = new MetaSerializerSelector();
+        GlobalHashDatabase = new HashDatabase();
 
         LoadMetaClassDescriptions();
         LoadGameProfiles(config.DataFolder);
@@ -82,12 +83,12 @@ public class Toolkit
     /// Gets the global hash database used for symbol resolution.
     /// Workspace-local databases are checked after this one.
     /// </summary>
-    public HashDatabase.HashDatabase GlobalHashDatabase { get; }
+    public HashDatabase GlobalHashDatabase { get; }
 
     /// <summary>
     /// Gets the serializer selector used to pick the right serializer for a given type.
     /// </summary>
-    public MetaClassSerializerSelector SerializerSelector { get; }
+    public MetaSerializerSelector SerializerSelector { get; }
 
     /// <summary>
     /// Gets all registered game profiles, keyed by profile name (case-insensitive).
@@ -223,6 +224,7 @@ public class Toolkit
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if reading or parsing fails.
@@ -267,6 +269,7 @@ public class Toolkit
     /// A readable stream positioned at the start of a MetaStream file.
     /// Not disposed by this method.
     /// </param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if parsing fails.
@@ -290,6 +293,7 @@ public class Toolkit
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if reading or parsing fails.
     /// </returns>
@@ -328,6 +332,7 @@ public class Toolkit
     /// A readable stream positioned at the start of a MetaStream file.
     /// Not disposed by this method.
     /// </param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if parsing fails.
     /// </returns>
@@ -500,13 +505,13 @@ public class Toolkit
     /// <summary>
     /// Returns the typed serializer for <typeparamref name="T"/>.
     /// </summary>
-    public MetaClassSerializer<T> GetSerializer<T>() where T : new()
+    public MetaSerializer<T> GetSerializer<T>() where T : new()
         => SerializerSelector.GetSerializer<T>();
 
     /// <summary>
     /// Returns the serializer for the given runtime <paramref name="type"/>.
     /// </summary>
-    public MetaClassSerializer GetSerializer(Type type)
+    public MetaSerializer GetSerializer(Type type)
         => SerializerSelector.GetSerializer(type);
 
     // -------------------------------------------------------------------------
@@ -665,9 +670,9 @@ public class Toolkit
 
         /// <summary>
         /// Gets or sets a value indicating whether symbols found in the
-        /// <see cref="MetaStreamParamsMetaStreamParamsizedSymbols"/> table are automatically
+        /// <see cref="MetaStreamParams"/> table are automatically
         /// resolved against the global hash database after every successful
-        /// <see cref="Deserialize{T}(string)"/> call.
+        /// <see cref="Deserialize{T}(string, Workspace?)"/> call.
         /// <para>
         /// Individual call sites can override this with the <c>autoResolveSymbols</c>
         /// parameter: <see langword="true"/> forces resolution, <see langword="false"/>

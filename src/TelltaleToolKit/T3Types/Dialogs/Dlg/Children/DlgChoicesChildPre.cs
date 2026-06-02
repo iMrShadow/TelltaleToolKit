@@ -1,10 +1,10 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChoicesChildPre>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgChoicesChildPre>))]
 public class DlgChoicesChildPre : IDlgChild
 {
     [MetaMember("Baseclass_DlgChild")]

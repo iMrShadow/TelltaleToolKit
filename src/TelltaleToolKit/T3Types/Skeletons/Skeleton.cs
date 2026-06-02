@@ -1,17 +1,17 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Skeleton>))]
+[MetaSerializer(typeof(MetaClassSerializer<Skeleton>))]
 public class Skeleton
 {
     [MetaMember("mEntries")]
     public List<Entry> Entries { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Entry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Entry>))]
     public class Entry
     {
         // This is a string and a symbol at the same time
@@ -65,7 +65,7 @@ public class Skeleton
 
         [MetaMember("mResourceGroupMembership")]
         public Dictionary<string, float> ResourceGroupMembershipStr { get; set; } = new();
-        
+
         [MetaMember("mConstraints")]
         public BoneConstraints Constraints { get; set; } = new();
 

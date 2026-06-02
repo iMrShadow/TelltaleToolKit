@@ -1,13 +1,13 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Miscellaneous;
 
 namespace TelltaleToolKit.T3Types.Audio;
 
 public class FootSteps2
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<FootstepBank>))]
+    [MetaSerializer(typeof(MetaClassSerializer<FootstepBank>))]
     public class FootstepBank
     {
         [MetaMember("mEventName")]

@@ -1,12 +1,12 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshMaterial>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshMaterial>))]
 public class T3MeshMaterial
 {
     [MetaMember("mhMaterial")]

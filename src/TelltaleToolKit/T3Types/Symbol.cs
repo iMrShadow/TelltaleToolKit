@@ -16,7 +16,7 @@ public sealed class Symbol : IEquatable<Symbol>
     private Symbol(string name)
     {
         DebugString = name;
-        Crc64 = Utility.Hashing.Crc64.Compute(name);
+        Crc64 = Hashing.Crc64.Compute(name);
     }
 
     private Symbol(ulong crc64)
@@ -67,7 +67,7 @@ public sealed class Symbol : IEquatable<Symbol>
     /// Always returns <c>false</c> for unresolved symbols.
     /// </summary>
     public bool IsDebugStringConsistent =>
-        DebugString is not null && Crc64 == Utility.Hashing.Crc64.Compute(DebugString);
+        DebugString is not null && Crc64 == Hashing.Crc64.Compute(DebugString);
 
     /// <summary>Creates a resolved symbol by computing CRC64 from <paramref name="name"/>.</summary>
     /// <remarks>The name is lowercased before hashing, making symbols case-insensitive.</remarks>
@@ -91,7 +91,7 @@ public sealed class Symbol : IEquatable<Symbol>
         var symbol = new Symbol(name, crc64);
         Debug.Assert(
             symbol.IsDebugStringConsistent,
-            $"Symbol CRC mismatch: '{name}' hashes to 0x{Utility.Hashing.Crc64.Compute(name):X16}, but 0x{crc64:X16} was provided.");
+            $"Symbol CRC mismatch: '{name}' hashes to 0x{Hashing.Crc64.Compute(name):X16}, but 0x{crc64:X16} was provided.");
         return symbol;
     }
 
@@ -99,7 +99,7 @@ public sealed class Symbol : IEquatable<Symbol>
     /// Returns <c>true</c> if <paramref name="name"/> would hash to this symbol's <see cref="Crc64"/>.
     /// </summary>
     public bool MatchesName(string name)
-        => Crc64 == Utility.Hashing.Crc64.Compute(name);
+        => Crc64 == Hashing.Crc64.Compute(name);
 
     /// <summary>
     /// Attaches a debug string to an unresolved symbol.
@@ -107,8 +107,8 @@ public sealed class Symbol : IEquatable<Symbol>
     /// <param name="name">The resolved name.</param>
     public void Resolve(string name)
     {
-        Debug.Assert(Utility.Hashing.Crc64.Compute(name) == Crc64,
-            $"Resolve mismatch: '{name}' hashes to 0x{Utility.Hashing.Crc64.Compute(name):X16}, expected 0x{Crc64:X16}.");
+        Debug.Assert(Hashing.Crc64.Compute(name) == Crc64,
+            $"Resolve mismatch: '{name}' hashes to 0x{Hashing.Crc64.Compute(name):X16}, expected 0x{Crc64:X16}.");
         DebugString = name;
     }
 

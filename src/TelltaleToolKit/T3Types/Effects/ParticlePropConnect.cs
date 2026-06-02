@@ -1,11 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Miscellaneous;
 
 namespace TelltaleToolKit.T3Types.Effects;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ParticlePropConnect>))]
+[MetaSerializer(typeof(MetaClassSerializer<ParticlePropConnect>))]
 public class ParticlePropConnect
 {
     [MetaMember("mModType")]

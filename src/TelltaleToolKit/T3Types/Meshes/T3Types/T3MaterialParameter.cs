@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialParameter>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialParameter>))]
 public class T3MaterialParameter
 {
     [MetaMember("mName")]
@@ -21,16 +21,16 @@ public class T3MaterialParameter
 
     [MetaMember("mScalarOffset")]
     public int ScalarOffset { get; set; }
-    
+
     [MetaMember("mScalarOffset[0]")]
     public int ScalarOffset0 { get; set; }
-    
+
     [MetaMember("mScalarOffset[1]")]
     public int ScalarOffset1{ get; set; }
-    
+
     [MetaMember("mScalarOffset[2]")]
     public int ScalarOffset2{ get; set; }
-    
+
     [MetaMember("mScalarOffset[3]")]
     public int ScalarOffset3 { get; set; }
 
@@ -41,7 +41,7 @@ public class T3MaterialParameter
     public int NestedMaterialIndex { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialValueType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialValueType>))]
 public enum T3MaterialValueType
 {
     //  eMaterialValue_
@@ -53,7 +53,7 @@ public enum T3MaterialValueType
     Channels = 0x4,
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialPropertyType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialPropertyType>))]
 public enum T3MaterialPropertyType
 {
     // eMaterialProperty_

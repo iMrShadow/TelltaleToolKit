@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumRenderMaskTest>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumRenderMaskTest>))]
 public struct EnumRenderMaskTest
 {
     [MetaMember("mVal")]
     public RenderMaskTest Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<RenderMaskTest>))]
+[MetaSerializer(typeof(EnumSerializer<RenderMaskTest>))]
 public enum RenderMaskTest
 {
     //        eRenderMaskTest_

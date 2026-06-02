@@ -1,12 +1,12 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Animations;
 using TelltaleToolKit.T3Types.Chores;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimOrChore>))]
+[MetaSerializer(typeof(MetaClassSerializer<AnimOrChore>))]
 public class AnimOrChore
 {
     [MetaMember("mhAnim")]

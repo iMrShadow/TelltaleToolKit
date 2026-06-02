@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticlePropDriver>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticlePropDriver>))]
 public struct EnumParticlePropDriver
 {
     [MetaMember("mVal")]
     public ParticlePropDriver Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticlePropDriver>))]
+[MetaSerializer(typeof(EnumSerializer<ParticlePropDriver>))]
 public enum ParticlePropDriver
 {
     // TODO:

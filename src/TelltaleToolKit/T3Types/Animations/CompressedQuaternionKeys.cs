@@ -1,9 +1,8 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class CompressedQuaternionKeys
 {
     public string Name { get; set; } = string.Empty;
@@ -13,7 +12,7 @@ public class CompressedQuaternionKeys
     public int Flags { get; set; }
 
 
-    public class Serializer : MetaClassSerializer<CompressedQuaternionKeys>
+    public class Serializer : MetaSerializer<CompressedQuaternionKeys>
     {
         public override void Serialize(ref CompressedQuaternionKeys obj, MetaStream stream)
         {

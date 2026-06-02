@@ -6,13 +6,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using TelltaleToolKit;
-using TelltaleToolKit.GamesDatabase;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.TelltaleArchives;
-using TelltaleToolKit.Utility.Blowfish;
-using TelltaleToolKit.Utility.Lua;
+using TelltaleToolKit.Encryption;
+using TelltaleToolKit.Games;
+using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.Lua;
+using TelltaleToolKit.Meta;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Binary;
 
 namespace DatabaseGenerator;
 

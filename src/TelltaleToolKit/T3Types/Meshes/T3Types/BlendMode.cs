@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BlendMode>))]
+[MetaSerializer(typeof(MetaClassSerializer<BlendMode>))]
 public struct BlendMode
 {
     [MetaMember("mVal")]
     public T3BlendMode Val {get;set;}
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3BlendMode>))]
+[MetaSerializer(typeof(EnumSerializer<T3BlendMode>))]
 public enum T3BlendMode
 {
     // eBlendMode_

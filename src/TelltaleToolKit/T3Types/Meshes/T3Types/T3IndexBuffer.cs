@@ -1,14 +1,13 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
 /// <summary>
 /// Old name - D3DIndexBuffer
 /// </summary>
-[MetaClassSerializerGlobal(typeof(T3IndexBufferSerializer))]
+[MetaSerializer(typeof(T3IndexBufferSerializer))]
 public class T3IndexBuffer
 {
     [MetaMember("mbLocked")]
@@ -31,14 +30,14 @@ public class T3IndexBuffer
 
     public byte[] Buffer { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(T3IndexBufferSerializer))]
-    public class T3IndexBufferSerializer : MetaClassSerializer<T3IndexBuffer>
+    [MetaSerializer(typeof(T3IndexBufferSerializer))]
+    public class T3IndexBufferSerializer : MetaSerializer<T3IndexBuffer>
     {
-        private static readonly DefaultClassSerializer<T3IndexBuffer> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3IndexBuffer> s_metaClassSerializer = new();
 
         public override void Serialize(ref T3IndexBuffer obj, MetaStream stream)
         {
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -63,7 +62,7 @@ public class T3IndexBuffer
     }
 }
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3VertexComponent>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3VertexComponent>))]
 public class T3VertexComponent
 {
     [MetaMember("mOffset")]
@@ -75,7 +74,7 @@ public class T3VertexComponent
     [MetaMember("mType")]
     public EnumType Type { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<EnumType>))]
+    [MetaSerializer(typeof(EnumSerializer<EnumType>))]
     public enum EnumType {
         VTypeNone = 0,
         VTypeFloat = 1,
@@ -102,11 +101,11 @@ public class T3VertexComponent
 //     public byte[] IndexBufferData = [];
 //
 //     [DataSerializerGlobal(typeof(D3DIndexBufferSerializer))]
-//     public class D3DIndexBufferSerializer : MetaClassSerializer<D3DIndexBuffer>
+//     public class D3DIndexBufferSerializer : MetaSerializer<D3DIndexBuffer>
 //     {
 //         public override void Serialize(ref D3DIndexBuffer obj, MetaStream stream, MetaClass desc)
 //         {
-//             new DefaultClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
+//             new MetaClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
 //
 //             if (stream.Mode is MetaStreamMode.Write)
 //             {

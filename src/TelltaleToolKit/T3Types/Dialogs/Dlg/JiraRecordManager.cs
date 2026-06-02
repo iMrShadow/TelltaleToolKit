@@ -1,16 +1,15 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 // TODO:
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class JiraRecordManager
 {
     public Dictionary<string, JiraRecord> Records = new();
 
-    public class Serializer : MetaClassSerializer<JiraRecordManager>
+    public class Serializer : MetaSerializer<JiraRecordManager>
     {
         public override void PreSerialize(ref JiraRecordManager? obj, MetaStream stream, MetaClassType? type = null)
         {

@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumRenderMaskWrite>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumRenderMaskWrite>))]
 public struct EnumRenderMaskWrite
 {
     [MetaMember("mVal")]
     public RenderMaskWrite Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<RenderMaskWrite>))]
+[MetaSerializer(typeof(EnumSerializer<RenderMaskWrite>))]
 public enum RenderMaskWrite
 {
     //       eRenderMaskWrite_

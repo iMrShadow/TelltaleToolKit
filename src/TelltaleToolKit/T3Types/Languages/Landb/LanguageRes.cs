@@ -1,11 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Animations;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageRes>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageRes>))]
 public class LanguageRes
 {
     [MetaMember("mResName")]
@@ -34,7 +34,7 @@ public class LanguageRes
 
     [MetaMember("mRecordingStatus")]
     public RecordingUtils.EnumRecordingStatus RecordingStatus { get; set; }
-    
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
 }

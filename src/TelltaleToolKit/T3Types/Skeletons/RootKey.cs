@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<RootKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<RootKey>))]
 public class RootKey
 {
     [MetaMember("mTranslationConstraint__Enabled")]

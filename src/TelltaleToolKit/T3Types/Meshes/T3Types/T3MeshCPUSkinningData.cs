@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshCPUSkinningData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshCPUSkinningData>))]
 public class T3MeshCPUSkinningData
 {
     [MetaMember("mPositionFormat")]
@@ -35,7 +35,7 @@ public class T3MeshCPUSkinningData
     public BinaryBuffer Data { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<GFXPlatformFormat>))]
+[MetaSerializer(typeof(EnumSerializer<GFXPlatformFormat>))]
 public enum GFXPlatformFormat
 {
     //  eGFXPlatformFormat_

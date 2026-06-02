@@ -1,16 +1,16 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common;
 using TelltaleToolKit.T3Types.Common.UID;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ActingPalette>))]
+[MetaSerializer(typeof(MetaClassSerializer<ActingPalette>))]
 public class ActingPalette
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<ActiveDuring>))]
+    [MetaSerializer(typeof(EnumSerializer<ActiveDuring>))]
     public enum ActiveDuring
     {
     }
@@ -66,7 +66,7 @@ public class ActingPalette
     public Dictionary<string, float> PaletteResourceGroups { get; set; }
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumActiveDuring>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumActiveDuring>))]
     public struct EnumActiveDuring
     {
         [MetaMember("mVal")]

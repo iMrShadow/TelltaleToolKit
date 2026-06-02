@@ -1,18 +1,18 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
 //.LDB FILES
 // TODO: Verify these values.
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocomotionDb>))]
+[MetaSerializer(typeof(MetaClassSerializer<LocomotionDb>))]
 public class LocomotionDb
 {
     [MetaMember("maAnimInfoList")]
     public Dictionary<string, AnimationInfo> AnimInfoList { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimationInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AnimationInfo>))]
     public class AnimationInfo
     {
         [MetaMember("mu64TimeStamp")]
@@ -59,7 +59,7 @@ public class LocomotionDb
     }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<Category>))]
+[MetaSerializer(typeof(EnumSerializer<Category>))]
 public enum Category
 {
     // Category_

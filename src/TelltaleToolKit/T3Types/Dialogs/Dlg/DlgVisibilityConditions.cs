@@ -1,12 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DlgVisibilityConditions
 {
     public Rule Rule { get; set; }
@@ -23,14 +22,14 @@ public class DlgVisibilityConditions
     [MetaMember("mScriptVisCond")]
     public string ScriptVisCond { get; set; }
 
-    public class Serializer : MetaClassSerializer<DlgVisibilityConditions>
+    public class Serializer : MetaSerializer<DlgVisibilityConditions>
     {
-        private static readonly DefaultClassSerializer<DlgVisibilityConditions> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<DlgVisibilityConditions> s_metaClassSerializer = new();
 
         public override void Serialize(ref DlgVisibilityConditions obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

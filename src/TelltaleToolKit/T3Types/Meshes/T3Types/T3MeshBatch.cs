@@ -1,11 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshBatch>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshBatch>))]
 public class T3MeshBatch
 {
     [MetaMember("mBoundingBox")]

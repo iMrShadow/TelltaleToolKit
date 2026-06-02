@@ -1,11 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3GFXBuffer
 {
     // TODO: Merge with T3MeshBuffer
@@ -31,14 +30,14 @@ public class T3GFXBuffer
     // cpu buffer
     public byte[] Buffer { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<T3GFXBuffer>
+    public class Serializer : MetaSerializer<T3GFXBuffer>
     {
-        private static readonly DefaultClassSerializer<T3GFXBuffer> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3GFXBuffer> s_metaClassSerializer = new();
 
         public override void Serialize(ref T3GFXBuffer obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             // I have a slightly different implementation
             // Telltale's meta serializer only applies to write-only streams
@@ -60,7 +59,7 @@ public class T3GFXBuffer
     }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<GFXPlatformResourceUsage>))]
+[MetaSerializer(typeof(EnumSerializer<GFXPlatformResourceUsage>))]
 public enum GFXPlatformResourceUsage
 {
     //  eGFXPlatformUsage_
@@ -73,7 +72,7 @@ public enum GFXPlatformResourceUsage
     CPUWriteStaging = 0x6,
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<GFXPlatformBufferUsage>))]
+[MetaSerializer(typeof(EnumSerializer<GFXPlatformBufferUsage>))]
 public enum GFXPlatformBufferUsage
 {
     //  eGFXPlatformBuffer_

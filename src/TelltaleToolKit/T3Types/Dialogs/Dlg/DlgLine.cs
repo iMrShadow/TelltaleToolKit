@@ -1,12 +1,12 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;
 using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgLine>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgLine>))]
 public class DlgLine : IOwner, IDlgObjIdOwner
 {
     [MetaMember("Baseclass_UID::Owner")]

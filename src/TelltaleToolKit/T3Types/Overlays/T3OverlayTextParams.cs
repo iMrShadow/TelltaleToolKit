@@ -1,13 +1,13 @@
 ﻿using System.Numerics;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Dialogs.Dlg;
 using TelltaleToolKit.T3Types.Fonts;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlayTextParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlayTextParams>))]
 public class T3OverlayTextParams
 {
     [MetaMember("mhFont")]

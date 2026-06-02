@@ -1,15 +1,15 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumEmitterBoneSelection>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumEmitterBoneSelection>))]
 public struct EnumEmitterBoneSelection
 {
     [MetaMember("mVal")]
     public EmitterBoneSelection Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<EmitterBoneSelection>))]
+[MetaSerializer(typeof(EnumSerializer<EmitterBoneSelection>))]
 public enum EmitterBoneSelection
 {
     // TODO:

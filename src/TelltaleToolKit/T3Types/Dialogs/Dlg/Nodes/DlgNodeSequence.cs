@@ -1,20 +1,20 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeSequence>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeSequence>))]
 public class DlgNodeSequence : IDlgNode
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<PlaybackModeT>))]
+    [MetaSerializer(typeof(EnumSerializer<PlaybackModeT>))]
     public enum PlaybackModeT
     {
         Sequential = 1,
         Shuffle = 2
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<PlayPositionT>))]
+    [MetaSerializer(typeof(EnumSerializer<PlayPositionT>))]
     public enum PlayPositionT
     {
         Unspecified = 1,
@@ -22,7 +22,7 @@ public class DlgNodeSequence : IDlgNode
         Last = 3
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<RepeatT>))]
+    [MetaSerializer(typeof(EnumSerializer<RepeatT>))]
     public enum RepeatT
     {
         Indefinitely = 1,
@@ -35,7 +35,7 @@ public class DlgNodeSequence : IDlgNode
         MaxPlusOne = 8
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<LifetimeModeT>))]
+    [MetaSerializer(typeof(EnumSerializer<LifetimeModeT>))]
     public enum LifetimeModeT
     {
         Looping = 1,
@@ -58,7 +58,7 @@ public class DlgNodeSequence : IDlgNode
     [MetaMember("mElemUseCriteria")]
     public DlgNodeCriteria ElemUseCriteria { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Element>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Element>))]
     public class Element : IDlgChild
     {
         [MetaMember("Baseclass_DlgChild")]
@@ -72,7 +72,7 @@ public class DlgNodeSequence : IDlgNode
     }
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChildSetElement>))]
+    [MetaSerializer(typeof(MetaClassSerializer<DlgChildSetElement>))]
     public class DlgChildSetElement : IDlgChildSet
     {
         [MetaMember("Baseclass_DlgChildSet")]

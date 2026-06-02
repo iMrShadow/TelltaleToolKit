@@ -1,12 +1,12 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BoneConstraints>))]
+[MetaSerializer(typeof(MetaClassSerializer<BoneConstraints>))]
 public class BoneConstraints
 {
     [MetaMember("mBoneType")]
@@ -19,7 +19,7 @@ public class BoneConstraints
     public Range<float>[] AxisRange { get; set; } = [new(), new(), new()];
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<BoneType>))]
+[MetaSerializer(typeof(EnumSerializer<BoneType>))]
 public enum BoneType
 {
     // eBoneType_

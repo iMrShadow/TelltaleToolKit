@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticlePropModifier>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticlePropModifier>))]
 public struct EnumParticlePropModifier
 {
     [MetaMember("mVal")]
     public ParticlePropModifier Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticlePropModifier>))]
+[MetaSerializer(typeof(EnumSerializer<ParticlePropModifier>))]
 public enum ParticlePropModifier
 {
     // TODO:

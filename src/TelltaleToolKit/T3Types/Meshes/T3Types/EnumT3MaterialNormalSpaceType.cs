@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumT3MaterialNormalSpaceType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumT3MaterialNormalSpaceType>))]
 public struct EnumT3MaterialNormalSpaceType
 {
     [MetaMember("mVal")]
     public T3MaterialNormalSpaceType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialNormalSpaceType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialNormalSpaceType>))]
 public enum T3MaterialNormalSpaceType
 {
     //  eMaterialNormalSpace_

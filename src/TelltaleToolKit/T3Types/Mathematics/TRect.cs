@@ -1,11 +1,10 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(RectClassSerializer<>), typeof(Rect<>))]
+[MetaSerializer(typeof(RectSerializer<>), typeof(Rect<>))]
 public class Rect<T>
 {
     [MetaMember("left")] public T Left { get; set; } = default!;
@@ -16,12 +15,12 @@ public class Rect<T>
     public override string ToString() => $"{Left}";
 }
 
-public class RectClassSerializer<T> : MetaClassSerializer<Rect<T>>
+public class RectSerializer<T> : MetaSerializer<Rect<T>>
 {
-    private static readonly DefaultClassSerializer<Rect<T>> DefaultSerializer = new();
+    private static readonly MetaClassSerializer<Rect<T>> s_metaClassSerializer = new();
 
     /// <inheritdoc/>
-    public override void PreSerialize(ref Rect<T> obj, MetaStream stream, MetaClassType? type)
+    public override void PreSerialize(ref Rect<T>? obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Read)
         {
@@ -33,6 +32,6 @@ public class RectClassSerializer<T> : MetaClassSerializer<Rect<T>>
 
     public override void Serialize(ref Rect<T> obj, MetaStream stream)
     {
-        DefaultSerializer.Serialize(ref obj, stream);
+        s_metaClassSerializer.Serialize(ref obj, stream);
     }
 }

@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumTextOrientationType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumTextOrientationType>))]
 public struct EnumTextOrientationType
 {
     [MetaMember("mVal")]
     public TextOrientationType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<TextOrientationType>))]
+[MetaSerializer(typeof(EnumSerializer<TextOrientationType>))]
 public enum TextOrientationType
 {
     //    eTextOrientation_

@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PlaceableBallTwistJointKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<PlaceableBallTwistJointKey>))]
 public class PlaceableBallTwistJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]
@@ -32,11 +32,11 @@ public class PlaceableBallTwistJointKey
     public float mAngleConstraint_MaxTwistAngle { get; set; }
 
     [MetaMember("mPlacementLockToAnimConstraint__Enabled")]
-    public bool mPlacementLockToAnimConstraint__Enabled { get; set; } 
-    
+    public bool mPlacementLockToAnimConstraint__Enabled { get; set; }
+
     [MetaMember("mPlacementLockToAnimConstraint_Offset")]
-    public Transform mPlacementLockToAnimConstraint_Offset { get; set; }  
-    
+    public Transform mPlacementLockToAnimConstraint_Offset { get; set; }
+
     [MetaMember("mPlacementLockToNodeConstraint_Offset")]
     public Transform mPlacementLockToNodeConstraint_Offset { get; set; }
 
@@ -85,7 +85,7 @@ public class PlaceableBallTwistJointKey
 
 public struct AnimationConstraint
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<LockMode>))]
+    [MetaSerializer(typeof(EnumSerializer<LockMode>))]
     public enum LockMode
     {
         eTrafoMode = 0, /*pos and rot*/
@@ -93,7 +93,7 @@ public struct AnimationConstraint
         eOriMode = 2, /*rot*/
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Node>))]
+    [MetaSerializer(typeof(EnumSerializer<Node>))]
     public enum Node
     {
         eWorld = 0x0,

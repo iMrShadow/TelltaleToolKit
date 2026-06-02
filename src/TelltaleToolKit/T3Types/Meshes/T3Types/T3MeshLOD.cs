@@ -1,11 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshLOD>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshLOD>))]
 public class T3MeshLOD
 {
     // Michonne for e.g. uses a DCArray of batches. In new games they only use 2.
@@ -13,7 +13,7 @@ public class T3MeshLOD
     public List<T3MeshBatch> Batches { get; set; } = []; // Default
 
     [MetaMember("mBatches[0]")]
-    public List<T3MeshBatch> Batches1 { get; set; } = []; // Default 
+    public List<T3MeshBatch> Batches1 { get; set; } = []; // Default
 
     [MetaMember("mBatches[1]")]
     public List<T3MeshBatch> Batches2 { get; set; } = []; //  Shadow

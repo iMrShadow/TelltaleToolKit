@@ -1,13 +1,12 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
 // TODO: Add Interface
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Animation
 {
     [MetaMember("mVersion")]
@@ -43,14 +42,14 @@ public class Animation
 
     public byte[] Buffer = [];
 
-    public class Serializer : MetaClassSerializer<Animation>
+    public class Serializer : MetaSerializer<Animation>
     {
-        private static readonly DefaultClassSerializer<Animation> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<Animation> s_metaClassSerializer = new();
 
         public override void Serialize(ref Animation obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
 
@@ -100,7 +99,7 @@ public class Animation
 
                 foreach (InterfaceInfo desc in obj.Descriptors)
                 {
-                    MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(desc.Type.LinkingType);
+                    MetaSerializer serializer = Toolkit.Instance.GetSerializer(desc.Type.LinkingType);
 
                     for (var j = 0; j < desc.ValueCount; j++)
                     {
@@ -158,7 +157,7 @@ public class Animation
 
                     int numOfType = stream.ReadInt32(); // The number of times that type has been serialized
 
-                    MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
+                    MetaSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {

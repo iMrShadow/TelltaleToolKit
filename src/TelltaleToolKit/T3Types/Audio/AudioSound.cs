@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Audio;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumSoundMode>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumSoundMode>))]
 public class AudioSound
 {
     // TODO: Check CSI Hard Evidence
@@ -14,7 +14,7 @@ public class AudioSound
         public SoundMode SoundMode { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<SoundMode>))]
+    [MetaSerializer(typeof(EnumSerializer<SoundMode>))]
     public enum SoundMode
     {
         mono = 0,

@@ -1,11 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<SoundEventNameBase>))]
+[MetaSerializer(typeof(MetaClassSerializer<SoundEventNameBase>))]
 public class SoundEventNameBase
 {
     [MetaMember("mEventGuid")]
@@ -23,7 +22,7 @@ public class SoundEventNameBase
     }
 }
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 
 public class SoundEventName
 {
@@ -42,11 +41,11 @@ public class SoundEventName
         Type = SoundEventNameBase.NameType.Default;
     }
 
-    public class Serializer : MetaClassSerializer<SoundEventName>
+    public class Serializer : MetaSerializer<SoundEventName>
     {
-        private static readonly DefaultClassSerializer<SoundEventName> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<SoundEventName> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref SoundEventName obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref SoundEventName? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (type is null)
             {
@@ -64,8 +63,8 @@ public class SoundEventName
 
         public override void Serialize(ref SoundEventName obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
         }
     }
 }

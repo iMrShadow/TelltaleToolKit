@@ -1,12 +1,12 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Fonts;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Font>))]
+[MetaSerializer(typeof(MetaClassSerializer<Font>))]
 public class Font
 {
     [MetaMember("mName")]
@@ -51,7 +51,7 @@ public class Font
     [MetaMember("mPreferredPointSizes")]
     public List<uint> PreferredPointSizes { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<GlyphInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<GlyphInfo>))]
     public class GlyphInfo
     {
         [MetaMember("mTexturePage")]

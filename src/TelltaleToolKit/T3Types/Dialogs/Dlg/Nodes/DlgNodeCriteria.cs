@@ -1,13 +1,13 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeCriteria>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeCriteria>))]
 public class DlgNodeCriteria : IDlgNode
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<DefaultResult>))]
+    [MetaSerializer(typeof(EnumSerializer<DefaultResult>))]
     public enum DefaultResult
     {
         DefaultToPass = 1,
@@ -15,14 +15,14 @@ public class DlgNodeCriteria : IDlgNode
         DefaultToNotPassUnlessTransparent = 3
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Test>))]
+    [MetaSerializer(typeof(EnumSerializer<Test>))]
     public enum Test
     {
         Required = 1,
         Forbidden = 2
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Threshold>))]
+    [MetaSerializer(typeof(EnumSerializer<Threshold>))]
     public enum Threshold
     {
         Any = 1,
@@ -55,21 +55,21 @@ public class DlgNodeCriteria : IDlgNode
     public DlgNode DlgNode { get; set; }
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumTestT>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumTestT>))]
     public struct EnumTestT
     {
         [MetaMember("mVal")]
         public Test Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumThresholdT>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumThresholdT>))]
     public struct EnumThresholdT
     {
         [MetaMember("mVal")]
         public Threshold Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumDefaultResultT>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumDefaultResultT>))]
     public struct EnumDefaultResultT
     {
         [MetaMember("mVal")]

@@ -1,11 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgFolder>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgFolder>))]
 public class DlgFolder : IDlgObjIdOwner, IDlgObjectPropsOwner, IDlgChildSet, ITaskOwner
 {
     [MetaMember("Baseclass_DlgObjIDOwner")]
@@ -13,10 +13,10 @@ public class DlgFolder : IDlgObjIdOwner, IDlgObjectPropsOwner, IDlgChildSet, ITa
 
     [MetaMember("Baseclass_DlgObjectPropsOwner")]
     public DlgObjectPropsOwner DlgObjectPropsOwner { get; set; }
-    
+
     [MetaMember("Baseclass_DlgChildSet")]
     public DlgChildSet DlgChildSet { get; set; }
-    
+
     [MetaMember("Baseclass_TaskOwner")]
     public TaskOwner TaskOwner { get; set; }
 

@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.InputMaps;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<InputMapper>))]
+[MetaSerializer(typeof(MetaClassSerializer<InputMapper>))]
 public class InputMapper
 {
     [MetaMember("mName")]
@@ -13,7 +13,7 @@ public class InputMapper
     [MetaMember("mMappedEvents")]
     public List<EventMapping> MappedEvents { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EventMapping>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EventMapping>))]
     public class EventMapping
     {
         [MetaMember("mInputCode")]
@@ -29,7 +29,7 @@ public class InputMapper
         public int ControllerIndexOverride { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<EventType>))]
+    [MetaSerializer(typeof(EnumSerializer<EventType>))]
     public enum EventType
     {
         ForceDword = -1,

@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<RenderSwizzleParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<RenderSwizzleParams>))]
 public struct RenderSwizzleParams
 {
     [MetaMember("mSwizzle[0]")]

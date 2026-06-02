@@ -1,13 +1,13 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
 /// <summary>
 /// The base class for .acol files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AssetCollection>))]
+[MetaSerializer(typeof(MetaClassSerializer<AssetCollection>))]
 public class AssetCollection
 {
     [MetaMember("mIncludeMasks")]

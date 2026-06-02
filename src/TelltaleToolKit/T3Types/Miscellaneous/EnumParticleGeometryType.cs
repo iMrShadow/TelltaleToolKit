@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticleGeometryType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticleGeometryType>))]
 public struct EnumParticleGeometryType
 {
     [MetaMember("mVal")]
     public ParticleGeometryType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticleGeometryType>))]
+[MetaSerializer(typeof(EnumSerializer<ParticleGeometryType>))]
 public enum ParticleGeometryType
 {
     //       eParticleGeometry_

@@ -1,18 +1,18 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Dialogs.Dlg;
 using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Languages.Llm;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageLookupMap>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageLookupMap>))]
 public class LanguageLookupMap
 {
     [MetaMember("mIDSets")]
     public List<DlgIdSet> IdSets { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgIdSet>))]
+    [MetaSerializer(typeof(MetaClassSerializer<DlgIdSet>))]
     public class DlgIdSet
     {
         [MetaMember("mIDRange")]
