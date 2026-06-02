@@ -17,6 +17,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A constructor with a boolean argument in `Blowfish`.
 - `Workspace` parameter in deserialize methods in `Toolkit`.
 - Helper methods for `VersionInfo`.
+- Helper version crc calculator method for `MetaClass`.
+- Better `TTArchive` compression detection.
+- A dedicated `Compression` class.
 
 ### Changed
 - Rename the following MetaStream implementations: `MetaStreamReader`/`MetaStreamWriter` to  `BinaryMetaStreamReader`/`BinaryMetaStreamWriter`.
@@ -28,6 +31,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Reorganize some namespaces.
 - Make the default serializer not throw errors and use logger instead.
 - `Serialize` from `MetaStream` now automatically preserializes.
+- Namespaces organization. (#24)
+- Various class names. (#24)
 
 ### Fixed
 - A regression that did not allow files being copied to the output folder.
@@ -39,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `AreSymbolsHashed` from `GameProfile` as symbols are always hashed.
 - `PreSerialize` from `MetaStream`.
 - Redundant `Version` from `MetaStreamParams`.
+- Unused `ISymbolResolver` interface.
 
 ## [0.2.0] - 2026-05-28
 

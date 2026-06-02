@@ -3,7 +3,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace TelltaleToolKit.IO;
 
-public class Compression
+public static class Compression
 {
     /// <summary>Compression algorithm to use when writing archive chunks.</summary>
     public enum Mode
