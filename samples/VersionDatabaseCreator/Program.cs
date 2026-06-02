@@ -4,9 +4,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using TelltaleToolKit;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.Games;
 using TelltaleToolKit.IO.Archives;
+using TelltaleToolKit.Lua;
 using TelltaleToolKit.Meta;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Binary;
 
 // !!!IMPORTANT!!!
 // This project creates ONLY the VERSION DATABASE for a specific game.
