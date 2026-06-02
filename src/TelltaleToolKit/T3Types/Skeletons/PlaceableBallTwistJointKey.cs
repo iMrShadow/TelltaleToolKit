@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PlaceableBallTwistJointKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<PlaceableBallTwistJointKey>))]
 public class PlaceableBallTwistJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]
@@ -85,7 +85,7 @@ public class PlaceableBallTwistJointKey
 
 public struct AnimationConstraint
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<LockMode>))]
+    [MetaSerializer(typeof(EnumSerializer<LockMode>))]
     public enum LockMode
     {
         eTrafoMode = 0, /*pos and rot*/
@@ -93,7 +93,7 @@ public struct AnimationConstraint
         eOriMode = 2, /*rot*/
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Node>))]
+    [MetaSerializer(typeof(EnumSerializer<Node>))]
     public enum Node
     {
         eWorld = 0x0,

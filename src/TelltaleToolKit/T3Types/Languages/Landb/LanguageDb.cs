@@ -7,7 +7,7 @@ using TelltaleToolKit.T3Types.Languages.Locreg;
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 // New language database files
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class LanguageDb
 {
     [MetaMember("Baseclass_UID::Owner")]
@@ -31,14 +31,14 @@ public class LanguageDb
     [MetaMember("mExpandedIDRanges")]
     public List<ProjectDatabaseIdPair> ExpandedIdRanges { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<LanguageDb>
+    public class Serializer : MetaSerializer<LanguageDb>
     {
-        private static readonly DefaultClassSerializer<LanguageDb> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<LanguageDb> s_metaClassSerializer = new();
 
         public override void Serialize(ref LanguageDb obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Read)
             {

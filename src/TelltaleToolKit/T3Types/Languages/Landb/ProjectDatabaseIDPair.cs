@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ProjectDatabaseIdPair>))]
+[MetaSerializer(typeof(MetaClassSerializer<ProjectDatabaseIdPair>))]
 public class ProjectDatabaseIdPair
 {
     [MetaMember("mProjectID")]

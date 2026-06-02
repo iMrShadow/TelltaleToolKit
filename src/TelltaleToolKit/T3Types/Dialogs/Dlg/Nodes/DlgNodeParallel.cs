@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeParallel>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeParallel>))]
 public class DlgNodeParallel : IDlgNode
 {
     [MetaMember("Baseclass_DlgNode")]
@@ -16,14 +16,14 @@ public class DlgNodeParallel : IDlgNode
     [MetaMember("mElemUseCriteria")]
     public DlgNodeCriteria ElemUseCriteria { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PElement>))]
+    [MetaSerializer(typeof(MetaClassSerializer<PElement>))]
     public class PElement : IDlgChild
     {
         [MetaMember("Baseclass_DlgChild")]
         public DlgChild DlgChild { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChildSetElement>))]
+    [MetaSerializer(typeof(MetaClassSerializer<DlgChildSetElement>))]
     public class DlgChildSetElement : IDlgChildSet
     {
         [MetaMember("Baseclass_DlgChildSet")]

@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageResProxy>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageResProxy>))]
 public class LanguageResProxy
 {
     [MetaMember("mID")]

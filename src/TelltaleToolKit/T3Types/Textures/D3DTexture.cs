@@ -40,12 +40,12 @@ namespace TelltaleToolKit.T3Types.Textures;
 //
 //     public byte[] DdsTextureData { get; set; } = [];
 //
-//     public class D3DTextureClassSerializer : MetaClassSerializer<D3DTexture>
+//     public class D3DTextureClassSerializer : MetaSerializer<D3DTexture>
 //     {
 //         public override void Serialize(ref D3DTexture obj, MetaStream stream, MetaClass desc)
 //         {
 //             // Default Serializer
-//             new DefaultClassSerializer<D3DTexture>().Serialize(ref obj, stream, desc);
+//             new MetaClassSerializer<D3DTexture>().Serialize(ref obj, stream, desc);
 //
 //             if (stream.Mode is MetaStreamMode.Write)
 //             {

@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshBoneEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshBoneEntry>))]
 public class T3MeshBoneEntry
 {
     [MetaMember("mBoneName")]

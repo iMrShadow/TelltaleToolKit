@@ -7,7 +7,7 @@ using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ChoreAgent>))]
+[MetaSerializer(typeof(MetaClassSerializer<ChoreAgent>))]
 public class ChoreAgent
 {
     [MetaMember("mAgentName")]
@@ -37,7 +37,7 @@ public class ChoreAgent
     [MetaMember("mAgentEnabledRule")]
     public Rule AgentEnabledRule { get; set; } // Bone only
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Attachment>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Attachment>))]
     public class Attachment
     {
         [MetaMember("mbDoAttach")]

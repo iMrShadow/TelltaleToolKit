@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageResourceProxy>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageResourceProxy>))]
 public class LanguageResourceProxy
 {
     [MetaMember("mID")]

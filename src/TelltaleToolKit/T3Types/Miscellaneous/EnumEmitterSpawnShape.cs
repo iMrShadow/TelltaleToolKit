@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumEmitterSpawnShape>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumEmitterSpawnShape>))]
 public struct EnumEmitterSpawnShape
 {
     [MetaMember("mVal")]
     public EmitterSpawnShape Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<EmitterSpawnShape>))]
+[MetaSerializer(typeof(EnumSerializer<EmitterSpawnShape>))]
 public enum EmitterSpawnShape
 {
     // TODO:

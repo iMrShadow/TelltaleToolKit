@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumDOFQualityLevel>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumDOFQualityLevel>))]
 public struct EnumDOFQualityLevel
 {
     [MetaMember("mVal")]
     public DOFQualityLevel Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<DOFQualityLevel>))]
+[MetaSerializer(typeof(EnumSerializer<DOFQualityLevel>))]
 public enum DOFQualityLevel
 {
     // TODO:

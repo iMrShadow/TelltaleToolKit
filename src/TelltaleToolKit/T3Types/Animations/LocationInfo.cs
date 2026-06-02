@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Skeletons;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocationInfo>))]
+[MetaSerializer(typeof(MetaClassSerializer<LocationInfo>))]
 public class LocationInfo
 {
     [MetaMember("mAttachmentAgent")]

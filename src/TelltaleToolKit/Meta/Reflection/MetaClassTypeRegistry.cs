@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.T3Types;
 using TelltaleToolKit.T3Types.ActorMaps;
 using TelltaleToolKit.T3Types.Animations;

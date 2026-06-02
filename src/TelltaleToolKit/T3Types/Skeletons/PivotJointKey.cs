@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PivotJointKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<PivotJointKey>))]
 public class PivotJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]

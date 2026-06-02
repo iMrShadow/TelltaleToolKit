@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialPassData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialPassData>))]
 public class T3MaterialPassData
 {
     [MetaMember("mPassType")]
@@ -17,7 +17,7 @@ public class T3MaterialPassData
     public ulong MaterialCrc { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialPassType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialPassType>))]
 public enum T3MaterialPassType
 {
     //

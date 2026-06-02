@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Rules;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LogicGroup>))]
+[MetaSerializer(typeof(MetaClassSerializer<LogicGroup>))]
 public class LogicGroup
 {
     [MetaMember("mOperator")]
@@ -26,7 +26,7 @@ public class LogicGroup
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LogicItem>))]
+    [MetaSerializer(typeof(MetaClassSerializer<LogicItem>))]
     public class LogicItem
     {
         [MetaMember("Baseclass_PropertySet")]

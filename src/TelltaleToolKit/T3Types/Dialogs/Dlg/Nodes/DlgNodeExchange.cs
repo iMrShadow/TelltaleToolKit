@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Chores;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DlgNodeExchange : IDlgNode
 {
     [MetaMember("Baseclass_DlgNode")]
@@ -23,14 +23,14 @@ public class DlgNodeExchange : IDlgNode
     public NoteCollection Notes { get; set; }
     public DlgLineCollection Lines { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<EntryType>))]
+    [MetaSerializer(typeof(EnumSerializer<EntryType>))]
     public enum EntryType
     {
         Line = 1,
         Note = 2
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Entry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Entry>))]
     public class Entry
     {
         [MetaMember("mID")]
@@ -40,14 +40,14 @@ public class DlgNodeExchange : IDlgNode
         public EntryType Type { get; set; }
     }
 
-    public class Serializer : MetaClassSerializer<DlgNodeExchange>
+    public class Serializer : MetaSerializer<DlgNodeExchange>
     {
-        private static readonly DefaultClassSerializer<DlgNodeExchange> DefaultClassSerializer = new();
+        private static readonly MetaClassSerializer<DlgNodeExchange> s_metaClassSerializer = new();
 
         public override void Serialize(ref DlgNodeExchange obj, MetaStream stream)
         {
-            DefaultClassSerializer.PreSerialize(ref obj, stream);
-            DefaultClassSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

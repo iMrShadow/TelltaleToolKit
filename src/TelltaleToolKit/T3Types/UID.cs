@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.Common
     namespace UID
     {
         // TODO: Convert these into interfaces.
-        [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Generator>))]
+        [MetaSerializer(typeof(MetaClassSerializer<Generator>))]
         public class Generator
         {
             [MetaMember("miNextUniqueID")]
@@ -20,7 +20,7 @@ namespace TelltaleToolKit.T3Types.Common
             public Generator Generator { get; set; }
         }
 
-        [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Owner>))]
+        [MetaSerializer(typeof(MetaClassSerializer<Owner>))]
         public class Owner
         {
             [MetaMember("miUniqueID")]
@@ -52,12 +52,12 @@ namespace TelltaleToolKit.T3Types.Common
         // TODO: Add a proper serializer
     }
 
-    [MetaClassSerializerGlobal(typeof(ActingOverridablePropOwnerSerializer))]
-    public class ActingOverridablePropOwnerSerializer : MetaClassSerializer<ActingOverridablePropOwner>
+    [MetaSerializer(typeof(ActingOverridablePropOwnerSerializer))]
+    public class ActingOverridablePropOwnerSerializer : MetaSerializer<ActingOverridablePropOwner>
     {
-        private static readonly DefaultClassSerializer<ActingOverridablePropOwner> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<ActingOverridablePropOwner> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref ActingOverridablePropOwner obj, MetaStream stream,
+        public override void PreSerialize(ref ActingOverridablePropOwner? obj, MetaStream stream,
             MetaClassType? type = null)
         {
             if (obj is null)
@@ -80,8 +80,8 @@ namespace TelltaleToolKit.T3Types.Common
 
                 if (value == ActingOverridablePropOwner.kHeader)
                 {
-                    DefaultSerializer.PreSerialize(ref obj, stream);
-                    DefaultSerializer.Serialize(ref obj, stream);
+                    s_metaClassSerializer.PreSerialize(ref obj, stream);
+                    s_metaClassSerializer.Serialize(ref obj, stream);
                     return;
                 }
 

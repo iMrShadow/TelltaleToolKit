@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3GFXVertexState
 {
     // TODO: Merge with T3MeshVertexState, old games use it.
@@ -25,14 +25,14 @@ public class T3GFXVertexState
     public List<T3GFXBuffer> IndexBuffer { get; set; } = [];
     public List<T3GFXBuffer> VertexBuffer { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<T3GFXVertexState>
+    public class Serializer : MetaSerializer<T3GFXVertexState>
     {
-        private static readonly DefaultClassSerializer<T3GFXVertexState> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3GFXVertexState> s_metaClassSerializer = new();
 
         public override void Serialize(ref T3GFXVertexState obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass? desc = stream.GetMetaClass(typeof(T3GFXVertexState));
 

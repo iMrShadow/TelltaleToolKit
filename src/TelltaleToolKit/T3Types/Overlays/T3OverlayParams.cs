@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlayParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlayParams>))]
 public class T3OverlayParams
 {
     [MetaMember("mhBackgroundTexture")]

@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Animations;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TransitionRemapper>))]
+[MetaSerializer(typeof(MetaClassSerializer<TransitionRemapper>))]
 public class TransitionRemapper
 {
     [MetaMember("mRemapKeys")]

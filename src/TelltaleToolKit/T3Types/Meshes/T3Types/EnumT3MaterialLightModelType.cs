@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumT3MaterialLightModelType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumT3MaterialLightModelType>))]
 public struct EnumT3MaterialLightModelType
 {
     [MetaMember("mVal")]
     public T3MaterialLightModelType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialLightModelType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialLightModelType>))]
 public enum T3MaterialLightModelType
 {
     // eMaterialLightModel_

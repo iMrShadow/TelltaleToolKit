@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgLine>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgLine>))]
 public class DlgLine : IOwner, IDlgObjIdOwner
 {
     [MetaMember("Baseclass_UID::Owner")]

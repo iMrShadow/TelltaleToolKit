@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Rect>))]
+[MetaSerializer(typeof(MetaClassSerializer<Rect>))]
 public struct Rect
 {
     [MetaMember("left")] public int Left { get; set; }

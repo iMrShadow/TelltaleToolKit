@@ -7,7 +7,7 @@ namespace TelltaleToolKit.T3Types;
 /// <summary>
 /// Main class for .reverb files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<SoundReverbDefinition>))]
+[MetaSerializer(typeof(MetaClassSerializer<SoundReverbDefinition>))]
 public class SoundReverbDefinition
 {
     [MetaMember("mbEnabled")]

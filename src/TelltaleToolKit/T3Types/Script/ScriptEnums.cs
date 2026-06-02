@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Script;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ScriptEnum>))]
+[MetaSerializer(typeof(MetaClassSerializer<ScriptEnum>))]
 public class ScriptEnum
 {
     [MetaMember("mCurValue")]

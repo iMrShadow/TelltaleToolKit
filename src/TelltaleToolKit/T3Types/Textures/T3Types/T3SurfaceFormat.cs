@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3SurfaceFormat>))]
+[MetaSerializer(typeof(EnumSerializer<T3SurfaceFormat>))]
 public enum T3SurfaceFormat
 {
     // Note: Apparently, some of these formats are equivalent to each other. It's just that some are used for Direct3D9, while others are used for Direct3D11.

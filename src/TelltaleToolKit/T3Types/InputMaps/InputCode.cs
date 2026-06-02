@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.InputMaps;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<InputCode>))]
+[MetaSerializer(typeof(EnumSerializer<InputCode>))]
 public enum InputCode
 {
 

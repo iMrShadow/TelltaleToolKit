@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BlendMode>))]
+[MetaSerializer(typeof(MetaClassSerializer<BlendMode>))]
 public struct BlendMode
 {
     [MetaMember("mVal")]
     public T3BlendMode Val {get;set;}
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3BlendMode>))]
+[MetaSerializer(typeof(EnumSerializer<T3BlendMode>))]
 public enum T3BlendMode
 {
     // eBlendMode_

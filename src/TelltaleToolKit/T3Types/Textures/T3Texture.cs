@@ -8,7 +8,7 @@ using TelltaleToolKit.T3Types.Textures.T3Types;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3Texture
 {
     // Most members here are before Poker Night 2
@@ -294,7 +294,7 @@ public class T3Texture
         IsEncrypted = true;
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<StreamHeader>))]
+    [MetaSerializer(typeof(MetaClassSerializer<StreamHeader>))]
     public struct StreamHeader
     {
         [MetaMember("mRegionCount")]
@@ -308,7 +308,7 @@ public class T3Texture
     }
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<RegionStreamHeader>))]
+    [MetaSerializer(typeof(MetaClassSerializer<RegionStreamHeader>))]
     public class RegionStreamHeader
     {
         // mVersion >= 5
@@ -338,11 +338,11 @@ public class T3Texture
         public byte[] RegionData { get; set; } = [];
     }
 
-    public class Serializer : MetaClassSerializer<T3Texture>
+    public class Serializer : MetaSerializer<T3Texture>
     {
-        private static readonly DefaultClassSerializer<T3Texture> DefaultT3TextureSerializer = new();
+        private static readonly MetaClassSerializer<T3Texture> s_metaClassT3TextureSerializer = new();
 
-        public override void PreSerialize(ref T3Texture obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref T3Texture? obj, MetaStream stream, MetaClassType? type = null)
         {
             obj ??= new T3Texture();
         }
@@ -350,7 +350,7 @@ public class T3Texture
         public override void Serialize(ref T3Texture obj, MetaStream stream)
         {
             // Default Serializer
-            DefaultT3TextureSerializer.Serialize(ref obj, stream);
+            s_metaClassT3TextureSerializer.Serialize(ref obj, stream);
 
             // The default serializer will throw if there is no serialized T3Texture.
             MetaClass classDescription = stream.GetMetaClass(typeof(T3Texture))!;
@@ -481,7 +481,7 @@ public class T3Texture
         }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AuxiliaryData>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AuxiliaryData>))]
     public class AuxiliaryData
     {
         [MetaMember("mType")]

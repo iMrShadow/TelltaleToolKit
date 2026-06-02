@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumT3LightEnvLodBehavior>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumT3LightEnvLodBehavior>))]
 public struct EnumT3LightEnvLodBehavior
 {
     [MetaMember("mVal")]
     public T3LightEnvLODBehavior Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3LightEnvLODBehavior>))]
+[MetaSerializer(typeof(EnumSerializer<T3LightEnvLODBehavior>))]
 public enum T3LightEnvLODBehavior
 {
     //    eLightEnvLOD_

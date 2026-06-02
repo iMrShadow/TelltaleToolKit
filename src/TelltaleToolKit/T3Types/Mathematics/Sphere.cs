@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Sphere>))]
+[MetaSerializer(typeof(MetaClassSerializer<Sphere>))]
 public struct Sphere
 {
     [MetaMember("mCenter")]

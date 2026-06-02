@@ -5,10 +5,10 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.LightMaps;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<MeshSceneLightmapData>))]
+[MetaSerializer(typeof(MetaClassSerializer<MeshSceneLightmapData>))]
 public class MeshSceneLightmapData
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Entry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Entry>))]
     public class Entry
     {
         [MetaMember("mMeshName")]
@@ -43,7 +43,7 @@ public class MeshSceneLightmapData
 }
 
 // Example enum for camera-facing type. Replace/extend as appropriate.
-[MetaClassSerializerGlobal(typeof(EnumSerializer<CameraFacingType>))]
+[MetaSerializer(typeof(EnumSerializer<CameraFacingType>))]
 public enum CameraFacingType
 {
     None = 0,

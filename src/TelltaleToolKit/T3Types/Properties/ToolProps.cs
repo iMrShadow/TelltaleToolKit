@@ -3,15 +3,15 @@ using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Properties;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class ToolProps
 {
     [MetaMember("mbHasProps")]
     public bool HasProps { get; set; }
 
-    public class Serializer : MetaClassSerializer<ToolProps>
+    public class Serializer : MetaSerializer<ToolProps>
     {
-        public override void PreSerialize(ref ToolProps obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref ToolProps? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (obj is null)
             {

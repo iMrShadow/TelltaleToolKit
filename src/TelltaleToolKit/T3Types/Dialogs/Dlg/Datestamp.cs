@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Datestamp>))]
+[MetaSerializer(typeof(MetaClassSerializer<Datestamp>))]
 public class Datestamp
 {
     [MetaMember("mSec")]

@@ -5,10 +5,10 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimOrChore>))]
+[MetaSerializer(typeof(MetaClassSerializer<AnimOrChore>))]
 public class EnlightenModule
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnlightenSystemSettings>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnlightenSystemSettings>))]
     public class EnlightenSystemSettings
     {
         [MetaMember("mDefaultQuality")]
@@ -21,14 +21,14 @@ public class EnlightenModule
         public bool DisableEnlighten { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumeProbeResolution>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumeProbeResolution>))]
     public struct EnumeProbeResolution
     {
         [MetaMember("mVal")]
         public ProbeResolution Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnlightenCubemapSettings>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnlightenCubemapSettings>))]
     public class EnlightenCubemapSettings
     {
         [MetaMember("mFaceWidth")]
@@ -42,7 +42,7 @@ public class EnlightenModule
     {
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumeQuality>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumeQuality>))]
     public struct EnumeQuality
     {
         [MetaMember("mVal")]
@@ -57,7 +57,7 @@ public class EnlightenModule
     {
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnlightenLightSettings>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnlightenLightSettings>))]
     public struct EnlightenLightSettings
     {
         [MetaMember("mEnlightenSaturation")]
@@ -70,7 +70,7 @@ public class EnlightenModule
         public bool CastDynamicEnlightenShadows { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnlightenPrimitiveSettings>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnlightenPrimitiveSettings>))]
     public class EnlightenPrimitiveSettings
     {
         [MetaMember("mSystemId")]
@@ -86,21 +86,21 @@ public class EnlightenModule
         public EnumeQualityWithDefault EnlightenQuality { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumeInstanceType>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumeInstanceType>))]
     public struct EnumeInstanceType
     {
         [MetaMember("mVal")]
         public InstanceType Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumeUpdateMethod>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumeUpdateMethod>))]
     public struct EnumeUpdateMethod
     {
         [MetaMember("mVal")]
         public UpdateMethod Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumeQualityWithDefault>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumeQualityWithDefault>))]
     public struct EnumeQualityWithDefault
     {
         [MetaMember("mVal")]
@@ -158,7 +158,7 @@ public class EnlightenModule
     {
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<InstanceType>))]
+    [MetaSerializer(typeof(EnumSerializer<InstanceType>))]
     public enum InstanceType
     {
         //  InstanceType_
@@ -170,7 +170,7 @@ public class EnlightenModule
         Disabled = 0x5,
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<UpdateMethod>))]
+    [MetaSerializer(typeof(EnumSerializer<UpdateMethod>))]
     public enum UpdateMethod
     {
         // UpdateMethod_
@@ -179,7 +179,7 @@ public class EnlightenModule
         Auto = 0x2,
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<QualityWithDefault>))]
+    [MetaSerializer(typeof(EnumSerializer<QualityWithDefault>))]
     public enum QualityWithDefault
     {
         //  QualityWithDefault_
@@ -191,7 +191,7 @@ public class EnlightenModule
         UseDefault = 0x5,
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<ProbeResolution>))]
+    [MetaSerializer(typeof(EnumSerializer<ProbeResolution>))]
     public enum ProbeResolution
     {
         //    ProbeResolution_
@@ -201,7 +201,7 @@ public class EnlightenModule
         ProbeResolution_1_8 = 0x3,
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Quality>))]
+    [MetaSerializer(typeof(EnumSerializer<Quality>))]
     public enum Quality
     {
         //     Quality_

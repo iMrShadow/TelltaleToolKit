@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Chores;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimOrChore>))]
+[MetaSerializer(typeof(MetaClassSerializer<AnimOrChore>))]
 public class AnimOrChore
 {
     [MetaMember("mhAnim")]

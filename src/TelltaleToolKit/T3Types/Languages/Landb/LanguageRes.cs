@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Animations;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageRes>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageRes>))]
 public class LanguageRes
 {
     [MetaMember("mResName")]

@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Textures.T3Types;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialTexture>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialTexture>))]
 public class T3MaterialTexture
 {
     [MetaMember("mName")]

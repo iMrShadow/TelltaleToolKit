@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<MovieCaptureInfo>))]
+[MetaSerializer(typeof(MetaClassSerializer<MovieCaptureInfo>))]
 public class MovieCaptureInfo
 {
     [MetaMember("mFPS")]
@@ -14,12 +14,12 @@ public class MovieCaptureInfo
     public EnumCompressorType CType { get; set; } = new();
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumCompressorType>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumCompressorType>))]
     public struct EnumCompressorType
     {
         [MetaMember("mVal")]
         public CompressorType Val { get; set; }
     }
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<CompressorType>))]
+    [MetaSerializer(typeof(EnumSerializer<CompressorType>))]
     public enum CompressorType{}
 }

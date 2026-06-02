@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticleSortMode>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticleSortMode>))]
 public struct EnumParticleSortMode
 {
     [MetaMember("mVal")]
     public ParticleSortMode Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticleSortMode>))]
+[MetaSerializer(typeof(EnumSerializer<ParticleSortMode>))]
 public enum ParticleSortMode
 {
     //  eParticleSortMode_

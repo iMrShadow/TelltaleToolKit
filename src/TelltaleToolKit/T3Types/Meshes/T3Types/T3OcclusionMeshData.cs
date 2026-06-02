@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OcclusionMeshData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OcclusionMeshData>))]
 public class T3OcclusionMeshData
 {
     [MetaMember("mData")]

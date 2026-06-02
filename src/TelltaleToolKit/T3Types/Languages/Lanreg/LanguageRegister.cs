@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.Languages.Lanreg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageRegister>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageRegister>))]
 public class LanguageRegister
 {
     [MetaMember("Baseclass_UID::Generator")]

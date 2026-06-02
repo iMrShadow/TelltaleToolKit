@@ -14,7 +14,7 @@ namespace TelltaleToolKit.IO.Archives;
 ///         and must not change after insertion.
 ///     </para>
 /// </remarks>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ResourceEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<ResourceEntry>))]
 public sealed class ResourceEntry
 {
     /// <summary>

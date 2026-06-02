@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Audio;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<SoundReverbPreset>))]
+[MetaSerializer(typeof(MetaClassSerializer<SoundReverbPreset>))]
 public class SoundReverbPreset
 {
     [MetaMember("mPreset")]

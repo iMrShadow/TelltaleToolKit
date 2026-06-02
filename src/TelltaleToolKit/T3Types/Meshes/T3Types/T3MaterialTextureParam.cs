@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialTextureParam>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialTextureParam>))]
 public class T3MaterialTextureParam
 {
     [MetaMember("mParamType")]
@@ -20,7 +20,7 @@ public class T3MaterialTextureParam
     public int ScalarOffset { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialTextureParamType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialTextureParamType>))]
 public enum T3MaterialTextureParamType
 {
     //  eMaterialTextureParam_

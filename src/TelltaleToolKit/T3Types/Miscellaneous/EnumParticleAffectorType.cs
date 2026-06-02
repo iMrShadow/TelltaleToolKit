@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticleAffectorType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticleAffectorType>))]
 public struct EnumParticleAffectorType
 {
     [MetaMember("mVal")]
     public ParticleAffectorType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticleAffectorType>))]
+[MetaSerializer(typeof(EnumSerializer<ParticleAffectorType>))]
 public enum ParticleAffectorType
 {
     //   eParticleAffectorType_

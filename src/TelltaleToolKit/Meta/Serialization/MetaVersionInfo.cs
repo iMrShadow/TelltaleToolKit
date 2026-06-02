@@ -1,13 +1,12 @@
 ﻿using TelltaleToolKit.Meta.Reflection;
-using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 
-namespace TelltaleToolKit.T3Types;
+namespace TelltaleToolKit.Meta.Serialization;
 
 /// <summary>
 /// Represents a single version info entry.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<MetaVersionInfo>))]
+[MetaSerializer(typeof(MetaClassSerializer<MetaVersionInfo>))]
 public class MetaVersionInfo
 {
     [MetaMember("mTypeSymbolCrc")]

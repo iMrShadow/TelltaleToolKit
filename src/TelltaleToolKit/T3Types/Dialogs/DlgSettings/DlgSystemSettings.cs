@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.DlgSettings;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgSystemSettings>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgSystemSettings>))]
 public class DlgSystemSettings
 {
     [MetaMember("mPropsMapUser")]

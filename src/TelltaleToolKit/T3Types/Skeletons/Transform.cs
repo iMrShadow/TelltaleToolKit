@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Transform>))]
+[MetaSerializer(typeof(MetaClassSerializer<Transform>))]
 public class Transform
 {
     [MetaMember("mRot")]

@@ -7,7 +7,7 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 /// <summary>
 /// Old name - D3DVertexBuffer
 /// </summary>
-[MetaClassSerializerGlobal(typeof(T3VertexBufferSerializer))]
+[MetaSerializer(typeof(T3VertexBufferSerializer))]
 public class T3VertexBuffer
 {
     [MetaMember("mNumVerts")]
@@ -39,14 +39,14 @@ public class T3VertexBuffer
 
     public byte[] Buffer = [];
 
-    [MetaClassSerializerGlobal(typeof(T3VertexBufferSerializer))]
-    public class T3VertexBufferSerializer : MetaClassSerializer<T3VertexBuffer>
+    [MetaSerializer(typeof(T3VertexBufferSerializer))]
+    public class T3VertexBufferSerializer : MetaSerializer<T3VertexBuffer>
     {
-        private static readonly DefaultClassSerializer<T3VertexBuffer> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3VertexBuffer> s_metaClassSerializer = new();
 
         public override void Serialize(ref T3VertexBuffer obj, MetaStream stream)
         {
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -70,7 +70,7 @@ public class T3VertexBuffer
 // Right, so D3DVertexBuffer changes to T3VertexBuffer (probably because the engine became cross-platform at the time).
 // Since most values are the same, I merged D3DVertexBuffer with T3VertexBuffer.
 
-// [DataSerializerGlobal(typeof(DefaultClassSerializer<D3DVertexBuffer>))]
+// [DataSerializerGlobal(typeof(MetaClassSerializer<D3DVertexBuffer>))]
 // public class D3DVertexBuffer
 // {
 //     [MetaMember("mNumVerts")] public int NumVerts { get; set; }
@@ -81,11 +81,11 @@ public class T3VertexBuffer
 //     public byte[] VertexBufferData = [];
 //
 //     [DataSerializerGlobal(typeof(D3DIndexBufferSerializer))]
-//     public class D3DIndexBufferSerializer : MetaClassSerializer<D3DIndexBuffer>
+//     public class D3DIndexBufferSerializer : MetaSerializer<D3DIndexBuffer>
 //     {
 //         public override void Serialize(ref D3DIndexBuffer obj, MetaStream stream, MetaClass desc)
 //         {
-//             new DefaultClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
+//             new MetaClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
 //
 //             if (stream.Mode is MetaStreamMode.Write)
 //             {

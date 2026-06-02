@@ -3,10 +3,10 @@ using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Serializers;
 
-[MetaClassSerializerGlobal(typeof(SymbolSerializer))]
-public class SymbolSerializer : MetaClassSerializer<Symbol>
+[MetaSerializer(typeof(SymbolSerializer))]
+public class SymbolSerializer : MetaSerializer<Symbol>
 {
-    public override void PreSerialize(ref Symbol obj, MetaStream stream, MetaClassType? type = null)
+    public override void PreSerialize(ref Symbol? obj, MetaStream stream, MetaClassType? type = null)
     {
         obj ??= Symbol.Empty;
     }

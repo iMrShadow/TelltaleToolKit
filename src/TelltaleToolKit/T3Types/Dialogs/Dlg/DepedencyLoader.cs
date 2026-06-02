@@ -3,12 +3,12 @@ using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DependencyLoader
 {
     public List<string> ResourceNames { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<DependencyLoader>
+    public class Serializer : MetaSerializer<DependencyLoader>
     {
         public override void Serialize(ref DependencyLoader obj, MetaStream stream)
         {

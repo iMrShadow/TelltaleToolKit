@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgVisibilityConditionsOwner>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgVisibilityConditionsOwner>))]
 public class DlgVisibilityConditionsOwner
 {
     [MetaMember("mVisCond")]

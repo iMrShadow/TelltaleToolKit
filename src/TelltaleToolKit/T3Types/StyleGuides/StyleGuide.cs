@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class StyleGuide
 {
     [MetaMember("Baseclass_UID::Generator")]
@@ -35,15 +35,15 @@ public class StyleGuide
     public List<ActingPaletteClass> PaletteClassesPtrs { get; set; } = [];
 
 
-    [MetaClassSerializerGlobal(typeof(ActingOverridablePropOwnerSerializer))]
-    public class Serializer : MetaClassSerializer<StyleGuide>
+    [MetaSerializer(typeof(ActingOverridablePropOwnerSerializer))]
+    public class Serializer : MetaSerializer<StyleGuide>
     {
-        private static readonly DefaultClassSerializer<StyleGuide> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<StyleGuide> s_metaClassSerializer = new();
 
         public override void Serialize(ref StyleGuide obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass? classDescription = stream.GetMetaClass(typeof(StyleGuide));
 

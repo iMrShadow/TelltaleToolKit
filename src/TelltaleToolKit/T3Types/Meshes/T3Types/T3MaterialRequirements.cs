@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialRequirements>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialRequirements>))]
 public class T3MaterialRequirements
 {
     [MetaMember("mPasses")]

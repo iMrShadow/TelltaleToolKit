@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<GFXPlatformAttributeParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<GFXPlatformAttributeParams>))]
 public class GFXPlatformAttributeParams
 {
     [MetaMember("mAttribute")]
@@ -26,7 +26,7 @@ public class GFXPlatformAttributeParams
     public uint BufferIndex { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<GFXPlatformVertexFrequency>))]
+[MetaSerializer(typeof(EnumSerializer<GFXPlatformVertexFrequency>))]
 public enum GFXPlatformVertexFrequency
 {
     //  eGFXPlatformFrequency_
@@ -34,7 +34,7 @@ public enum GFXPlatformVertexFrequency
     PerInstance = 0x1,
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<GFXPlatformVertexAttribute>))]
+[MetaSerializer(typeof(EnumSerializer<GFXPlatformVertexAttribute>))]
 public enum GFXPlatformVertexAttribute
 {
     //   eGFXPlatformAttribute_

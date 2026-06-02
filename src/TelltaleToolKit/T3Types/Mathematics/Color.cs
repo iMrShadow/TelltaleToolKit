@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 public struct Color
 {
@@ -21,7 +21,7 @@ public struct Color
     public float A;
 
 
-    public class Serializer : MetaClassSerializer<Color>
+    public class Serializer : MetaSerializer<Color>
     {
         public override void Serialize(ref Color obj, MetaStream stream)
         {

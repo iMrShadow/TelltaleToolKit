@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Text;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TextAlignmentType>))]
+[MetaSerializer(typeof(MetaClassSerializer<TextAlignmentType>))]
 public class TextAlignmentType
 {
     [MetaMember("mAlignmentType")]

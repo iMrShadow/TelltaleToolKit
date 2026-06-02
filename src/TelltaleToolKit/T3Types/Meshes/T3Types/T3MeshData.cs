@@ -6,11 +6,11 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3MeshData
 {
     [Flags]
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<MeshFlags>))]
+    [MetaSerializer(typeof(EnumSerializer<MeshFlags>))]
     public enum MeshFlags
     {
         eDeformable = 0x1,
@@ -91,15 +91,15 @@ public class T3MeshData
     public T3MeshCPUSkinningData CPUSkinningData { get; set; }
     public T3MeshTexCoordTransform[] TexCoordTransform { get; set; } = [new(), new(), new(), new()];
 
-    public class Serializer : MetaClassSerializer<T3MeshData>
+    public class Serializer : MetaSerializer<T3MeshData>
     {
-        private static readonly DefaultClassSerializer<T3MeshData> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3MeshData> s_metaClassSerializer = new();
 
 
         public override void Serialize(ref T3MeshData obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -181,7 +181,7 @@ public class T3MeshData
     }
 }
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshBonePaletteEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshBonePaletteEntry>))]
 public class T3MeshBonePaletteEntry
 {
     [MetaMember("mBoneName")]

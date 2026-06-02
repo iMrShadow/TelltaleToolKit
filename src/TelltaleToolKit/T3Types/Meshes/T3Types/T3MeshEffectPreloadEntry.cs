@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshEffectPreloadEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshEffectPreloadEntry>))]
 public class T3MeshEffectPreloadEntry
 {
 	[MetaMember("mEffectType")]
@@ -25,7 +25,7 @@ public class T3MeshEffectPreloadEntry
 // The effect type is serialized as a regular uint.
 // Probably because there are different effect for each platform?
 // But then - there would have been metaflags for it.
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3EffectType>))]
+[MetaSerializer(typeof(EnumSerializer<T3EffectType>))]
 public enum T3EffectType
 {
 	// WDC_eEffect_

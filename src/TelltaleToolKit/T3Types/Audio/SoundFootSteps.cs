@@ -6,7 +6,7 @@ namespace TelltaleToolKit.T3Types.Audio;
 
 public class SoundFootsteps
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumMaterial>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumMaterial>))]
     public struct EnumMaterial
     {
         [MetaMember("mVal")]
@@ -14,7 +14,7 @@ public class SoundFootsteps
         public Material Val { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<Material>))]
+    [MetaSerializer(typeof(EnumSerializer<Material>))]
     public enum Material
     {
         Never = 0x1,

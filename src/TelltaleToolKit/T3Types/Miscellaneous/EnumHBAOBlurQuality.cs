@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumHBAOBlurQuality>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumHBAOBlurQuality>))]
 public struct EnumHBAOBlurQuality
 {
     [MetaMember("mVal")]
     public HBAOBlurQuality Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<HBAOBlurQuality>))]
+[MetaSerializer(typeof(EnumSerializer<HBAOBlurQuality>))]
 public enum HBAOBlurQuality
 {
     // TODO:

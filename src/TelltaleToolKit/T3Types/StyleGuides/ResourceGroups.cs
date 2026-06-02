@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ResourceGroups>))]
+[MetaSerializer(typeof(MetaClassSerializer<ResourceGroups>))]
 public class ResourceGroups
 {
     // String and symbol at the same time

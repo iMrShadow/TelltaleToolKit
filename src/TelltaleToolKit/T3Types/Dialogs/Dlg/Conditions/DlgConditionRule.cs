@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgConditionRule>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgConditionRule>))]
 public class DlgConditionRule : IDlgCondition
 {
     [MetaMember("Baseclass_DlgCondition")]

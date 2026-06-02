@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Fonts;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Font>))]
+[MetaSerializer(typeof(MetaClassSerializer<Font>))]
 public class Font
 {
     [MetaMember("mName")]
@@ -51,7 +51,7 @@ public class Font
     [MetaMember("mPreferredPointSizes")]
     public List<uint> PreferredPointSizes { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<GlyphInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<GlyphInfo>))]
     public class GlyphInfo
     {
         [MetaMember("mTexturePage")]

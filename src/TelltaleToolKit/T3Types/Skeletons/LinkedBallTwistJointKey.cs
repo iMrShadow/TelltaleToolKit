@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LinkedBallTwistJointKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<LinkedBallTwistJointKey>))]
 public class LinkedBallTwistJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]

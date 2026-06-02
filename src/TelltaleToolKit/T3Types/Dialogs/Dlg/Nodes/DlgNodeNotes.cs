@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeNotes>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeNotes>))]
 public class DlgNodeNotes : IDlgNode
 {
     [MetaMember("Baseclass_DlgNode")]

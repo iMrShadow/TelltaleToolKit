@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlaySpriteParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlaySpriteParams>))]
 public class T3OverlaySpriteParams
 {
     [MetaMember("mhSprite")]

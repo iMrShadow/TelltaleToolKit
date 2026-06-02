@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumEmitterSpriteAnimationType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumEmitterSpriteAnimationType>))]
 public struct EnumEmitterSpriteAnimationType
 {
     [MetaMember("mVal")]
     public EmitterSpriteAnimationType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<EmitterSpriteAnimationType>))]
+[MetaSerializer(typeof(EnumSerializer<EmitterSpriteAnimationType>))]
 public enum EmitterSpriteAnimationType
 {
     // TODO:

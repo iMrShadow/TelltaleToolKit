@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.WalkBoxes;
 /// <summary>
 /// Represents the class for .wbox files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<WalkBoxes>))]
+[MetaSerializer(typeof(MetaClassSerializer<WalkBoxes>))]
 public class WalkBoxes
 {
     [MetaMember("mName")]
@@ -26,7 +26,7 @@ public class WalkBoxes
     [MetaMember("mQuads")]
     public List<Quad> Quads { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Edge>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Edge>))]
     public class Edge
     {
         [MetaMember("mV1")]
@@ -48,7 +48,7 @@ public class WalkBoxes
         public float MaxRadius { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Tri>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Tri>))]
     public class Tri
     {
         [MetaMember("mFlags")]
@@ -76,7 +76,7 @@ public class WalkBoxes
         public float[] VertScales { get; set; } = new float[3];
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Vert>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Vert>))]
     public struct Vert
     {
         [MetaMember("mFlags")]
@@ -86,7 +86,7 @@ public class WalkBoxes
         public Vector3 Position { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Quad>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Quad>))]
     public class Quad
     {
         [MetaMember("mVerts")]

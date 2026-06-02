@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class ActingPaletteClass
 {
     [MetaMember("Baseclass_UID::Owner")]
@@ -39,14 +39,14 @@ public class ActingPaletteClass
     [MetaMember("mIdle")]
     public AnimOrChore Idle { get; set; }
 
-    public class Serializer : MetaClassSerializer<ActingPaletteClass>
+    public class Serializer : MetaSerializer<ActingPaletteClass>
     {
-        private static readonly DefaultClassSerializer<ActingPaletteClass> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<ActingPaletteClass> s_metaClassSerializer = new();
 
         public override void Serialize(ref ActingPaletteClass obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             // TODO:
             MetaClass? classDescription = stream.GetMetaClass(typeof(ActingPaletteClass));

@@ -6,7 +6,7 @@ namespace TelltaleToolKit.T3Types.Languages.Locreg;
 
 public class Localization
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Language>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Language>))]
     public class Language
     {
         [MetaMember("mName")]

@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MeshEndianType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MeshEndianType>))]
 public enum T3MeshEndianType
 {
     // eMeshEndian_

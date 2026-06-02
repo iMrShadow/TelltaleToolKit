@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshLOD>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshLOD>))]
 public class T3MeshLOD
 {
     // Michonne for e.g. uses a DCArray of batches. In new games they only use 2.

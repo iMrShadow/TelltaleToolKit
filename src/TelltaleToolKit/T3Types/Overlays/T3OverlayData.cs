@@ -7,7 +7,7 @@ namespace TelltaleToolKit.T3Types.Overlays;
 /// <summary>
 /// Main class for .overlay files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlayData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlayData>))]
 public class T3OverlayData
 {
     [MetaMember("mName")]

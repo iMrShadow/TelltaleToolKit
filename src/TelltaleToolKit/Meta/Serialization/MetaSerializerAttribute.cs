@@ -8,22 +8,22 @@
 /// Can be applied to assemblies, classes, structs, or enums.
 /// </summary>
 /// <remarks>
-/// If <see cref="MetaClassSerializerGlobalAttribute.SerializedType"/> is a generic type definition, this attribute
+/// If <see cref="MetaSerializerAttribute.SerializedType"/> is a generic type definition, this attribute
 /// can be used to register open generic serializers (e.g., for <c>List&lt;&gt;</c>).
 /// </remarks>
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum)]
-public class MetaClassSerializerGlobalAttribute : Attribute
+public class MetaSerializerAttribute : Attribute
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="MetaClassSerializerGlobalAttribute"/> class.
+    /// Initializes a new instance of the <see cref="MetaSerializerAttribute"/> class.
     /// </summary>
     /// <param name="serializerType">
-    /// The type of the serializer (must inherit from <see cref="MetaClassSerializer"/>).
+    /// The type of the serializer (must inherit from <see cref="MetaSerializer"/>).
     /// </param>
     /// <param name="serializedType">
     /// The target type this serializer handles. If null, the serializer will be queried for its supported type.
     /// </param>
-    public MetaClassSerializerGlobalAttribute(Type? serializerType, Type? serializedType = null)
+    public MetaSerializerAttribute(Type? serializerType, Type? serializedType = null)
     {
         SerializerType = serializerType;
         SerializedType = serializedType;

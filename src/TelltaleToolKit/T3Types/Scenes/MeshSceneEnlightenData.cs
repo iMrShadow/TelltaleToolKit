@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Scenes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<MeshSceneEnlightenData>))]
+[MetaSerializer(typeof(MetaClassSerializer<MeshSceneEnlightenData>))]
 public class MeshSceneEnlightenData
 {
     [MetaMember("mSystemName")]

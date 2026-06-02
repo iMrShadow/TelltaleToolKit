@@ -41,7 +41,7 @@ public class Toolkit
         Config = config ?? throw new ArgumentNullException(nameof(config));
 
         ClassRegistry = new MetaClassRegistry();
-        SerializerSelector = new MetaClassSerializerSelector();
+        SerializerSelector = new MetaSerializerSelector();
         GlobalHashDatabase = new HashDatabase();
 
         LoadMetaClassDescriptions();
@@ -88,7 +88,7 @@ public class Toolkit
     /// <summary>
     /// Gets the serializer selector used to pick the right serializer for a given type.
     /// </summary>
-    public MetaClassSerializerSelector SerializerSelector { get; }
+    public MetaSerializerSelector SerializerSelector { get; }
 
     /// <summary>
     /// Gets all registered game profiles, keyed by profile name (case-insensitive).
@@ -505,13 +505,13 @@ public class Toolkit
     /// <summary>
     /// Returns the typed serializer for <typeparamref name="T"/>.
     /// </summary>
-    public MetaClassSerializer<T> GetSerializer<T>() where T : new()
+    public MetaSerializer<T> GetSerializer<T>() where T : new()
         => SerializerSelector.GetSerializer<T>();
 
     /// <summary>
     /// Returns the serializer for the given runtime <paramref name="type"/>.
     /// </summary>
-    public MetaClassSerializer GetSerializer(Type type)
+    public MetaSerializer GetSerializer(Type type)
         => SerializerSelector.GetSerializer(type);
 
     // -------------------------------------------------------------------------

@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialDomainType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialDomainType>))]
 public enum T3MaterialDomainType
 {
     // eMaterialDomain_

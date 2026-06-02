@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChainHead>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgChainHead>))]
 public class DlgChainHead : IDlgObjIdOwner
 {
     [MetaMember("Baseclass_DlgObjIDOwner")]

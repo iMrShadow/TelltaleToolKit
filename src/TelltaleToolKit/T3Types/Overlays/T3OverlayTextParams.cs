@@ -7,7 +7,7 @@ using TelltaleToolKit.T3Types.Fonts;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlayTextParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlayTextParams>))]
 public class T3OverlayTextParams
 {
     [MetaMember("mhFont")]

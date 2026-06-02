@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialEnlightenPrecomputeParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialEnlightenPrecomputeParams>))]
 public class T3MaterialEnlightenPrecomputeParams
 {
     [MetaMember("mIndirectReflectivity")]

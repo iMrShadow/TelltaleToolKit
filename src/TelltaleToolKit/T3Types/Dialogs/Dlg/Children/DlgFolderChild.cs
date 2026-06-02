@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgFolderChild>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgFolderChild>))]
 public class DlgFolderChild : IDlgChild
 {
     [MetaMember("Baseclass_DlgChild")]

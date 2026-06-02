@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Voice;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class VoiceData
 {
     [MetaMember("mbEncrypted")]
@@ -31,14 +31,14 @@ public class VoiceData
     public byte[] VoiceDataBuffer { get; set; }
 
 
-    public class Serializer : MetaClassSerializer<VoiceData>
+    public class Serializer : MetaSerializer<VoiceData>
     {
-        private static readonly DefaultClassSerializer<VoiceData> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<VoiceData> s_metaClassSerializer = new();
 
         public override void Serialize(ref VoiceData obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

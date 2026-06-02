@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.NavCam;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<Mode>))]
+[MetaSerializer(typeof(EnumSerializer<Mode>))]
 public enum Mode
 {
     None = 1,
@@ -17,7 +17,7 @@ public enum Mode
     DynamicConversationCamera = 8
 }
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumMode>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumMode>))]
 public struct EnumMode
 {
     [MetaMember("mVal")]

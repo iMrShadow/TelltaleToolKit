@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class CompressedVector3Keys
 {
     public string Name { get; set; }
@@ -14,7 +14,7 @@ public class CompressedVector3Keys
     public Vector3 Min { get; set; }
     public Vector3 Max { get; set; }
 
-    public class Serializer : MetaClassSerializer<CompressedVector3Keys>
+    public class Serializer : MetaSerializer<CompressedVector3Keys>
     {
         public override void Serialize(ref CompressedVector3Keys obj, MetaStream stream)
         {

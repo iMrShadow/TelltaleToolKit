@@ -7,7 +7,7 @@ using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DialogExchange>))]
+[MetaSerializer(typeof(MetaClassSerializer<DialogExchange>))]
 public class DialogExchange : IDialogBase
 {
     [MetaMember("Baseclass_DialogBase")]

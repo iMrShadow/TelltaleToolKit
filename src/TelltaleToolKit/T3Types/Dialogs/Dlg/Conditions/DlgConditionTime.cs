@@ -4,10 +4,10 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgConditionTime>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgConditionTime>))]
 public class DlgConditionTime : IDlgCondition
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<DurationClass>))]
+    [MetaSerializer(typeof(EnumSerializer<DurationClass>))]
     public enum DurationClass
     {
         Timed = 1,

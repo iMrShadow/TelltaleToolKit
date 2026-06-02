@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DialogResource
 {
     [MetaMember("miNextDialogID")]
@@ -50,14 +50,14 @@ public class DialogResource
     public List<DialogLine> Lines = [];
     public List<DialogText> Texts = [];
 
-    public class Serializer : MetaClassSerializer<DialogResource>
+    public class Serializer : MetaSerializer<DialogResource>
     {
-        private static readonly DefaultClassSerializer<DialogResource> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<DialogResource> s_metaClassSerializer = new();
 
         public override void Serialize(ref DialogResource obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

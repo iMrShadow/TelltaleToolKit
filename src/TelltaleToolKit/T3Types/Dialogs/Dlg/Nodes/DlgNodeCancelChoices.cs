@@ -4,13 +4,13 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeCancelChoices>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeCancelChoices>))]
 public class DlgNodeCancelChoices : IDlgNode
 {
     [MetaMember("Baseclass_DlgNode")]
     public DlgNode DlgNode { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<CancelGroupT>))]
+    [MetaSerializer(typeof(EnumSerializer<CancelGroupT>))]
     public enum CancelGroupT
     {
         AllActiveChoices = 1,

@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocalizeInfo>))]
+[MetaSerializer(typeof(MetaClassSerializer<LocalizeInfo>))]
 public class LocalizeInfo
 {
     [MetaMember("mFlags")]

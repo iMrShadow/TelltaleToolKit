@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageResLocal>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageResLocal>))]
 public class LanguageResLocal
 {
     [MetaMember("mPrefix")]

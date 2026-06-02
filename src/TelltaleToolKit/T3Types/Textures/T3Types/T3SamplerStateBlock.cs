@@ -17,7 +17,7 @@ namespace TelltaleToolKit.T3Types.Textures.T3Types;
 ///
 /// This class provides typed accessors and several utility functions.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3SamplerStateBlock>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3SamplerStateBlock>))]
 public class T3SamplerStateBlock
 {
     [MetaMember("mData")]

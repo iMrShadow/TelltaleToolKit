@@ -4,21 +4,21 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.Meta.Serialization;
 
 /// <summary>
-/// Responsible for selecting and providing the appropriate <see cref="MetaClassSerializer"/>
+/// Responsible for selecting and providing the appropriate <see cref="MetaSerializer"/>
 /// instance for a given .NET type, including support for open generics and arrays.
 /// </summary>
-public class MetaClassSerializerSelector
+public class MetaSerializerSelector
 {
-    private readonly Dictionary<Type, MetaClassSerializer> _serializers = new();
+    private readonly Dictionary<Type, MetaSerializer> _serializers = new();
 
     // Open generics (List<>, Dictionary<,>, etc.)
     private readonly Dictionary<Type, Type> _openGenericSerializers = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MetaClassSerializerSelector"/> class,
+    /// Initializes a new instance of the <see cref="MetaSerializerSelector"/> class,
     /// scanning loaded assemblies for serializer registrations.
     /// </summary>
-    public MetaClassSerializerSelector()
+    public MetaSerializerSelector()
     {
         Initialize();
     }
@@ -27,11 +27,11 @@ public class MetaClassSerializerSelector
     /// Registers a serializer instance for the specified type key.
     /// </summary>
     /// <param name="key">Type of the object to be (de)serialized.</param>
-    /// <param name="classSerializer">Serializer instance for that type.</param>
-    public void Register(Type? key, MetaClassSerializer classSerializer)
+    /// <param name="serializer">Serializer instance for that type.</param>
+    public void Register(Type? key, MetaSerializer serializer)
     {
         if (key != null)
-            _serializers[key] = classSerializer;
+            _serializers[key] = serializer;
     }
 
     /// <summary>
@@ -39,11 +39,11 @@ public class MetaClassSerializerSelector
     /// </summary>
     /// <typeparam name="T">The type being serialized.</typeparam>
     /// <param name="key">Type of the object to be (de)serialized.</param>
-    /// <param name="classSerializer">Serializer instance for that type.</param>
-    public void Register<T>(Type? key, MetaClassSerializer<T> classSerializer)
+    /// <param name="serializer">Serializer instance for that type.</param>
+    public void Register<T>(Type? key, MetaSerializer<T> serializer)
     {
         if (key != null)
-            _serializers[key] = classSerializer;
+            _serializers[key] = serializer;
     }
 
     /// <summary>
@@ -52,8 +52,8 @@ public class MetaClassSerializerSelector
     /// <param name="serializer">Serializer instance.</param>
     public void Register(object serializer)
     {
-        var type = (MetaClassSerializer)serializer;
-        _serializers[type.SerializationType] = (MetaClassSerializer)serializer;
+        var type = (MetaSerializer)serializer;
+        _serializers[type.SerializationType] = (MetaSerializer)serializer;
     }
 
     /// <summary>
@@ -61,8 +61,8 @@ public class MetaClassSerializerSelector
     /// </summary>
     /// <typeparam name="T">The type to (de)serialize.</typeparam>
     /// <returns>The serializer instance, or null if not found.</returns>
-    public MetaClassSerializer<T> GetSerializer<T>()
-        => GetSerializer(typeof(T)) as MetaClassSerializer<T>;
+    public MetaSerializer<T> GetSerializer<T>()
+        => GetSerializer(typeof(T)) as MetaSerializer<T>;
 
 
     /// <summary>
@@ -70,12 +70,12 @@ public class MetaClassSerializerSelector
     /// </summary>
     /// <param name="type">The type that you want to (de)serialize.</param>
     /// <returns>
-    /// The <see cref="MetaClassSerializer"/> for this type if it exists or can be created; otherwise, throws.
+    /// The <see cref="MetaSerializer"/> for this type if it exists or can be created; otherwise, throws.
     /// </returns>
     /// <exception cref="NotSupportedException">Thrown when a serializer cannot be found for the provided type.</exception>
-    public MetaClassSerializer GetSerializer(Type type)
+    public MetaSerializer GetSerializer(Type type)
     {
-        if (_serializers.TryGetValue(type, out MetaClassSerializer? serializer))
+        if (_serializers.TryGetValue(type, out MetaSerializer? serializer))
         {
             return serializer;
         }
@@ -85,7 +85,7 @@ public class MetaClassSerializerSelector
         {
             Type? elementType = type.GetElementType();
             Type serializerType = typeof(ArraySerializer<>).MakeGenericType(elementType);
-            var arraySerializer = (MetaClassSerializer)Activator.CreateInstance(serializerType)!;
+            var arraySerializer = (MetaSerializer)Activator.CreateInstance(serializerType)!;
             arraySerializer?.Initialize(this);
             _serializers[type] = arraySerializer; // Cache for later
             return arraySerializer;
@@ -101,7 +101,7 @@ public class MetaClassSerializerSelector
                 // Instantiate the open generic serializer for the type arguments
                 Type[] args = type.GetGenericArguments();
                 Type closedSerializerType = serializerGenericType.MakeGenericType(args);
-                var closedSerializer = (MetaClassSerializer)Activator.CreateInstance(closedSerializerType)!;
+                var closedSerializer = (MetaSerializer)Activator.CreateInstance(closedSerializerType)!;
 
                 closedSerializer?.Initialize(this);
 
@@ -117,7 +117,7 @@ public class MetaClassSerializerSelector
     }
 
     /// <summary>
-    /// Scans all loaded assemblies for types decorated with <see cref="MetaClassSerializerGlobalAttribute"/>
+    /// Scans all loaded assemblies for types decorated with <see cref="MetaSerializerAttribute"/>
     /// and registers the corresponding serializers.
     /// </summary>
     public void Initialize()
@@ -126,7 +126,7 @@ public class MetaClassSerializerSelector
         {
             foreach (Type type in assembly.GetTypes())
             {
-                var globalAttr = type.GetCustomAttribute<MetaClassSerializerGlobalAttribute>();
+                var globalAttr = type.GetCustomAttribute<MetaSerializerAttribute>();
 
                 if (globalAttr == null) continue;
 
@@ -141,13 +141,13 @@ public class MetaClassSerializerSelector
                 else if (serializedType != null)
                 {
                     // Register a closed serializer instance
-                    var serializer = (MetaClassSerializer)Activator.CreateInstance(serializerType);
+                    var serializer = (MetaSerializer)Activator.CreateInstance(serializerType);
                     serializer?.Initialize(this);
                     _serializers[serializedType] = serializer;
                 }
                 else
                 {
-                    var serializer = (MetaClassSerializer)Activator.CreateInstance(serializerType);
+                    var serializer = (MetaSerializer)Activator.CreateInstance(serializerType);
                     serializer?.Initialize(this);
                     _serializers[serializer.SerializationType] = serializer;
                 }

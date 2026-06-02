@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TaskOwner>))]
+[MetaSerializer(typeof(MetaClassSerializer<TaskOwner>))]
 public class TaskOwner
 {
     [MetaMember("mTaskID")]

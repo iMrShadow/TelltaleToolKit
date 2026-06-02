@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshPropertyEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshPropertyEntry>))]
 
 public class T3MeshPropertyEntry
 {

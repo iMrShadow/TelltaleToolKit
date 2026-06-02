@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<FlagsT3LightEnvGroupSet>))]
+[MetaSerializer(typeof(MetaClassSerializer<FlagsT3LightEnvGroupSet>))]
 public struct FlagsT3LightEnvGroupSet
 {
     [MetaMember("mFlags")]

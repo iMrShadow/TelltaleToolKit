@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<RenderSwizzleParams>))]
+[MetaSerializer(typeof(MetaClassSerializer<RenderSwizzleParams>))]
 public struct RenderSwizzleParams
 {
     [MetaMember("mSwizzle[0]")]

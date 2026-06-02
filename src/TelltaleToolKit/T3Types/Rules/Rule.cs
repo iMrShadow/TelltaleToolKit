@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Rules;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Rule
 {
     [MetaMember("mName")]
@@ -40,7 +40,7 @@ public class Rule
 
     public List<AgentInfo> AgentInformation { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AgentInfo>))]
     public class AgentInfo
     {
         [MetaMember("mAgentName")]
@@ -53,11 +53,11 @@ public class Rule
         public PropertySet ActionProperties { get; set; } = new();
     }
 
-    public class Serializer : MetaClassSerializer<Rule>
+    public class Serializer : MetaSerializer<Rule>
     {
-        private static readonly DefaultClassSerializer<Rule> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<Rule> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref Rule obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref Rule? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (obj is null)
             {
@@ -68,7 +68,7 @@ public class Rule
         public override void Serialize(ref Rule obj, MetaStream stream)
         {
             PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (!obj.VersionHasAgents)
             {

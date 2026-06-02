@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ColorMode>))]
+[MetaSerializer(typeof(EnumSerializer<ColorMode>))]
 
 public enum ColorMode
 {

@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3LightProbeInternalData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3LightProbeInternalData>))]
 public class T3LightProbeInternalData
 {
     [MetaMember("mEntryForQuality[0]")]
@@ -20,7 +20,7 @@ public class T3LightProbeInternalData
     [MetaMember("mEntryForQuality[3]")]
     public QualityEntry EntryForQuality3 { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<QualityEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<QualityEntry>))]
     public class QualityEntry
     {
         [MetaMember("mShadowTextureScale")]

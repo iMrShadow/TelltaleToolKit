@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialStaticParameter>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialStaticParameter>))]
 public class T3MaterialStaticParameter
 {
     [MetaMember("mName")]

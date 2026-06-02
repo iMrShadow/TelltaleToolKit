@@ -7,13 +7,13 @@ namespace TelltaleToolKit.T3Types.ActorMaps;
 /// <summary>
 /// Represents the class for .amap files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentMap>))]
+[MetaSerializer(typeof(MetaClassSerializer<AgentMap>))]
 public class AgentMap
 {
     [MetaMember("maAgents")]
     public Dictionary<string, AgentMapEntry> Agents { get; set; } = new();
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentMapEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AgentMapEntry>))]
     public class AgentMapEntry
     {
         [MetaMember("mzName")]

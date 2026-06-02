@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Dlg : IDlgObjIdOwner, ITaskOwner
 {
     [MetaMember("Baseclass_DlgObjIDOwner")]
@@ -57,13 +57,13 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
 
     public List<IDlgNode> Nodes { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<Dlg>
+    public class Serializer : MetaSerializer<Dlg>
     {
-        private static readonly DefaultClassSerializer<Dlg> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<Dlg> s_metaClassSerializer = new();
         public override void Serialize(ref Dlg obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass metaClass = stream.GetMetaClass(typeof(Dlg))!;
 
@@ -93,11 +93,11 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                     if (type == null)
                         throw new InvalidOperationException("[Dlg] Type is not registered.");
 
-                    MetaClassSerializer metaClassSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
+                    MetaSerializer metaSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object node = null!;
-                    metaClassSerializer.PreSerialize(ref node, stream);
-                    metaClassSerializer.Serialize(ref node, stream);
+                    metaSerializer.PreSerialize(ref node, stream);
+                    metaSerializer.Serialize(ref node, stream);
 
                     if (node is IDlgNode dlgNode)
                     {

@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumBokehOcclusionType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumBokehOcclusionType>))]
 public struct EnumBokehOcclusionType
 {
     [MetaMember("mVal")]
     public BokehOcclusionType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<BokehOcclusionType>))]
+[MetaSerializer(typeof(EnumSerializer<BokehOcclusionType>))]
 public enum BokehOcclusionType
 {
     // TODO:

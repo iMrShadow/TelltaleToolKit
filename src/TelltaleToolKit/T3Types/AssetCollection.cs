@@ -7,7 +7,7 @@ namespace TelltaleToolKit.T3Types;
 /// <summary>
 /// The base class for .acol files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AssetCollection>))]
+[MetaSerializer(typeof(MetaClassSerializer<AssetCollection>))]
 public class AssetCollection
 {
     [MetaMember("mIncludeMasks")]

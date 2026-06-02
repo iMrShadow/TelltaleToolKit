@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumHBAOParticipationType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumHBAOParticipationType>))]
 public struct EnumHBAOParticipationType
 {
     [MetaMember("mVal")]
     public HBAOParticipationType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<HBAOParticipationType>))]
+[MetaSerializer(typeof(EnumSerializer<HBAOParticipationType>))]
 public enum HBAOParticipationType
 {
     // TODO:

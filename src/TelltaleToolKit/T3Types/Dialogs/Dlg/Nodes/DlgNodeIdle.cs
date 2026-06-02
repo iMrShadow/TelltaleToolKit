@@ -5,10 +5,10 @@ using TelltaleToolKit.T3Types.Chores;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeIdle>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeIdle>))]
 public class DlgNodeIdle : IDlgNode
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<OverrideOption>))]
+    [MetaSerializer(typeof(EnumSerializer<OverrideOption>))]
     public enum OverrideOption
     {
         UseDefaults = 1,

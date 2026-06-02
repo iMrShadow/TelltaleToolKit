@@ -6,7 +6,7 @@ namespace TelltaleToolKit.T3Types.Audio;
 
 public class FootSteps
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<FootstepBank>))]
+    [MetaSerializer(typeof(MetaClassSerializer<FootstepBank>))]
     public class FootstepBank
     {
         [MetaMember("mSounds")]

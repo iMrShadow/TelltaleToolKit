@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Voice;
 
 namespace TelltaleToolKit.T3Types.Languages.Langdb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageResource>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageResource>))]
 public class LanguageResource
 {
     [MetaMember("mId")]

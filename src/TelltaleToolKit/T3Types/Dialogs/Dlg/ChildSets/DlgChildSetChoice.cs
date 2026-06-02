@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChildSetChoice>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgChildSetChoice>))]
 public class DlgChildSetChoice : IDlgChildSet
 {
     [MetaMember("Baseclass_DlgChildSet")]

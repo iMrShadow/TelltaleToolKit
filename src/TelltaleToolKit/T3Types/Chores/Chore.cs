@@ -8,7 +8,7 @@ using TelltaleToolKit.T3Types.Scenes;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Chore
 {
     // [MetaMember("mpChore")]
@@ -74,14 +74,14 @@ public class Chore
     [MetaMember("mWalkPaths")]
     public Dictionary<Symbol, WalkPath> WalkPaths  { get; set; }
 
-    public class Serializer : MetaClassSerializer<Chore>
+    public class Serializer : MetaSerializer<Chore>
     {
-        private static readonly DefaultClassSerializer<Chore> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<Chore> s_metaClassSerializer = new();
 
         public override void Serialize(ref Chore obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
             MetaClass? choreMetaClassDescription = stream.GetMetaClass(typeof(Chore));
 
             if (stream.Mode is MetaStreamMode.Write)

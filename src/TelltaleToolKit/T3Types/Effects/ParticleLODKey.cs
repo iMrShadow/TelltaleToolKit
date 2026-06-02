@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Effects;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ParticleLODKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<ParticleLODKey>))]
 public class ParticleLODKey
 {
     [MetaMember("mCountScale")]

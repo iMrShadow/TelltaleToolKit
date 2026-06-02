@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialCompiledData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialCompiledData>))]
 public class T3MaterialCompiledData
 {
     [MetaMember("mParameters")]
@@ -96,7 +96,7 @@ public class T3MaterialCompiledData
     public uint PreShaderParameterBufferScalarSize { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialChannelType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialChannelType>))]
 public enum T3MaterialChannelType
 {
     // eMaterialChannel_
@@ -148,7 +148,7 @@ public enum T3MaterialChannelType
     TexCoordCount = 0x4,
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3MaterialQualityType>))]
+[MetaSerializer(typeof(EnumSerializer<T3MaterialQualityType>))]
 public enum T3MaterialQualityType
 {
 	High = 0,

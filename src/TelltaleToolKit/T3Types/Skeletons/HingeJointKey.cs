@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Skeletons;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<HingeJointKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<HingeJointKey>))]
 public class HingeJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]

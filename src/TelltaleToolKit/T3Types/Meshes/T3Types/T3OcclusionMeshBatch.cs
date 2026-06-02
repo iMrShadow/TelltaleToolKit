@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OcclusionMeshBatch>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OcclusionMeshBatch>))]
 public class T3OcclusionMeshBatch
 {
     [MetaMember("mFlags")]

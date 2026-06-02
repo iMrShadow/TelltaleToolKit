@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.ActorMaps;
 /// <summary>
 /// Represents the main class for .aam files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ActorAgentMapper>))]
+[MetaSerializer(typeof(MetaClassSerializer<ActorAgentMapper>))]
 public class ActorAgentMapper
 {
     [MetaMember("mActorAgentMap")]

@@ -6,7 +6,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BoundingBox>))]
+[MetaSerializer(typeof(MetaClassSerializer<BoundingBox>))]
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 public struct BoundingBox
 {

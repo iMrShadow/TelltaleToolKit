@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<StyleGuideRef>))]
+[MetaSerializer(typeof(MetaClassSerializer<StyleGuideRef>))]
 public class StyleGuideRef
 {
     [MetaMember("mhStyleGuide")]

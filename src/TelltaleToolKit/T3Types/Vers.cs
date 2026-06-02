@@ -26,8 +26,8 @@ public class Vers
     }
 
     // TODO: Convert this to the meta type system.
-    [MetaClassSerializerGlobal(typeof(VersSerializer))]
-    public class VersSerializer : MetaClassSerializer<Vers>
+    [MetaSerializer(typeof(VersSerializer))]
+    public class VersSerializer : MetaSerializer<Vers>
     {
         public override void Serialize(ref Vers obj, MetaStream stream)
         {

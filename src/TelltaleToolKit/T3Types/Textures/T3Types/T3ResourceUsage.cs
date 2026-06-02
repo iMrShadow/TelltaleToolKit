@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3ResourceUsage>))]
+[MetaSerializer(typeof(EnumSerializer<T3ResourceUsage>))]
 public enum T3ResourceUsage
 {
     // eResourceUsage

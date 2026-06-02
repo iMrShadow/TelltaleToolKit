@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Scenes;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Scene
 {
     [MetaMember("mbHidden")]
@@ -20,14 +20,14 @@ public class Scene
 
     public List<AgentInfo> Agents { get; set; } = [];
 
-    public class Serializer : MetaClassSerializer<Scene>
+    public class Serializer : MetaSerializer<Scene>
     {
-        private static readonly DefaultClassSerializer<Scene> DefaultSceneSerializer = new();
+        private static readonly MetaClassSerializer<Scene> s_metaClassSceneSerializer = new();
 
         public override void Serialize(ref Scene obj, MetaStream stream)
         {
-            DefaultSceneSerializer.PreSerialize(ref obj, stream);
-            DefaultSceneSerializer.Serialize(ref obj, stream);
+            s_metaClassSceneSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSceneSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
 
@@ -53,7 +53,7 @@ public class Scene
         }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AgentInfo>))]
     public class AgentInfo
     {
         [MetaMember("mAgentName")]
@@ -90,7 +90,7 @@ public class Scene
         public bool MembersImportedIntoSceneProps { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentQualitySettings>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AgentQualitySettings>))]
     public class AgentQualitySettings
     {
         [MetaMember("mFlags")]

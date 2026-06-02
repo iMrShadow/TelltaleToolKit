@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumParticleGeometryType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumParticleGeometryType>))]
 public struct EnumParticleGeometryType
 {
     [MetaMember("mVal")]
     public ParticleGeometryType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ParticleGeometryType>))]
+[MetaSerializer(typeof(EnumSerializer<ParticleGeometryType>))]
 public enum ParticleGeometryType
 {
     //       eParticleGeometry_

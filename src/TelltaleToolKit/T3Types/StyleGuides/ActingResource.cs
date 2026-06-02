@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ActingResource>))]
+[MetaSerializer(typeof(MetaClassSerializer<ActingResource>))]
 public class ActingResource
 {
     [MetaMember("Baseclass_ActingOverridablePropOwner")]

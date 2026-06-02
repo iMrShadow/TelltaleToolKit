@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types;
 namespace TelltaleToolKit.Meta.Serialization.Serializers;
 
 /// <summary>
-/// Provides a default implementation of <see cref="MetaClassSerializer{T}"/> for class serialization,
+/// Provides a default implementation of <see cref="MetaSerializer{T}"/> for class serialization,
 /// using reflection and attribute caching to efficiently map class properties to meta members.
 /// <para>
 /// This serializer builds a cache of properties with <see cref="MetaMemberAttribute"/>, linking them to their
@@ -16,12 +16,12 @@ namespace TelltaleToolKit.Meta.Serialization.Serializers;
 /// </para>
 /// </summary>
 /// <typeparam name="T">The type of the class being serialized.</typeparam>
-public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
+public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
 {
     private static readonly Dictionary<(string, Type), CachedMember> MemberCache;
 
     // Initialize the mapping dictionary.
-    static DefaultClassSerializer()
+    static MetaClassSerializer()
     {
         MemberCache = typeof(T).GetProperties()
             .Select(p => new { Property = p, Attribute = p.GetCustomAttribute<MetaMemberAttribute>() })
@@ -68,7 +68,6 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
             if (propDesc.Type.IsBlocked())
                 stream.BeginBlock();
 
-
             stream.Key(propDesc.MemberName);
 
             if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
@@ -84,7 +83,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
 
             object? value = cached?.Getter(ref obj);
 
-            MetaClassSerializer serializer =
+            MetaSerializer serializer =
                 Toolkit.Instance.GetSerializer(cached?.Property.PropertyType ?? propDesc.Type.LinkingType);
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream);
@@ -113,7 +112,7 @@ public class DefaultClassSerializer<T> : MetaClassSerializer<T> where T : new()
         Toolkit.Instance.Logger.LogInfo($"Ending {typeof(T).Name}.");
     }
 
-    public override void PreSerialize(ref T obj, MetaStream stream, MetaClassType? type = null)
+    public override void PreSerialize(ref T? obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Read && obj == null)
         {

@@ -9,7 +9,7 @@ using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Meshes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<D3DMesh>))]
+[MetaSerializer(typeof(MetaClassSerializer<D3DMesh>))]
 public class D3DMesh
 {
     /// <summary>
@@ -93,7 +93,7 @@ public class D3DMesh
     [MetaMember("mLocalTransformPalettes")]
     public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocalTransformEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<LocalTransformEntry>))]
     public class LocalTransformEntry;
 
 
@@ -124,13 +124,13 @@ public class D3DMesh
     [MetaMember("mToolAnimatedVertexEntries")]
     public List<AnimatedVertexEntry> ToolAnimatedVertexEntries { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimatedVertexEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AnimatedVertexEntry>))]
     public class AnimatedVertexEntry;
 
     [MetaMember("mToolAnimatedVertexGroupEntries")]
     public Dictionary<Symbol, AnimatedVertexGroupEntry> ToolAnimatedVertexGroupEntries { get; set; } = new();
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimatedVertexGroupEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AnimatedVertexGroupEntry>))]
     public class AnimatedVertexGroupEntry;
 
     [MetaMember("mInternalResources")]
@@ -150,7 +150,7 @@ public class D3DMesh
     /// <summary>
     /// This is a combination of T3MeshBatch and others for old games ( from Texas Hold'em to unknown).
     /// </summary>
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TriangleSet>))]
+    [MetaSerializer(typeof(MetaClassSerializer<TriangleSet>))]
     public class TriangleSet
     {
         [MetaMember("mFlags")]
@@ -291,15 +291,15 @@ public class D3DMesh
         [MetaMember("mSubsurfaceScateringRadius")]
         public float SubsurfaceScateringRadius { get; set; }
 
-        [MetaClassSerializerGlobal(typeof(TriangleSetSerializer))]
-        public class TriangleSetSerializer : MetaClassSerializer<TriangleSet>
+        [MetaSerializer(typeof(TriangleSetSerializer))]
+        public class TriangleSetSerializer : MetaSerializer<TriangleSet>
         {
-            private static readonly DefaultClassSerializer<TriangleSet> DefaultSerializer = new();
+            private static readonly MetaClassSerializer<TriangleSet> s_metaClassSerializer = new();
 
             public override void Serialize(ref TriangleSet obj, MetaStream stream)
             {
-                DefaultSerializer.PreSerialize(ref obj, stream);
-                DefaultSerializer.Serialize(ref obj, stream);
+                s_metaClassSerializer.PreSerialize(ref obj, stream);
+                s_metaClassSerializer.Serialize(ref obj, stream);
 
                 if (stream.Mode is MetaStreamMode.Write)
                 {
@@ -322,7 +322,7 @@ public class D3DMesh
     /// <summary>
     /// This is for old games where bones were embedded inside the mesh.
     /// </summary>
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PaletteEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<PaletteEntry>))]
     public class PaletteEntry
     {
         [MetaMember("mBoneName")]
@@ -344,15 +344,15 @@ public class D3DMesh
         public int SkeletonIndex { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(Serializer))]
-    public class Serializer : MetaClassSerializer<D3DMesh>
+    [MetaSerializer(typeof(Serializer))]
+    public class Serializer : MetaSerializer<D3DMesh>
     {
-        private static readonly DefaultClassSerializer<D3DMesh> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<D3DMesh> s_metaClassSerializer = new();
 
         public override void Serialize(ref D3DMesh obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -662,7 +662,7 @@ public class D3DMesh
                     stream.BeginBlock();
 
 
-                    MetaClassSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
+                    MetaSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
                     serializer.PreSerialize(ref propertyValue, stream, typeSymbol);
 
 
@@ -748,10 +748,10 @@ public class D3DMesh
     }
 
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<VertexAnimation>))]
+    [MetaSerializer(typeof(MetaClassSerializer<VertexAnimation>))]
     public class VertexAnimation;
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Texture>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Texture>))]
     public class Texture
     {
         [MetaMember("mName")]
@@ -776,10 +776,10 @@ public class D3DMesh
         public float AverageObjAreaPerUVArea { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<SkinningEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<SkinningEntry>))]
     public class SkinningEntry;
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<BoneEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<BoneEntry>))]
     public class BoneEntry;
 
     public PropertySet? GetMaterialPropertySet(int index)

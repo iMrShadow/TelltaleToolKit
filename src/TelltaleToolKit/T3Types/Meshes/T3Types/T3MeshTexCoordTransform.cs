@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshTexCoordTransform>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshTexCoordTransform>))]
 public class T3MeshTexCoordTransform
 {
     [MetaMember("mScale")]

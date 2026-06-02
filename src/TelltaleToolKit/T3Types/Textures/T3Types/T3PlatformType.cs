@@ -5,12 +5,12 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumBase>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumBase>))]
 public struct EnumBase
 {
 }
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumPlatformType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumPlatformType>))]
 public struct EnumPlatformType
 {
     [MetaMember("mVal")]
@@ -20,7 +20,7 @@ public struct EnumPlatformType
     public EnumBase EnumBase { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<PlatformType>))]
+[MetaSerializer(typeof(EnumSerializer<PlatformType>))]
 public enum PlatformType
 {
     [Display(Name = "Default Mode")]

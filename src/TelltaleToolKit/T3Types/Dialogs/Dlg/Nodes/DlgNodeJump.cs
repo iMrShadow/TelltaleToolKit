@@ -4,11 +4,11 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeJump>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeJump>))]
 public class DlgNodeJump : IDlgNode
 {
     // TODO: Not exactly the right names.
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<JumpBehaviourEnum>))]
+    [MetaSerializer(typeof(EnumSerializer<JumpBehaviourEnum>))]
     public enum JumpBehaviourEnum
     {
         JumpAndExecute = 1,
@@ -16,7 +16,7 @@ public class DlgNodeJump : IDlgNode
         Return = 3
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<JumpTargetClassEnum>))]
+    [MetaSerializer(typeof(EnumSerializer<JumpTargetClassEnum>))]
     public enum JumpTargetClassEnum
     {
         ToName = 1,
@@ -24,7 +24,7 @@ public class DlgNodeJump : IDlgNode
         ToNodeAfterParentWaitNode = 3
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<VisibilityBehaviourEnum>))]
+    [MetaSerializer(typeof(EnumSerializer<VisibilityBehaviourEnum>))]
     public enum VisibilityBehaviourEnum
     {
         IgnoreVisibility = 1,

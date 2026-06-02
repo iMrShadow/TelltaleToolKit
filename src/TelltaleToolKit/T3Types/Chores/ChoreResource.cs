@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class ChoreResource
 {
     [MetaMember("mVersion")]
@@ -77,7 +77,7 @@ public class ChoreResource
 
     public object? Embedded { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Block>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Block>))]
     public class Block
     {
         [MetaMember("mStartTime")]
@@ -93,19 +93,19 @@ public class ChoreResource
         public float Scale { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<AutoActStatus>))]
+    [MetaSerializer(typeof(EnumSerializer<AutoActStatus>))]
     public enum AutoActStatus
     {
     }
 
-    public class Serializer : MetaClassSerializer<ChoreResource>
+    public class Serializer : MetaSerializer<ChoreResource>
     {
-        private static readonly DefaultClassSerializer<ChoreResource> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<ChoreResource> s_metaClassSerializer = new();
 
         public override void Serialize(ref ChoreResource obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass? description = stream.GetMetaClass(typeof(ChoreResource));
 

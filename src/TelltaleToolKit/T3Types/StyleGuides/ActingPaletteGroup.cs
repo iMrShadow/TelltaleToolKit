@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.StyleGuides;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ActingPaletteGroup>))]
+[MetaSerializer(typeof(MetaClassSerializer<ActingPaletteGroup>))]
 public class ActingPaletteGroup
 {
     [MetaMember("Baseclass_UID::Owner")]

@@ -6,7 +6,7 @@ using TelltaleToolKit.T3Types.Properties;
 namespace TelltaleToolKit.T3Types.Languages.Locreg;
 
 // .locreg
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LocalizationRegistry>))]
+[MetaSerializer(typeof(MetaClassSerializer<LocalizationRegistry>))]
 public class LocalizationRegistry
 {
     [MetaMember("mFlagIndexMap")]

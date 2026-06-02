@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.LightMaps;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LightType>))]
+[MetaSerializer(typeof(MetaClassSerializer<LightType>))]
 public struct LightType
 {
     [MetaMember("mLightType")] public int Type { get; set; }

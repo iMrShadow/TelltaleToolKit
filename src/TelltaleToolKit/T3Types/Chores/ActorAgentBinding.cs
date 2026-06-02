@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ActorAgentBinding>))]
+[MetaSerializer(typeof(MetaClassSerializer<ActorAgentBinding>))]
 public class ActorAgentBinding
 {
     [MetaMember("mActorName")]

@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3ToonGradientRegion>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3ToonGradientRegion>))]
 public struct T3ToonGradientRegion
 {
     [MetaMember("mColor")]

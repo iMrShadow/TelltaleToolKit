@@ -13,13 +13,13 @@ public class Range<T>
     public T Max { get; set; } = default!;
 }
 
-[MetaClassSerializerGlobal(typeof(RangeClassSerializer<>), typeof(Range<>))]
-public class RangeClassSerializer<T> : MetaClassSerializer<Range<T>>
+[MetaSerializer(typeof(RangeSerializer<>), typeof(Range<>))]
+public class RangeSerializer<T> : MetaSerializer<Range<T>>
 {
-    private static readonly DefaultClassSerializer<Range<T>> DefaultSerializer = new();
+    private static readonly MetaClassSerializer<Range<T>> s_metaClassSerializer = new();
 
     /// <inheritdoc/>
-    public override void PreSerialize(ref Range<T> obj, MetaStream stream, MetaClassType? type)
+    public override void PreSerialize(ref Range<T>? obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Read)
         {
@@ -30,7 +30,7 @@ public class RangeClassSerializer<T> : MetaClassSerializer<Range<T>>
 
     public override void Serialize(ref Range<T> obj, MetaStream stream)
     {
-        DefaultSerializer.PreSerialize(ref obj, stream);
-        DefaultSerializer.Serialize(ref obj, stream);
+        s_metaClassSerializer.PreSerialize(ref obj, stream);
+        s_metaClassSerializer.Serialize(ref obj, stream);
     }
 }

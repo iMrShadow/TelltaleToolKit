@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Languages.Langdb;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageDatabase>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageDatabase>))]
 public class LanguageDatabase
 {
     [MetaMember("mName")]

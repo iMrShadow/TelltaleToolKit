@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimationValueInterfaceBase>))]
+[MetaSerializer(typeof(MetaClassSerializer<AnimationValueInterfaceBase>))]
 public class AnimationValueInterfaceBase
 {
     // Both Symbol and a String

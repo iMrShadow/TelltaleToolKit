@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Note : IGenerator, IOwner
 {
     [MetaMember("Baseclass_UID::Generator")]
@@ -41,14 +41,14 @@ public class Note : IGenerator, IOwner
         public string Text { get; set; }
     }
 
-    public class Serializer : MetaClassSerializer<Note>
+    public class Serializer : MetaSerializer<Note>
     {
-        private static readonly DefaultClassSerializer<Note> DefaultClassSerializer = new();
+        private static readonly MetaClassSerializer<Note> s_metaClassSerializer = new();
 
         public override void Serialize(ref Note obj, MetaStream stream)
         {
-            DefaultClassSerializer.PreSerialize(ref obj, stream);
-            DefaultClassSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumHBAOPerPixelNormals>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumHBAOPerPixelNormals>))]
 public struct EnumHBAOPerPixelNormals
 {
     [MetaMember("mVal")]
     public HBAOPerPixelNormals Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<HBAOPerPixelNormals>))]
+[MetaSerializer(typeof(EnumSerializer<HBAOPerPixelNormals>))]
 public enum HBAOPerPixelNormals
 {
     //TODO:

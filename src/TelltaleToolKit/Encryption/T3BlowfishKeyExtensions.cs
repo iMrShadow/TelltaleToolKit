@@ -5,7 +5,7 @@ namespace TelltaleToolKit.Encryption;
 
 public static class T3BlowfishKeyExtensions
 {
-    // TODO: In C#13 there is a feature that makes adding extensions easier.
+    // TODO: In C#14 there is a feature that makes adding extensions easier.
 
     /// <summary>
     /// Gets the display name of <see cref="T3BlowfishKey"></see>.

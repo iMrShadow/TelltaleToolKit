@@ -6,7 +6,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types.Animations;
 
 // TODO: .look Files
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class ProceduralLookAt
 {
     [MetaMember("Baseclass_Animation")]
@@ -60,7 +60,7 @@ public class ProceduralLookAt
         // 2 = final look at
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Constraint>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Constraint>))]
 
     public struct Constraint
     {
@@ -83,7 +83,7 @@ public class ProceduralLookAt
         public float UpDownFixedOffset { get; set; }
     }
 
-    public class Serializer : MetaClassSerializer<ProceduralLookAt>
+    public class Serializer : MetaSerializer<ProceduralLookAt>
     {
         public override void Serialize(ref ProceduralLookAt obj, MetaStream stream)
         {

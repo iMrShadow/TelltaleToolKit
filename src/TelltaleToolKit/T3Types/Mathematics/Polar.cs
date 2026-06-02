@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Mathematics;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Polar>))]
+[MetaSerializer(typeof(MetaClassSerializer<Polar>))]
 public struct Polar
 {
     [MetaMember("mR")]

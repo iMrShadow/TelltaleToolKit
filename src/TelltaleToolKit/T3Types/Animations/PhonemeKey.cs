@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<PhonemeKey>))]
+[MetaSerializer(typeof(MetaClassSerializer<PhonemeKey>))]
 public class PhonemeKey
 {
     [MetaMember("mPhoneme")]

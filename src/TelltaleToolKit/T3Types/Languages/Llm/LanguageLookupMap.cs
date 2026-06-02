@@ -6,13 +6,13 @@ using TelltaleToolKit.T3Types.Mathematics;
 
 namespace TelltaleToolKit.T3Types.Languages.Llm;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LanguageLookupMap>))]
+[MetaSerializer(typeof(MetaClassSerializer<LanguageLookupMap>))]
 public class LanguageLookupMap
 {
     [MetaMember("mIDSets")]
     public List<DlgIdSet> IdSets { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgIdSet>))]
+    [MetaSerializer(typeof(MetaClassSerializer<DlgIdSet>))]
     public class DlgIdSet
     {
         [MetaMember("mIDRange")]

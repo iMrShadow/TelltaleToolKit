@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumHTextAlignmentType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumHTextAlignmentType>))]
 public struct EnumHTextAlignmentType
 {
     [MetaMember("mVal")]
     public HTextAlignmentType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<HTextAlignmentType>))]
+[MetaSerializer(typeof(EnumSerializer<HTextAlignmentType>))]
 public enum HTextAlignmentType
 {
     //    eHTextAlignment_

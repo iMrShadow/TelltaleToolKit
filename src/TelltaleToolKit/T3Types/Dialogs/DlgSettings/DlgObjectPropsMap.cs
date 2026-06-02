@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Dialogs.DlgSettings;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DlgObjectPropsMap : IGenerator
 {
     public List<GroupDefinition> GroupDefinitions { get; set; }
@@ -28,7 +28,7 @@ public class DlgObjectPropsMap : IGenerator
         public Owner Owner { get; set; }
     }
 
-    public class Serializer : MetaClassSerializer<DlgObjectPropsMap>
+    public class Serializer : MetaSerializer<DlgObjectPropsMap>
     {
         public override void Serialize(ref DlgObjectPropsMap obj, MetaStream stream)
         {

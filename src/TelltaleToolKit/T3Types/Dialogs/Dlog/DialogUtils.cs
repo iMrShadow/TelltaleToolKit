@@ -5,7 +5,7 @@ namespace TelltaleToolKit.T3Types.Dialogs;
 
 public class DialogUtils
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<DialogElemT>))]
+    [MetaSerializer(typeof(EnumSerializer<DialogElemT>))]
     public enum DialogElemT : uint
     {
         Exchange = 1,

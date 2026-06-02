@@ -4,14 +4,14 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<CameraFacingTypes>))]
+[MetaSerializer(typeof(MetaClassSerializer<CameraFacingTypes>))]
 public class CameraFacingTypes
 {
     [MetaMember("mCameraFacingType")]
     public FacingTypes CameraFacingType { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<FacingTypes>))]
+[MetaSerializer(typeof(EnumSerializer<FacingTypes>))]
 public enum FacingTypes
 {
     Facing = 0,

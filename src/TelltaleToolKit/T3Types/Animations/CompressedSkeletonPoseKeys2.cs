@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class CompressedSkeletonPoseKeys2 : IAnimatedValueInterface
 {
     public AnimationValueInterfaceBase AnimationValueInterfaceBase { get; set; } = new();
@@ -47,9 +47,9 @@ public class CompressedSkeletonPoseKeys2 : IAnimatedValueInterface
 
     public byte[] Data { get; set; }
 
-    public class Serializer : MetaClassSerializer<CompressedSkeletonPoseKeys2>
+    public class Serializer : MetaSerializer<CompressedSkeletonPoseKeys2>
     {
-        public override void PreSerialize(ref CompressedSkeletonPoseKeys2 obj, MetaStream stream,
+        public override void PreSerialize(ref CompressedSkeletonPoseKeys2? obj, MetaStream stream,
             MetaClassType? type = null)
         {
             obj ??= new CompressedSkeletonPoseKeys2();

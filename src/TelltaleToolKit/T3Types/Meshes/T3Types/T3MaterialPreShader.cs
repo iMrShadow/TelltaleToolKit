@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialPreShader>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialPreShader>))]
 public class T3MaterialPreShader
 {
     [MetaMember("mValueType")]

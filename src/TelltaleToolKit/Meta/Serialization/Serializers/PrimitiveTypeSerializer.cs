@@ -2,8 +2,8 @@
 
 namespace TelltaleToolKit.Meta.Serialization.Serializers;
 
-[MetaClassSerializerGlobal(typeof(BoolSerializer))]
-public sealed class BoolSerializer : MetaClassSerializer<bool>
+[MetaSerializer(typeof(BoolSerializer))]
+public sealed class BoolSerializer : MetaSerializer<bool>
 {
     /// <inheritdoc/>
     public override void Serialize(ref bool obj, MetaStream stream)
@@ -12,8 +12,8 @@ public sealed class BoolSerializer : MetaClassSerializer<bool>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(SByteSerializer))]
-public sealed class SByteSerializer : MetaClassSerializer<sbyte>
+[MetaSerializer(typeof(SByteSerializer))]
+public sealed class SByteSerializer : MetaSerializer<sbyte>
 {
     /// <inheritdoc/>
     public override void Serialize(ref sbyte obj, MetaStream stream)
@@ -22,8 +22,8 @@ public sealed class SByteSerializer : MetaClassSerializer<sbyte>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(ByteSerializer))]
-public sealed class ByteSerializer : MetaClassSerializer<byte>
+[MetaSerializer(typeof(ByteSerializer))]
+public sealed class ByteSerializer : MetaSerializer<byte>
 {
     /// <inheritdoc/>
     public override void Serialize(ref byte obj, MetaStream stream)
@@ -32,8 +32,8 @@ public sealed class ByteSerializer : MetaClassSerializer<byte>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(Int16ClassSerializer))]
-public sealed class Int16ClassSerializer : MetaClassSerializer<short>
+[MetaSerializer(typeof(Int16Serializer))]
+public sealed class Int16Serializer : MetaSerializer<short>
 {
     /// <inheritdoc/>
     public override void Serialize(ref short obj, MetaStream stream)
@@ -42,8 +42,8 @@ public sealed class Int16ClassSerializer : MetaClassSerializer<short>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(UInt16ClassSerializer))]
-public sealed class UInt16ClassSerializer : MetaClassSerializer<ushort>
+[MetaSerializer(typeof(UInt16Serializer))]
+public sealed class UInt16Serializer : MetaSerializer<ushort>
 {
     /// <inheritdoc/>
     public override void Serialize(ref ushort obj, MetaStream stream)
@@ -52,8 +52,8 @@ public sealed class UInt16ClassSerializer : MetaClassSerializer<ushort>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(Int32ClassSerializer))]
-public sealed class Int32ClassSerializer : MetaClassSerializer<int>
+[MetaSerializer(typeof(Int32Serializer))]
+public sealed class Int32Serializer : MetaSerializer<int>
 {
     /// <inheritdoc/>
     public override void Serialize(ref int obj, MetaStream stream)
@@ -62,8 +62,8 @@ public sealed class Int32ClassSerializer : MetaClassSerializer<int>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(UInt32ClassSerializer))]
-public sealed class UInt32ClassSerializer : MetaClassSerializer<uint>
+[MetaSerializer(typeof(UInt32Serializer))]
+public sealed class UInt32Serializer : MetaSerializer<uint>
 {
     /// <inheritdoc/>
     public override void Serialize(ref uint obj, MetaStream stream)
@@ -72,8 +72,8 @@ public sealed class UInt32ClassSerializer : MetaClassSerializer<uint>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(Int64ClassSerializer))]
-public sealed class Int64ClassSerializer : MetaClassSerializer<long>
+[MetaSerializer(typeof(Int64Serializer))]
+public sealed class Int64Serializer : MetaSerializer<long>
 {
     /// <inheritdoc/>
     public override void Serialize(ref long obj, MetaStream stream)
@@ -82,8 +82,8 @@ public sealed class Int64ClassSerializer : MetaClassSerializer<long>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(UInt64ClassSerializer))]
-public sealed class UInt64ClassSerializer : MetaClassSerializer<ulong>
+[MetaSerializer(typeof(UInt64Serializer))]
+public sealed class UInt64Serializer : MetaSerializer<ulong>
 {
     /// <inheritdoc/>
     public override void Serialize(ref ulong obj, MetaStream stream)
@@ -92,8 +92,8 @@ public sealed class UInt64ClassSerializer : MetaClassSerializer<ulong>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(SingleClassSerializer))]
-public sealed class SingleClassSerializer : MetaClassSerializer<float>
+[MetaSerializer(typeof(SingleSerializer))]
+public sealed class SingleSerializer : MetaSerializer<float>
 {
     /// <inheritdoc/>
     public override void Serialize(ref float obj, MetaStream stream)
@@ -102,8 +102,8 @@ public sealed class SingleClassSerializer : MetaClassSerializer<float>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(DoubleClassSerializer))]
-public sealed class DoubleClassSerializer : MetaClassSerializer<double>
+[MetaSerializer(typeof(DoubleSerializer))]
+public sealed class DoubleSerializer : MetaSerializer<double>
 {
     /// <inheritdoc/>
     public override void Serialize(ref double obj, MetaStream stream)
@@ -112,8 +112,8 @@ public sealed class DoubleClassSerializer : MetaClassSerializer<double>
     }
 }
 
-[MetaClassSerializerGlobal(typeof(StringClassSerializer))]
-public sealed class StringClassSerializer : MetaClassSerializer<string>
+[MetaSerializer(typeof(StringSerializer))]
+public sealed class StringSerializer : MetaSerializer<string>
 {
     /// <inheritdoc/>
     public override void Serialize(ref string obj, MetaStream stream)
@@ -122,12 +122,12 @@ public sealed class StringClassSerializer : MetaClassSerializer<string>
     }
 
     /// <inheritdoc/>
-    public override void PreSerialize(ref string obj, MetaStream stream, MetaClassType? type)
+    public override void PreSerialize(ref string? obj, MetaStream stream, MetaClassType? type)
     {
     }
 }
 
-public sealed class EnumSerializer<TEnum> : MetaClassSerializer<TEnum> where TEnum : Enum
+public sealed class EnumSerializer<TEnum> : MetaSerializer<TEnum> where TEnum : Enum
 {
     /// <inheritdoc/>
     public override void Serialize(ref TEnum obj, MetaStream stream)

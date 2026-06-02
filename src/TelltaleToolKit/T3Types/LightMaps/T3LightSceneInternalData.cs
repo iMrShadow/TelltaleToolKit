@@ -5,10 +5,10 @@ using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.LightMaps;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3LightSceneInternalData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3LightSceneInternalData>))]
 public class T3LightSceneInternalData
 {
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<QualityEntry>))]
+    [MetaSerializer(typeof(MetaClassSerializer<QualityEntry>))]
     public class QualityEntry
     {
         [MetaMember("mLightmapPages")]
@@ -18,7 +18,7 @@ public class T3LightSceneInternalData
         public Handle<T3Texture> mhStaticShadowVolumeTexture { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LightmapPage>))]
+    [MetaSerializer(typeof(MetaClassSerializer<LightmapPage>))]
     public class LightmapPage
     {
         [MetaMember("mhTextureAtlas")]

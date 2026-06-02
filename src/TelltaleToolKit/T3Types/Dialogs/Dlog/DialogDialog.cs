@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Dialogs.Dlog;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DialogDialog>))]
+[MetaSerializer(typeof(MetaClassSerializer<DialogDialog>))]
 public class DialogDialog : IDialogBase
 {
     [MetaMember("Baseclass_DialogBase")]

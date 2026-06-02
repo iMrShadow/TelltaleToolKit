@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgDownstreamVisibilityConditions>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgDownstreamVisibilityConditions>))]
 public class DlgDownstreamVisibilityConditions
 {
     [MetaMember("mNodeTypeFlags")]

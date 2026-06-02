@@ -7,7 +7,7 @@ namespace TelltaleToolKit.Meta.Serialization;
 /// Describes how to serialize and deserialize an object without knowing its type.
 /// Used as a common base class for all data serializers.
 /// </summary>
-public abstract class MetaClassSerializer
+public abstract class MetaSerializer
 {
     /// <summary>
     /// The type of the object that can be serialized or deserialized.
@@ -18,8 +18,8 @@ public abstract class MetaClassSerializer
     /// Initializes the specified serializer.
     /// </summary>
     /// <remarks>This method should be thread-safe and OK to call multiple times.</remarks>
-    /// <param name="classSerializerSelector">The serializer.</param>
-    public virtual void Initialize(MetaClassSerializerSelector classSerializerSelector)
+    /// <param name="serializerSelector">The serializer.</param>
+    public virtual void Initialize(MetaSerializerSelector serializerSelector)
     {
     }
 
@@ -39,14 +39,14 @@ public abstract class MetaClassSerializer
     /// <param name="obj">The object to process.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
     /// <param name="type"></param>
-    public abstract void PreSerialize(ref object obj, MetaStream stream, MetaClassType? type = null);
+    public abstract void PreSerialize(ref object? obj, MetaStream stream, MetaClassType? type = null);
 }
 
 /// <summary>
 /// Describes how to serialize and deserialize an object of a given type.
 /// </summary>
 /// <typeparam name="T">The type of object to serialize or deserialize.</typeparam>
-public abstract class MetaClassSerializer<T> : MetaClassSerializer
+public abstract class MetaSerializer<T> : MetaSerializer
 {
     /// <inheritdoc/>
     public override Type SerializationType => typeof(T);
@@ -54,9 +54,9 @@ public abstract class MetaClassSerializer<T> : MetaClassSerializer
     /// <inheritdoc/>
     public override void Serialize(ref object obj, MetaStream stream)
     {
-        T? objT = obj == null ? default : (T)obj;
+        T objT = (T)obj;
         Serialize(ref objT, stream);
-        obj = objT;
+        obj = objT!;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public abstract class MetaClassSerializer<T> : MetaClassSerializer
     }
 
     /// <inheritdoc/>
-    public override void PreSerialize(ref object obj, MetaStream stream, MetaClassType? type = null)
+    public override void PreSerialize(ref object? obj, MetaStream stream, MetaClassType? type = null)
     {
         T? objT = obj == null ? default : (T)obj;
         PreSerialize(ref objT, stream, type);
@@ -87,7 +87,7 @@ public abstract class MetaClassSerializer<T> : MetaClassSerializer
     /// <param name="obj">The object to process.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
     /// <param name="type"></param>
-    public virtual void PreSerialize(ref T obj, MetaStream stream, MetaClassType? type = null)
+    public virtual void PreSerialize(ref T? obj, MetaStream stream, MetaClassType? type = null)
     {
     }
 

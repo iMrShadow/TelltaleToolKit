@@ -3,7 +3,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<TextureType>))]
+[MetaSerializer(typeof(MetaClassSerializer<TextureType>))]
 public enum TextureType
 {
     Unknown = 0,

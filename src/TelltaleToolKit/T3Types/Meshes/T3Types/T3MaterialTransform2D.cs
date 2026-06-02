@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 // I am probably going to add SArrays (unfortunately)
 // Maybe check if the value contains "[...]"?
 // Or maybe leave it as it is.
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialTransform2D>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialTransform2D>))]
 public class T3MaterialTransform2D
 {
     [MetaMember("mParameterPrefix")]

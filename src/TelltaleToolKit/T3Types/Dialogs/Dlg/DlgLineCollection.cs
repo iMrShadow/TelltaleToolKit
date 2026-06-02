@@ -5,7 +5,7 @@ using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgLineCollection>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgLineCollection>))]
 public class DlgLineCollection : IGenerator
 {
     [MetaMember("Baseclass_UID::Generator")]
