@@ -3,7 +3,7 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Archives.Formats;
-using TelltaleToolKit.Utility.Caching;
+using TelltaleToolKit.IO.Caching;
 
 namespace TelltaleToolKit.IO.Streams;
 

@@ -1,4 +1,4 @@
-﻿namespace TelltaleToolKit.Utility.Caching;
+﻿namespace TelltaleToolKit.IO.Caching;
 
 /// <summary>
 ///     Defines the contract for a chunk-level cache.
