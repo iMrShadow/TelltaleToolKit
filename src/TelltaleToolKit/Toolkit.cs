@@ -224,6 +224,7 @@ public class Toolkit
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if reading or parsing fails.
@@ -268,6 +269,7 @@ public class Toolkit
     /// A readable stream positioned at the start of a MetaStream file.
     /// Not disposed by this method.
     /// </param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// A tuple containing the deserialized object and the @params embedded in the stream,
     /// or <c>(null, null)</c> if parsing fails.
@@ -291,6 +293,7 @@ public class Toolkit
     /// </summary>
     /// <typeparam name="T">The target type. It must have a parameterless constructor.</typeparam>
     /// <param name="fileName">Path to the MetaStream file on disk.</param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if reading or parsing fails.
     /// </returns>
@@ -329,6 +332,7 @@ public class Toolkit
     /// A readable stream positioned at the start of a MetaStream file.
     /// Not disposed by this method.
     /// </param>
+    /// <param name="workspace">Optional workspace for additional context.</param>
     /// <returns>
     /// The deserialized object, or <see langword="null"/> if parsing fails.
     /// </returns>
@@ -666,9 +670,9 @@ public class Toolkit
 
         /// <summary>
         /// Gets or sets a value indicating whether symbols found in the
-        /// <see cref="MetaStreamParamsMetaStreamParamsizedSymbols"/> table are automatically
+        /// <see cref="MetaStreamParams"/> table are automatically
         /// resolved against the global hash database after every successful
-        /// <see cref="Deserialize{T}(string)"/> call.
+        /// <see cref="Deserialize{T}(string, Workspace?)"/> call.
         /// <para>
         /// Individual call sites can override this with the <c>autoResolveSymbols</c>
         /// parameter: <see langword="true"/> forces resolution, <see langword="false"/>

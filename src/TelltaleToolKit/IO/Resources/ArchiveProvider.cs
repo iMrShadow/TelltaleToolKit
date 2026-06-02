@@ -1,6 +1,5 @@
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
-using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.IO.Resources;
 
@@ -23,7 +22,7 @@ public sealed class ArchiveProvider : IFileProvider, IDisposable
     /// </summary>
     /// <param name="path">Absolute or relative path to the .ttarch / .ttarch2 file.</param>
     /// <param name="workspace">
-    /// The workspace whose <see cref="Workspace.LoadArchive(string, bool, bool)"/> method is
+    /// The workspace whose <see cref="Workspace.LoadArchive(string)"/> method is
     /// used so the <c>ArchiveLoaded</c> event fires and the correct decryption key is applied.
     /// </param>
     /// <exception cref="FileNotFoundException">

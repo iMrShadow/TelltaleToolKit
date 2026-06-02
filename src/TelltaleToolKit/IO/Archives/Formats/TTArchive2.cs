@@ -1,8 +1,6 @@
 using System.Text;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Streams;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Utility.Hashing;
 
 namespace TelltaleToolKit.IO.Archives.Formats;
 
