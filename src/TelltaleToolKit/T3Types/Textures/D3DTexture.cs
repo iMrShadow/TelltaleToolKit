@@ -47,12 +47,12 @@ namespace TelltaleToolKit.T3Types.Textures;
 //             // Default Serializer
 //             new DefaultClassSerializer<D3DTexture>().Serialize(ref obj, stream, desc);
 //
-//             if (stream is MetaStreamWriter streamWriter)
+//             if (stream.Mode is MetaStreamMode.Write)
 //             {
-//                 streamWriter.Write(obj.DdsTextureData.Length);
-//                 streamWriter.Write(obj.DdsTextureData);
+//                 stream.Write(obj.DdsTextureData.Length);
+//                 stream.Write(obj.DdsTextureData);
 //             }
-//             else if (stream is MetaStreamReader streamReader)
+//             else if (stream.Mode is MetaStreamMode.Read)
 //             {
 //                 if (!obj.HasTextureData)
 //                 {
@@ -60,8 +60,8 @@ namespace TelltaleToolKit.T3Types.Textures;
 //                 }
 //
 //                 //    T3MetaStream.SerializeByteArray(ref texture.DdsTextureData, stream);
-//                 var bufferSize = streamReader.ReadInt32();
-//                 obj.DdsTextureData = streamReader.ReadBytes(bufferSize);
+//                 var bufferSize = stream.ReadInt32();
+//                 obj.DdsTextureData = stream.ReadBytes(bufferSize);
 //             }
 //         }
 //     }

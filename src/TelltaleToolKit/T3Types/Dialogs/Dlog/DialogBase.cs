@@ -48,14 +48,14 @@ public class DialogBase
         {
             new DefaultClassSerializer<DialogBase>().Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 if (obj.HasStyleGuides)
                 {
                     Toolkit.Instance.GetSerializer<List<StyleGuideRef>>().Serialize(ref obj.StyleGuideRefs, stream);
                 }
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (obj.HasStyleGuides)
                 {

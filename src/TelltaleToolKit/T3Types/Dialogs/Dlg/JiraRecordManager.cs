@@ -30,18 +30,18 @@ public class JiraRecordManager
                 return;
             }
 
-            if (stream is MetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numRecords = streamReader.ReadInt32();
-                
+                int numRecords = stream.ReadInt32();
+
                 for (int i = 0; i < numRecords; i++)
                 {
-                    string key = streamReader.ReadString();
+                    string key = stream.ReadString();
                     var record = new JiraRecord();
 
                     obj.Records[key] = record;

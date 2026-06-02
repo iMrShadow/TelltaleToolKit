@@ -5,6 +5,6 @@
     "isTtarch2": true,
     "ttarchVersion": 4,
     "luaVersion": "5.2.3",
-    "metaStreamVersion": "MSV5",
+    "streamVersion": 5,
     "enableOodleCompression": true
 }

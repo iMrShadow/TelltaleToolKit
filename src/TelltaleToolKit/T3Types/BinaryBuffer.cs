@@ -13,18 +13,18 @@ public class BinaryBuffer
         {
             obj ??= new BinaryBuffer();
         }
-        
+
         public override void Serialize(ref BinaryBuffer obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                streamWriter.Write(obj.Data.Length);
-                streamWriter.Write(obj.Data);
+                stream.Write(obj.Data.Length);
+                stream.Write(obj.Data);
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                int bufferSize = streamReader.ReadInt32();
-                obj.Data = streamReader.ReadBytes(bufferSize);
+                int bufferSize = stream.ReadInt32();
+                obj.Data = stream.ReadBytes(bufferSize);
             }
         }
     }

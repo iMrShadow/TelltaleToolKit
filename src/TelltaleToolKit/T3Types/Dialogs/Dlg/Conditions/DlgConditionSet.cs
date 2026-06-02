@@ -8,29 +8,32 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class DlgConditionSet
 {
     public List<IDlgCondition> Conditions { get; set; } = [];
-    
+
     public class Serializer : MetaClassSerializer<DlgConditionSet>
     {
-        public override void PreSerialize(ref DlgConditionSet obj, MetaStream stream, MetaClassType? type = null )
+        public override void PreSerialize(ref DlgConditionSet obj, MetaStream stream, MetaClassType? type = null)
         {
             obj ??= new DlgConditionSet();
         }
-        
-        
+
+
         public override void Serialize(ref DlgConditionSet obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int numChildren = streamReader.ReadInt32();
+                int numChildren = stream.ReadInt32();
 
                 for (var i = 0; i < numChildren; i++)
                 {
-                    MetaClassType type = streamReader.ReadMetaClassType();
+                    MetaClassType? type = stream.ReadMetaClassType();
+                    if (type == null)
+                        throw new InvalidOperationException("[DlgConditionSet] Type is not registered.");
+
                     MetaClassSerializer conditionSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object? dlgConditionSet = null;

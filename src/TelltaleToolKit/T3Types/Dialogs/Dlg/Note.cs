@@ -14,7 +14,7 @@ public class Note : IGenerator, IOwner
 
     [MetaMember("Baseclass_UID::Owner")]
     public Owner Owner { get; set; }
-    
+
     [MetaMember("mEntries")]
     public List<Entry> Entries { get; set; } = [];
 
@@ -51,19 +51,18 @@ public class Note : IGenerator, IOwner
             DefaultClassSerializer.PreSerialize(ref obj, stream);
             DefaultClassSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 // mEntries is not serialized.
-                int numEntries = streamReader.ReadInt32();
+                int numEntries = stream.ReadInt32();
                 for (var i = 0; i < numEntries; i++)
                 {
                     Entry? entry = null;
-                    stream.PreSerialize(ref entry);
                     stream.Serialize(ref entry);
                     obj.Entries.Add(entry);
                 }

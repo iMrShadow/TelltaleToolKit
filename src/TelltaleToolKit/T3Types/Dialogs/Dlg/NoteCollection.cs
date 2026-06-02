@@ -18,19 +18,18 @@ public class NoteCollection : IGenerator
     {
         public override void Serialize(ref NoteCollection obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 // mEntries is not serialized.
-                int numNotes = streamReader.ReadInt32();
+                int numNotes = stream.ReadInt32();
                 for (var i = 0; i < numNotes; i++)
                 {
                     Note? note = null;
-                    stream.PreSerialize(ref note);
                     stream.Serialize(ref note);
                     // TODO: Set the correct IDs. Not a priority, I haven't seen this serialized anywhere.
                     obj.Notes.Add(i, note);

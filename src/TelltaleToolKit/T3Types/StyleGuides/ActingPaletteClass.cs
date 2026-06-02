@@ -54,12 +54,12 @@ public class ActingPaletteClass
 
             if (classDescription is not null && classDescription.ContainsMember("mFlags"))
             {
-                if (stream is MetaStreamWriter streamWriter)
+                if (stream.Mode is MetaStreamMode.Write)
                 {
                     throw new NotImplementedException();
                 }
 
-                if (stream is MetaStreamReader streamReader)
+                if (stream.Mode is MetaStreamMode.Read)
                 {
                     throw new NotImplementedException();
                 }

@@ -1,5 +1,6 @@
-﻿using TelltaleToolKit.TelltaleArchives.Caching;
-using TelltaleToolKit.Utility.Blowfish;
+﻿using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Caching;
+using TelltaleToolKit.Utility.Compression;
 
 namespace TelltaleToolKit.TelltaleArchives.IO;
 
@@ -15,9 +16,9 @@ internal sealed class TtarchiveChunkedDataStream : Stream
     private readonly uint _chunkSize;
     private readonly ulong[] _chunkSizes;
     private readonly long _dataStart;
-    private ArchiveFlags _flags;
     private readonly bool _isEncrypted;
     private readonly Stream _source;
+    private ArchiveFlags _flags;
     private long _position;
 
     public TtarchiveChunkedDataStream(
@@ -126,7 +127,7 @@ internal sealed class TtarchiveChunkedDataStream : Stream
 
         // Decompress the chunk
         ArchiveFlags flags = _flags;
-        var res = ChunkDecoder.DecompressBlock(compressed, (int)_chunkSize, ref flags);
+        byte[] res = ChunkDecoder.DecompressBlock(compressed, (int)_chunkSize, ref flags);
         _flags = flags;
         return res;
     }

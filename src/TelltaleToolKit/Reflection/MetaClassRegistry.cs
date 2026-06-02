@@ -21,7 +21,7 @@ public class MetaClassRegistry
     /// <summary>
     /// Retrieves a class by type hash (CRC64) and CRC32.
     /// </summary>
-    private MetaClass? GetClass(ulong typeHash, uint crc32)
+    public MetaClass? GetClass(ulong typeHash, uint crc32)
         => GetClass((typeHash, crc32));
 
     /// <summary>
@@ -35,7 +35,7 @@ public class MetaClassRegistry
     /// </summary>
     private MetaClass? GetClass((ulong TypeHash, uint Crc32) key)
     {
-        return Classes.TryGetValue(key, out MetaClass? result) ? result : null;
+        return Classes.GetValueOrDefault(key);
     }
 
     /// <summary>

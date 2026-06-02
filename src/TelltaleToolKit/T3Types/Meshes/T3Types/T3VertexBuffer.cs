@@ -49,12 +49,12 @@ public class T3VertexBuffer
         {
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException($"There is no serializer for {SerializationType}");
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 int totalBytes = obj.StoreCompressed switch
                 {
@@ -62,7 +62,7 @@ public class T3VertexBuffer
                     _ => obj.NumVerts * obj.VertSize
                 };
 
-                obj.Buffer = streamReader.ReadBytes(totalBytes);
+                obj.Buffer = stream.ReadBytes(totalBytes);
             }
         }
     }
@@ -88,10 +88,10 @@ public class T3VertexBuffer
 //         {
 //             new DefaultClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
 //
-//             if (stream is MetaStreamWriter streamWriter)
+//             if (stream.Mode is MetaStreamMode.Write)
 //             {
 //             }
-//             else if (stream is MetaStreamReader streamReader)
+//             else if (stream.Mode is MetaStreamMode.Read)
 //             {
 //             }
 //         }

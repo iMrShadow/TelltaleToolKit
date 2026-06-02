@@ -6,11 +6,11 @@ namespace TelltaleToolKit.GamesDatabase;
 public class GameProfileJsonExtensions
 {
     /// <summary>
-    /// Serializes GameProfile.Classes to JSON.
+    ///     Serializes GameProfile.Classes to JSON.
     /// </summary>
     public static string ToClassesJson(GameProfile profile, JsonSerializerOptions options)
     {
-        var classes = new SortedDictionary<string?, uint>(
+        SortedDictionary<string?, uint> classes = new(
             profile.Classes.ToDictionary(
                 kvp => kvp.Key.Symbol.DebugString,
                 kvp => kvp.Value
@@ -21,13 +21,15 @@ public class GameProfileJsonExtensions
     }
 
     /// <summary>
-    /// Reads JSON produced by <see cref="ToClassesJson"/> and applies it back onto GameProfile.Classes.
+    ///     Reads JSON produced by <see cref="ToClassesJson" /> and applies it back onto GameProfile.Classes.
     /// </summary>
     public static void ReadClassesJsonInto(GameProfile profile, string json, JsonSerializerOptions options)
     {
-        var dict = JsonSerializer.Deserialize<Dictionary<string, uint>>(json, options);
+        Dictionary<string, uint>? dict = JsonSerializer.Deserialize<Dictionary<string, uint>>(json, options);
         if (dict is null)
+        {
             return;
+        }
 
         profile.Classes.Clear();
 

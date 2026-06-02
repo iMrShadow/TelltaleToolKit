@@ -68,29 +68,32 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
 
             MetaClass metaClass = stream.GetMetaClass(typeof(Dlg))!;
 
-            if (stream is MetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                int folderCount = streamReader.ReadInt32();
+                int folderCount = stream.ReadInt32();
                 obj.Folders.Capacity = folderCount;
 
                 for (var i = 0; i < folderCount; i++)
                 {
                     var folder = new DlgFolder();
-                    stream.PreSerialize(ref folder);
                     stream.Serialize(ref folder);
                     obj.Folders.Add(folder);
                 }
 
-                int nodeCount = streamReader.ReadInt32();
+                int nodeCount = stream.ReadInt32();
                 obj.Nodes.Capacity = nodeCount;
                 for (var i = 0; i < nodeCount; i++)
                 {
-                    MetaClassType type = streamReader.ReadMetaClassType();
+                    MetaClassType? type = stream.ReadMetaClassType();
+
+                    if (type == null)
+                        throw new InvalidOperationException("[Dlg] Type is not registered.");
+
                     MetaClassSerializer metaClassSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object node = null!;
@@ -106,7 +109,7 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                 if (metaClass.ContainsMember("mbHasToolOnlyData"))
                 {
                     // Read runtime boolean
-                    _ = streamReader.ReadBoolean();
+                    _ = stream.ReadBoolean();
                 }
             }
         }

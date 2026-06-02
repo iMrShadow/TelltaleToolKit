@@ -1,12 +1,21 @@
-﻿namespace TelltaleToolKit.Serialization.Binary;
+﻿namespace TelltaleToolKit.Serialization;
 
 /// <summary>
-/// Represents a substream of an underlying <see cref="Stream" />.
+///     Represents a substream of an underlying <see cref="Stream" />.
 /// </summary>
 public class SubStream : Stream
 {
+    private readonly long _length;
+
+    private readonly long _offset;
+
+    private readonly Stream _stream;
+
+    private long _position;
+
     /// <summary>
-    /// Creates a new substream instance using the specified underlying stream at the specified offset with the specified length.
+    ///     Creates a new substream instance using the specified underlying stream at the specified offset with the specified
+    ///     length.
     /// </summary>
     /// <param name="stream">The underlying stream.</param>
     /// <param name="offset">The offset.</param>
@@ -26,7 +35,7 @@ public class SubStream : Stream
             throw new NotSupportedException("Stream does not support seeking.");
         }
 
-        this._stream = stream;
+        _stream = stream;
 
         if (offset < 0)
         {
@@ -40,6 +49,55 @@ public class SubStream : Stream
 
         _offset = offset;
         _length = length;
+    }
+
+    /// <inheritdoc />
+    public override long Length => _length;
+
+    /// <inheritdoc />
+    public override bool CanRead => _stream.CanRead;
+
+    /// <inheritdoc />
+    public override bool CanSeek => _stream.CanSeek;
+
+    /// <inheritdoc />
+    public override bool CanWrite => _stream.CanWrite;
+
+    /// <inheritdoc />
+    public override bool CanTimeout => _stream.CanTimeout;
+
+    /// <inheritdoc />
+    public override int ReadTimeout
+    {
+        get => _stream.ReadTimeout;
+        set => throw new NotSupportedException("Cannot set the read timeout of a substream.");
+    }
+
+    /// <inheritdoc />
+    public override int WriteTimeout
+    {
+        get => _stream.WriteTimeout;
+        set => throw new NotSupportedException("Cannot set the write timeout of a substream.");
+    }
+
+    /// <inheritdoc />
+    public override long Position
+    {
+        get => _position;
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException("Position cannot be less than zero.");
+            }
+
+            if (value > _length)
+            {
+                throw new ArgumentOutOfRangeException("Position cannot be greater than the length.");
+            }
+
+            _stream.Position = _offset + (_position = value);
+        }
     }
 
     /// <inheritdoc />
@@ -116,7 +174,7 @@ public class SubStream : Stream
                         "Offset cannot be less than the length of the substream.");
                 }
 
-                _stream.Seek(_position = (_length + offset), SeekOrigin.End);
+                _stream.Seek(_position = _length + offset, SeekOrigin.End);
 
                 break;
             case SeekOrigin.Current:
@@ -139,70 +197,11 @@ public class SubStream : Stream
     }
 
     /// <inheritdoc />
-    public override void SetLength(long value)
-    {
+    public override void SetLength(long value) => throw
         // While other Stream implementations allow the caller to set the length, this makes little sense in the context of a substream.
         // Perhaps, in the future, we can allow callers to reduce the length but not expand the length.
-
-        throw new NotSupportedException("Cannot set the length of a fixed substream.");
-    }
+        new NotSupportedException("Cannot set the length of a fixed substream.");
 
     /// <inheritdoc />
     public override void Flush() => _stream.Flush();
-
-    /// <inheritdoc />
-    public override long Length => _length;
-
-    /// <inheritdoc />
-    public override bool CanRead => _stream.CanRead;
-
-    /// <inheritdoc />
-    public override bool CanSeek => _stream.CanSeek;
-
-    /// <inheritdoc />
-    public override bool CanWrite => _stream.CanWrite;
-
-    /// <inheritdoc />
-    public override bool CanTimeout => _stream.CanTimeout;
-
-    /// <inheritdoc />
-    public override int ReadTimeout
-    {
-        get => _stream.ReadTimeout;
-        set => throw new NotSupportedException("Cannot set the read timeout of a substream.");
-    }
-
-    /// <inheritdoc />
-    public override int WriteTimeout
-    {
-        get => _stream.WriteTimeout;
-        set => throw new NotSupportedException("Cannot set the write timeout of a substream.");
-    }
-
-    /// <inheritdoc />
-    public override long Position
-    {
-        get => _position;
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentOutOfRangeException("Position cannot be less than zero.");
-            }
-
-            if (value > _length)
-            {
-                throw new ArgumentOutOfRangeException("Position cannot be greater than the length.");
-            }
-
-            _stream.Position = _offset + (_position = value);
-        }
-    }
-
-    private readonly Stream _stream;
-
-    private readonly long _offset;
-    private readonly long _length;
-
-    private long _position;
 }

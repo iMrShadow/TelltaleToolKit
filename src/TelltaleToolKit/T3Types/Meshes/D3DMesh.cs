@@ -302,17 +302,17 @@ public class D3DMesh
                 DefaultSerializer.PreSerialize(ref obj, stream);
                 DefaultSerializer.Serialize(ref obj, stream);
 
-                if (stream is MetaStreamWriter streamWriter)
+                if (stream.Mode is MetaStreamMode.Write)
                 {
                 }
-                else if (stream is MetaStreamReader streamReader)
+                else if (stream.Mode is MetaStreamMode.Read)
                 {
                     if (stream.GetMetaClass(typeof(TriangleSet)).ContainsMember("mbHasPixelShader_RemoveMe"))
                     {
-                        string shaderName = streamReader.ReadString();
+                        string shaderName = stream.ReadString();
                         if (obj.HasPixelShaderRemoveMe)
                         {
-                            string pixelShader = streamReader.ReadString();
+                            string pixelShader = stream.ReadString();
                         }
                     }
                 }
@@ -355,7 +355,7 @@ public class D3DMesh
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 if (obj.Version < 19)
                 {
@@ -369,13 +369,13 @@ public class D3DMesh
                     SerializeInternalResources(ref obj, stream);
                 }
 
-                streamWriter.Write(0);
+                stream.Write(0);
 
 
                 if (obj.Version >= 52)
                 {
                     bool hasOcclusionData = obj.OcclusionMeshData != null;
-                    streamWriter.Write(hasOcclusionData);
+                    stream.Write(hasOcclusionData);
 
                     if (hasOcclusionData)
                     {
@@ -394,7 +394,7 @@ public class D3DMesh
                 Toolkit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
                 stream.EndBlock();
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 // According to Telltale, the new meshes start from version 20.
                 if (obj.Version == 0)
@@ -414,19 +414,19 @@ public class D3DMesh
                     SerializeInternalResources(ref obj, stream);
                 }
 
-                int toolData = streamReader.ReadInt32();
+                int toolData = stream.ReadInt32();
                 // Telltale skip this data.
                 if (toolData > 0)
                 {
                     stream.BeginBlock();
-                    streamReader.SkipToEndOfCurrentBlock();
+                    stream.SkipToEndOfCurrentBlock();
                     stream.EndBlock();
                 }
 
                 // Probably new meshes?
                 if (obj.Version >= 52)
                 {
-                    bool hasOcclusionData = streamReader.ReadBoolean();
+                    bool hasOcclusionData = stream.ReadBoolean();
                     if (hasOcclusionData)
                     {
                         // TODO: Assign this.
@@ -448,12 +448,12 @@ public class D3DMesh
 
         private static void SerializeOldMedD3DMesh(ref D3DMesh obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 obj.T3VertexBuffers = new T3VertexBuffer[15];
 
@@ -562,7 +562,7 @@ public class D3DMesh
                     obj.T3VertexBuffers[13] = buffer;
                 }
                 // Read Index Buffer
-                // bool hasIndexBuffer = streamReader.ReadBoolean();
+                // bool hasIndexBuffer = stream.ReadBoolean();
                 //
                 // if (hasIndexBuffer)
                 // {
@@ -580,7 +580,7 @@ public class D3DMesh
                 //
                 // for (int i = 0; i < obj.T3VertexBuffers.Length; i++)
                 // {
-                //     bool hasVertexBuffer = streamReader.ReadBoolean();
+                //     bool hasVertexBuffer = stream.ReadBoolean();
                 //
                 //     if (!hasVertexBuffer)
                 //         continue;
@@ -595,15 +595,15 @@ public class D3DMesh
 
         private static void SerializeOldD3DMesh(ref D3DMesh obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 // Read Index Buffer
-                bool hasIndexBuffer = streamReader.ReadBoolean();
+                bool hasIndexBuffer = stream.ReadBoolean();
 
                 if (hasIndexBuffer)
                 {
@@ -623,7 +623,7 @@ public class D3DMesh
 
                 for (int i = 0; i < obj.T3VertexBuffers.Length; i++)
                 {
-                    bool hasVertexBuffer = streamReader.ReadBoolean();
+                    bool hasVertexBuffer = stream.ReadBoolean();
 
                     if (!hasVertexBuffer)
                         continue;
@@ -638,11 +638,11 @@ public class D3DMesh
 
         private static void SerializeInternalResources(ref D3DMesh obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 obj.InternalResources ??= [];
 
-                streamWriter.Write(obj.InternalResources.Count);
+                stream.Write(obj.InternalResources.Count);
 
                 foreach (HandleBase handle in obj.InternalResources)
                 {
@@ -657,8 +657,8 @@ public class D3DMesh
                     MetaClassType typeSymbol = metaClass.ClassType;
                     handle.ObjectInfo.Type = typeSymbol;
 
-                    streamWriter.Write(symbol);
-                    streamWriter.Write(typeSymbol.Symbol.Crc64);
+                    stream.Write(symbol);
+                    stream.Write(typeSymbol.Symbol.Crc64);
 
                     stream.BeginBlock();
 
@@ -676,25 +676,32 @@ public class D3DMesh
                 return;
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 obj.InternalResources = [];
 
                 // Part of DC Array
-                int numRes = streamReader.ReadInt32();
+                int numRes = stream.ReadInt32();
 
                 for (var i = 0; i < numRes; i++)
                 {
                     // Handle name?
-                    Symbol symbol = streamReader.ReadSymbol();
-                    MetaClassType typeSymbol = streamReader.ReadMetaClassType();
+                    Symbol symbol = stream.ReadSymbol();
+                    MetaClassType? typeSymbol = stream.ReadMetaClassType();
 
                     stream.BeginBlock();
+
+                    if (typeSymbol is null)
+                    {
+                        Toolkit.Instance.Logger.LogError($"[D3DMesh] Internal resource '{symbol}' has no registered type.");
+                        stream.EndBlock();
+                        continue;
+                    }
 
                     object? propertyValue = null;
 
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
-                        .PreSerialize(ref propertyValue, stream, typeSymbol);
+                        .PreSerialize(ref propertyValue!, stream, typeSymbol);
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
                         .Serialize(ref propertyValue, stream);
 

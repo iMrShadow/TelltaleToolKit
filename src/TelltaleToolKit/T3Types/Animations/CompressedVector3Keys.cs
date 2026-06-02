@@ -21,23 +21,23 @@ public class CompressedVector3Keys
         {
             // TODO: Test this type.
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                obj.Name = streamReader.ReadString();
-                obj.Flags = streamReader.ReadInt32();
-                
-                obj.Min = new Vector3 { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
-                obj.Max = new Vector3 { X = streamReader.ReadSingle(), Y = streamReader.ReadSingle(), Z = streamReader.ReadSingle() };
+                obj.Name = stream.ReadString();
+                obj.Flags = stream.ReadInt32();
 
-                obj.MinTime = streamReader.ReadSingle();
-                obj.MaxTime = streamReader.ReadSingle();
+                obj.Min = new Vector3 { X = stream.ReadSingle(), Y = stream.ReadSingle(), Z = stream.ReadSingle() };
+                obj.Max = new Vector3 { X = stream.ReadSingle(), Y = stream.ReadSingle(), Z = stream.ReadSingle() };
 
-                short numSamples = streamReader.ReadInt16();
+                obj.MinTime = stream.ReadSingle();
+                obj.MaxTime = stream.ReadSingle();
 
-                obj.Buffer = streamReader.ReadBytes(numSamples * 6);
+                short numSamples = stream.ReadInt16();
+
+                obj.Buffer = stream.ReadBytes(numSamples * 6);
             }
         }
     }

@@ -89,9 +89,9 @@ public class ProceduralLookAt
         public override void Serialize(ref ProceduralLookAt obj, MetaStream stream)
         {
             // TODO: Check with meta stream version.
-            if (stream is MetaStreamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
-                if (stream.Configuration.Version is MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6)
+                if (stream.Params.StreamVersion >= 5)
                 {
                     return;
                 }
@@ -99,9 +99,9 @@ public class ProceduralLookAt
                 Animation objAnimation = obj.Animation;
                 Toolkit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
             }
-            else if (stream is MetaStreamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                if (stream.Configuration.Version is MetaStreamVersion.Msv5 or MetaStreamVersion.Msv6)
+                if (stream.Params.StreamVersion >= 5)
                 {
                     return;
                 }

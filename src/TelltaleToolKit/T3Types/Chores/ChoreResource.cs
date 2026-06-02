@@ -12,13 +12,13 @@ public class ChoreResource
 {
     [MetaMember("mVersion")]
     public int Version { get; set; }
-    
+
     [MetaMember("mResName")]
     public string ResName { get; set; } = string.Empty;
 
     [MetaMember("mResName")]
     public Symbol ResNameSymbol { get; set; }
-    
+
     [MetaMember("mResLength")]
     public float ResLength { get; set; }
 
@@ -54,7 +54,7 @@ public class ChoreResource
 
     [MetaMember("mbViewResourceGroups")]
     public bool ViewResourceGroups { get; set; }
-    
+
     [MetaMember("mbViewEmptyGraphs")]
     public bool ViewEmptyGraphs { get; set; }
 
@@ -63,7 +63,7 @@ public class ChoreResource
 
     [MetaMember("mResourceGroupInclude")]
     public Dictionary<string, float> ResourceGroupInclude { get; set; } = new();
-    
+
     [MetaMember("mResourceGroupInclude")]
     public Dictionary<Symbol, float> ResourceGroupIncludeSymbol { get; set; } = new();
 
@@ -75,7 +75,7 @@ public class ChoreResource
 
     [MetaMember("mhObject")]
     public HandleBase ObjectHandle { get; set; } = new(); // Bone only
-    
+
     public object? Embedded { get; set; }
 
     [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Block>))]
@@ -110,15 +110,18 @@ public class ChoreResource
 
             MetaClass? description = stream.GetMetaClass(typeof(ChoreResource));
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
                 if (description != null && description.ContainsMember("mbEmbedded") && obj.HasEmbedded)
                 {
-                    MetaClassType embeddedClassType = streamReader.ReadMetaClassType();
-                    Symbol _ = streamReader.ReadSymbol();
+                    MetaClassType? embeddedClassType = stream.ReadMetaClassType();
+                    if (embeddedClassType is null)
+                        throw new InvalidOperationException("[ChoreResource] Embedded type is not registered.");
+
+                    Symbol _ = stream.ReadSymbol();
 
                     object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
 
