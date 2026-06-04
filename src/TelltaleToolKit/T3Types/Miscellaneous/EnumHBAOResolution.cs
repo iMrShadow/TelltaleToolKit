@@ -9,10 +9,12 @@ public struct EnumHBAOResolution
 {
     [MetaMember("mVal")]
     public HBAOResolution Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAOResolution>))]
-public enum HBAOResolution
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<HBAOResolution>))]
+    public enum HBAOResolution
+    {
+        Full = 0x0,
+        Half = 0x1,
+        Quarter = 0x2
+    }
 }

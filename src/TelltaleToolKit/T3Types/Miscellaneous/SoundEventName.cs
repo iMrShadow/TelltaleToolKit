@@ -7,64 +7,47 @@ namespace TelltaleToolKit.T3Types.Miscellaneous;
 [MetaSerializer(typeof(MetaClassSerializer<SoundEventNameBase>))]
 public class SoundEventNameBase
 {
-    [MetaMember("mEventGuid")]
-    public Symbol EventGuid { get; set; }
-
-
-    [MetaMember("mEventDisplayName")]
-    public Symbol EventDisplayName { get; set; }
-
     public enum NameType
     {
         Default = 0,
         Snapshot = 1,
         Dialog = 2
     }
+
+    [MetaMember("mEventGuid")]
+    public Symbol EventGuid { get; set; }
+
+
+    [MetaMember("mEventDisplayName")]
+    public Symbol EventDisplayName { get; set; }
 }
 
-[MetaSerializer(typeof(Serializer))]
-
-public class SoundEventName
+// Small hack
+// In C++ this is a compile-time type from an enum.
+// In C# that is not possible - so we create the fixed classes.
+[MetaSerializer(typeof(MetaClassSerializer<SoundEventName0>))]
+public class SoundEventName0
 {
     [MetaMember("Baseclass_SoundEventNameBase")]
     public SoundEventNameBase BaseclassSoundEventNameBase { get; set; } = new();
 
-    public SoundEventNameBase.NameType Type { get; set; }
+    public static SoundEventNameBase.NameType Type => SoundEventNameBase.NameType.Default;
+}
 
-    public SoundEventName(SoundEventNameBase.NameType type)
-    {
-        Type = type;
-    }
+[MetaSerializer(typeof(MetaClassSerializer<SoundEventName1>))]
+public class SoundEventName1
+{
+    [MetaMember("Baseclass_SoundEventNameBase")]
+    public SoundEventNameBase BaseclassSoundEventNameBase { get; set; } = new();
 
-    public SoundEventName()
-    {
-        Type = SoundEventNameBase.NameType.Default;
-    }
+    public static SoundEventNameBase.NameType Type => SoundEventNameBase.NameType.Snapshot;
+}
 
-    public class Serializer : MetaSerializer<SoundEventName>
-    {
-        private static readonly MetaClassSerializer<SoundEventName> s_metaClassSerializer = new();
+[MetaSerializer(typeof(MetaClassSerializer<SoundEventName2>))]
+public class SoundEventName2
+{
+    [MetaMember("Baseclass_SoundEventNameBase")]
+    public SoundEventNameBase BaseclassSoundEventNameBase { get; set; } = new();
 
-        public override void PreSerialize(ref SoundEventName? obj, MetaStream stream, MetaClassType? type = null)
-        {
-            if (type is null)
-            {
-                throw new NullReferenceException($"{nameof(SoundEventName)} cannot be null.");
-            }
-
-            obj = type.Symbol.DebugString switch
-            {
-                "SoundEventName<0>" => new SoundEventName(SoundEventNameBase.NameType.Default),
-                "SoundEventName<1>" => new SoundEventName(SoundEventNameBase.NameType.Snapshot),
-                "SoundEventName<2>" => new SoundEventName(SoundEventNameBase.NameType.Dialog),
-                _ => obj
-            };
-        }
-
-        public override void Serialize(ref SoundEventName obj, MetaStream stream)
-        {
-            s_metaClassSerializer.PreSerialize(ref obj, stream);
-            s_metaClassSerializer.Serialize(ref obj, stream);
-        }
-    }
+    public static SoundEventNameBase.NameType Type => SoundEventNameBase.NameType.Dialog;
 }

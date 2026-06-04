@@ -9,13 +9,12 @@ public struct EnumTextOrientationType
 {
     [MetaMember("mVal")]
     public TextOrientationType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<TextOrientationType>))]
-public enum TextOrientationType
-{
-    //    eTextOrientation_
-    Screen = 0x0,
-    WorldZ = 0x1,
-    WorldXYZ = 0x2,
+    [MetaSerializer(typeof(EnumSerializer<TextOrientationType>))]
+    public enum TextOrientationType
+    {
+        Screen = 0x0,
+        WorldZ = 0x1,
+        WorldXYZ = 0x2
+    }
 }

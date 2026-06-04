@@ -7,10 +7,15 @@ public struct EnumRenderLightmapUVGenerationType
 {
     [MetaMember("mVal")]
     public RenderLightmapUVGenerationType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<RenderLightmapUVGenerationType>))]
-public enum RenderLightmapUVGenerationType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<RenderLightmapUVGenerationType>))]
+    public enum RenderLightmapUVGenerationType
+    {
+        Default = 0,
+        Auto = 1,
+        UV0 = 2,
+        UV1 = 3,
+        UV2 = 4,
+        UV3 = 5
+    }
 }

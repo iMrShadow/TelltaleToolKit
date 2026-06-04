@@ -9,10 +9,11 @@ public struct EnumEmitterParticleCountType
 {
     [MetaMember("mVal")]
     public EmitterParticleCountType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmitterParticleCountType>))]
-public enum EmitterParticleCountType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<EmitterParticleCountType>))]
+    public enum EmitterParticleCountType
+    {
+        Count = 0x1,
+        SpawnVolParticleCount = 0x2
+    }
 }

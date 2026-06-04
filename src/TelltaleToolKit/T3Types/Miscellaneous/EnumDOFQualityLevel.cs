@@ -9,10 +9,13 @@ public struct EnumDOFQualityLevel
 {
     [MetaMember("mVal")]
     public DOFQualityLevel Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<DOFQualityLevel>))]
-public enum DOFQualityLevel
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<DOFQualityLevel>))]
+    public enum DOFQualityLevel
+    {
+        Disabled = 0x0,
+        Low = 0x1,
+        Medium = 0x2,
+        High = 0x3
+    }
 }

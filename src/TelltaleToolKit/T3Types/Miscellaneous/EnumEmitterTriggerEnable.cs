@@ -9,10 +9,13 @@ public struct EnumEmitterTriggerEnable
 {
     [MetaMember("mVal")]
     public EmitterTriggerEnable Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmitterTriggerEnable>))]
-public enum EmitterTriggerEnable
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<EmitterTriggerEnable>))]
+    public enum EmitterTriggerEnable
+    {
+        None = 1,
+        AgentVis = 2,
+        AgentVisInvert = 3,
+        Default = 4
+    }
 }

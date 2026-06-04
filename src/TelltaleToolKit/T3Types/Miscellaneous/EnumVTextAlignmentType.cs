@@ -9,14 +9,13 @@ public struct EnumVTextAlignmentType
 {
     [MetaMember("mVal")]
     public VTextAlignmentType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<VTextAlignmentType>))]
-public enum VTextAlignmentType
-{
-    //  eVTextAlignment_
-    None = 0,
-    Top = 1,
-    Middle = 2,
-    Bottom = 3,
+    [MetaSerializer(typeof(EnumSerializer<VTextAlignmentType>))]
+    public enum VTextAlignmentType
+    {
+        None = 0,
+        Top = 1,
+        Middle = 2,
+        Bottom = 3
+    }
 }

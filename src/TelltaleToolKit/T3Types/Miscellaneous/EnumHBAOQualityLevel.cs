@@ -9,10 +9,14 @@ public struct EnumHBAOQualityLevel
 {
     [MetaMember("mVal")]
     public HBAOQualityLevel Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAOQualityLevel>))]
-public enum HBAOQualityLevel
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<HBAOQualityLevel>))]
+    public enum HBAOQualityLevel
+    {
+        Lowest = 0x0,
+        Low = 0x1,
+        Medium = 0x2,
+        High = 0x3,
+        Highest = 0x4
+    }
 }

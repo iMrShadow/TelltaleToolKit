@@ -9,12 +9,11 @@ public struct EnumT3LightEnvLodBehavior
 {
     [MetaMember("mVal")]
     public T3LightEnvLODBehavior Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<T3LightEnvLODBehavior>))]
-public enum T3LightEnvLODBehavior
-{
-    //    eLightEnvLOD_
-    Disable = 0x0,
-    BakeOnly = 0x1,
+    [MetaSerializer(typeof(EnumSerializer<T3LightEnvLODBehavior>))]
+    public enum T3LightEnvLODBehavior
+    {
+        Disable = 0x0,
+        BakeOnly = 0x1
+    }
 }

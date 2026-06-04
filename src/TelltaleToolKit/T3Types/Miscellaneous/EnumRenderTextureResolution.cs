@@ -9,10 +9,13 @@ public struct EnumRenderTextureResolution
 {
     [MetaMember("mVal")]
     public RenderTextureResolution Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<RenderTextureResolution>))]
-public enum RenderTextureResolution
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<RenderTextureResolution>))]
+    public enum RenderTextureResolution
+    {
+        Small = 0x1,
+        Medium = 0x2,
+        Default = 0x3,
+        Ultra = 0x4
+    }
 }
