@@ -2,7 +2,18 @@
     {
         "type": "ActingAccentPalette::EnumOverrun",
         "crc32": 2762767791,
-        "members": []
+        "members": [
+            {
+                "name": "mVal",
+                "type": "int32",
+                "flags": 64
+            },
+            {
+                "name": "Baseclass_EnumBase",
+                "type": "EnumBase",
+                "flags": 16
+            }
+        ]
     },
     {
         "type": "ActingPaletteGroup::ActingPaletteTransition",
@@ -2939,12 +2950,34 @@
     {
         "type": "T3VertexSampleDataBase",
         "crc32": 1740664242,
-        "members": []
+        "members": [
+            {
+                "name": "mNumVerts",
+                "type": "int32",
+                "flags": 0
+            },
+            {
+                "name": "mVertSize",
+                "type": "int32",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "TRange<unsignedint>",
         "crc32": 1072543900,
-        "members": []
+        "members": [
+            {
+                "name": "min",
+                "type": "unsignedint",
+                "flags": 0
+            },
+            {
+                "name": "max",
+                "type": "unsignedint",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "TRange<unsignedint>",
@@ -2991,7 +3024,78 @@
     {
         "type": "ActingAccentPalette",
         "crc32": 2757891538,
-        "members": []
+        "members": [
+            {
+                "name": "Baseclass_ActingOverridablePropOwner",
+                "type": "ActingOverridablePropOwner",
+                "flags": 16
+            },
+            {
+                "name": "Baseclass_UID::Owner",
+                "type": "UID::Owner",
+                "flags": 16
+            },
+            {
+                "name": "mName",
+                "type": "String",
+                "flags": 32
+            },
+            {
+                "name": "mStartOffsetRange",
+                "type": "TRange<float>",
+                "flags": 0
+            },
+            {
+                "name": "mMoodOverrunAllowed",
+                "type": "ActingAccentPalette::EnumOverrun",
+                "flags": 0
+            },
+            {
+                "name": "mDisableAct",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mValidIntensityRange",
+                "type": "TRange<float>",
+                "flags": 0
+            },
+            {
+                "name": "mSpilloutBufPostRange",
+                "type": "TRange<float>",
+                "flags": 0
+            },
+            {
+                "name": "mRandomChance",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mTrackID",
+                "type": "int32",
+                "flags": 64
+            },
+            {
+                "name": "mResourcePtrs",
+                "type": "DCArray<ActingResource*>",
+                "flags": 33
+            },
+            {
+                "name": "mGroupMembershipUID",
+                "type": "int32",
+                "flags": 32
+            },
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 0
+            },
+            {
+                "name": "mVersion",
+                "type": "int32",
+                "flags": 32
+            }
+        ]
     },
     {
         "type": "ActingOverridablePropOwner",
@@ -3022,12 +3126,12 @@
             {
                 "name": "Baseclass_ActingOverridablePropOwner",
                 "type": "ActingOverridablePropOwner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "Baseclass_UID::Owner",
                 "type": "UID::Owner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "mName",
@@ -3338,17 +3442,17 @@
             {
                 "name": "Baseclass_UID::Generator",
                 "type": "UID::Generator",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "Baseclass_UID::Owner",
                 "type": "UID::Owner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "Baseclass_ActingOverridablePropOwner",
                 "type": "ActingOverridablePropOwner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "mName",
@@ -3572,12 +3676,12 @@
             {
                 "name": "Baseclass_UID::Owner",
                 "type": "UID::Owner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "mName",
                 "type": "String",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "mIdle",
@@ -3675,7 +3779,23 @@
     {
         "type": "ActingResource",
         "crc32": 3658828778,
-        "members": []
+        "members": [
+            {
+                "name": "Baseclass_ActingOverridablePropOwner",
+                "type": "ActingOverridablePropOwner",
+                "flags": 16
+            },
+            {
+                "name": "mResource",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mValidIntensityRange",
+                "type": "TRange<float>",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "ActingResource",
@@ -3684,7 +3804,7 @@
             {
                 "name": "Baseclass_ActingOverridablePropOwner",
                 "type": "ActingOverridablePropOwner",
-                "flags": 0
+                "flags": 16
             },
             {
                 "name": "mResource",
@@ -21703,7 +21823,28 @@
     {
         "type": "KeyframedValue<Vector3>::Sample",
         "crc32": 309762929,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Vector3",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Vector3>::Sample",
@@ -21758,6 +21899,32 @@
             {
                 "name": "mSamples",
                 "type": "DCArray<KeyframedValue<Vector4>::Sample>",
+                "flags": 0
+            }
+        ]
+    },
+    {
+        "type": "KeyframedValue<Vector4>::Sample",
+        "crc32": 2285389175,
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int32",
+                "flags": 0
+            },
+            {
+                "name": "mValue",
+                "type": "Vector4",
                 "flags": 0
             }
         ]
