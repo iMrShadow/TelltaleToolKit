@@ -9,10 +9,13 @@ public struct EnumBokehOcclusionType
 {
     [MetaMember("mVal")]
     public BokehOcclusionType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<BokehOcclusionType>))]
-public enum BokehOcclusionType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<BokehOcclusionType>))]
+    public enum BokehOcclusionType
+    {
+        Disabled = 0x0,
+        ZTestAndScaleOccluded = 0x1,
+        ScaleOccluded = 0x2,
+        ZTest = 0x3
+    }
 }

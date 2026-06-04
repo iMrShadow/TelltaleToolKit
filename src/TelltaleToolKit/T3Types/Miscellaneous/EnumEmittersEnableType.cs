@@ -9,10 +9,12 @@ public struct EnumEmittersEnableType
 {
     [MetaMember("mVal")]
     public EmittersEnableType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmittersEnableType>))]
-public enum EmittersEnableType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<EmittersEnableType>))]
+    public enum EmittersEnableType
+    {
+        All = 1,
+        Random = 2,
+        Sequential = 3
+    }
 }

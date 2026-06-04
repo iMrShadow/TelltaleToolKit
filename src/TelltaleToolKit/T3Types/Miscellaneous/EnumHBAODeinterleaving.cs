@@ -9,10 +9,12 @@ public struct EnumHBAODeinterleaving
 {
     [MetaMember("mVal")]
     public HBAODeinterleaving Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAODeinterleaving>))]
-public enum HBAODeinterleaving
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<HBAODeinterleaving>))]
+    public enum HBAODeinterleaving
+    {
+        _Disabled = 0x0,
+        _2x = 0x1,
+        _4x = 0x2
+    }
 }

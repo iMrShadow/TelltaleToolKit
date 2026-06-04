@@ -9,10 +9,11 @@ public struct EnumHBAOPerPixelNormals
 {
     [MetaMember("mVal")]
     public HBAOPerPixelNormals Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAOPerPixelNormals>))]
-public enum HBAOPerPixelNormals
-{
-    //TODO:
+    [MetaSerializer(typeof(EnumSerializer<HBAOPerPixelNormals>))]
+    public enum HBAOPerPixelNormals
+    {
+        GBuffer = 0x0,
+        Reconstructed = 0x1
+    }
 }

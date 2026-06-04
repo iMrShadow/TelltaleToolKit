@@ -7,10 +7,11 @@ public struct EnumTonemapType
 {
     [MetaMember("mVal")]
     public TonemapType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<TonemapType>))]
-public enum TonemapType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<TonemapType>))]
+    public enum TonemapType
+    {
+        Default = 1,
+        Filmic = 2
+    }
 }

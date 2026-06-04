@@ -9,10 +9,11 @@ public struct EnumDepthOfFieldType
 {
     [MetaMember("mVal")]
     public DepthOfFieldType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<DepthOfFieldType>))]
-public enum DepthOfFieldType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<DepthOfFieldType>))]
+    public enum DepthOfFieldType
+    {
+        Default = 0x1,
+        Brush = 0x2
+    }
 }

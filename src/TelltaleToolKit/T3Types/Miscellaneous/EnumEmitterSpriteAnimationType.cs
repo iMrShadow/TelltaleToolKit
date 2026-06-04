@@ -9,10 +9,11 @@ public struct EnumEmitterSpriteAnimationType
 {
     [MetaMember("mVal")]
     public EmitterSpriteAnimationType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmitterSpriteAnimationType>))]
-public enum EmitterSpriteAnimationType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<EmitterSpriteAnimationType>))]
+    public enum EmitterSpriteAnimationType
+    {
+        Linear = 0x1,
+        Random = 0x2
+    }
 }

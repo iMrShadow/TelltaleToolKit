@@ -9,14 +9,13 @@ public struct EnumParticleSortMode
 {
     [MetaMember("mVal")]
     public ParticleSortMode Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<ParticleSortMode>))]
-public enum ParticleSortMode
-{
-    //  eParticleSortMode_
-    None = 0x1,
-    ByDistance = 0x2,
-    YoungestFirst = 0x3,
-    OldestFirst = 0x4,
+    [MetaSerializer(typeof(EnumSerializer<ParticleSortMode>))]
+    public enum ParticleSortMode
+    {
+        None = 0x1,
+        ByDistance = 0x2,
+        YoungestFirst = 0x3,
+        OldestFirst = 0x4
+    }
 }

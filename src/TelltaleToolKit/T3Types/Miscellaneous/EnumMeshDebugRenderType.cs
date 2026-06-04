@@ -9,10 +9,11 @@ public struct EnumMeshDebugRenderType
 {
     [MetaMember("mVal")]
     public MeshDebugRenderType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<MeshDebugRenderType>))]
-public enum MeshDebugRenderType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<MeshDebugRenderType>))]
+    public enum MeshDebugRenderType
+    {
+        eMeshRender_Solid = 1,
+        eMeshRender_Wireframe = 2
+    }
 }

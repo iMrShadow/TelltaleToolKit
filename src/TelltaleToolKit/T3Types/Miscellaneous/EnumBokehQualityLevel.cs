@@ -9,10 +9,13 @@ public struct EnumBokehQualityLevel
 {
     [MetaMember("mVal")]
     public BokehQualityLevel Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<BokehQualityLevel>))]
-public enum BokehQualityLevel
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<BokehQualityLevel>))]
+    public enum BokehQualityLevel
+    {
+        Disabled = 0x0,
+        Low = 0x1,
+        Medium = 0x2,
+        High = 0x3
+    }
 }

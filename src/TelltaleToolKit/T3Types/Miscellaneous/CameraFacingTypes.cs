@@ -7,14 +7,14 @@ namespace TelltaleToolKit.T3Types.Miscellaneous;
 [MetaSerializer(typeof(MetaClassSerializer<CameraFacingTypes>))]
 public class CameraFacingTypes
 {
+    [MetaSerializer(typeof(EnumSerializer<FacingTypes>))]
+    public enum FacingTypes
+    {
+        Facing = 0,
+        FacingY = 1,
+        FacingLocalY = 2
+    }
+
     [MetaMember("mCameraFacingType")]
     public FacingTypes CameraFacingType { get; set; }
-}
-
-[MetaSerializer(typeof(EnumSerializer<FacingTypes>))]
-public enum FacingTypes
-{
-    Facing = 0,
-    FacingY = 1,
-    FacingLocalY = 2,
 }
