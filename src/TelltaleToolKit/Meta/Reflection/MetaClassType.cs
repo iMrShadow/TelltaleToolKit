@@ -16,12 +16,14 @@ public class MetaClassType
     /// <param name="name">The full type name.</param>
     /// <param name="linkingType">The .NET type it links to.</param>
     /// <param name="flags">Optional metadata flags for this type.</param>
-    public MetaClassType(string name, Type linkingType, MetaFlags flags = MetaFlags.None)
+    /// <param name="argNum">Optional argument size if the type allows it.</param>
+    public MetaClassType(string name, Type linkingType, MetaFlags flags = MetaFlags.None, int argNum = 0)
     {
         FullTypeName = name;
         Symbol = Symbol.FromName(GetStrippedTypeName(name));
         LinkingType = linkingType;
         Flags = flags;
+        ArgNum = argNum;
     }
 
     /// /// <summary>
@@ -50,6 +52,13 @@ public class MetaClassType
     /// Gets the flags describing this type's metadata. See <see cref="MetaFlags"/>.
     /// </summary>
     public MetaFlags Flags { get; }
+
+    /// <summary>
+    /// Gets the argument size of this type.
+    /// Used only for types which have a number in them such as SArray or BitSetBases.
+    /// </summary>
+    /// <returns><c>true</c> if serialization is enabled; otherwise, <c>false</c>.</returns>
+    public int ArgNum { get; }
 
     /// <summary>
     /// Determines whether this type is serialized in a blocked format.
