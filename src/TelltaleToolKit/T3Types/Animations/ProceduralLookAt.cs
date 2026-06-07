@@ -5,8 +5,8 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-// TODO: .look Files
-[MetaSerializer(typeof(Serializer))]
+// .look Files
+[MetaSerializer(typeof(MetaClassSerializer<ProceduralLookAt>))]
 public class ProceduralLookAt
 {
     [MetaMember("Baseclass_Animation")]
@@ -67,7 +67,6 @@ public class ProceduralLookAt
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<Constraint>))]
-
     public struct Constraint
     {
         [MetaMember("mMaxLeftRight")]
@@ -89,33 +88,18 @@ public class ProceduralLookAt
         public float UpDownFixedOffset { get; set; }
     }
 
-    public class Serializer : MetaSerializer<ProceduralLookAt>
-    {
-        public override void Serialize(ref ProceduralLookAt obj, MetaStream stream, MetaClassType? type = null)
-        {
-            // TODO: Check with meta stream version.
-            if (stream.Mode is MetaStreamMode.Write)
-            {
-                if (stream.Params.StreamVersion >= 6)
-                {
-                    return;
-                }
-
-                Animation objAnimation = obj.Animation;
-                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
-            }
-            else if (stream.Mode is MetaStreamMode.Read)
-            {
-                if (stream.Params.StreamVersion == 6)
-                {
-                    return;
-                }
-
-                var animation = new Animation();
-                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref animation, stream);
-
-                obj.Animation = animation;
-            }
-        }
-    }
+    // public class Serializer : MetaSerializer<ProceduralLookAt>
+    // {
+    //     public override void Serialize(ref ProceduralLookAt obj, MetaStream stream, MetaClassType? type = null)
+    //     {
+    //         if (stream.Mode is MetaStreamMode.Write)
+    //         {
+    //
+    //         }
+    //         else if (stream.Mode is MetaStreamMode.Read)
+    //         {
+    //
+    //         }
+    //     }
+    // }
 }

@@ -229,8 +229,11 @@ public sealed class BinaryMetaStreamReader : MetaStream
         // I have no idea how they got there in the first place, but I saw one such file (ui_mainmenu_background.scene) which benefits from this.
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
-        Toolkit.Instance.Logger.LogWarning(
-            $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+
+        // Toolkit.Instance.Logger.LogWarning(
+        //     $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+      //  throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+
         currentSectionInfo.Stream.Position = expectedPosition;
         currentSectionInfo.CompressedSize -= (int)(currentPosition - expectedPosition);
         // #if DEBUG

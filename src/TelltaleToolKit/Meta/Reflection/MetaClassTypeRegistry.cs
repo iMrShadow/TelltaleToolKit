@@ -190,7 +190,7 @@ public static class MetaClassTypeRegistry
         Register("KeyframedValue<class Handle<PhonemeTable>>::Sample",typeof(KeyframedValue<Handle<PhonemeTable>>.Sample));
         Register("KeyframedValue<class Handle<PropertySet>>::Sample",typeof(KeyframedValue<Handle<PropertySet>>.Sample));
         Register("KeyframedValue<class Handle<Scene>>::Sample",typeof(KeyframedValue<Handle<Scene>>.Sample));
-        Register("KeyframedValue<class Handle<SoundAmbience::AmbienceDefinition>>::Sample",typeof(KeyframedValue<Handle<SoundAmbience.AmbienceDefinition>>.Sample));
+        Register("KeyframedValue<class Handle<SoundAmbience::AmbienceDefinition>>::Sample",typeof(KeyframedValue<Handle<AmbienceDefinition>>.Sample));
         Register("KeyframedValue<class Handle<SoundBusSnapshot::Snapshot>>::Sample",typeof(KeyframedValue<Handle<SoundBusSnapshot.Snapshot>>.Sample));
         Register("KeyframedValue<class Handle<SoundBusSnapshot::SnapshotSuite>>::Sample",typeof(KeyframedValue<Handle<SoundBusSnapshot.SnapshotSuite>>.Sample));
         Register("KeyframedValue<class Handle<SoundData>>::Sample",typeof(KeyframedValue<Handle<SoundData>>.Sample));
@@ -313,7 +313,7 @@ public static class MetaClassTypeRegistry
         Register("Set<unsignedint,less<unsignedint>>", typeof(HashSet<uint>));
         Register("SingleContributionValue<float>",typeof(NotImplementedException));
         Register("SkeletonPoseCompoundValue",typeof(NotImplementedException));
-        Register("SoundAmbience::EventContext", typeof(NotImplementedException));
+        Register("SoundAmbience::EventContext", typeof(EventContext));
         Register("Style::StyleIdleManager::FadeData", typeof(NotImplementedException));
         Register("T3EffectBinary", typeof(NotImplementedException));
         Register("class T3EffectParameters", typeof(NotImplementedException));
@@ -375,7 +375,7 @@ public static class MetaClassTypeRegistry
         Register("class AnimatedValueInterface<class Handle<class SoundReverbDefinition> >", typeof(AnimationValueInterface<Handle<SoundReverbDefinition>>));
         Register("class AnimatedValueInterface<class Handle<class T3Texture> >", typeof(AnimationValueInterface<Handle<T3Texture>>));
         Register("class AnimatedValueInterface<class Handle<class WalkBoxes> >", typeof(AnimationValueInterface<Handle<WalkBoxes>>));
-        Register("class AnimatedValueInterface<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(AnimationValueInterface<Handle<SoundAmbience.AmbienceDefinition>>));
+        Register("class AnimatedValueInterface<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(AnimationValueInterface<Handle<AmbienceDefinition>>));
         Register("class AnimatedValueInterface<class LocationInfo>", typeof(AnimationValueInterface<LocationInfo>));
         Register("class AnimatedValueInterface<class Polar>", typeof(AnimationValueInterface<Polar>));
         Register("class AnimatedValueInterface<class Quaternion>", typeof(AnimationValueInterface<Quaternion>));
@@ -460,7 +460,7 @@ public static class MetaClassTypeRegistry
         Register("class CompressedKeys<class Handle<class SoundReverbDefinition> >", typeof(CompressedKeys<Handle<SoundReverbDefinition>>));
         Register("class CompressedKeys<class Handle<class T3Texture> >", typeof(CompressedKeys<Handle<T3Texture>>));
         Register("class CompressedKeys<class Handle<class WalkBoxes> >", typeof(CompressedKeys<Handle<WalkBoxes>>));
-        Register("class CompressedKeys<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(CompressedKeys<Handle<SoundAmbience.AmbienceDefinition>>));
+        Register("class CompressedKeys<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(CompressedKeys<Handle<AmbienceDefinition>>));
         Register("class CompressedKeys<class LocationInfo>", typeof(CompressedKeys<LocationInfo>));
         Register("class CompressedKeys<class Polar>", typeof(CompressedKeys<Polar>));
         Register("class CompressedKeys<class Quaternion>", typeof(CompressedKeys<Quaternion>));
@@ -558,7 +558,7 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<class KeyframedValue<class Handle<class SoundReverbDefinition> >::Sample>", typeof(List<KeyframedValue<Handle<SoundReverbDefinition>>.Sample>));
         Register("class DCArray<class KeyframedValue<class Handle<class T3Texture> >::Sample>", typeof(List<KeyframedValue<Handle<T3Texture>>.Sample>));
         Register("class DCArray<class KeyframedValue<class Handle<class WalkBoxes> >::Sample>", typeof(List<KeyframedValue<Handle<WalkBoxes>>.Sample>));
-        Register("class DCArray<class KeyframedValue<class Handle<struct SoundAmbience::AmbienceDefinition> >::Sample>", typeof(List<KeyframedValue<Handle<SoundAmbience.AmbienceDefinition>>.Sample>));
+        Register("class DCArray<class KeyframedValue<class Handle<struct SoundAmbience::AmbienceDefinition> >::Sample>", typeof(List<KeyframedValue<Handle<AmbienceDefinition>>.Sample>));
         Register("class DCArray<class KeyframedValue<class LocationInfo>::Sample>", typeof(List<KeyframedValue<LocationInfo>.Sample>));
         Register("class DCArray<class KeyframedValue<class PhonemeKey>>", typeof(List<KeyframedValue<PhonemeKey>>));
         Register("class DCArray<class KeyframedValue<class Polar>::Sample>", typeof(List<KeyframedValue<Polar>.Sample>));
@@ -637,7 +637,7 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<struct SkeletonPoseValue::ValueEntry>", typeof(List<SkeletonPoseValue.ValueEntry>));
         Register("class DCArray<struct SkeletonPoseValue::Sample>", typeof(List<SkeletonPoseValue.Sample>));
         Register("class DCArray<struct SklNodeData>", typeof(List<SklNodeData>));
-        Register("class DCArray<struct SoundAmbience::EventContext>", typeof(List<SoundAmbience.EventContext>));
+        Register("class DCArray<struct SoundAmbience::EventContext>", typeof(List<EventContext>));
         Register("class DCArray<struct T3LightSceneInternalData::LightmapPage>", typeof(List<T3LightSceneInternalData.LightmapPage>));
         Register("class DCArray<struct T3MaterialCompiledData>", typeof(List<T3MaterialCompiledData>));
         Register("class DCArray<struct T3MaterialNestedMaterial>", typeof(List<T3MaterialNestedMaterial>));
@@ -815,7 +815,7 @@ public static class MetaClassTypeRegistry
         Register("class Handle<class VoiceData>", typeof(Handle<VoiceData>));
         Register("class Handle<class WalkBoxes>", typeof(Handle<WalkBoxes>));
         Register("class Handle<struct ResourceGroupInfo>", typeof(Handle<ResourceGroupInfo>));
-        Register("class Handle<struct SoundAmbience::AmbienceDefinition>", typeof(Handle<SoundAmbience.AmbienceDefinition>));
+        Register("class Handle<struct SoundAmbience::AmbienceDefinition>", typeof(Handle<AmbienceDefinition>));
         Register("class HandleBase", typeof(HandleBase));
         Register("class HandleLock<class Animation>", typeof(Handle<Animation>));
         Register("class HandleLock<class LanguageRes>", typeof(Handle<LanguageRes>));
@@ -860,7 +860,7 @@ public static class MetaClassTypeRegistry
         Register("class KeyframedValue<class Handle<class SoundReverbDefinition> >", typeof(KeyframedValue<Handle<SoundReverbDefinition>>));
         Register("class KeyframedValue<class Handle<class T3Texture> >", typeof(KeyframedValue<Handle<T3Texture>>));
         Register("class KeyframedValue<class Handle<class WalkBoxes> >", typeof(KeyframedValue<Handle<WalkBoxes>>));
-        Register("class KeyframedValue<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(KeyframedValue<Handle<SoundAmbience.AmbienceDefinition>>));
+        Register("class KeyframedValue<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(KeyframedValue<Handle<AmbienceDefinition>>));
         Register("class KeyframedValue<class LocationInfo>", typeof(KeyframedValue<LocationInfo>));
         Register("class KeyframedValue<class PhonemeKey>::Sample", typeof(KeyframedValue<PhonemeKey>.Sample));
         Register("class KeyframedValue<class Polar>", typeof(KeyframedValue<Polar>));
@@ -1111,7 +1111,7 @@ public static class MetaClassTypeRegistry
         Register("class SingleValue<class Handle<class SoundReverbDefinition> >", typeof(SingleValue<Handle<SoundReverbDefinition>>));
         Register("class SingleValue<class Handle<class T3Texture> >", typeof(SingleValue<Handle<T3Texture>>));
         Register("class SingleValue<class Handle<class WalkBoxes> >", typeof(SingleValue<Handle<WalkBoxes>>));
-        Register("class SingleValue<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(SingleValue<Handle<SoundAmbience.AmbienceDefinition>>));
+        Register("class SingleValue<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(SingleValue<Handle<AmbienceDefinition>>));
         Register("class SingleValue<class LocationInfo>", typeof(SingleValue<LocationInfo>));
         Register("class SingleValue<class Polar>", typeof(SingleValue<Polar>));
         Register("class SingleValue<class Quaternion>", typeof(SingleValue<Quaternion>));
@@ -1376,7 +1376,7 @@ public static class MetaClassTypeRegistry
         Register("struct SkeletonPoseValue::ValueEntry", typeof(SkeletonPoseValue.ValueEntry));
         Register("struct SkeletonPoseValue::Sample", typeof(SkeletonPoseValue.Sample));
         Register("struct SklNodeData", typeof(SklNodeData));
-        Register("struct SoundAmbience::AmbienceDefinition", typeof(SoundAmbience.AmbienceDefinition));
+        Register("struct SoundAmbience::AmbienceDefinition", typeof(AmbienceDefinition));
         Register("struct SoundSystem::Implementation::ChannelHolder", typeof(SoundSystem.Implementation.ChannelHolder));
         Register("struct T3GFXBuffer", typeof(T3GFXBuffer));
         Register("struct T3GFXVertexState", typeof(T3GFXVertexState));
@@ -2089,16 +2089,7 @@ public class ResourceGroupInfo
 {
 }
 
-public class SoundAmbience
-{
-    public class AmbienceDefinition
-    {
-    }
 
-    public class EventContext
-    {
-    }
-}
 
 public class SoundEventSnapshotData
 {

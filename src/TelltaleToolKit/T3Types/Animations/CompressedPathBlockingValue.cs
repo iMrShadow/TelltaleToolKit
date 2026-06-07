@@ -7,7 +7,7 @@ using TelltaleToolKit.T3Types.Skeletons;
 namespace TelltaleToolKit.T3Types.Animations;
 
 [MetaSerializer(typeof(MetaClassSerializer<CompressedPathBlockingValue>))]
-public class CompressedPathBlockingValue
+public class CompressedPathBlockingValue : IAnimationValueInterface
 {
     [MetaMember("Baseclass_KeyframedValue<Transform>")]
     public KeyframedValue<Transform> BaseclassCompressedPathBlockingValue { get; set; } = new();
@@ -32,5 +32,11 @@ public class CompressedPathBlockingValue
 
         [MetaMember("mfDampingFactor")]
         public float DampingFactor { get; set; }
+    }
+
+    public AnimationValueInterfaceBase AnimationValueInterfaceBase
+    {
+        get => BaseclassCompressedPathBlockingValue.AnimationValueInterfaceBase;
+        set => BaseclassCompressedPathBlockingValue.AnimationValueInterfaceBase = value;
     }
 }
