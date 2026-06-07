@@ -111,7 +111,7 @@ public class D3DMesh
     public int AnimatedVertexCount { get; set; }
 
     [MetaMember("mTextures")]
-    public List<Texture>[] Textures { get; set; } = new List<Texture>[11];
+    public List<Texture>[] Textures { get; set; }
 
     [MetaMember("mDiffuseScale")]
     public Vector2 DiffuseScale { get; set; }
@@ -371,8 +371,8 @@ public class D3DMesh
                     (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
                     (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
                     (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
-                    (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
-                    (MeshFlags.HasInterleavedStream, 12), (MeshFlags.HasSoftwareSkinningStream, 13)
+                    (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),(MeshFlags.Unknown2, 12),
+                    (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),(MeshFlags.HasSoftwareSkinningStream, 15)
                 };
 
                 if (obj.T3IndexBuffer != null)
@@ -487,8 +487,8 @@ public class D3DMesh
                 (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
                 (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
                 (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
-                (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
-                (MeshFlags.HasInterleavedStream, 12), (MeshFlags.HasSoftwareSkinningStream, 13)
+                (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),(MeshFlags.Unknown2, 12),
+                (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),(MeshFlags.HasSoftwareSkinningStream, 15)
             };
 
             if (stream.Mode is MetaStreamMode.Write)
@@ -506,7 +506,7 @@ public class D3DMesh
             }
             else
             {
-                obj.T3VertexBuffers = new T3VertexBuffer[14];
+                obj.T3VertexBuffers = new T3VertexBuffer[16];
 
                 if (obj.Flags.Has((int)MeshFlags.HasIndexBuffer))
                 {
@@ -682,25 +682,26 @@ public class D3DMesh
     public enum MeshFlags
     {
         HasIndexBuffer = 0x1,
-        HasPosStream = 0x2,
-        HasNormStream = 0x4,
-        HasSmoothNormStream = 0x8,
-        HasBlendWeightStream = 0x10,
-        HasBlendIdxStream = 0x20,
-        HasUV1Stream = 0x40,
-        HasUV2Stream = 0x80,
-        HasUV3Stream = 0x100,
-        HasUV4Stream = 0x200,
-        HasTangentStream = 0x400,
-        HasColorStream = 0x800,
-        Unknown = 0x1000,
+        HasPosStream = 0x2, // 1
+        HasNormStream = 0x4, // 2
+        HasSmoothNormStream = 0x8, // 11
+        HasBlendWeightStream = 0x10, // 3
+        HasBlendIdxStream = 0x20, // 4
+        HasUV1Stream = 0x40, // 5
+        HasUV2Stream = 0x80,// 6
+        HasUV3Stream = 0x100, // 7
+        HasUV4Stream = 0x200, // 8
+        HasTangentStream = 0x400, // 9
+        HasColorStream = 0x800, // 10
+        Unknown = 0x1000, // 12
+        Unknown2 = 0x2000, // 13
         HasVertexAnimation = 0x10000,
         TriangleSetsFixedUp = 0x40000,
         HasZeroVertexAlpha = 0x80000,
-        HasInterleavedStream = 0x200000,
-        HasSoftwareSkinningStream = 0x400000,
+        HasInterleavedStream = 0x200000, // 14
+        HasSoftwareSkinningStream = 0x400000, // 16
         IsManualSort = 0x10000000, // Vector 3???!?!?
-        Deformable = 0x20000000, // It's a string - Interface
+        Deformable = 0x2000000, // It's a string - Interface // 15
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<VertexAnimation>))]
@@ -709,6 +710,10 @@ public class D3DMesh
     [MetaSerializer(typeof(MetaClassSerializer<Texture>))]
     public class Texture
     {
+
+        //'eFlagHasLightmap',0
+        //  'eFlagHasNonLightmap',0
+        // 'eFlagHasSpecular',0
         [MetaMember("mName")]
         public Handle<T3Texture> Name { get; set; }
 
