@@ -761,7 +761,33 @@
     {
         "type": "KeyframedValue<CompressedPathBlockingValue::CompressedPathInfoKey>::Sample",
         "crc32": 123491795,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "CompressedPathBlockingValue::CompressedPathInfoKey",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<CompressedPathBlockingValue::CompressedPathInfoKey>::Sample",
@@ -818,7 +844,33 @@
     {
         "type": "KeyframedValue<LocationInfo>::Sample",
         "crc32": 2775375510,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "LocationInfo",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<ScriptEnum>::Sample",
@@ -849,7 +901,33 @@
     {
         "type": "KeyframedValue<SoundEventName<0>>::Sample",
         "crc32": 3490792114,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "SoundEventName<0>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<SoundEventName<0>>::Sample",
@@ -906,12 +984,59 @@
     {
         "type": "KeyframedValue<SoundEventName<1>>::Sample",
         "crc32": 48901230,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "SoundEventName<1>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<SoundEventName<2>>::Sample",
         "crc32": 2154151251,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int32",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "SoundEventName<2>",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Symbol>::Sample",
@@ -942,7 +1067,33 @@
     {
         "type": "KeyframedValue<Symbol>::Sample",
         "crc32": 735955943,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Symbol",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<T3VertexBufferSample<T3NormalSampleData,T3HeapAllocator>>::Sample",
@@ -1051,12 +1202,64 @@
     {
         "type": "KeyframedValue<Handle<Chore>>::Sample",
         "crc32": 1906438923,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<Chore>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<D3DMesh>>::Sample",
         "crc32": 1964710119,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<D3DMesh>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<D3DMesh>>::Sample",
@@ -1087,7 +1290,33 @@
     {
         "type": "KeyframedValue<Handle<Dlg>>::Sample",
         "crc32": 3845365155,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<Dlg>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<Dlg>>::Sample",
@@ -1118,7 +1347,33 @@
     {
         "type": "KeyframedValue<Handle<Font>>::Sample",
         "crc32": 2968426688,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<Font>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<Font>>::Sample",
@@ -1201,12 +1456,64 @@
     {
         "type": "KeyframedValue<Handle<PropertySet>>::Sample",
         "crc32": 1083545107,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<PropertySet>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<SoundAmbience::AmbienceDefinition>>::Sample",
         "crc32": 1494976989,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<SoundAmbience::AmbienceDefinition>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<SoundData>>::Sample",
@@ -1289,12 +1596,64 @@
     {
         "type": "KeyframedValue<Handle<T3Texture>>::Sample",
         "crc32": 762576919,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<T3Texture>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<WalkBoxes>>::Sample",
         "crc32": 2189458300,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Handle<WalkBoxes>",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Handle<WalkBoxes>>::Sample",
@@ -1346,7 +1705,23 @@
     {
         "type": "LanguageLookupMap::DlgIDSet",
         "crc32": 1422179024,
-        "members": []
+        "members": [
+            {
+                "name": "mIDRange",
+                "type": "TRange<unsignedint>",
+                "flags": 0
+            },
+            {
+                "name": "mAdditionalIDs",
+                "type": "Set<unsignedint,less<unsignedint>>",
+                "flags": 0
+            },
+            {
+                "name": "mhDlg",
+                "type": "Handle<Dlg>",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "LanguageRegister",
@@ -19779,7 +20154,33 @@
     {
         "type": "KeyframedValue<bool>::Sample",
         "crc32": 1271868337,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<AnimOrChore>",
@@ -19898,7 +20299,33 @@
     {
         "type": "KeyframedValue<AnimOrChore>::Sample",
         "crc32": 2911155438,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "AnimOrChore",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<AnimOrChore>::Sample",
@@ -20064,7 +20491,33 @@
     {
         "type": "KeyframedValue<Color>::Sample",
         "crc32": 162664713,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Color",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Color>::Sample",
@@ -21388,7 +21841,33 @@
     {
         "type": "KeyframedValue<String>::Sample",
         "crc32": 3662232385,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mValue",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<String>::Sample",
@@ -21652,7 +22131,33 @@
     {
         "type": "KeyframedValue<Transform>::Sample",
         "crc32": 3129982977,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int32",
+                "flags": 64
+            },
+            {
+                "name": "mValue",
+                "type": "Transform",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<Vector2>",
@@ -22098,7 +22603,33 @@
     {
         "type": "KeyframedValue<float>::Sample",
         "crc32": 2034371971,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mValue",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<int>",
@@ -22217,7 +22748,33 @@
     {
         "type": "KeyframedValue<int>::Sample",
         "crc32": 1246207306,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mValue",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<int>::Sample",
@@ -22465,7 +23022,33 @@
     {
         "type": "KeyframedValue<unsigned__int64>::Sample",
         "crc32": 4250266928,
-        "members": []
+        "members": [
+            {
+                "name": "mTime",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "mbInterpolateToNextKey",
+                "type": "bool",
+                "flags": 0
+            },
+            {
+                "name": "mTangentMode",
+                "type": "int",
+                "flags": 0
+            },
+            {
+                "name": "mValue",
+                "type": "unsigned__int64",
+                "flags": 0
+            },
+            {
+                "name": "mRecipTimeToNextSample",
+                "type": "float",
+                "flags": 8225
+            }
+        ]
     },
     {
         "type": "KeyframedValue<unsigned__int64>::Sample",
@@ -30052,12 +30635,34 @@
     {
         "type": "SoundBankWaveMapEntry",
         "crc32": 2682756536,
-        "members": []
+        "members": [
+            {
+                "name": "fLengthSeconds",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "strFileName",
+                "type": "String",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "SoundBankWaveMapEntry",
         "crc32": 1568689605,
-        "members": []
+        "members": [
+            {
+                "name": "fLengthSeconds",
+                "type": "float",
+                "flags": 0
+            },
+            {
+                "name": "strFileName",
+                "type": "String",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "SoundBusSnapshot::Snapshot",
@@ -33889,7 +34494,43 @@
     {
         "type": "ChorecorderParameters",
         "crc32": 1380213052,
-        "members": []
+        "members": [
+            {
+                "name": "mFlags",
+                "type": "Flags",
+                "flags": 262144
+            },
+            {
+                "name": "mhDialogChore",
+                "type": "Handle<Chore>",
+                "flags": 32
+            },
+            {
+                "name": "mhCutChore",
+                "type": "Handle<Chore>",
+                "flags": 32
+            },
+            {
+                "name": "mNewCutName",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mCameraAgentToUse",
+                "type": "String",
+                "flags": 0
+            },
+            {
+                "name": "mAgentsToChorecord",
+                "type": "Set<String,StringCompareCaseInsensitive>",
+                "flags": 32
+            },
+            {
+                "name": "mChorecordingName",
+                "type": "String",
+                "flags": 0
+            }
+        ]
     },
     {
         "type": "ChorecorderParameters",
