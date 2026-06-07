@@ -1,3 +1,4 @@
+using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
@@ -9,7 +10,7 @@ public class T3MeshTextureIndices
 
     public class Serializer : MetaSerializer<T3MeshTextureIndices>
     {
-        public override void Serialize(ref T3MeshTextureIndices obj, MetaStream stream)
+        public override void Serialize(ref T3MeshTextureIndices obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {

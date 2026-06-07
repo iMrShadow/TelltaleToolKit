@@ -2,11 +2,12 @@ using System.Numerics;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Audio;
 
 namespace TelltaleToolKit.T3Types.WalkBoxes;
 
 /// <summary>
-/// Represents the class for .wbox files.
+/// Represents the class for .wbox (Walkbox) files.
 /// </summary>
 [MetaSerializer(typeof(MetaClassSerializer<WalkBoxes>))]
 public class WalkBoxes
@@ -74,6 +75,9 @@ public class WalkBoxes
 
         [MetaMember("mVertScales")]
         public float[] VertScales { get; set; } = new float[3];
+
+        [MetaMember("mFootstepMaterial")]
+        public SoundFootsteps.EnumMaterial FootstepMaterial { get; set; }
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<Vert>))]

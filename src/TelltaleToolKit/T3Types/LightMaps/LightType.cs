@@ -7,5 +7,6 @@ namespace TelltaleToolKit.T3Types.LightMaps;
 [MetaSerializer(typeof(MetaClassSerializer<LightType>))]
 public struct LightType
 {
-    [MetaMember("mLightType")] public int Type { get; set; }
+    [MetaMember("mLightType")]
+    public int Type { get; set; }
 }

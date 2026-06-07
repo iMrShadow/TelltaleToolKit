@@ -9,4 +9,8 @@ public class LanguageResourceProxy
 {
     [MetaMember("mID")]
     public uint LangId { get; set; }
+
+    internal class ModRes
+    {
+    }
 }

@@ -1,4 +1,5 @@
-﻿using TelltaleToolKit.Meta.Serialization;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
@@ -29,7 +30,7 @@ public class Vers
     [MetaSerializer(typeof(VersSerializer))]
     public class VersSerializer : MetaSerializer<Vers>
     {
-        public override void Serialize(ref Vers obj, MetaStream stream)
+        public override void Serialize(ref Vers obj, MetaStream stream, MetaClassType? type = null)
         {
             PreSerialize(ref obj, stream);
 

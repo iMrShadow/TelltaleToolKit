@@ -5,19 +5,22 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types;
 
 /// <summary>
-/// Main class for .tmap files.
+///     Main class for .tmap files.
 /// </summary>
 [MetaSerializer(typeof(MetaClassSerializer<TransitionMap>))]
 public class TransitionMap
 {
     // Symbols can be both strings and crc64s.
-    [MetaMember("mRemapper")]
-    public Dictionary<Symbol, TransitionMapInfo> TransitionRemappers = new();
+    [MetaMember("mTransitionRemappers")]
+    public Dictionary<Symbol, TransitionMapInfo> TransitionRemappersS { get; set; } = [];
+
+    [MetaMember("mTransitionRemappers")]
+    public Dictionary<string, TransitionMapInfo> TransitionRemappers { get; set; } = [];
 
     [MetaSerializer(typeof(MetaClassSerializer<TransitionMapInfo>))]
     public class TransitionMapInfo
     {
         [MetaMember("mRemapper")]
-        public TransitionRemapper Remapper = new();
+        public TransitionRemapper Remapper { get; set; } = new();
     }
 }

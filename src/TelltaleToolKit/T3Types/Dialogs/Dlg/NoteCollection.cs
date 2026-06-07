@@ -8,29 +8,31 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class NoteCollection : IGenerator
 {
     [MetaMember("Baseclass_UID::Generator")]
-    public Generator Generator { get; set; }
+    public Generator Generator { get; set; } = new();
 
     [MetaMember("mNotes")]
     public Dictionary<int, Note> Notes { get; set; } = new();
 
     public class Serializer : MetaSerializer<NoteCollection>
     {
-        public override void Serialize(ref NoteCollection obj, MetaStream stream)
+        public override void Serialize(ref NoteCollection obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotSupportedException();
-            }
-
-            if (stream.Mode is MetaStreamMode.Read)
-            {
-                // mEntries is not serialized.
-                int numNotes = stream.ReadInt32();
-                for (var i = 0; i < numNotes; i++)
+                stream.Write(obj.Notes.Count);
+                foreach (var note in obj.Notes.Values)
                 {
-                    Note? note = null;
+                    Note note1 = note;
+                    stream.Serialize(ref note1);
+                }
+            }
+            else
+            {
+                int numNotes = stream.ReadInt32();
+                for (int i = 0; i < numNotes; i++)
+                {
+                    Note note = new();
                     stream.Serialize(ref note);
-                    // TODO: Set the correct IDs. Not a priority, I haven't seen this serialized anywhere.
                     obj.Notes.Add(i, note);
                 }
             }

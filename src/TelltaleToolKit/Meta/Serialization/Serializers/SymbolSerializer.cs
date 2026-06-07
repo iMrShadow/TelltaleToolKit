@@ -11,7 +11,7 @@ public class SymbolSerializer : MetaSerializer<Symbol>
         obj ??= Symbol.Empty;
     }
 
-    public override void Serialize(ref Symbol obj, MetaStream stream)
+    public override void Serialize(ref Symbol obj, MetaStream stream, MetaClassType? type = null)
     {
         MetaClass? description = stream.GetMetaClass(typeof(Symbol));
 

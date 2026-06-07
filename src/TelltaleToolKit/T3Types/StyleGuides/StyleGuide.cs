@@ -27,43 +27,50 @@ public class StyleGuide
     [MetaMember("mbGeneratesLookAts")]
     public bool GeneratesLookAts { get; set; } = false;
 
+    [MetaMember("mbDisallowOverrun")]
+    public bool DisallowOverrun { get; set; } = false;
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
 
-
-    // It's a metamember, but not serialized by default. TODO:
+    [MetaMember("mPaletteClassPtrs")]
     public List<ActingPaletteClass> PaletteClassesPtrs { get; set; } = [];
 
-
-    [MetaSerializer(typeof(ActingOverridablePropOwnerSerializer))]
     public class Serializer : MetaSerializer<StyleGuide>
     {
         private static readonly MetaClassSerializer<StyleGuide> s_metaClassSerializer = new();
 
-        public override void Serialize(ref StyleGuide obj, MetaStream stream)
+        public override void Serialize(ref StyleGuide obj, MetaStream stream, MetaClassType? type = null)
         {
-            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass? classDescription = stream.GetMetaClass(typeof(StyleGuide));
 
-            if (classDescription is not null && classDescription.ContainsMember("mFlags"))
+            if (classDescription is null || !classDescription.ContainsMember("mFlags"))
             {
-                if (stream.Mode is MetaStreamMode.Write)
+                return;
+            }
+
+            if (stream.Mode is MetaStreamMode.Write)
+            {
+                stream.Write(obj.PaletteClassesPtrs.Count);
+                foreach (ActingPaletteClass paletteClass in obj.PaletteClassesPtrs)
                 {
-                    throw new NotImplementedException();
+                    ActingPaletteClass actingPaletteClass = paletteClass;
+                    stream.Serialize(ref actingPaletteClass);
                 }
+            }
+            else
+            {
+                obj.PaletteClassesPtrs = [];
 
-                if (stream.Mode is MetaStreamMode.Read)
+                int values = stream.ReadInt32();
+                for (int i = 0; i < values; i++)
                 {
-                    int values = stream.ReadInt32();
-
-                    for (var i = 0; i < values; i++)
-                    {
-                        var child = new ActingPaletteClass();
-                        stream.Serialize<ActingPaletteClass>(ref child);
-                        obj.PaletteClassesPtrs.Add(child);
-                    }
+                    ActingPaletteClass child = new();
+                    stream.Serialize(ref child);
+                    obj.PaletteClassesPtrs.Add(child);
                 }
             }
         }

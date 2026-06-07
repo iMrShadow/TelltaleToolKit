@@ -7,6 +7,11 @@ namespace TelltaleToolKit.T3Types;
 [MetaSerializer(typeof(MetaClassSerializer<MovieCaptureInfo>))]
 public class MovieCaptureInfo
 {
+    [MetaSerializer(typeof(EnumSerializer<CompressorType>))]
+    public enum CompressorType
+    {
+    }
+
     [MetaMember("mFPS")]
     public int Fps { get; set; }
 
@@ -20,6 +25,4 @@ public class MovieCaptureInfo
         [MetaMember("mVal")]
         public CompressorType Val { get; set; }
     }
-    [MetaSerializer(typeof(EnumSerializer<CompressorType>))]
-    public enum CompressorType{}
 }

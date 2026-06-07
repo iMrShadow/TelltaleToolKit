@@ -5,35 +5,63 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
 /// <summary>
-/// Compact sampler state packed into a single 32-bit unsigned integer.
-/// Bit layout (inclusive):
-/// bits 0..3   : WrapU (4 bits)
-/// bits 4..7   : WrapV (4 bits)
-/// bit  8      : Filtered (1 bit)
-/// bits 9..12  : Border Color (4 bits)
-/// bit  13     : Gamma Correct (1 bit)
-/// bits 14..21 : Mip Bias (8 bits)
-/// Remaining bits unused/reserved.
-///
-/// This class provides typed accessors and several utility functions.
+///     Compact sampler state packed into a single 32-bit unsigned integer.
+///     Bit layout (inclusive):
+///     bits 0..3   : WrapU (4 bits)
+///     bits 4..7   : WrapV (4 bits)
+///     bit  8      : Filtered (1 bit)
+///     bits 9..12  : Border Color (4 bits)
+///     bit  13     : Gamma Correct (1 bit)
+///     bits 14..21 : Mip Bias (8 bits)
+///     Remaining bits unused/reserved.
+///     This class provides typed accessors and several utility functions.
 /// </summary>
 [MetaSerializer(typeof(MetaClassSerializer<T3SamplerStateBlock>))]
 public class T3SamplerStateBlock
 {
+    public enum T3SamplerStateValue
+    {
+        // eSamplerState_..._Value
+        WrapU = 0x0, // TextureWrapMode.
+        WrapV = 0x1, // TextureWrapMode.
+        Filtered = 0x2, // bool
+        BorderColor = 0x3, // TextureBorderColor
+        GammaCorrect = 0x4, // bool
+        MipBias = 0x5 // char
+    }
+
+    public enum TextureBorderColor
+    {
+        //  TEXTURE_BORDER_COLOR_
+        Black = 0, // Color(0,0,0,0)
+        White = 1 // Color(1,1,1,1)
+    }
+
+    public enum TextureWrapMode
+    {
+        // Texture_Wrap
+        Clamp = 0,
+        Wrap = 1,
+        Border = 2
+    }
+
+    private static readonly Entry[] Entries =
+    [
+        new(0, 4), // WrapU
+
+        new(4, 4), // WrapV
+
+        new(8, 1), // Filter
+
+        new(9, 4), // Border
+
+        new(13, 1), // Gamma
+
+        new(14, 8) // MipBias
+    ];
+
     [MetaMember("mData")]
     public uint Data { get; set; }
-
-    private struct Entry
-    {
-        public int Shift;
-        public uint Mask;
-
-        public Entry(int shift, int width)
-        {
-            Shift = shift;
-            Mask = (1u << width) - 1u << shift;
-        }
-    }
 
     [MetaMember("Wrap U")]
     public TextureWrapMode WrapU
@@ -92,45 +120,15 @@ public class T3SamplerStateBlock
         Data = (Data & ~e.Mask) | ((value << e.Shift) & e.Mask);
     }
 
-    private static readonly Entry[] Entries =
-    [
-        new Entry(0, 4), // WrapU
-
-        new Entry(4, 4), // WrapV
-
-        new Entry(8, 1), // Filter
-
-        new Entry(9, 4), // Border
-
-        new Entry(13, 1), // Gamma
-
-        new Entry(14, 8) // MipBias
-    ];
-
-
-    public enum T3SamplerStateValue
+    private struct Entry
     {
-        // eSamplerState_..._Value
-        WrapU = 0x0, // TextureWrapMode.
-        WrapV = 0x1, // TextureWrapMode.
-        Filtered = 0x2, // bool
-        BorderColor = 0x3, // TextureBorderColor
-        GammaCorrect = 0x4, // bool
-        MipBias = 0x5, // char
-    }
+        public readonly int Shift;
+        public readonly uint Mask;
 
-    public enum TextureWrapMode
-    {
-        // Texture_Wrap
-        Clamp = 0,
-        Wrap = 1,
-        Border = 2,
-    }
-
-    public enum TextureBorderColor
-    {
-        //  TEXTURE_BORDER_COLOR_
-        Black = 0, // Color(0,0,0,0)
-        White = 1, // Color(1,1,1,1)
+        public Entry(int shift, int width)
+        {
+            Shift = shift;
+            Mask = ((1u << width) - 1u) << shift;
+        }
     }
 }

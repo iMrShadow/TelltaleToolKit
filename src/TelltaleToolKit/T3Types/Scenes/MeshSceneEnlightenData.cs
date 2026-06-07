@@ -9,11 +9,11 @@ namespace TelltaleToolKit.T3Types.Scenes;
 public class MeshSceneEnlightenData
 {
     [MetaMember("mSystemName")]
-    public Symbol SystemName { get; set; }
+    public Symbol SystemName { get; set; } = Symbol.Empty;
 
     [MetaMember("mUVTransform")]
-    public Vector4 UVTransform { get; set; }
+    public Vector4 UvTransform { get; set; }
 
     [MetaMember("mFlags")]
-    public Flags  Flags { get; set; }
+    public Flags Flags { get; set; }
 }

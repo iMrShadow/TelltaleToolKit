@@ -1,3 +1,4 @@
+using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Animations;
@@ -14,7 +15,7 @@ public class CompressedQuaternionKeys
 
     public class Serializer : MetaSerializer<CompressedQuaternionKeys>
     {
-        public override void Serialize(ref CompressedQuaternionKeys obj, MetaStream stream)
+        public override void Serialize(ref CompressedQuaternionKeys obj, MetaStream stream, MetaClassType? type = null)
         {
             // TODO: Test this type.
 

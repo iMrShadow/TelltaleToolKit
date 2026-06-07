@@ -16,18 +16,27 @@ public class Skeleton
     {
         // This is a string and a symbol at the same time
         [MetaMember("mJointName")]
-        public Symbol JointName { get; set; }
+        public Symbol JointNameS { get; set; }
+
+        [MetaMember("mJointName")]
+        public string JointName { get; set; }
 
         // This is a string and a symbol at the same time
         [MetaMember("mParentName")]
-        public Symbol ParentName { get; set; }
+        public Symbol ParentNameS { get; set; }
+
+        [MetaMember("mParentName")]
+        public string ParentName { get; set; }
 
         [MetaMember("mParentIndex")]
         public int ParentIndex { get; set; }
 
         // This is a string and a symbol at the same time
         [MetaMember("mMirrorBoneName")]
-        public Symbol MirrorBoneName { get; set; }
+        public Symbol MirrorBoneNameS { get; set; }
+
+        [MetaMember("mMirrorBoneName")]
+        public string MirrorBoneName { get; set; }
 
         [MetaMember("mMirrorBoneIndex")]
         public int MirrorBoneIndex { get; set; }
@@ -59,7 +68,6 @@ public class Skeleton
         [MetaMember("mAnimTranslationScale")]
         public Vector3 AnimTranslationScale { get; set; } = new();
 
-        // This is a string and a symbol at the same time
         [MetaMember("mResourceGroupMembership")]
         public Dictionary<Symbol, float> ResourceGroupMembership { get; set; } = new();
 

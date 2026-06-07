@@ -66,11 +66,14 @@ public class ChoreResource
     [MetaMember("mResourceGroupInclude")]
     public Dictionary<Symbol, float> ResourceGroupIncludeSymbol { get; set; } = new();
 
+    [MetaMember("mAAStatus")]
+    public AutoActStatus AaStatus { get; set; } = new();
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; } = new(); // Bone only
 
     [MetaMember("mAAStatus")]
-    public AutoActStatus AaStatus { get; set; } // Bone only
+    public AAStatus AaStatusE { get; set; } // Bone only
 
     [MetaMember("mhObject")]
     public HandleBase ObjectHandle { get; set; } = new(); // Bone only
@@ -93,8 +96,8 @@ public class ChoreResource
         public float Scale { get; set; }
     }
 
-    [MetaSerializer(typeof(EnumSerializer<AutoActStatus>))]
-    public enum AutoActStatus
+    [MetaSerializer(typeof(EnumSerializer<AAStatus>))]
+    public enum AAStatus
     {
     }
 
@@ -102,7 +105,7 @@ public class ChoreResource
     {
         private static readonly MetaClassSerializer<ChoreResource> s_metaClassSerializer = new();
 
-        public override void Serialize(ref ChoreResource obj, MetaStream stream)
+        public override void Serialize(ref ChoreResource obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
@@ -112,7 +115,7 @@ public class ChoreResource
             if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 if (description != null && description.ContainsMember("mbEmbedded") && obj.HasEmbedded)
                 {
@@ -123,7 +126,7 @@ public class ChoreResource
                     Symbol _ = stream.ReadSymbol();
 
                     object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
-
+                    Toolkit.Instance.GetSerializer(embeddedClassType.LinkingType).PreSerialize(ref embedded, stream);
                     Toolkit.Instance.GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
                     obj.Embedded = embedded;
                 }

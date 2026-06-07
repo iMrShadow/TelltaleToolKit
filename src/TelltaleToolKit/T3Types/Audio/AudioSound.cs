@@ -7,7 +7,6 @@ namespace TelltaleToolKit.T3Types.Audio;
 [MetaSerializer(typeof(MetaClassSerializer<EnumSoundMode>))]
 public class AudioSound
 {
-    // TODO: Check CSI Hard Evidence
     public struct EnumSoundMode
     {
         [MetaMember("mVal")]

@@ -16,4 +16,8 @@ public class FootSteps
         public Dictionary<SoundFootsteps.EnumMaterial, List<Handle<SoundData>>> MaterialFootsteps { get; set; } =
             new();
     }
+
+    internal class FootStepMonitor
+    {
+    }
 }

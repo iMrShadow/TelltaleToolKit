@@ -13,6 +13,9 @@ public class ActingPalette
     [MetaSerializer(typeof(EnumSerializer<ActiveDuring>))]
     public enum ActiveDuring
     {
+        always = 1,
+        talking = 2,
+        listening = 3
     }
 
     [MetaMember("mName")]
@@ -48,7 +51,6 @@ public class ActingPalette
     [MetaMember("mGroupMembershipUID")]
     public int GroupMembershipUID { get; set; }
 
-
     [MetaMember("mAnimFadeInOut")]
     public float AnimFadeInOut { get; set; }
 
@@ -58,13 +60,11 @@ public class ActingPalette
     [MetaMember("mAnimPostDelay")]
     public float AnimPostDelay { get; set; }
 
-
     [MetaMember("mScaleRange")]
     public Range<float> ScaleRange { get; set; }
 
     [MetaMember("mPaletteResourceGroups")]
-    public Dictionary<string, float> PaletteResourceGroups { get; set; }
-
+    public Dictionary<string, float> PaletteResourceGroups { get; set; } = [];
 
     [MetaSerializer(typeof(MetaClassSerializer<EnumActiveDuring>))]
     public struct EnumActiveDuring

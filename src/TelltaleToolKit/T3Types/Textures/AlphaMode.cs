@@ -9,5 +9,5 @@ public enum AlphaMode
     Unknown = -1,
     NoAlpha = 0,
     AlphaTest = 1,
-    AlphaBlend = 2,
+    AlphaBlend = 2
 }

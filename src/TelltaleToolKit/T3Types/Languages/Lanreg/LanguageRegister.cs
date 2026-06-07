@@ -9,5 +9,5 @@ namespace TelltaleToolKit.T3Types.Languages.Lanreg;
 public class LanguageRegister
 {
     [MetaMember("Baseclass_UID::Generator")]
-    public Generator UIDGenerator { get; set; } = null!;
+    public Generator UIDGenerator { get; set; } = new();
 }

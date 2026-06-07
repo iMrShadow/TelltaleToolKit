@@ -1,5 +1,6 @@
 ﻿using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;
 using TelltaleToolKit.T3Types.Properties;
 
@@ -8,11 +9,12 @@ namespace TelltaleToolKit.T3Types.Dialogs.DlgSettings;
 [MetaSerializer(typeof(Serializer))]
 public class DlgObjectPropsMap : IGenerator
 {
-    public List<GroupDefinition> GroupDefinitions { get; set; }
-
     [MetaMember("Baseclass_UID::Generator")]
     public Generator Generator { get; set; }
 
+    public List<GroupDefinition> GroupDefinitions { get; set; } = [];
+
+    [MetaSerializer(typeof(MetaClassSerializer<GroupDefinition>))]
     public class GroupDefinition : IOwner
     {
         [MetaMember("mVer")]
@@ -30,7 +32,12 @@ public class DlgObjectPropsMap : IGenerator
 
     public class Serializer : MetaSerializer<DlgObjectPropsMap>
     {
-        public override void Serialize(ref DlgObjectPropsMap obj, MetaStream stream)
+        public override void PreSerialize(ref DlgObjectPropsMap? obj, MetaStream stream, MetaClassType? type = null)
+        {
+            obj ??= new DlgObjectPropsMap();
+        }
+
+        public override void Serialize(ref DlgObjectPropsMap obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {

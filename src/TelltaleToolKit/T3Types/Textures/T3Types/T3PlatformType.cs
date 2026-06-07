@@ -70,5 +70,5 @@ public enum PlatformType
 
     [Display(Name = "Nintendo Switch")]
     NX = 15,
-    Count = 16,
+    Count = 16
 }

@@ -11,5 +11,5 @@ public enum T3ResourceUsage
     Dynamic = 1,
     System = 2,
     RenderTarget = 3,
-    ShaderWrite = 4,
+    ShaderWrite = 4
 }

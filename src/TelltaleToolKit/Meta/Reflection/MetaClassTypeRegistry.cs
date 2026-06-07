@@ -14,10 +14,13 @@ using TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 using TelltaleToolKit.T3Types.Dialogs.DlgSettings;
 using TelltaleToolKit.T3Types.Dialogs.Dlog;
 using TelltaleToolKit.T3Types.Effects;
+using TelltaleToolKit.T3Types.Enlighten;
+using TelltaleToolKit.T3Types.Events;
 using TelltaleToolKit.T3Types.Fonts;
 using TelltaleToolKit.T3Types.InputMaps;
 using TelltaleToolKit.T3Types.Languages.Landb;
 using TelltaleToolKit.T3Types.Languages.Langdb;
+using TelltaleToolKit.T3Types.Languages.Lanreg;
 using TelltaleToolKit.T3Types.Languages.Llm;
 using TelltaleToolKit.T3Types.Languages.Locreg;
 using TelltaleToolKit.T3Types.LightMaps;
@@ -25,8 +28,10 @@ using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Meshes;
 using TelltaleToolKit.T3Types.Meshes.T3Types;
 using TelltaleToolKit.T3Types.Miscellaneous;
+using TelltaleToolKit.T3Types.Miscellaneous.PreloadPackage;
 using TelltaleToolKit.T3Types.NavCam;
 using TelltaleToolKit.T3Types.Overlays;
+using TelltaleToolKit.T3Types.Particles;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Rules;
 using TelltaleToolKit.T3Types.Scenes;
@@ -44,8 +49,8 @@ namespace TelltaleToolKit.Meta.Reflection;
 public static class MetaClassTypeRegistry
 {
     // Lookup by type, name, or CRC hash
-    private static readonly Dictionary<string, MetaClassType> ByName = new(StringComparer.Ordinal);
-    private static readonly Dictionary<ulong, MetaClassType> ByHash = new();
+    private static readonly Dictionary<string, MetaClassType> s_byName = new(StringComparer.Ordinal);
+    private static readonly Dictionary<ulong, MetaClassType> s_byHash = new();
 
     /// <summary>
     /// All encountered types in Telltale Tool in their original nameof form.
@@ -55,7 +60,7 @@ public static class MetaClassTypeRegistry
     {
 	    // @formatter:off
         // Types which are linked to int are NOT supported.
-        Register("ActingAccentPalette::EnumOverrun",typeof(NotImplementedException)); // Telltale...you have outdone yourself. EnumDescriptionMemories. For some reason this type's owner is also ActingAccentPalette. No idea why.
+        Register("ActingAccentPalette::EnumOverrun",typeof(ActingAccentPalette.EnumOverrun)); // Telltale...you have outdone yourself. EnumDescriptionMemories. For some reason this type's owner is also ActingAccentPalette. No idea why.
         Register("ActingCommandSequence",typeof(NotImplementedException));
         Register("ActingCommandSequence::Context",typeof(NotImplementedException));
         Register("ActingPalette::EnumEndOffsetRelativeTo",typeof(NotImplementedException));
@@ -151,7 +156,7 @@ public static class MetaClassTypeRegistry
         Register("DCArray<D3DMesh::Texture>", typeof(List<D3DMesh.Texture>));
         Register("DCArray<D3DMesh::VertexAnimation>", typeof(List<D3DMesh.VertexAnimation>));
         Register("VertexAnimation", typeof(D3DMesh.VertexAnimation));
-        Register("class SArray<int,11>", typeof(int[]));
+        Register("class SArray<int,11>", typeof(int[]), MetaFlags.None, 11);
         Register("DCArray<DCArray<D3DMesh::LocalTransformEntry>>", typeof(List<List<D3DMesh.LocalTransformEntry>>));
         Register("DCArray<DCArray<T3MeshBonePaletteEntry>>", typeof(List<List<T3MeshBonePaletteEntry>>));
         Register("DCArray<DCArray<T3MeshLocalTransformEntry>>", typeof(List<List<T3MeshLocalTransformEntry>>));
@@ -177,7 +182,7 @@ public static class MetaClassTypeRegistry
         Register("Handle<T3EffectBinary>", typeof(NotImplementedException));
         Register("Handle<T3EffectPreloadPackage>", typeof(NotImplementedException));
         Register("IntrusiveSet<Symbol,PropertySet::KeyInfo,TagPropertyKeyInfoSet,less<Symbol>>", typeof(NotImplementedException));
-        Register("KeyframedValue<CompressedPathBlockingValue::CompressedPathInfoKey>::Sample",typeof(NotImplementedException));
+        Register("KeyframedValue<CompressedPathBlockingValue::CompressedPathInfoKey>::Sample",typeof(KeyframedValue<CompressedPathBlockingValue.CompressedPathInfoKey>.Sample));
         Register("KeyframedValue<class Handle<Chore>>::Sample",typeof(KeyframedValue<Handle<Chore>>.Sample));
         Register("KeyframedValue<class Handle<D3DMesh>>::Sample",typeof(KeyframedValue<Handle<D3DMesh>>.Sample));
         Register("KeyframedValue<class Handle<Dlg>>::Sample",typeof(KeyframedValue<Handle<Dlg>>.Sample));
@@ -185,9 +190,9 @@ public static class MetaClassTypeRegistry
         Register("KeyframedValue<class Handle<PhonemeTable>>::Sample",typeof(KeyframedValue<Handle<PhonemeTable>>.Sample));
         Register("KeyframedValue<class Handle<PropertySet>>::Sample",typeof(KeyframedValue<Handle<PropertySet>>.Sample));
         Register("KeyframedValue<class Handle<Scene>>::Sample",typeof(KeyframedValue<Handle<Scene>>.Sample));
-        Register("KeyframedValue<class Handle<SoundAmbience::AmbienceDefinition>>::Sample",typeof(NotImplementedException));
-        Register("KeyframedValue<class Handle<SoundBusSnapshot::Snapshot>>::Sample",typeof(NotImplementedException));
-        Register("KeyframedValue<class Handle<SoundBusSnapshot::SnapshotSuite>>::Sample",typeof(NotImplementedException));
+        Register("KeyframedValue<class Handle<SoundAmbience::AmbienceDefinition>>::Sample",typeof(KeyframedValue<Handle<SoundAmbience.AmbienceDefinition>>.Sample));
+        Register("KeyframedValue<class Handle<SoundBusSnapshot::Snapshot>>::Sample",typeof(KeyframedValue<Handle<SoundBusSnapshot.Snapshot>>.Sample));
+        Register("KeyframedValue<class Handle<SoundBusSnapshot::SnapshotSuite>>::Sample",typeof(KeyframedValue<Handle<SoundBusSnapshot.SnapshotSuite>>.Sample));
         Register("KeyframedValue<class Handle<SoundData>>::Sample",typeof(KeyframedValue<Handle<SoundData>>.Sample));
         Register("KeyframedValue<class Handle<SoundEventData>>::Sample",typeof(KeyframedValue<Handle<SoundEventData>>.Sample));
         Register("KeyframedValue<class Handle<SoundEventSnapshotData>>::Sample",typeof(KeyframedValue<Handle<SoundEventSnapshotData>>.Sample));
@@ -197,17 +202,17 @@ public static class MetaClassTypeRegistry
         Register("KeyframedValue<LocationInfo>::Sample",typeof(KeyframedValue<LocationInfo>.Sample));
         Register("KeyframedValue<Polar>::Sample",typeof(KeyframedValue<Polar>.Sample));
         Register("KeyframedValue<ScriptEnum>::Sample",typeof(KeyframedValue<ScriptEnum>.Sample));
-        Register("KeyframedValue<SoundEventName<0>>::Sample",typeof(KeyframedValue<SoundEventName>.Sample));
-        Register("KeyframedValue<SoundEventName<1>>::Sample",typeof(KeyframedValue<SoundEventName>.Sample));
-        Register("KeyframedValue<SoundEventName<2>>::Sample",typeof(KeyframedValue<SoundEventName>.Sample));
+        Register("KeyframedValue<SoundEventName<0>>::Sample",typeof(KeyframedValue<SoundEventName0>.Sample));
+        Register("KeyframedValue<SoundEventName<1>>::Sample",typeof(KeyframedValue<SoundEventName1>.Sample));
+        Register("KeyframedValue<SoundEventName<2>>::Sample",typeof(KeyframedValue<SoundEventName2>.Sample));
         Register("KeyframedValue<Symbol>::Sample",typeof(KeyframedValue<Symbol>.Sample));
-        Register("KeyframedValue<T3VertexBufferSample<T3NormalSampleData,T3HeapAllocator>>::Sample",typeof(NotImplementedException));
-        Register("KeyframedValue<T3VertexBufferSample<T3PositionSampleData,T3HeapAllocator>>::Sample",typeof(NotImplementedException));
+        Register("KeyframedValue<T3VertexBufferSample<T3NormalSampleData,T3HeapAllocator>>::Sample",typeof(KeyframedValue<T3VertexBufferSample<T3NormalSampleData>>.Sample));
+        Register("KeyframedValue<T3VertexBufferSample<T3PositionSampleData,T3HeapAllocator>>::Sample",typeof(KeyframedValue<T3VertexBufferSample<T3PositionSampleData>>.Sample));
         Register("KeyframedValue<Vector2>::Sample",typeof(KeyframedValue<Vector2>.Sample));
         Register("KeyframedValue<Vector4>::Sample",typeof(KeyframedValue<Vector4>.Sample));
-        Register("LanguageLookupMap::DlgIDSet", typeof(NotImplementedException));
-        Register("LanguageRegister",typeof(NotImplementedException));
-        Register("Map<String,Rule*,less<String>>", typeof(NotImplementedException));
+        Register("LanguageLookupMap::DlgIDSet", typeof(LanguageLookupMap.DlgIdSet));
+        Register("LanguageRegister",typeof(LanguageRegister));
+        Register("Map<String,Rule*,less<String>>", typeof(Dictionary<string, Rule>));
         Register("Map<Symbol,D3DMesh::AnimatedVertexGroupEntry,less<Symbol>>", typeof(Dictionary<Symbol, D3DMesh.AnimatedVertexGroupEntry>));
         Register("D3DMesh::AnimatedVertexGroupEntry", typeof(D3DMesh.AnimatedVertexGroupEntry));
         Register("Map<float,KeyframedValue<int>,less<float>>", typeof(NotImplementedException));
@@ -226,12 +231,14 @@ public static class MetaClassTypeRegistry
         Register("RenderObject_HLSMovie", typeof(NotImplementedException));
         Register("RenderObject_Mesh::MeshInstance", typeof(RenderObject_Mesh.MeshInstance));
         Register("RenderObject_Viewport", typeof(NotImplementedException));
-        Register("SArray<DCArray<D3DMesh::Texture>,14>", typeof(List<D3DMesh.Texture>[]));
-        Register("SArray<DCArray<RenderObject_Mesh::TextureInstance>,14>", typeof(List<RenderObject_Mesh.TextureInstance>[]));
-        Register("SArray<T3VertexComponent,13>", typeof(T3VertexComponent[]));
-        Register("SArray<T3VertexComponent,14>", typeof(T3VertexComponent[]));
-        Register("SArray<int,14>", typeof(int[]));
-        Register("SArray<unsignedint,2>", typeof(uint[]));
+        Register("SArray<DCArray<D3DMesh::Texture>,14>", typeof(List<D3DMesh.Texture>[]), MetaFlags.None, 14);
+        Register("SArray<DCArray<RenderObject_Mesh::TextureInstance>,14>", typeof(List<RenderObject_Mesh.TextureInstance>[]), MetaFlags.None, 14);
+        Register("SArray<T3VertexComponent,12>", typeof(T3VertexComponent[]), MetaFlags.None, 12);
+        Register("SArray<T3VertexComponent,13>", typeof(T3VertexComponent[]), MetaFlags.None, 13);
+        Register("SArray<T3VertexComponent,14>", typeof(T3VertexComponent[]), MetaFlags.None, 14);
+        Register("SArray<int,14>", typeof(int[]), MetaFlags.None, 14);
+        Register("SArray<unsignedint,2>", typeof(uint[]), MetaFlags.None, 2);
+        Register("SArray<unsignedshort,3>", typeof(ushort[]), MetaFlags.None, 2);
         Register("ScriptEnum:AIAgentState", typeof(ScriptEnum));
         Register("ScriptEnum:AIDummyPos", typeof(ScriptEnum));
         Register("ScriptEnum:AIPatrolType", typeof(ScriptEnum));
@@ -303,7 +310,7 @@ public static class MetaClassTypeRegistry
         Register("ScriptEnum:WhatTellThanosTrainingRoomGamora", typeof(ScriptEnum));
         Register("ScriptEnum:WhatTellThanosTrainingRoomNebula", typeof(ScriptEnum));
         Register("ScriptEnum:WormName", typeof(ScriptEnum));
-        Register("Set<unsignedint,less<unsignedint>>", typeof(NotImplementedException));
+        Register("Set<unsignedint,less<unsignedint>>", typeof(HashSet<uint>));
         Register("SingleContributionValue<float>",typeof(NotImplementedException));
         Register("SkeletonPoseCompoundValue",typeof(NotImplementedException));
         Register("SoundAmbience::EventContext", typeof(NotImplementedException));
@@ -330,14 +337,14 @@ public static class MetaClassTypeRegistry
         Register("T3OverlayTextParams", typeof(T3OverlayTextParams));
         Register("T3VertexComponent", typeof(T3VertexComponent));
         Register("T3VertexDeclaration", typeof(NotImplementedException));
-        Register("T3VertexSampleDataBase",typeof(NotImplementedException));
-        Register("TRange<unsignedint>", typeof(NotImplementedException));
-        Register("class TRange<unsigned long>", typeof(Range<uint>));
+        Register("T3VertexSampleDataBase",typeof(T3VertexSampleDatabase));
+        Register("TRange<unsignedint>", typeof(Range<uint>), MetaFlags.MetaSerializeBlockingDisabled);
+        Register("class TRange<unsigned long>", typeof(Range<uint>), MetaFlags.MetaSerializeBlockingDisabled);
         Register("TextBuffer::Line", typeof(NotImplementedException));
         Register("__int64", typeof(long),MetaFlags.MetaSerializeBlockingDisabled);
         Register("bool", typeof(bool), MetaFlags.MetaSerializeBlockingDisabled);
         Register("char", typeof(sbyte),MetaFlags.MetaSerializeBlockingDisabled);
-        Register("class ActingAccentPalette", typeof(NotImplementedException));
+        Register("class ActingAccentPalette", typeof(ActingAccentPalette));
         Register("class ActingOverridablePropOwner", typeof(ActingOverridablePropOwner));
         Register("class ActingPalette", typeof(ActingPalette));
         Register("class ActingPaletteClass", typeof(ActingPaletteClass));
@@ -350,46 +357,46 @@ public static class MetaClassTypeRegistry
         Register("class AgentMap::AgentMapEntry", typeof(AgentMap.AgentMapEntry));
         Register("class AgentState", typeof(AgentState));
         Register("class AnimOrChore", typeof(AnimOrChore));
-        Register("class AnimatedValueInterface<bool>", typeof(AnimatedValueInterface<bool>));
-        Register("class AnimatedValueInterface<class AnimOrChore>", typeof(AnimatedValueInterface<AnimOrChore>));
-        Register("class AnimatedValueInterface<class Color>", typeof(AnimatedValueInterface<Color>));
-        Register("class AnimatedValueInterface<class Handle<class Chore> >", typeof(AnimatedValueInterface<Handle<Chore>>));
-        Register("class AnimatedValueInterface<class Handle<class D3DMesh> >", typeof(AnimatedValueInterface<Handle<D3DMesh>>));
-        Register("class AnimatedValueInterface<class Handle<class Dlg> >", typeof(AnimatedValueInterface<Handle<Dlg>>));
-        Register("class AnimatedValueInterface<class Handle<class Font> >", typeof(AnimatedValueInterface<Handle<Font>>));
-        Register("class AnimatedValueInterface<class Handle<class PhonemeTable> >", typeof(AnimatedValueInterface<Handle<PhonemeTable>>));
-        Register("class AnimatedValueInterface<class Handle<class PropertySet> >", typeof(AnimatedValueInterface<Handle<PropertySet>>));
-        Register("class AnimatedValueInterface<class Handle<class Scene> >", typeof(AnimatedValueInterface<Handle<Scene>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundBusSnapshot::Snapshot> >", typeof(AnimatedValueInterface<Handle<SoundBusSnapshot.Snapshot>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundBusSnapshot::SnapshotSuite> >", typeof(AnimatedValueInterface<Handle<SoundBusSnapshot.SnapshotSuite>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundData> >", typeof(AnimatedValueInterface<Handle<SoundData>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundEventData> >", typeof(AnimatedValueInterface<Handle<SoundEventData>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundEventSnapshotData> >", typeof(AnimatedValueInterface<Handle<SoundEventSnapshotData>>));
-        Register("class AnimatedValueInterface<class Handle<class SoundReverbDefinition> >", typeof(AnimatedValueInterface<Handle<SoundReverbDefinition>>));
-        Register("class AnimatedValueInterface<class Handle<class T3Texture> >", typeof(AnimatedValueInterface<Handle<T3Texture>>));
-        Register("class AnimatedValueInterface<class Handle<class WalkBoxes> >", typeof(AnimatedValueInterface<Handle<WalkBoxes>>));
-        Register("class AnimatedValueInterface<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(AnimatedValueInterface<Handle<SoundAmbience.AmbienceDefinition>>));
-        Register("class AnimatedValueInterface<class LocationInfo>", typeof(AnimatedValueInterface<LocationInfo>));
-        Register("class AnimatedValueInterface<class Polar>", typeof(AnimatedValueInterface<Polar>));
-        Register("class AnimatedValueInterface<class Quaternion>", typeof(AnimatedValueInterface<Quaternion>));
-        Register("class AnimatedValueInterface<class SoundEventName<0> >", typeof(AnimatedValueInterface<SoundEventName>));
-        Register("class AnimatedValueInterface<class SoundEventName<1> >", typeof(AnimatedValueInterface<SoundEventName>));
-        Register("class AnimatedValueInterface<class SoundEventName<2> >", typeof(AnimatedValueInterface<SoundEventName>));
-        Register("class AnimatedValueInterface<class String>", typeof(AnimatedValueInterface<string>));
-        Register("class AnimatedValueInterface<class Symbol>", typeof(AnimatedValueInterface<Symbol>));
-        Register("class AnimatedValueInterface<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(AnimatedValueInterface<T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>>));
-        Register("class AnimatedValueInterface<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(AnimatedValueInterface<T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>>));
-        Register("class AnimatedValueInterface<class Transform>", typeof(AnimatedValueInterface<Transform>));
-        Register("class AnimatedValueInterface<class Vector2>", typeof(AnimatedValueInterface<Vector2>));
-        Register("class AnimatedValueInterface<class Vector3>", typeof(AnimatedValueInterface<Vector3>));
-        Register("class AnimatedValueInterface<class Vector4>", typeof(AnimatedValueInterface<Vector4>));
-        Register("class AnimatedValueInterface<float>", typeof(AnimatedValueInterface<float>));
-        Register("class AnimatedValueInterface<int>", typeof(AnimatedValueInterface<int>));
-        Register("class AnimatedValueInterface<struct CompressedPathBlockingValue::CompressedPathInfoKey>", typeof(AnimatedValueInterface<CompressedPathBlockingValue.CompressedPathInfoKey>));
-        Register("class AnimatedValueInterface<struct PhonemeKey>", typeof(AnimatedValueInterface<PhonemeKey>));
-        Register("class AnimatedValueInterface<struct ScriptEnum>", typeof(AnimatedValueInterface<ScriptEnum>));
-        Register("class AnimatedValueInterface<ulong long>", typeof(AnimatedValueInterface<uint>));
-        Register("class AnimatedValueInterface<unsigned __int64>", typeof(AnimatedValueInterface<ulong>));
+        Register("class AnimatedValueInterface<bool>", typeof(AnimationValueInterface<bool>));
+        Register("class AnimatedValueInterface<class AnimOrChore>", typeof(AnimationValueInterface<AnimOrChore>));
+        Register("class AnimatedValueInterface<class Color>", typeof(AnimationValueInterface<Color>));
+        Register("class AnimatedValueInterface<class Handle<class Chore> >", typeof(AnimationValueInterface<Handle<Chore>>));
+        Register("class AnimatedValueInterface<class Handle<class D3DMesh> >", typeof(AnimationValueInterface<Handle<D3DMesh>>));
+        Register("class AnimatedValueInterface<class Handle<class Dlg> >", typeof(AnimationValueInterface<Handle<Dlg>>));
+        Register("class AnimatedValueInterface<class Handle<class Font> >", typeof(AnimationValueInterface<Handle<Font>>));
+        Register("class AnimatedValueInterface<class Handle<class PhonemeTable> >", typeof(AnimationValueInterface<Handle<PhonemeTable>>));
+        Register("class AnimatedValueInterface<class Handle<class PropertySet> >", typeof(AnimationValueInterface<Handle<PropertySet>>));
+        Register("class AnimatedValueInterface<class Handle<class Scene> >", typeof(AnimationValueInterface<Handle<Scene>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundBusSnapshot::Snapshot> >", typeof(AnimationValueInterface<Handle<SoundBusSnapshot.Snapshot>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundBusSnapshot::SnapshotSuite> >", typeof(AnimationValueInterface<Handle<SoundBusSnapshot.SnapshotSuite>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundData> >", typeof(AnimationValueInterface<Handle<SoundData>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundEventData> >", typeof(AnimationValueInterface<Handle<SoundEventData>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundEventSnapshotData> >", typeof(AnimationValueInterface<Handle<SoundEventSnapshotData>>));
+        Register("class AnimatedValueInterface<class Handle<class SoundReverbDefinition> >", typeof(AnimationValueInterface<Handle<SoundReverbDefinition>>));
+        Register("class AnimatedValueInterface<class Handle<class T3Texture> >", typeof(AnimationValueInterface<Handle<T3Texture>>));
+        Register("class AnimatedValueInterface<class Handle<class WalkBoxes> >", typeof(AnimationValueInterface<Handle<WalkBoxes>>));
+        Register("class AnimatedValueInterface<class Handle<struct SoundAmbience::AmbienceDefinition> >", typeof(AnimationValueInterface<Handle<SoundAmbience.AmbienceDefinition>>));
+        Register("class AnimatedValueInterface<class LocationInfo>", typeof(AnimationValueInterface<LocationInfo>));
+        Register("class AnimatedValueInterface<class Polar>", typeof(AnimationValueInterface<Polar>));
+        Register("class AnimatedValueInterface<class Quaternion>", typeof(AnimationValueInterface<Quaternion>));
+        Register("class AnimatedValueInterface<class SoundEventName<0> >", typeof(AnimationValueInterface<SoundEventName0>));
+        Register("class AnimatedValueInterface<class SoundEventName<1> >", typeof(AnimationValueInterface<SoundEventName1>));
+        Register("class AnimatedValueInterface<class SoundEventName<2> >", typeof(AnimationValueInterface<SoundEventName2>));
+        Register("class AnimatedValueInterface<class String>", typeof(AnimationValueInterface<string>));
+        Register("class AnimatedValueInterface<class Symbol>", typeof(AnimationValueInterface<Symbol>));
+        Register("class AnimatedValueInterface<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(AnimationValueInterface<T3VertexBufferSample<T3NormalSampleData>>));
+        Register("class AnimatedValueInterface<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(AnimationValueInterface<T3VertexBufferSample<T3PositionSampleData>>));
+        Register("class AnimatedValueInterface<class Transform>", typeof(AnimationValueInterface<Transform>));
+        Register("class AnimatedValueInterface<class Vector2>", typeof(AnimationValueInterface<Vector2>));
+        Register("class AnimatedValueInterface<class Vector3>", typeof(AnimationValueInterface<Vector3>));
+        Register("class AnimatedValueInterface<class Vector4>", typeof(AnimationValueInterface<Vector4>));
+        Register("class AnimatedValueInterface<float>", typeof(AnimationValueInterface<float>));
+        Register("class AnimatedValueInterface<int>", typeof(AnimationValueInterface<int>));
+        Register("class AnimatedValueInterface<struct CompressedPathBlockingValue::CompressedPathInfoKey>", typeof(AnimationValueInterface<CompressedPathBlockingValue.CompressedPathInfoKey>));
+        Register("class AnimatedValueInterface<struct PhonemeKey>", typeof(AnimationValueInterface<PhonemeKey>));
+        Register("class AnimatedValueInterface<struct ScriptEnum>", typeof(AnimationValueInterface<ScriptEnum>));
+        Register("class AnimatedValueInterface<ulong long>", typeof(AnimationValueInterface<uint>));
+        Register("class AnimatedValueInterface<unsigned __int64>", typeof(AnimationValueInterface<ulong>));
         Register("class Animation", typeof(Animation));
         Register("class AnimationConstraintParameters", typeof(AnimationConstraintParameters));
         Register("class AnimationManager", typeof(AnimationManager));
@@ -402,16 +409,16 @@ public static class MetaClassTypeRegistry
         Register("class BallJointKey", typeof(BallJointKey));
         Register("class BallTwistJointKey", typeof(BallTwistJointKey));
         Register("class BinaryBuffer", typeof(BinaryBuffer));
-        Register("class BitSetBase<1>", typeof(BitSetBase));
-        Register("class BitSetBase<2>", typeof(BitSetBase));
-        Register("class BitSetBase<3>", typeof(BitSetBase));
-        Register("class BitSetBase<4>", typeof(BitSetBase));
-        Register("class BitSetBase<5>", typeof(BitSetBase));
-        Register("class BitSetBase<6>", typeof(BitSetBase));
-        Register("class BitSetBase<7>", typeof(BitSetBase));
-        Register("class BitSetBase<8>", typeof(BitSetBase));
-        Register("class BitSetBase<9>", typeof(BitSetBase));
-        Register("class BlendCameraResource", typeof(BlendCameraResource));
+        Register("class BitSetBase<1>", typeof(BitSetBase), MetaFlags.None, 1);
+        Register("class BitSetBase<2>", typeof(BitSetBase), MetaFlags.None, 2);
+        Register("class BitSetBase<3>", typeof(BitSetBase), MetaFlags.None, 3);
+        Register("class BitSetBase<4>", typeof(BitSetBase), MetaFlags.None, 4);
+        Register("class BitSetBase<5>", typeof(BitSetBase), MetaFlags.None, 5);
+        Register("class BitSetBase<6>", typeof(BitSetBase), MetaFlags.None, 6);
+        Register("class BitSetBase<7>", typeof(BitSetBase), MetaFlags.None, 7);
+        Register("class BitSetBase<8>", typeof(BitSetBase), MetaFlags.None, 8);
+        Register("class BitSetBase<9>", typeof(BitSetBase), MetaFlags.None, 9);
+        Register("class BlendCameraResource", typeof(BlendCameraResource), MetaFlags.Memberless);
         Register("class BlendEntry", typeof(BlendEntry));
         Register("class BlendGraph", typeof(BlendGraph));
         Register("class BlendGraphManager", typeof(BlendGraphManager));
@@ -457,13 +464,13 @@ public static class MetaClassTypeRegistry
         Register("class CompressedKeys<class LocationInfo>", typeof(CompressedKeys<LocationInfo>));
         Register("class CompressedKeys<class Polar>", typeof(CompressedKeys<Polar>));
         Register("class CompressedKeys<class Quaternion>", typeof(CompressedKeys<Quaternion>));
-        Register("class CompressedKeys<class SoundEventName<0> >", typeof(CompressedKeys<SoundEventName>));
-        Register("class CompressedKeys<class SoundEventName<1> >", typeof(CompressedKeys<SoundEventName>));
-        Register("class CompressedKeys<class SoundEventName<2> >", typeof(CompressedKeys<SoundEventName>));
-        Register("class CompressedKeys<class String>", typeof(CompressedKeys<String>));
+        Register("class CompressedKeys<class SoundEventName<0> >", typeof(CompressedKeys<SoundEventName0>));
+        Register("class CompressedKeys<class SoundEventName<1> >", typeof(CompressedKeys<SoundEventName1>));
+        Register("class CompressedKeys<class SoundEventName<2> >", typeof(CompressedKeys<SoundEventName2>));
+        Register("class CompressedKeys<class String>", typeof(CompressedKeys<string>));
         Register("class CompressedKeys<class Symbol>", typeof(CompressedKeys<Symbol>));
-        Register("class CompressedKeys<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(CompressedKeys<T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>>));
-        Register("class CompressedKeys<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(CompressedKeys<T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>>));
+        Register("class CompressedKeys<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(CompressedKeys<T3VertexBufferSample<T3NormalSampleData>>));
+        Register("class CompressedKeys<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(CompressedKeys<T3VertexBufferSample<T3PositionSampleData>>));
         Register("class CompressedKeys<class Transform>", typeof(CompressedKeys<Transform>));
         Register("class CompressedKeys<class Vector2>", typeof(CompressedKeys<Vector2>));
         Register("class CompressedKeys<class Vector3>", typeof(CompressedKeys<Vector3>));
@@ -503,6 +510,7 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<class ActingPaletteClass>", typeof(List<ActingPaletteClass>));
         Register("class DCArray<class ActingPaletteGroup>", typeof(List<ActingPaletteGroup>));
         Register("class DCArray<class ActingResource>", typeof(List<ActingResource>));
+        Register("class DCArray<class ActingResource*>", typeof(List<ActingResource>));
         Register("class DCArray<class AnimOrChore>", typeof(List<AnimOrChore>));
         Register("class DCArray<class BlendEntry>", typeof(List<BlendEntry>));
         Register("class DCArray<class ChoreAgent>", typeof(List<ChoreAgent>));
@@ -519,6 +527,7 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<class FileName<class SoundEventBankDummy> >", typeof(List<FileName<SoundEventBankDummy>>));
         Register("class DCArray<class FontConfig>", typeof(List<FontConfig>));
         Register("class DCArray<class Guide>", typeof(List<Guide>));
+        Register("class Guide", typeof(Guide));
         Register("class DCArray<class Handle<class AnimOrChore> >", typeof(List<Handle<AnimOrChore>>));
         Register("class DCArray<class Handle<class AudioData> >", typeof(List<Handle<AudioData>>));
         Register("class DCArray<class Handle<class Chore> >", typeof(List<Handle<Chore>>));
@@ -554,13 +563,13 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<class KeyframedValue<class PhonemeKey>>", typeof(List<KeyframedValue<PhonemeKey>>));
         Register("class DCArray<class KeyframedValue<class Polar>::Sample>", typeof(List<KeyframedValue<Polar>.Sample>));
         Register("class DCArray<class KeyframedValue<class Quaternion>::Sample>", typeof(List<KeyframedValue<Quaternion>.Sample>));
-        Register("class DCArray<class KeyframedValue<class SoundEventName<0> >::Sample>", typeof(List<KeyframedValue<SoundEventName>.Sample>));
-        Register("class DCArray<class KeyframedValue<class SoundEventName<1> >::Sample>", typeof(List<KeyframedValue<SoundEventName>.Sample>));
-        Register("class DCArray<class KeyframedValue<class SoundEventName<2> >::Sample>", typeof(List<KeyframedValue<SoundEventName>.Sample>));
+        Register("class DCArray<class KeyframedValue<class SoundEventName<0> >::Sample>", typeof(List<KeyframedValue<SoundEventName0>.Sample>));
+        Register("class DCArray<class KeyframedValue<class SoundEventName<1> >::Sample>", typeof(List<KeyframedValue<SoundEventName1>.Sample>));
+        Register("class DCArray<class KeyframedValue<class SoundEventName<2> >::Sample>", typeof(List<KeyframedValue<SoundEventName2>.Sample>));
         Register("class DCArray<class KeyframedValue<class String>::Sample>", typeof(List<KeyframedValue<string>.Sample>));
         Register("class DCArray<class KeyframedValue<class Symbol>::Sample>", typeof(List<KeyframedValue<Symbol>.Sample>));
-        Register("class DCArray<class KeyframedValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >::Sample>", typeof(List<KeyframedValue<T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>>.Sample>));
-        Register("class DCArray<class KeyframedValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >::Sample>", typeof(List<KeyframedValue<T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>>.Sample>));
+        Register("class DCArray<class KeyframedValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >::Sample>", typeof(List<KeyframedValue<T3VertexBufferSample<T3NormalSampleData>>.Sample>));
+        Register("class DCArray<class KeyframedValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >::Sample>", typeof(List<KeyframedValue<T3VertexBufferSample<T3PositionSampleData>>.Sample>));
         Register("class DCArray<class KeyframedValue<class Transform>::Sample>", typeof(List<KeyframedValue<Transform>.Sample>));
         Register("class DCArray<class KeyframedValue<class Vector2>::Sample>", typeof(List<KeyframedValue<Vector2>.Sample>));
         Register("class DCArray<class KeyframedValue<class Vector3>::Sample>", typeof(List<KeyframedValue<Vector3>.Sample>));
@@ -575,16 +584,18 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<class LanguageResLocal>", typeof(List<LanguageResLocal>));
         Register("class DCArray<class LightGroupInstance>", typeof(List<LightGroupInstance>));
         Register("class DCArray<class LogicGroup>", typeof(List<LogicGroup>));
-        Register("class DCArray<class Map<class String,class String,struct std::less<class String> > >", typeof(List<Dictionary<String, String>>));
+        Register("class DCArray<class Map<class String,class String,struct std::less<class String> > >", typeof(List<Dictionary<string, string>>));
         Register("class DCArray<class ParticlePropConnect>", typeof(List<ParticlePropConnect>));
         Register("class DCArray<class ProjectDatabaseIDPair>", typeof(List<ProjectDatabaseIdPair>));
         Register("class DCArray<class PropertySet>", typeof(List<PropertySet>));
         Register("class DCArray<class Ptr<class ActingAccentPalette> >", typeof(List<ActingAccentPalette>));
+        Register("class DCArray<class Ptr<class ActingAccentPalette::PaletteClassStatus> >", typeof(List<ActingAccentPalette.PaletteClassStatus>));
         Register("class DCArray<class Ptr<class ActingPalette> >", typeof(List<ActingPalette>));
         Register("class DCArray<class Ptr<class ActingPaletteClass> >", typeof(List<ActingPaletteClass>));
         Register("class DCArray<class Ptr<class ActingPaletteGroup> >", typeof(List<ActingPaletteGroup>));
         Register("class DCArray<class Ptr<class AnimationValueInterfaceBase> >", typeof(List<AnimationValueInterfaceBase>));
         Register("class DCArray<class Ptr<class DlgChild> >", typeof(List<DlgChild>));
+        Register("class DCArray<class Ptr<class Note::Entry> >", typeof(List<Note.Entry>));
         Register("class DCArray<class Ptr<class DlgChoiceInstance>>", typeof(NotImplementedException));
         Register("class DCArray<class RenderObject_Mesh::MeshInstance>", typeof(List<RenderObject_Mesh.MeshInstance>));
         Register("class DCArray<class ResourceBundle::ResourceInfo>", typeof(List<ResourceBundle.ResourceInfo>));
@@ -616,10 +627,10 @@ public static class MetaClassTypeRegistry
         Register("class DCArray<struct MeshSceneLightmapData::Entry>", typeof(List<MeshSceneLightmapData.Entry>));
         Register("class DCArray<struct ParticleProperties::Animation>", typeof(List<ParticleProperties.Animation>));
         Register("class DCArray<struct ParticleSprite::Animation>", typeof(List<ParticleSprite.Animation>));
-        Register("class DCArray<struct PreloadPackage::ResourceKey>", typeof(List<PreloadPackage.ResourceKey>));
-        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DialogResourceInfo>", typeof(List<PreloadPackage.RuntimeDataDialog.DialogResourceInfo>));
-        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DlgObjIdAndResourceVector>", typeof(List<PreloadPackage.RuntimeDataDialog.DlgObjIdAndResourceVector>));
-        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DlgObjIdAndStartNodeOffset>", typeof(List<PreloadPackage.RuntimeDataDialog.DlgObjIdAndStartNodeOffset>));
+        Register("class DCArray<struct PreloadPackage::ResourceKey>", typeof(List<ResourceKey>));
+        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DialogResourceInfo>", typeof(List<RuntimeDataDialog.DialogResourceInfo>));
+        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DlgObjIdAndResourceVector>", typeof(List<RuntimeDataDialog.DlgObjIdAndResourceVector>));
+        Register("class DCArray<struct PreloadPackage::RuntimeDataDialog::DlgObjIdAndStartNodeOffset>", typeof(List<RuntimeDataDialog.DlgObjIdAndStartNodeOffset>));
         Register("class DCArray<struct Procedural_LookAt::Constraint>", typeof(List<ProceduralLookAt.Constraint>));
         Register("class DCArray<struct RenderObject_Mesh::TextureInstance>", typeof(List<RenderObject_Mesh.TextureInstance>));
         Register("class DCArray<struct SkeletonPoseValue::BoneEntry>", typeof(List<SkeletonPoseValue.BoneEntry>));
@@ -779,8 +790,8 @@ public static class MetaClassTypeRegistry
         Register("class Handle<class PhonemeTable>", typeof(Handle<PhonemeTable>));
         Register("class Handle<class PhysicsData>", typeof(Handle<PhysicsData>));
         Register("class Handle<class PhysicsObject>", typeof(Handle<PhysicsObject>));
-        Register("class Handle<class PreloadPackage::RuntimeDataDialog>", typeof(Handle<PreloadPackage.RuntimeDataDialog>));
-        Register("class Handle<class PreloadPackage::RuntimeDataScene>", typeof(Handle<PreloadPackage.RuntimeDataScene>));
+        Register("class Handle<class PreloadPackage::RuntimeDataDialog>", typeof(Handle<RuntimeDataDialog>));
+        Register("class Handle<class PreloadPackage::RuntimeDataScene>", typeof(Handle<RuntimeDataScene>));
         Register("class Handle<class PropertySet>", typeof(Handle<PropertySet>));
         Register("class Handle<class ResourceBundle>", typeof(Handle<ResourceBundle>));
         Register("class Handle<class Rule>", typeof(Handle<Rule>));
@@ -818,12 +829,14 @@ public static class MetaClassTypeRegistry
         Register("class IdleSlotDefaults", typeof(IdleSlotDefaults));
         Register("class IdleTransitionSettings", typeof(IdleTransitionSettings));
         Register("class InputMapper", typeof(InputMapper));
+        Register("class PlatformInputMapper", typeof(PlatformInputMapper));
+        Register("class PlatformInputMapper::EventMapping", typeof(PlatformInputMapper.EventMapping));
         Register("class InputMapper::EventMapping", typeof(InputMapper.EventMapping));
         Register("class InputMapper::RawEvent", typeof(InputMapper.RawEvent));
         Register("class IntrusiveSet<class Symbol,class PropertySet::KeyInfo,struct TagPropertyKeyInfoSet,struct Symbol::CompareCRC>", typeof(NotImplementedException));
         Register("class InverseKinematics", typeof(InverseKinematics));
         Register("class InverseKinematicsAttach", typeof(InverseKinematicsAttach));
-        Register("class InverseKinematicsBase", typeof(InverseKinematicsBase));
+        Register("class InverseKinematicsBase", typeof(InverseKinematicsBase), MetaFlags.MetaSerializeDisable);
         Register("class InverseKinematicsDerived", typeof(InverseKinematicsDerived));
         Register("class JiraRecordManager", typeof(JiraRecordManager));
         Register("class KeyframedValue<bool>", typeof(KeyframedValue<bool>));
@@ -853,14 +866,14 @@ public static class MetaClassTypeRegistry
         Register("class KeyframedValue<class Polar>", typeof(KeyframedValue<Polar>));
         Register("class KeyframedValue<class Quaternion>", typeof(KeyframedValue<Quaternion>));
         Register("class KeyframedValue<class Quaternion>::Sample", typeof(KeyframedValue<Quaternion>.Sample));
-        Register("class KeyframedValue<class SoundEventName<0> >", typeof(KeyframedValue<SoundEventName>));
-        Register("class KeyframedValue<class SoundEventName<1> >", typeof(KeyframedValue<SoundEventName>));
-        Register("class KeyframedValue<class SoundEventName<2> >", typeof(KeyframedValue<SoundEventName>));
+        Register("class KeyframedValue<class SoundEventName<0> >", typeof(KeyframedValue<SoundEventName0>));
+        Register("class KeyframedValue<class SoundEventName<1> >", typeof(KeyframedValue<SoundEventName1>));
+        Register("class KeyframedValue<class SoundEventName<2> >", typeof(KeyframedValue<SoundEventName2>));
         Register("class KeyframedValue<class String>", typeof(KeyframedValue<string>));
         Register("class KeyframedValue<class String>::Sample", typeof(KeyframedValue<string>.Sample));
         Register("class KeyframedValue<class Symbol>", typeof(KeyframedValue<Symbol>));
-        Register("class KeyframedValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(KeyframedValue<T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>>));
-        Register("class KeyframedValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(KeyframedValue<T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>>));
+        Register("class KeyframedValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(KeyframedValue<T3VertexBufferSample<T3NormalSampleData>>));
+        Register("class KeyframedValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(KeyframedValue<T3VertexBufferSample<T3PositionSampleData>>));
         Register("class KeyframedValue<class Transform>", typeof(KeyframedValue<Transform>));
         Register("class KeyframedValue<class Transform>::Sample", typeof(KeyframedValue<Transform>.Sample));
         Register("class KeyframedValue<class Vector2>", typeof(KeyframedValue<Vector2>));
@@ -888,6 +901,7 @@ public static class MetaClassTypeRegistry
         Register("class LanguageResProxy", typeof(LanguageResProxy));
         Register("class LanguageResource", typeof(LanguageResource));
         Register("class LanguageResourceProxy", typeof(LanguageResourceProxy));
+        Register("class LanguageResourceProxy::ModRes", typeof(LanguageResourceProxy.ModRes));
         Register("class LightInstance", typeof(LightInstance));
         Register("class LightProbe", typeof(LightProbe));
         Register("class LightProbeData", typeof(LightProbeData));
@@ -898,7 +912,7 @@ public static class MetaClassTypeRegistry
         Register("class LipSync2", typeof(LipSync2));
         Register("class List<bool>", typeof(List<bool>));
         Register("class List<class Color>", typeof(List<Color>));
-        Register("class List<class DCArray<class String> >", typeof(List<List<String>>));
+        Register("class List<class DCArray<class String> >", typeof(List<List<string>>));
         Register("class List<class Handle<class AnimOrChore> >", typeof(List<Handle<AnimOrChore>>));
         Register("class List<class Handle<class AudioData> >", typeof(List<Handle<AudioData>>));
         Register("class List<class Handle<class Chore> >", typeof(List<Handle<Chore>>));
@@ -913,7 +927,7 @@ public static class MetaClassTypeRegistry
         Register("class List<class List<class Symbol> >", typeof(List<List<Symbol>>));
         Register("class List<class Map<class String,class String,struct std::less<class String> > >", typeof(List<Dictionary<string, string>>));
         Register("class List<class PropertySet>", typeof(List<PropertySet>));
-        Register("class List<class String>", typeof(List<String>));
+        Register("class List<class String>", typeof(List<string>));
         Register("class List<class T3ToonGradientRegion>", typeof(List<T3ToonGradientRegion>));
         Register("class List<class Vector3>", typeof(List<Vector3>));
         Register("class List<float>", typeof(List<float>));
@@ -933,30 +947,30 @@ public static class MetaClassTypeRegistry
         Register("class Map<class MetaClassDescription const * __ptr64,int,struct std::less<class MetaClassDescription const * __ptr64> >", typeof(NotImplementedException));
         Register("class Map<class String, class TransitionMap::TransitionMapInfo, std::less<class String>>", typeof(Dictionary<string, TransitionMap.TransitionMapInfo>));
         Register("class Map<class String,bool,struct std::less<class String> >", typeof(Dictionary<string, bool>));
-        Register("class Map<class String,class AgentMap::AgentMapEntry,struct std::less<class String> >", typeof(Dictionary<String, AgentMap.AgentMapEntry>));
+        Register("class Map<class String,class AgentMap::AgentMapEntry,struct std::less<class String> >", typeof(Dictionary<string, AgentMap.AgentMapEntry>));
         Register("class Map<class String,class AnimOrChore,struct std::less<class String> >", typeof(Dictionary<string, AnimOrChore>));
-        Register("class Map<class String,class DCArray<class String>,struct std::less<class String> >", typeof(Dictionary<string, List<String>>));
+        Register("class Map<class String,class DCArray<class String>,struct std::less<class String> >", typeof(Dictionary<string, List<string>>));
         Register("class Map<class String,class DCArray<unsigned char>,struct std::less<class String> >", typeof(Dictionary<string, List<byte>>));
         Register("class Map<class String,class Handle<class PropertySet>,struct std::less<class String> >", typeof(Dictionary<string, Handle<PropertySet>>));
         Register("class Map<class String,class LocomotionDB::AnimationInfo,struct std::less<class String> >", typeof(Dictionary<string, LocomotionDb.AnimationInfo>));
         Register("class Map<class String,class LogicGroup::LogicItem,struct std::less<class String> >", typeof(Dictionary<string, LogicGroup.LogicItem>));
-        Register("class Map<class String,class Map<class String,class DCArray<class String>,struct std::less<class String> >,struct std::less<class String> >", typeof(Dictionary<string, Dictionary<string, List<String>>>));
-        Register("class Map<class String,class Map<class String,class String,struct std::less<class String> >,struct std::less<class String> >", typeof(Dictionary<string, Dictionary<string, String>>));
+        Register("class Map<class String,class Map<class String,class DCArray<class String>,struct std::less<class String> >,struct std::less<class String> >", typeof(Dictionary<string, Dictionary<string, List<string>>>));
+        Register("class Map<class String,class Map<class String,class String,struct std::less<class String> >,struct std::less<class String> >", typeof(Dictionary<string, Dictionary<string, string>>));
         Register("class Map<class String,class PropertySet,struct std::less<class String> >", typeof(Dictionary<string, PropertySet>));
         Register("class Map<class String,class Ptr<class JiraRecord>,struct std::less<class String> >", typeof(Dictionary<string, JiraRecord>));
         Register("class Map<class String,class Rule * __ptr64,struct std::less<class String> >", typeof(Dictionary<string, Rule>));
         Register("class Map<class String,class Set<class String,struct std::less<class String> >,struct std::less<class String> >", typeof(Dictionary<string, HashSet<string>>));
         Register("class Map<class String,class Set<class Symbol,struct std::less<class Symbol> >,struct StringCompareCaseInsensitive>", typeof(Dictionary<string, HashSet<Symbol>>));
         Register("class Map<class String,class Set<class Symbol,struct std::less<class Symbol> >,struct std::less<class String> >", typeof(Dictionary<string, HashSet<Symbol>>));
-        Register("class Map<class String,class SoundBusSystem::BusDescription,struct std::less<class String> >", typeof(Dictionary<String, SoundBusSystem.BusDescription>));
+        Register("class Map<class String,class SoundBusSystem::BusDescription,struct std::less<class String> >", typeof(Dictionary<string, SoundBusSystem.BusDescription>));
         Register("class Map<class String,class String,struct std::less<class String> >", typeof(Dictionary<string, string>));
-        Register("class Map<class String,class StyleGuideRef,struct std::less<class String> >", typeof(Dictionary<String, StyleGuideRef>));
-        Register("class Map<class String,class Vector3,struct std::less<class String> >", typeof(Dictionary<String, Vector3>));
+        Register("class Map<class String,class StyleGuideRef,struct std::less<class String> >", typeof(Dictionary<string, StyleGuideRef>));
+        Register("class Map<class String,class Vector3,struct std::less<class String> >", typeof(Dictionary<string, Vector3>));
         Register("class Map<class String,float,struct std::less<class String> >", typeof(Dictionary<string, float>));
-        Register("class Map<class String,int,struct std::less<class String> >", typeof(Dictionary<String, int>));
-        Register("class Map<class String,struct ChorecorderParameters,struct std::less<class String> >", typeof(Dictionary<String, ChorecorderParameters>));
-        Register("class Map<class String,struct ClipResourceFilter,struct StringCompareCaseInsensitive>", typeof(Dictionary<String, ClipResourceFilter>));
-        Register("class Map<class String,struct PhonemeTable::PhonemeEntry,struct std::less<class String> >", typeof(Dictionary<String, PhonemeTable.PhonemeEntry>));
+        Register("class Map<class String,int,struct std::less<class String> >", typeof(Dictionary<string, int>));
+        Register("class Map<class String,struct ChorecorderParameters,struct std::less<class String> >", typeof(Dictionary<string, ChorecorderParameters>));
+        Register("class Map<class String,struct ClipResourceFilter,struct StringCompareCaseInsensitive>", typeof(Dictionary<string, ClipResourceFilter>));
+        Register("class Map<class String,struct PhonemeTable::PhonemeEntry,struct std::less<class String> >", typeof(Dictionary<string, PhonemeTable.PhonemeEntry>));
         Register("class Map<class Symbol,bool,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, bool>));
         Register("class Map<class Symbol,class DCArray<class LanguageResLocal>,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, List<LanguageResLocal>>));
         Register("class Map<class Symbol,class Handle<class SoundBusSnapshot::Snapshot>,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, Handle<SoundBusSnapshot.Snapshot>>));
@@ -964,7 +978,7 @@ public static class MetaClassTypeRegistry
         Register("class Map<class Symbol,class Map<class Symbol,class Set<class Symbol,struct std::less<class Symbol> >,struct std::less<class Symbol> >,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, Dictionary<Symbol, HashSet<Symbol>>>));
         Register("class Map<class Symbol,class Map<class Symbol,int,struct std::less<class Symbol> >,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, Dictionary<Symbol, int>>));
         Register("class Map<class Symbol,class PropertySet,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, PropertySet>));
-        Register("class Map<class Symbol,class String,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, String>));
+        Register("class Map<class Symbol,class String,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, string>));
         Register("class Map<class Symbol,class Symbol,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, Symbol>));
         Register("class Map<class Symbol,class WalkPath,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, WalkPath>));
         Register("class Map<class Symbol,float,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, float>));
@@ -972,7 +986,7 @@ public static class MetaClassTypeRegistry
         Register("class Map<class Symbol,struct FootSteps::FootstepBank,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, FootSteps.FootstepBank>));
         Register("class Map<class Symbol,struct Footsteps2::FootstepBank,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, FootSteps2.FootstepBank>));
         Register("class Map<class Symbol,struct PhonemeTable::PhonemeEntry,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, PhonemeTable.PhonemeEntry>));
-        Register("class Map<class Symbol,struct PreloadPackage::ResourceSeenTimes,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, PreloadPackage.ResourceSeenTimes>));
+        Register("class Map<class Symbol,struct PreloadPackage::ResourceSeenTimes,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, ResourceSeenTimes>));
         Register("class Map<class Symbol,struct SoundBankWaveMapEntry,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, SoundBankWaveMapEntry>));
         Register("class Map<class Symbol,struct TransitionMap::TransitionMapInfo,struct std::less<class Symbol> >", typeof(Dictionary<Symbol, TransitionMap.TransitionMapInfo>));
         Register("class Map<int,class DlgLine,struct std::less<int> >", typeof(Dictionary<int, DlgLine>));
@@ -984,12 +998,12 @@ public static class MetaClassTypeRegistry
         Register("class Map<int,class Ptr<class DialogItem>,struct std::less<int> >", typeof(Dictionary<int, DialogItem>));
         Register("class Map<int,class Ptr<class DialogLine>,struct std::less<int> >", typeof(Dictionary<int, DialogLine>));
         Register("class Map<int,class Ptr<class DialogText>,struct std::less<int> >", typeof(Dictionary<int, DialogText>));
-        Register("class Map<int,class String,struct std::less<int> >", typeof(Dictionary<int, String>));
+        Register("class Map<int,class String,struct std::less<int> >", typeof(Dictionary<int, string>));
         Register("class Map<int,class Symbol,struct std::less<int> >", typeof(Dictionary<int, Symbol>));
         Register("class Map<int,int,struct std::less<int> >", typeof(Dictionary<int, int>));
-        Register("class Map<struct PreloadPackage::ResourceKey,struct PreloadPackage::ResourceSeenTimes,struct std::less<struct PreloadPackage::ResourceKey> >", typeof(Dictionary<PreloadPackage.ResourceKey, PreloadPackage.ResourceSeenTimes>));
+        Register("class Map<struct PreloadPackage::ResourceKey,struct PreloadPackage::ResourceSeenTimes,struct std::less<struct PreloadPackage::ResourceKey> >", typeof(Dictionary<ResourceKey, ResourceSeenTimes>));
         Register("class Map<struct SoundFootsteps::EnumMaterial,class DCArray<class Handle<class SoundData> >,struct std::less<struct SoundFootsteps::EnumMaterial> >", typeof(Dictionary<SoundFootsteps.EnumMaterial, List<Handle<SoundData>>>));
-        Register("class Map<struct SoundFootsteps::EnumMaterial,class SoundEventName<0>,struct std::less<struct SoundFootsteps::EnumMaterial> >", typeof(Dictionary<SoundFootsteps.EnumMaterial, SoundEventName>));
+        Register("class Map<struct SoundFootsteps::EnumMaterial,class SoundEventName<0>,struct std::less<struct SoundFootsteps::EnumMaterial> >", typeof(Dictionary<SoundFootsteps.EnumMaterial, SoundEventName0>));
         Register("class Map<unsigned int,class LanguageRes,struct std::less<unsigned int> >", typeof(Dictionary<uint, LanguageRes>));
         Register("class Map<unsigned int,class Set<class Symbol,struct std::less<class Symbol> >,struct std::less<unsigned int> >", typeof(Dictionary<uint, HashSet<Symbol>>));
         Register("class Map<unsigned int,struct Font::GlyphInfo,struct std::less<unsigned int> >", typeof(Dictionary<uint, Font.GlyphInfo>));
@@ -1023,11 +1037,12 @@ public static class MetaClassTypeRegistry
         Register("class PlaybackController", typeof(PlaybackController));
         Register("class PointOfInterestBlocking", typeof(PointOfInterestBlocking));
         Register("class Polar", typeof(Polar));
-        Register("class PreloadPackage::RuntimeDataDialog", typeof(PreloadPackage.RuntimeDataDialog));
-        Register("class PreloadPackage::RuntimeDataDialog::DlgObjIdAndResourceVector", typeof(PreloadPackage.RuntimeDataDialog.DlgObjIdAndResourceVector));
-        Register("class PreloadPackage::RuntimeDataDialog::DlgObjIdAndStartNodeOffset", typeof(PreloadPackage.RuntimeDataDialog.DlgObjIdAndStartNodeOffset));
-        Register("class PreloadPackage::RuntimeDataScene", typeof(PreloadPackage.RuntimeDataScene));
-        Register("class PreloadPackage::StartNodeOffset", typeof(PreloadPackage.StartNodeOffset));
+        Register("class AfterEffect", typeof(AfterEffect));
+        Register("class PreloadPackage::RuntimeDataDialog", typeof(RuntimeDataDialog));
+        Register("class PreloadPackage::RuntimeDataDialog::DlgObjIdAndResourceVector", typeof(RuntimeDataDialog.DlgObjIdAndResourceVector));
+        Register("class PreloadPackage::RuntimeDataDialog::DlgObjIdAndStartNodeOffset", typeof(RuntimeDataDialog.DlgObjIdAndStartNodeOffset));
+        Register("class PreloadPackage::RuntimeDataScene", typeof(RuntimeDataScene));
+        Register("class PreloadPackage::StartNodeOffset", typeof(StartNodeOffset));
         Register("class ProceduralEyes", typeof(ProceduralEyes));
         Register("class Procedural_LookAt", typeof(ProceduralLookAt));
         Register("class Procedural_LookAt::Constraint", typeof(ProceduralLookAt.Constraint));
@@ -1050,22 +1065,23 @@ public static class MetaClassTypeRegistry
         Register("class RootKey", typeof(RootKey));
         Register("class Rule", typeof(Rule));
         Register("class Rules", typeof(Rules));
-        Register("class SArray<class Handle<class T3Texture>,1>", typeof(Handle<T3Texture>[]));
-        Register("class SArray<class TRange<float>,3>", typeof(Range<float>[]));
-        Register("class SArray<class WalkBoxes::Edge,3>", typeof(WalkBoxes.Edge[]));
-        Register("class SArray<float,3>", typeof(float[]));
-        Register("class SArray<int,3>", typeof(int[]));
-        Register("class SArray<int,4>", typeof(int[]));
-        Register("class SArray<unsigned char,32>", typeof(byte[]));
-        Register("class SArray<unsigned int,3>", typeof(uint[]));
-        Register("class SArray<unsigned long,3>", typeof(uint[]));
-        Register("class SArray<unsigned long,6>", typeof(uint[]));
-        Register("class SArray<unsigned long,8>", typeof(uint[]));
-        Register("class SArray<DCArray<D3DMesh::Texture>,11>", typeof(List<D3DMesh.Texture>[]));
+        Register("class SArray<class Handle<class T3Texture>,1>", typeof(Handle<T3Texture>[]), MetaFlags.None,1);
+        Register("class SArray<class TRange<float>,3>", typeof(Range<float>[]), MetaFlags.None, 3);
+        Register("class SArray<class WalkBoxes::Edge,3>", typeof(WalkBoxes.Edge[]), MetaFlags.None, 3);
+        Register("class SArray<float,3>", typeof(float[]), MetaFlags.None, 3);
+        Register("class SArray<int,3>", typeof(int[]), MetaFlags.None, 3);
+        Register("class SArray<int,4>", typeof(int[]), MetaFlags.None, 4);
+        Register("class SArray<unsigned char,32>", typeof(sbyte[]), MetaFlags.None, 32);
+        Register("class SArray<unsigned int,3>", typeof(uint[]), MetaFlags.None, 3);
+        Register("class SArray<unsigned long,3>", typeof(uint[]), MetaFlags.None, 3);
+        Register("class SArray<unsigned long,6>", typeof(uint[]), MetaFlags.None, 6);
+        Register("class SArray<unsigned long,8>", typeof(uint[]), MetaFlags.None, 8);
+        Register("class SArray<DCArray<D3DMesh::Texture>,11>", typeof(List<D3DMesh.Texture>[]),MetaFlags.None,11);
         Register("class SaveGame", typeof(SaveGame));
         Register("class SaveGame::AgentInfo", typeof(SaveGame.AgentInfo));
         Register("class Scene", typeof(Scene));
         Register("class Scene::AgentInfo", typeof(Scene.AgentInfo));
+        Register("class Scene::AddSceneInfo", typeof(Scene.AddSceneInfo));
         Register("class SceneInstData", typeof(SceneInstData));
         Register("class ScriptEnum:TextColorStyle", typeof(ScriptEnum));
         Register("class Selectable", typeof(Selectable));
@@ -1099,13 +1115,13 @@ public static class MetaClassTypeRegistry
         Register("class SingleValue<class LocationInfo>", typeof(SingleValue<LocationInfo>));
         Register("class SingleValue<class Polar>", typeof(SingleValue<Polar>));
         Register("class SingleValue<class Quaternion>", typeof(SingleValue<Quaternion>));
-        Register("class SingleValue<class SoundEventName<0> >", typeof(SingleValue<SoundEventName>));
-        Register("class SingleValue<class SoundEventName<1> >", typeof(SingleValue<SoundEventName>));
-        Register("class SingleValue<class SoundEventName<2> >", typeof(SingleValue<SoundEventName>));
-        Register("class SingleValue<class String>", typeof(SingleValue<String>));
+        Register("class SingleValue<class SoundEventName<0> >", typeof(SingleValue<SoundEventName0>));
+        Register("class SingleValue<class SoundEventName<1> >", typeof(SingleValue<SoundEventName1>));
+        Register("class SingleValue<class SoundEventName<2> >", typeof(SingleValue<SoundEventName2>));
+        Register("class SingleValue<class String>", typeof(SingleValue<string>));
         Register("class SingleValue<class Symbol>", typeof(SingleValue<Symbol>));
-        Register("class SingleValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(SingleValue<T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>>));
-        Register("class SingleValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(SingleValue<T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>>));
+        Register("class SingleValue<class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator> >", typeof(SingleValue<T3VertexBufferSample<T3NormalSampleData>>));
+        Register("class SingleValue<class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator> >", typeof(SingleValue<T3VertexBufferSample<T3PositionSampleData>>));
         Register("class SingleValue<class Transform>", typeof(SingleValue<Transform>));
         Register("class SingleValue<class Vector2>", typeof(SingleValue<Vector2>));
         Register("class SingleValue<class Vector3>", typeof(SingleValue<Vector3>));
@@ -1136,9 +1152,9 @@ public static class MetaClassTypeRegistry
         Register("class SoundEventBankMap", typeof(SoundEventBankMap));
         Register("class SoundEventData", typeof(SoundEventData));
         Register("class SoundEventEmitterInstance", typeof(SoundEventEmitterInstance));
-        Register("class SoundEventName<0>", typeof(SoundEventName));
-        Register("class SoundEventName<1>", typeof(SoundEventName));
-        Register("class SoundEventName<2>", typeof(SoundEventName));
+        Register("class SoundEventName<0>", typeof(SoundEventName0));
+        Register("class SoundEventName<1>", typeof(SoundEventName1));
+        Register("class SoundEventName<2>", typeof(SoundEventName2));
         Register("class SoundEventNameBase", typeof(SoundEventNameBase));
         Register("class SoundEventPreloadInterface", typeof(SoundEventPreloadInterface));
         Register("class SoundEventSnapshotData", typeof(SoundEventSnapshotData));
@@ -1175,8 +1191,8 @@ public static class MetaClassTypeRegistry
         Register("class T3Texture::RegionStreamHeader", typeof(T3Texture.RegionStreamHeader));
         Register("class T3ToonGradientRegion", typeof(T3ToonGradientRegion));
         Register("class T3VertexBuffer", typeof(T3VertexBuffer));
-        Register("class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator>", typeof(T3VertexBufferSample<T3NormalSampleData, T3HeapAllocator>));
-        Register("class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator>", typeof(T3VertexBufferSample<T3PositionSampleData, T3HeapAllocator>));
+        Register("class T3VertexBufferSample<class T3NormalSampleData,class T3HeapAllocator>", typeof(T3VertexBufferSample<T3NormalSampleData>));
+        Register("class T3VertexBufferSample<class T3PositionSampleData,class T3HeapAllocator>", typeof(T3VertexBufferSample<T3PositionSampleData>));
         Register("class TRange<float>", typeof(Range<float>), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class TRect<float>", typeof(Rect<float>), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class TaskOwner", typeof(TaskOwner));
@@ -1215,8 +1231,8 @@ public static class MetaClassTypeRegistry
         Register("double", typeof(double),MetaFlags.MetaSerializeBlockingDisabled);
         Register("enum ActingPalette::ActiveDuring", typeof(ActingPalette.ActiveDuring), MetaFlags.MetaSerializeBlockingDisabled);
         Register("enum AudioSound::SoundMode", typeof(AudioSound.SoundMode), MetaFlags.MetaSerializeBlockingDisabled);
-        Register("enum ChoreResource::AAStatus", typeof(ChoreResource.AutoActStatus), MetaFlags.MetaSerializeBlockingDisabled);
-        Register("enum DialogItem::PlaybackMode", typeof(DialogItem.PlaybackModeEnum), MetaFlags.MetaSerializeBlockingDisabled);
+        Register("enum ChoreResource::AAStatus", typeof(ChoreResource.AAStatus), MetaFlags.MetaSerializeBlockingDisabled);
+        Register("enum DialogItem::PlaybackMode", typeof(DialogItem.PlaybackMode), MetaFlags.MetaSerializeBlockingDisabled);
         Register("enum DialogUtils::DialogElemT", typeof(DialogUtils.DialogElemT), MetaFlags.MetaSerializeBlockingDisabled);
         Register("enum InputCode", typeof(InputCode), MetaFlags.MetaSerializeBlockingDisabled);
         Register("enum InputMapper::EventType", typeof(InputMapper.EventType), MetaFlags.MetaSerializeBlockingDisabled);
@@ -1345,12 +1361,12 @@ public static class MetaClassTypeRegistry
         Register("struct PhonemeKey", typeof(PhonemeKey));
         Register("struct PhysicsObject::EnumePhysicsBoundingVolumeType", typeof(PhysicsObject.EnumePhysicsBoundingVolumeType));
         Register("struct PhysicsObject::EnumePhysicsCollisionType", typeof(PhysicsObject.EnumePhysicsCollisionType));
-        Register("struct PreloadPackage::ResourceKey", typeof(PreloadPackage.ResourceKey));
-        Register("struct PreloadPackage::ResourceSeenTimes", typeof(PreloadPackage.ResourceSeenTimes));
-        Register("struct PreloadPackage::RuntimeDataDialog::DialogResourceInfo", typeof(PreloadPackage.RuntimeDataDialog.DialogResourceInfo));
+        Register("struct PreloadPackage::ResourceKey", typeof(ResourceKey));
+        Register("struct PreloadPackage::ResourceSeenTimes", typeof(ResourceSeenTimes));
+        Register("struct PreloadPackage::RuntimeDataDialog::DialogResourceInfo", typeof(RuntimeDataDialog.DialogResourceInfo));
         Register("struct Procedural_LookAt::EnumLookAtComputeStage", typeof(ProceduralLookAt.EnumLookAtComputeStage));
         Register("struct PtrBase", typeof(NotImplementedException));
-        Register("struct RecordingUtils::EnumRecordingStatus", typeof(RecordingUtils.EnumRecordingStatus));
+        Register("struct RecordingUtils::EnumRecordingStatus", typeof(EnumRecordingStatus));
         Register("struct RenderSwizzleParams", typeof(RenderSwizzleParams));
         Register("struct ResourceGroupInfo", typeof(ResourceGroupInfo));
         Register("struct Rule::AgentInfo", typeof(Rule.AgentInfo));
@@ -1410,37 +1426,70 @@ public static class MetaClassTypeRegistry
         Register("unsigned int", typeof(uint), MetaFlags.MetaSerializeBlockingDisabled);
         Register("unsigned long", typeof(uint), MetaFlags.MetaSerializeBlockingDisabled);
         Register("unsigned short", typeof(ushort),MetaFlags.MetaSerializeBlockingDisabled);
+        Register("PropertyValue", typeof(PropertyValue));
+        Register("PropertySet::KeyInfo", typeof(PropertySet.KeyInfo));
+        Register("Sound", typeof(Sound));
+        Register("FootSteps::FootStepMonitor", typeof(FootSteps.FootStepMonitor));
+        Register("LightGroupInstance", typeof(LightGroupInstance));
+        Register("MoviePlayer", typeof(MoviePlayer));
+        Register("EnumJumpTargetClass", typeof(DlgNodeJump.EnumJumpTargetClass));
+        Register("EnumJumpBehaviour", typeof(DlgNodeJump.EnumJumpBehaviour));
+        Register("EnumVisibilityBehaviour ", typeof(DlgNodeJump.EnumVisibilityBehaviour));
+
         // @formatter:on
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Register(string typeName, Type linkingType, MetaFlags flags = MetaFlags.None)
+    public static void Register(string typeName, Type linkingType, MetaFlags flags = MetaFlags.None, int argNum = 0)
     {
-        Register(new MetaClassType(typeName, linkingType, flags));
+        Register(new MetaClassType(typeName, linkingType, flags, argNum));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Register(MetaClassType info)
     {
-        ByName.Add(info.Symbol.DebugString, info);
-        ByHash.Add(info.Symbol.Crc64, info);
+        s_byName.Add(info.Symbol.DebugString, info);
+        s_byHash.Add(info.Symbol.Crc64, info);
     }
 
     public static MetaClassType GetByName(string typeName)
     {
-        ByName.TryGetValue(typeName, out MetaClassType? info);
+        s_byName.TryGetValue(typeName, out MetaClassType? info);
         return info ?? throw new KeyNotFoundException($"Unregistered class {typeName}");
     }
 
     public static MetaClassType? GetByHash(ulong hash) =>
-        ByHash.GetValueOrDefault(hash);
+        s_byHash.GetValueOrDefault(hash);
 
     public static void PrintRegisteredTypes()
     {
-        foreach (MetaClassType type in ByHash.Values)
+        foreach (MetaClassType type in s_byHash.Values)
         {
             Console.WriteLine(($"{type.Symbol.DebugString} {type.Symbol.Crc64:X}"));
         }
+    }
+}
+
+internal class MoviePlayer
+{
+}
+
+internal class Sound
+{
+}
+
+internal class PropertyValue
+{
+}
+
+internal class AfterEffect
+{
+}
+
+internal class PlatformInputMapper
+{
+    internal class EventMapping
+    {
     }
 }
 
@@ -1638,7 +1687,6 @@ public enum T3EffectParameterType
     EVSMShadowSamplerCount = 0x2,
 }
 
-
 public class T3EffectBinaryData
 {
 }
@@ -1686,23 +1734,7 @@ public class DelaunayTriangleSet
 {
 }
 
-public class EnlightenData
-{
-}
-
 public class EnvironmentLightGroup
-{
-}
-
-public class EnlightenSignature
-{
-}
-
-public class EnlightenSystemData
-{
-}
-
-public class EnlightenProbeData
 {
 }
 
@@ -1748,6 +1780,7 @@ public class SoundSfxInterface
 public class SoundSnapshotInstance
 {
 }
+
 public class SoundEventPreloadInterface
 {
 }
@@ -1825,15 +1858,7 @@ public class LightProbe
 {
 }
 
-public class ParticlePropertySamples
-{
-}
-
 public class BGM_HeadTurn_Value
-{
-}
-
-public class CorrespondencePoint
 {
 }
 
@@ -1849,13 +1874,7 @@ public class FilterArea
 {
 }
 
-
-
 public class InverseKinematicsDerived
-{
-}
-
-public class SoundBankWaveMap
 {
 }
 
@@ -1871,23 +1890,11 @@ public class InverseKinematics
 {
 }
 
-public class ParticleInverseKinematics
-{
-}
-
 public class PathSegment
 {
 }
 
-public class ProceduralEyes
-{
-}
-
 public class SingleQuaternionValue
-{
-}
-
-public class PerAgentClipResourceFilter
 {
 }
 
@@ -1896,14 +1903,6 @@ public class IdleTransitionSettings
 }
 
 public class IdleSlotDefaults
-{
-}
-
-public class EventStoragePage
-{
-}
-
-public class EventLoggerEvent
 {
 }
 
@@ -1921,10 +1920,6 @@ public class SoundBusSystem
     {
     }
 }
-
-
-
-
 
 public class Selectable
 {
@@ -1954,18 +1949,6 @@ public class CinematicLight
 {
 }
 
-public class AutoActStatus
-{
-}
-
-public class BlendEntry
-{
-}
-
-public class ClipResourceFilter
-{
-}
-
 public class CompressedTransformKeys
 {
 }
@@ -1985,13 +1968,6 @@ public class CompressedVertexNormalKeys
 public class CompressedQuaternionKeys2
 {
 }
-
-
-
-public class StyleIdleTransitionsRes
-{
-}
-
 
 public class CinematicLightRig
 {
@@ -2019,15 +1995,7 @@ public class DateStamp
 {
 }
 
-public class SoundBankWaveMapEntry
-{
-}
-
 public class SingleVector3Value
-{
-}
-
-public class Guide
 {
 }
 
@@ -2036,13 +2004,6 @@ public class T3RenderStateBlock
 }
 
 public class RenderObject_PostMaterial
-{
-}
-public class SoundEventBankMap
-{
-}
-
-public class PhysicsData
 {
 }
 
@@ -2070,22 +2031,6 @@ public class Rollover
 {
 }
 
-public class SkeletonPoseValue
-{
-    public class Sample
-    {
-    }
-
-    public class BoneEntry
-    {
-    }
-
-    internal class ValueEntry
-    {
-    }
-}
-
-
 public class LightProbeData
 {
 }
@@ -2098,13 +2043,6 @@ public class T3MaterialSwizzleParams
 {
 }
 
-public class EventStorage
-{
-    public class PageEntry
-    {
-    }
-}
-
 public class JiraRecord
 {
 }
@@ -2112,7 +2050,6 @@ public class JiraRecord
 public class ChorecorderParameters
 {
 }
-
 
 public class Agent
 {
@@ -2134,127 +2071,17 @@ public class Mover
 {
 }
 
-public class PhysicsObject
-{
-    public class EnumePhysicsBoundingVolumeType
-    {
-    }
 
-    public class EnumePhysicsCollisionType
-    {
-    }
-}
-
-
-public class ParticleProperties
-{
-    public class Animation
-    {
-    }
-
-    public class AnimationParams
-    {
-    }
-}
 
 public class EnvironmentLight
 {
 }
-
-public class ActingAccentPalette
-{
-}
-
-public class RecordingUtils
-{
-    public class EnumRecordingStatus
-    {
-    }
-}
-
-public class CameraSelect
-{
-}
-
-public class PointOfInterestBlocking
-{
-}
-
-public class KeyframedValueSteppedString
-{
-}
-
-public class BlendCameraResource
-{
-}
-
-public class EnumeTangentModes
-{
-}
-
-
-public class PreloadPackage
-{
-    public class ResourceSeenTimes
-    {
-    }
-
-    public class RuntimeDataDialog
-    {
-        public class DialogResourceInfo
-        {
-        }
-
-        public class DlgObjIdAndResourceVector
-        {
-        }
-
-        public class DlgObjIdAndStartNodeOffset
-        {
-        }
-    }
-
-    public class RuntimeDataScene
-    {
-    }
-
-    public class ResourceKey
-    {
-    }
-
-    public class StartNodeOffset
-    {
-    }
-}
-
-
 
 public class SklNodeData
 {
 }
 
 public class Matrix4
-{
-}
-
-public class InverseKinematicsBase
-{
-}
-
-
-public class T3HeapAllocator
-{
-}
-
-public class T3NormalSampleData
-{
-}
-
-public class T3VertexBufferSample<T, T1>
-{
-}
-
-public class T3PositionSampleData
 {
 }
 
@@ -2281,10 +2108,6 @@ public class SoundEventData
 {
 }
 
-public class SoundReverbDefinition
-{
-}
-
 public class SoundBusSnapshot
 {
     public class Snapshot
@@ -2300,12 +2123,6 @@ public class SingleValue<T>
 {
 }
 
-public class ParticleSprite
-{
-    public class Animation
-    {
-    }
-}
 public class RenderObject_Mesh
 {
     public class TextureInstance
@@ -2329,7 +2146,6 @@ public class CompressedKeys<T>
 {
 }
 
-
 public class PathTo
 {
 }
@@ -2342,12 +2158,9 @@ public class AgentState
 {
 }
 
-
 public class LightGroupInstance
 {
 }
-
-
 
 public class ColorHDR
 {
@@ -2360,27 +2173,7 @@ public class ResourceBundle
     }
 }
 
-
-
-public class CompressedPathBlockingValue
-{
-    public class CompressedPathInfoKey
-    {
-    }
-}
-
-public class BlendGraph
-{
-    public class EnumBlendGraphType
-    {
-    }
-}
-
 public class AnimationConstraintParameters
-{
-}
-
-public class BlendGraphManager
 {
 }
 

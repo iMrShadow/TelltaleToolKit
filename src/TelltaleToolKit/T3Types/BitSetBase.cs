@@ -6,12 +6,9 @@ namespace TelltaleToolKit.T3Types;
 [MetaSerializer(typeof(Serializer))]
 public class BitSetBase
 {
-    public uint[] Values { get; set; }
+    public BitSetBase(int numValues) => Values = new uint[numValues];
 
-    public BitSetBase(int numValues)
-    {
-        Values = new uint[numValues];
-    }
+    public uint[] Values { get; set; }
 
     public class Serializer : MetaSerializer<BitSetBase>
     {
@@ -22,7 +19,7 @@ public class BitSetBase
                 throw new ArgumentNullException(nameof(type), "BitSetBase requires a metaclass type!");
             }
 
-            int? bitSetSize = type.Symbol.DebugString switch
+            int bitSetSize = type.Symbol.DebugString switch
             {
                 "BitSetBase<1>" => 1,
                 "BitSetBase<2>" => 2,
@@ -36,15 +33,22 @@ public class BitSetBase
                 _ => throw new InvalidDataException($"Unexpected BitSetBase type: {type.Symbol.DebugString}")
             };
 
-            if (obj?.Values == null || obj.Values.Length != bitSetSize.Value)
+            obj ??= new BitSetBase(bitSetSize);
+
+            if (obj.Values.Length != bitSetSize)
             {
-                obj = new BitSetBase(bitSetSize.Value);
+                BitSetBase newBitSet = new(bitSetSize);
+
+                int copyLength = Math.Min(obj.Values.Length, bitSetSize);
+                Array.Copy(obj.Values, 0, newBitSet.Values, 0, copyLength);
+
+                obj = newBitSet;
             }
         }
 
-        public override void Serialize(ref BitSetBase obj, MetaStream stream)
+        public override void Serialize(ref BitSetBase obj, MetaStream stream, MetaClassType? type = null)
         {
-            for (var i = 0; i < obj.Values.Length; i++)
+            for (int i = 0; i < obj.Values.Length; i++)
             {
                 stream.Serialize(ref obj.Values[i]);
             }

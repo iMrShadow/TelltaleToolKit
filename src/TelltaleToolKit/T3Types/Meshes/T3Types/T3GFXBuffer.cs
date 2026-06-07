@@ -34,7 +34,7 @@ public class T3GFXBuffer
     {
         private static readonly MetaClassSerializer<T3GFXBuffer> s_metaClassSerializer = new();
 
-        public override void Serialize(ref T3GFXBuffer obj, MetaStream stream)
+        public override void Serialize(ref T3GFXBuffer obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

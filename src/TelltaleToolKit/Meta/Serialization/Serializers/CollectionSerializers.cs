@@ -26,7 +26,7 @@ public sealed class ListSerializer<T> : MetaSerializer<List<T>>
     }
 
     /// <inheritdoc/>
-    public override void Serialize(ref List<T> obj, MetaStream stream)
+    public override void Serialize(ref List<T> obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -45,8 +45,8 @@ public sealed class ListSerializer<T> : MetaSerializer<List<T>>
             for (var i = 0; i < count; i++)
             {
                 var value = default(T);
-                _itemDataSerializer.PreSerialize(ref value, stream);
-                _itemDataSerializer.Serialize(ref value, stream);
+                _itemDataSerializer.PreSerialize(ref value, stream, type);
+                _itemDataSerializer.Serialize(ref value, stream, type);
 
                 obj.Add(value);
             }
@@ -77,7 +77,7 @@ public sealed class HashSetSerializer<T> : MetaSerializer<HashSet<T>>
     }
 
     /// <inheritdoc/>
-    public override void Serialize(ref HashSet<T> obj, MetaStream stream)
+    public override void Serialize(ref HashSet<T> obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -130,7 +130,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaSerializer<Dictiona
     }
 
     /// <inheritdoc/>
-    public override void Serialize(ref Dictionary<TKey, TValue> obj, MetaStream stream)
+    public override void Serialize(ref Dictionary<TKey, TValue> obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -150,11 +150,11 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaSerializer<Dictiona
             {
                 var key = default(TKey);
                 var value = default(TValue);
-                _keySerializer.PreSerialize(ref key, stream);
-                _keySerializer.Serialize(ref key, stream);
-                _valueSerializer.PreSerialize(ref value, stream);
-                _valueSerializer.Serialize(ref value, stream);
-                obj.Add(key!, value!);
+                _keySerializer.PreSerialize(ref key, stream, type);
+                _keySerializer.Serialize(ref key, stream, type);
+                _valueSerializer.PreSerialize(ref value, stream, type);
+                _valueSerializer.Serialize(ref value, stream, type);
+                obj.TryAdd(key!, value!);
             }
         }
     }
@@ -164,14 +164,34 @@ public sealed class ArraySerializer<T> : MetaSerializer<T[]>
 {
     private MetaSerializer<T> _itemDataSerializer = null!;
 
+    public override void PreSerialize(ref T[]? obj, MetaStream stream, MetaClassType? type = null)
+    {
+        if (obj is null && type is not null)
+        {
+            obj = new T[type.ArgNum];
+        }
+        else if (obj is not null && type is not null)
+        {
+            if (obj.Length <= type.ArgNum)
+            {
+                return;
+            }
+
+            var temp = new T[type.ArgNum];
+            Array.Copy(obj, temp, type.ArgNum);
+            obj = temp;
+        }
+    }
+
     public override void Initialize(MetaSerializerSelector selector)
     {
         _itemDataSerializer = selector.GetSerializer<T>();
     }
 
-    public override void Serialize(ref T[] obj, MetaStream stream)
+    public override void Serialize(ref T[] obj, MetaStream stream, MetaClassType? type = null)
     {
-        for (var i = 0; i < obj.Length; ++i)
+        int length = type?.ArgNum ?? obj.Length;
+        for (int i = 0; i < length; ++i)
         {
             _itemDataSerializer.PreSerialize(ref obj[i], stream);
             _itemDataSerializer.Serialize(ref obj[i], stream);

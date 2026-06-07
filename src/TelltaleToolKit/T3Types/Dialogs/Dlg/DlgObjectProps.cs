@@ -24,7 +24,7 @@ public class DlgObjectProps
     {
         private static readonly MetaClassSerializer<DlgObjectProps> s_metaClassSerializer = new();
 
-        public override void Serialize(ref DlgObjectProps obj, MetaStream stream)
+        public override void Serialize(ref DlgObjectProps obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

@@ -5,7 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types.Overlays;
 
 /// <summary>
-/// Main class for .overlay files.
+///     Main class for .overlay files.
 /// </summary>
 [MetaSerializer(typeof(MetaClassSerializer<T3OverlayData>))]
 public class T3OverlayData
