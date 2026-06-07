@@ -41,21 +41,24 @@ public sealed class JsonMetaStreamWriter : MetaStream
 
     public override MetaStreamMode Mode => MetaStreamMode.Write;
 
-    protected override void SetSection(SectionType section)
+    protected override bool SetSection(SectionType section)
     {
         // Intentional no-op: JSON folds all sections into the payload object via
         // BeginAsyncSection / BeginDebugSection named sub-objects.
         _currentSection = section;
+        return true;
     }
 
-    public override void BeginAsyncSection()
+    public override bool BeginAsyncSection()
     {
-        if (Params.StreamVersion < 4) return;
-        if (_currentSection is SectionType.Async) return;
+        if (Params.StreamVersion < 4) return false;
+        if (_currentSection is SectionType.Async) return false;
 
         _payload.WritePropertyName("Async Data");
         _payload.WriteStartObject();
         _currentSection = SectionType.Async;
+
+        return true;
     }
 
     public override void EndAsyncSection()
@@ -66,14 +69,16 @@ public sealed class JsonMetaStreamWriter : MetaStream
         _currentSection = SectionType.Default;
     }
 
-    public override void BeginDebugSection()
+    public override bool BeginDebugSection()
     {
-        if (Params.StreamVersion < 4) return;
-        if (_currentSection is SectionType.Debug) return;
+        if (Params.StreamVersion < 4) return false;
+        if (_currentSection is SectionType.Debug) return false;
 
         _payload.WritePropertyName("Debug Data");
         _payload.WriteStartObject();
         _currentSection = SectionType.Debug;
+
+        return true;
     }
 
     public override void EndDebugSection()

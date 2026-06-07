@@ -73,20 +73,23 @@ public sealed class JsonMetaStreamReader : MetaStream
 
     public override MetaStreamMode Mode => MetaStreamMode.Read;
 
-    protected override void SetSection(SectionType section)
+    protected override bool SetSection(SectionType section)
     {
+        return false;
     }
 
-    public override void BeginAsyncSection()
+    public override bool BeginAsyncSection()
     {
+        return false;
     }
 
     public override void EndAsyncSection()
     {
     }
 
-    public override void BeginDebugSection()
+    public override bool BeginDebugSection()
     {
+        return false;
     }
 
     public override void EndDebugSection()

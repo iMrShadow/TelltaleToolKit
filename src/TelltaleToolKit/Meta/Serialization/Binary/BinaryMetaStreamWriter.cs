@@ -17,6 +17,7 @@ public sealed class BinaryMetaStreamWriter : MetaStream
         Params.SerializedSymbols.Clear();
 
         Sections[0].Stream = new MemoryStream(0x100);
+        Sections[0].IsEnabled = true;
         SetSection(SectionType.Default);
     }
 
@@ -64,7 +65,7 @@ public sealed class BinaryMetaStreamWriter : MetaStream
 
         this.Write(Params.VersionInfo.Count);
 
-        foreach (MetaVersionInfo? versionInfo in Params.VersionInfo)
+        foreach (MetaVersionInfo versionInfo in Params.VersionInfo)
         {
             if (streamVersion >= 3)
             {
@@ -79,17 +80,25 @@ public sealed class BinaryMetaStreamWriter : MetaStream
         }
     }
 
-    protected override void SetSection(SectionType newSection)
+    protected override bool SetSection(SectionType newSection)
     {
-        if (_currentSection == newSection)
+        var section = Sections[(int)newSection];
+        if (section.Stream is not null)
         {
-            return;
+            Writer = new BinaryWriter(section.Stream, Encoding.UTF8, true);
+            _currentSection = newSection;
+            return true;
         }
 
+        if (!section.IsEnabled)
+        {
+            return false;
+        }
+
+        section.Stream =  new MemoryStream(0x4000);
+        Writer = new BinaryWriter(section.Stream, Encoding.UTF8, true);
         _currentSection = newSection;
-        Stream sectionStream = CurrentSection.Stream ?? new MemoryStream(0x4000);
-        Writer = new BinaryWriter(sectionStream, Encoding.UTF8, true);
-        CurrentSection.Stream ??= sectionStream;
+        return true;
     }
 
     public override void BeginBlock()

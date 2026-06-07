@@ -108,6 +108,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         }
         else
         {
+            Sections[(int)SectionType.Header].IsEnabled = true;
             Params.Encrypt = true;
             // For MCOM, there is an extra 4-byte field to skip
             if (magic is MetaStreamMagic.Mcom or MetaStreamMagic.EncryptedMcom)
@@ -194,15 +195,17 @@ public sealed class BinaryMetaStreamReader : MetaStream
         return true;
     }
 
-    protected override void SetSection(SectionType newSection)
+    protected override bool SetSection(SectionType newSection)
     {
-        if (_currentSection == newSection)
+        var section = Sections[(int)newSection];
+        if (section.Stream is null)
         {
-            return;
+            return false;
         }
 
+        Reader = new BinaryReader(section.Stream, Encoding.UTF8, true);
         _currentSection = newSection;
-        Reader = new BinaryReader(Sections[(int)_currentSection].Stream, Encoding.UTF8, true);
+        return true;
     }
 
     public override void BeginBlock()
@@ -229,6 +232,10 @@ public sealed class BinaryMetaStreamReader : MetaStream
         Toolkit.Instance.Logger.LogWarning(
             $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
         currentSectionInfo.Stream.Position = expectedPosition;
+        currentSectionInfo.CompressedSize -= (int)(currentPosition - expectedPosition);
+        // #if DEBUG
+        // throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        // #endif
     }
 
     public override void Serialize(ref bool value) =>
