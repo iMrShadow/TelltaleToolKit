@@ -10,22 +10,23 @@ public class Localization
     public class Language
     {
         [MetaMember("mName")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [MetaMember("mDisplayText")]
-        public string DisplayText { get; set; }
+        public string DisplayText { get; set; } = string.Empty;
 
         [MetaMember("mAudioResourceSetName")]
-        public string AudioResourceSetName { get; set; }
+        public string AudioResourceSetName { get; set; } = string.Empty;
 
         [MetaMember("mPlatformToSyncFSLocation")]
-        public Dictionary<string, string> PlatformToSyncFSLocation { get; set; }
+        public Dictionary<string, string> PlatformToSyncFSLocation { get; set; } = [];
 
         [MetaMember("mPlatformToSubgroupToAudioSyncFSLocation")]
-        public Dictionary<string, Dictionary<string, string>> PlatformToSubgroupToAudioSyncFSLocation { get; set; }
+        public Dictionary<string, Dictionary<string, string>>
+            PlatformToSubgroupToAudioSyncFSLocation { get; set; } = [];
 
         [MetaMember("mSubgroupToResourceSetName")]
-        public Dictionary<string, string> SubgroupToResourceSetName { get; set; }
+        public Dictionary<string, string> SubgroupToResourceSetName { get; set; } = [];
 
         [MetaMember("mFlags")]
         public Flags Flags { get; set; }

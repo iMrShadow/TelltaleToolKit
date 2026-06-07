@@ -18,19 +18,13 @@ public class RangeSerializer<T> : MetaSerializer<Range<T>>
 {
     private static readonly MetaClassSerializer<Range<T>> s_metaClassSerializer = new();
 
-    /// <inheritdoc/>
-    public override void PreSerialize(ref Range<T>? obj, MetaStream stream, MetaClassType? type = null)
-    {
-        if (stream.Mode is MetaStreamMode.Read)
-        {
-            if (obj is null)
-                obj = new Range<T>();
-        }
-    }
+    // TODO: Null serializer
+    public override void PreSerialize(ref Range<T>? obj, MetaStream stream, MetaClassType? type = null) =>
+        obj ??= new Range<T>();
 
-    public override void Serialize(ref Range<T> obj, MetaStream stream)
+    public override void Serialize(ref Range<T> obj, MetaStream stream, MetaClassType? type = null)
     {
-        s_metaClassSerializer.PreSerialize(ref obj, stream);
+        s_metaClassSerializer.PreSerialize(ref obj!, stream);
         s_metaClassSerializer.Serialize(ref obj, stream);
     }
 }

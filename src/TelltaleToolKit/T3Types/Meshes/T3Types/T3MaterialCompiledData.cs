@@ -75,10 +75,10 @@ public class T3MaterialCompiledData
     public Flags Flags { get; set; }
 
     [MetaMember("mPropertyParameterIndex")]
-    public int[] PropertyParameterIndex { get; set; } = new int[31];
+    public int[] PropertyParameterIndex { get; set; }
 
     [MetaMember("mTexturePropertyParameterIndex")]
-    public int[] TexturePropertyParameterIndex { get; set; } = new int[1];
+    public int[] TexturePropertyParameterIndex { get; set; }
 
     [MetaMember("mParameterBufferScalarSize[0]")]
     public uint ParameterBufferScalarSize0 { get; set; }

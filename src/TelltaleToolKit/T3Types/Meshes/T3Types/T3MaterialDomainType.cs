@@ -6,7 +6,6 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 [MetaSerializer(typeof(EnumSerializer<T3MaterialDomainType>))]
 public enum T3MaterialDomainType
 {
-    // eMaterialDomain_
     None = -1,
     Mesh = 0x0,
     Particle = 0x1,

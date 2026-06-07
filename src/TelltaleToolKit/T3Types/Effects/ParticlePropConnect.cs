@@ -9,23 +9,23 @@ namespace TelltaleToolKit.T3Types.Effects;
 public class ParticlePropConnect
 {
     [MetaMember("mModType")]
-    public ParticlePropModifier mModType { get; set; }
+    public EnumParticlePropModifier.ParticlePropModifier ModType { get; set; }
 
     [MetaMember("mDriveType")]
-    public ParticlePropDriver mDriveType { get; set; }
+    public EnumParticlePropDriver.ParticlePropDriver DriveType { get; set; }
 
     [MetaMember("mDriveMin")]
-    public float mDriveMin { get; set; }
+    public float DriveMin { get; set; }
 
     [MetaMember("mDriveMax")]
-    public float mDriveMax { get; set; }
+    public float DriveMax { get; set; }
 
     [MetaMember("mModMin")]
-    public float mModMin { get; set; }
+    public float ModMin { get; set; }
 
     [MetaMember("mModMax")]
-    public float mModMax { get; set; }
+    public float ModMax { get; set; }
 
     [MetaMember("mInvert")]
-    public bool mInvert { get; set; }
+    public bool Invert { get; set; }
 }

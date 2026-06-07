@@ -4,12 +4,12 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types.Textures;
 
 [MetaSerializer(typeof(EnumSerializer<ColorMode>))]
-
 public enum ColorMode
 {
-    eTxColorUnknown = -1,
-    eTxColorFull = 0,
-    eTxColorBlack = 1,
-    eTxColorGrayscale = 2,
-    eTxColorGrayscaleAlpha = 3,
+    // eTxColor
+    Unknown = -1,
+    Full = 0,
+    Black = 1,
+    Grayscale = 2,
+    GrayscaleAlpha = 3
 }

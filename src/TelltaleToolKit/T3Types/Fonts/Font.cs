@@ -43,13 +43,19 @@ public class Font
     public bool IsFiltered { get; set; }
 
     [MetaMember("mTtfData")]
-    public BinaryBuffer TtfData { get; set; }
+    public BinaryBuffer TtfData { get; set; } = new();
 
     [MetaMember("mBasePointSize")]
     public float BasePointSize { get; set; }
 
     [MetaMember("mPreferredPointSizes")]
-    public List<uint> PreferredPointSizes { get; set; }
+    public List<uint> PreferredPointSizes { get; set; } = [];
+
+    [MetaMember("mWiiScale")]
+    public float WiiScale { get; set; }
+
+    [MetaMember("mFontScale")]
+    public float FontScale { get; set; }
 
     [MetaSerializer(typeof(MetaClassSerializer<GlyphInfo>))]
     public class GlyphInfo

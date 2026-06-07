@@ -49,15 +49,21 @@ public class ProceduralLookAt
     public float LastUdWeight { get; set; }
 
     [MetaMember("mLookAtComputeStage")]
-    public EnumLookAtComputeStage LookAtComputeStage { get; set; }
+    public EnumLookAtComputeStage LookAtComputeStageE { get; set; }
 
+    [MetaSerializer(typeof(MetaClassSerializer<EnumLookAtComputeStage>))]
     public struct EnumLookAtComputeStage
     {
         [MetaMember("mVal")]
-        public int Val { get; set; }
-        // 0 = idle look at
-        // 1 = dialog chore look at
-        // 2 = final look at
+        public LookAtComputeStage Val { get; set; }
+    }
+
+    [MetaSerializer(typeof(EnumSerializer<LookAtComputeStage>))]
+    public enum LookAtComputeStage
+    {
+        IdleLookAt = 0,
+        DialogChoreLookAt = 1,
+        FinalLookAt = 2
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<Constraint>))]
@@ -85,12 +91,12 @@ public class ProceduralLookAt
 
     public class Serializer : MetaSerializer<ProceduralLookAt>
     {
-        public override void Serialize(ref ProceduralLookAt obj, MetaStream stream)
+        public override void Serialize(ref ProceduralLookAt obj, MetaStream stream, MetaClassType? type = null)
         {
             // TODO: Check with meta stream version.
             if (stream.Mode is MetaStreamMode.Write)
             {
-                if (stream.Params.StreamVersion >= 5)
+                if (stream.Params.StreamVersion >= 6)
                 {
                     return;
                 }
@@ -100,7 +106,7 @@ public class ProceduralLookAt
             }
             else if (stream.Mode is MetaStreamMode.Read)
             {
-                if (stream.Params.StreamVersion >= 5)
+                if (stream.Params.StreamVersion == 6)
                 {
                     return;
                 }

@@ -4,7 +4,7 @@ using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
-namespace TelltaleToolKit.T3Types;
+namespace TelltaleToolKit.T3Types.Events;
 
 [MetaSerializer(typeof(Serializer))]
 public class SaveGame
@@ -21,11 +21,26 @@ public class SaveGame
     [MetaMember("mAdditionalPropNames")]
     public HashSet<string> AdditionalPropNames { get; set; } = [];
 
+    [MetaMember("mRuntimePropNames")]
+    public HashSet<Symbol> RuntimePropNamesS { get; set; } = [];
+
+    [MetaMember("mEnabledDynamicSets")]
+    public HashSet<Symbol> EnabledDynamicSets { get; set; } = [];
+
     [MetaSerializer(typeof(MetaClassSerializer<AgentInfo>))]
     public class AgentInfo
     {
         [MetaMember("mAgentName")]
         public string AgentName { get; set; } = string.Empty;
+
+        [MetaMember("mAgentName")]
+        public Symbol AgentNameS { get; set; } = Symbol.Empty;
+
+        [MetaMember("mSceneName")]
+        public string  SceneName { get; set; } = string.Empty;
+
+        [MetaMember("mSceneName")]
+        public Symbol  SceneNameS { get; set; } = Symbol.Empty;
 
         [MetaMember("mPosition")]
         public Vector3 Position { get; set; } = new();
@@ -41,6 +56,12 @@ public class SaveGame
 
         [MetaMember("mAttachedToNode")]
         public string AttachedToNode { get; set; } = string.Empty;
+
+        [MetaMember("mAttachedToAgent")]
+        public Symbol AttachedToAgentS { get; set; } = Symbol.Empty;
+
+        [MetaMember("mAttachedToNode")]
+        public Symbol AttachedToNodeS { get; set; } = Symbol.Empty;
     }
 
 
@@ -48,7 +69,7 @@ public class SaveGame
     {
         private static readonly MetaClassSerializer<SaveGame> s_metaClassSaveGameSerializer = new();
 
-        public override void Serialize(ref SaveGame obj, MetaStream stream)
+        public override void Serialize(ref SaveGame obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSaveGameSerializer.Serialize(ref obj, stream);
 

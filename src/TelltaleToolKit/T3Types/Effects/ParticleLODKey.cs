@@ -8,14 +8,14 @@ namespace TelltaleToolKit.T3Types.Effects;
 public class ParticleLODKey
 {
     [MetaMember("mCountScale")]
-    public float mCountScale { get; set; }
+    public float CountScale { get; set; }
 
     [MetaMember("mStrideScale")]
-    public float mStrideScale { get; set; }
+    public float StrideScale { get; set; }
 
     [MetaMember("mDivisionScale")]
-    public float mDivisionScale { get; set; }
+    public float DivisionScale { get; set; }
 
     [MetaMember("mLifeScale")]
-    public float mLifeScale { get; set; }
+    public float LifeScale { get; set; }
 }

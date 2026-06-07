@@ -26,7 +26,7 @@ public class DlgVisibilityConditions
     {
         private static readonly MetaClassSerializer<DlgVisibilityConditions> s_metaClassSerializer = new();
 
-        public override void Serialize(ref DlgVisibilityConditions obj, MetaStream stream)
+        public override void Serialize(ref DlgVisibilityConditions obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

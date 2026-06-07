@@ -7,6 +7,7 @@ namespace TelltaleToolKit.T3Types.Textures.T3Types;
 public enum T3SurfaceFormat
 {
     // Note: Apparently, some of these formats are equivalent to each other. It's just that some are used for Direct3D9, while others are used for Direct3D11.
+
     #region DXGI_FORMATS / D3DFMT
 
     // I am using DXGI channel ordering.
@@ -121,6 +122,7 @@ public enum T3SurfaceFormat
     #endregion
 
     #region Depth/Stencil Formats
+
     /*
     PCF probably stands for percentage-closer filtering, which is used for shadow mapping. No idea why it's different than Depth16 and Depth24.
     https://github.com/bkaradzic/bimg/blob/master/src/image.cpp
@@ -210,8 +212,10 @@ public enum T3SurfaceFormat
 
     // ETC2 EAC RGBA
     ETC2_RGBA = 0x73, //73h
+
     // ETC2 EAC R11
     ETC2_R = 0x74, //74h
+
     // ETC2 EAC RG11
     ETC2_RG = 0x75, //75h
 
@@ -219,8 +223,9 @@ public enum T3SurfaceFormat
     ASTC_RGBA_4x4 = 0x80, //80h
 
     #endregion
+
     FrontBuffer = 0x90, //90h
 
     Count = 0x91, //91h
-    Unknown = unchecked((int)0xFFFFFFFF), //0FFFFFFFFh
+    Unknown = unchecked((int)0xFFFFFFFF) //0FFFFFFFFh
 }

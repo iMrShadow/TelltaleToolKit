@@ -43,7 +43,7 @@ public class DialogBase
 
     public class Serializer : MetaSerializer<DialogBase>
     {
-        public override void Serialize(ref DialogBase obj, MetaStream stream)
+        public override void Serialize(ref DialogBase obj, MetaStream stream, MetaClassType? type = null)
         {
             new MetaClassSerializer<DialogBase>().Serialize(ref obj, stream);
 

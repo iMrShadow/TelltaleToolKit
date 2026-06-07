@@ -29,7 +29,7 @@ public class T3GFXVertexState
     {
         private static readonly MetaClassSerializer<T3GFXVertexState> s_metaClassSerializer = new();
 
-        public override void Serialize(ref T3GFXVertexState obj, MetaStream stream)
+        public override void Serialize(ref T3GFXVertexState obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

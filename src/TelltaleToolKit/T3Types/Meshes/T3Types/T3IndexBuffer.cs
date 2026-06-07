@@ -35,7 +35,7 @@ public class T3IndexBuffer
     {
         private static readonly MetaClassSerializer<T3IndexBuffer> s_metaClassSerializer = new();
 
-        public override void Serialize(ref T3IndexBuffer obj, MetaStream stream)
+        public override void Serialize(ref T3IndexBuffer obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.Serialize(ref obj, stream);
 

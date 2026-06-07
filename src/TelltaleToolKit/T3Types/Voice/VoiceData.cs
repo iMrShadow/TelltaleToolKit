@@ -4,6 +4,9 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Voice;
 
+/// <summary>
+/// Represents the class for .vox files.
+/// </summary>
 [MetaSerializer(typeof(Serializer))]
 public class VoiceData
 {
@@ -28,16 +31,20 @@ public class VoiceData
     [MetaMember("mPacketPositions")]
     public List<int> PacketPositions { get; set; } = [];
 
-    public byte[] VoiceDataBuffer { get; set; }
-
+    public byte[] VoiceDataBuffer { get; set; } = [];
 
     public class Serializer : MetaSerializer<VoiceData>
     {
         private static readonly MetaClassSerializer<VoiceData> s_metaClassSerializer = new();
 
-        public override void Serialize(ref VoiceData obj, MetaStream stream)
+        public override void PreSerialize(ref VoiceData? obj, MetaStream stream, MetaClassType? type = null)
         {
-            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            obj ??= new VoiceData();
+        }
+
+        public override void Serialize(ref VoiceData obj, MetaStream stream, MetaClassType? type = null)
+        {
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)

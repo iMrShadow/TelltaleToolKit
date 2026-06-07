@@ -19,9 +19,9 @@ public struct Flags
     public bool Has(int flag) => (Data & flag) == flag;
     public bool HasAny(int mask) => (Data & mask) != 0;
 
-    public Flags Set(int flag) => new Flags(Data | flag);
-    public Flags Clear(int flag) => new Flags(Data & ~flag);
-    public Flags Toggle(int flag) => new Flags(Data ^ flag);
+    public Flags Set(int flag) => new(Data | flag);
+    public Flags Clear(int flag) => new(Data & ~flag);
+    public Flags Toggle(int flag) => new(Data ^ flag);
 
     public override string ToString() => $"0x{Data:X16}";
 
@@ -30,10 +30,10 @@ public struct Flags
     public override int GetHashCode() => Data;
 
     public static implicit operator int(Flags f) => f.Data;
-    public static implicit operator Flags(int i) => new Flags(i);
+    public static implicit operator Flags(int i) => new(i);
 
-    public static Flags operator |(Flags a, Flags b) => new Flags(a.Data | b.Data);
-    public static Flags operator &(Flags a, Flags b) => new Flags(a.Data & b.Data);
-    public static Flags operator ^(Flags a, Flags b) => new Flags(a.Data ^ b.Data);
-    public static Flags operator ~(Flags a) => new Flags(~a.Data);
+    public static Flags operator |(Flags a, Flags b) => new(a.Data | b.Data);
+    public static Flags operator &(Flags a, Flags b) => new(a.Data & b.Data);
+    public static Flags operator ^(Flags a, Flags b) => new(a.Data ^ b.Data);
+    public static Flags operator ~(Flags a) => new(~a.Data);
 }

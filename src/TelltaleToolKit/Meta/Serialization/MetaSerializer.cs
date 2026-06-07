@@ -28,7 +28,8 @@ public abstract class MetaSerializer
     /// </summary>
     /// <param name="obj">The object to serialize or deserialize.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
-    public abstract void Serialize(ref object obj, MetaStream stream);
+    /// <param name="type"></param>
+    public abstract void Serialize(ref object obj, MetaStream stream, MetaClassType? type = null);
 
     /// <summary>
     /// Performs the first step of serialization or deserialization.
@@ -52,7 +53,7 @@ public abstract class MetaSerializer<T> : MetaSerializer
     public override Type SerializationType => typeof(T);
 
     /// <inheritdoc/>
-    public override void Serialize(ref object obj, MetaStream stream)
+    public override void Serialize(ref object obj, MetaStream stream, MetaClassType? type = null)
     {
         T objT = (T)obj;
         Serialize(ref objT, stream);
@@ -96,5 +97,6 @@ public abstract class MetaSerializer<T> : MetaSerializer
     /// </summary>
     /// <param name="obj">The object to serialize or deserialize.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
-    public abstract void Serialize(ref T obj, MetaStream stream);
+    /// <param name="type"></param>
+    public abstract void Serialize(ref T obj, MetaStream stream, MetaClassType? type = null);
 }

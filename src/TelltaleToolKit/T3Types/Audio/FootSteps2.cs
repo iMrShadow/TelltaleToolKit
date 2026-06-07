@@ -11,9 +11,9 @@ public class FootSteps2
     public class FootstepBank
     {
         [MetaMember("mEventName")]
-        public SoundEventName EventName { get; set; } // NT_DEFAULT is int, adjust as needed
+        public SoundEventName0 EventName { get; set; } // NT_DEFAULT is int, adjust as needed
 
         [MetaMember("mMaterialMap")]
-        public Dictionary<SoundFootsteps.EnumMaterial, SoundEventName> MaterialMap { get; set; }
+        public Dictionary<SoundFootsteps.EnumMaterial, SoundEventName0> MaterialMap { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace TelltaleToolKit.Meta.Serialization.Serializers;
 [MetaSerializer(typeof(Vector2Serializer))]
 public class Vector2Serializer : MetaSerializer<Vector2>
 {
-    public override void Serialize(ref Vector2 obj, MetaStream stream)
+    public override void Serialize(ref Vector2 obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -30,7 +30,7 @@ public class Vector2Serializer : MetaSerializer<Vector2>
 [MetaSerializer(typeof(Vector3Serializer))]
 public class Vector3Serializer : MetaSerializer<Vector3>
 {
-    public override void Serialize(ref Vector3 obj, MetaStream stream)
+    public override void Serialize(ref Vector3 obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -56,7 +56,7 @@ public class Vector3Serializer : MetaSerializer<Vector3>
 [MetaSerializer(typeof(Vector4Serializer))]
 public class Vector4Serializer : MetaSerializer<Vector4>
 {
-    public override void Serialize(ref Vector4 obj, MetaStream stream)
+    public override void Serialize(ref Vector4 obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {
@@ -84,7 +84,7 @@ public class Vector4Serializer : MetaSerializer<Vector4>
 [MetaSerializer(typeof(QuaternionSerializer))]
 public class QuaternionSerializer : MetaSerializer<Quaternion>
 {
-    public override void Serialize(ref Quaternion obj, MetaStream stream)
+    public override void Serialize(ref Quaternion obj, MetaStream stream, MetaClassType? type = null)
     {
         if (stream.Mode is MetaStreamMode.Write)
         {

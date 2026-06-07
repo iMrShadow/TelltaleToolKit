@@ -8,56 +8,56 @@ namespace TelltaleToolKit.T3Types.Skeletons;
 public class BallTwistJointKey
 {
     [MetaMember("mBoneLengthConstraint__Enabled")]
-    public bool mBoneLengthConstraint__Enabled { get; set; }
+    public bool BoneLengthConstraintEnabled { get; set; }
 
     [MetaMember("mBoneLengthConstraint_RestRelative")]
-    public bool mBoneLengthConstraint_RestRelative { get; set; }
+    public bool BoneLengthConstraintRestRelative { get; set; }
 
     [MetaMember("mBoneLengthConstraint_NodeMobility")]
-    public float mBoneLengthConstraint_NodeMobility { get; set; }
+    public float BoneLengthConstraintNodeMobility { get; set; }
 
     [MetaMember("mBoneLengthConstraint_ParentMobility")]
-    public float mBoneLengthConstraint_ParentMobility { get; set; }
+    public float BoneLengthConstraintParentMobility { get; set; }
 
     [MetaMember("mAngleConstraint__Enabled")]
-    public bool mAngleConstraint__Enabled { get; set; }
+    public bool AngleConstraintEnabled { get; set; }
 
     [MetaMember("mAngleConstraint_MaxBendAngle")]
-    public float mAngleConstraint_MaxBendAngle { get; set; }
+    public float AngleConstraintMaxBendAngle { get; set; }
 
     [MetaMember("mAngleConstraint_MinTwistAngle")]
-    public float mAngleConstraint_MinTwistAngle { get; set; }
+    public float AngleConstraintMinTwistAngle { get; set; }
 
     [MetaMember("mAngleConstraint_MaxTwistAngle")]
-    public float mAngleConstraint_MaxTwistAngle { get; set; }
+    public float AngleConstraintMaxTwistAngle { get; set; }
 
     [MetaMember("mTranslationConstraint__Enabled")]
-    public bool mTranslationConstraint__Enabled { get; set; }
+    public bool TranslationConstraintEnabled { get; set; }
 
     [MetaMember("mTranslationConstraint_ReferenceFrame")]
-    public ConstraintReferenceFrame mTranslationConstraint_ReferenceFrame { get; set; }
+    public ConstraintReferenceFrame TranslationConstraintReferenceFrame { get; set; }
 
     [MetaMember("mTranslationConstraint_MaxVelocity")]
-    public float mTranslationConstraint_MaxVelocity { get; set; }
+    public float TranslationConstraintMaxVelocity { get; set; }
 
     [MetaMember("mTranslationConstraint_MaxAcceleration")]
-    public float mTranslationConstraint_MaxAcceleration { get; set; }
+    public float TranslationConstraintMaxAcceleration { get; set; }
 
     [MetaMember("mRotationConstraint__Enabled")]
-    public bool mRotationConstraint__Enabled { get; set; }
+    public bool RotationConstraintEnabled { get; set; }
 
     [MetaMember("mRotationConstraint_ReferenceFrame")]
-    public ConstraintReferenceFrame mRotationConstraint_ReferenceFrame { get; set; }
+    public ConstraintReferenceFrame RotationConstraintReferenceFrame { get; set; }
 
     [MetaMember("mRotationConstraint_MaxBendAngularVelocity")]
-    public float mRotationConstraint_MaxBendAngularVelocity { get; set; }
+    public float RotationConstraintMaxBendAngularVelocity { get; set; }
 
     [MetaMember("mRotationConstraint_MaxBendAngularAcceleration")]
-    public float mRotationConstraint_MaxBendAngularAcceleration { get; set; }
+    public float RotationConstraintMaxBendAngularAcceleration { get; set; }
 
     [MetaMember("mRotationConstraint_MaxTwistAngularVelocity")]
-    public float mRotationConstraint_MaxTwistAngularVelocity { get; set; }
+    public float RotationConstraintMaxTwistAngularVelocity { get; set; }
 
     [MetaMember("mRotationConstraint_MaxTwistAngularAcceleration")]
-    public float mRotationConstraint_MaxTwistAngularAcceleration { get; set; }
+    public float RotationConstraintMaxTwistAngularAcceleration { get; set; }
 }

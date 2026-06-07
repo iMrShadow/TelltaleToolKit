@@ -23,7 +23,7 @@ public struct Color
 
     public class Serializer : MetaSerializer<Color>
     {
-        public override void Serialize(ref Color obj, MetaStream stream)
+        public override void Serialize(ref Color obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -48,8 +48,5 @@ public struct Color
         }
     }
 
-    public override string ToString()
-    {
-        return $"Color: ({R}, {G}, {B}, {A})";
-    }
+    public override string ToString() => $"Color: ({R}, {G}, {B}, {A})";
 }

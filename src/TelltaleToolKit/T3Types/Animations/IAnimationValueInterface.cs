@@ -3,7 +3,7 @@ namespace TelltaleToolKit.T3Types.Animations;
 // C# doesn't support multiple inheritance.
 // So, the only place where I use inheritance for Telltale types are the Handles (since they don't have meta members)
 
-public interface IAnimatedValueInterface
+public interface IAnimationValueInterface
 {
     public AnimationValueInterfaceBase AnimationValueInterfaceBase { get; set; }
 }

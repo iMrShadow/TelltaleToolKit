@@ -4,10 +4,13 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
+// Right, so D3DVertexBuffer changes to T3VertexBuffer (probably because the engine became cross-platform at the time).
+// Since most values are the same, I merged D3DVertexBuffer with T3VertexBuffer.
+
 /// <summary>
 /// Old name - D3DVertexBuffer
 /// </summary>
-[MetaSerializer(typeof(T3VertexBufferSerializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3VertexBuffer
 {
     [MetaMember("mNumVerts")]
@@ -32,28 +35,44 @@ public class T3VertexBuffer
     public int Usage { get; set; }
 
     [MetaMember("mVertexComponents")]
-    public T3VertexComponent[] VertexComponents { get; set; } = new T3VertexComponent[12];
+    public T3VertexComponent[] VertexComponents { get; set; } = new T3VertexComponent[14];
 
     [MetaMember("mbStoreCompressed")]
     public bool StoreCompressed { get; set; }
 
     public byte[] Buffer = [];
 
-    [MetaSerializer(typeof(T3VertexBufferSerializer))]
-    public class T3VertexBufferSerializer : MetaSerializer<T3VertexBuffer>
+    public class Serializer : MetaSerializer<T3VertexBuffer>
     {
         private static readonly MetaClassSerializer<T3VertexBuffer> s_metaClassSerializer = new();
 
-        public override void Serialize(ref T3VertexBuffer obj, MetaStream stream)
+        public override void PreSerialize(ref T3VertexBuffer? obj, MetaStream stream, MetaClassType? type = null)
         {
+            obj ??= new T3VertexBuffer();
+        }
+
+        public override void Serialize(ref T3VertexBuffer obj, MetaStream stream, MetaClassType? type = null)
+        {
+            if (stream.Mode is MetaStreamMode.Write)
+            {
+                if (obj.Buffer.Length == obj.NumVerts * obj.VertSize)
+                {
+                    obj.StoreCompressed = false;
+                }
+                else if (obj.Buffer.Length == 2 * obj.NumVerts && obj.Type is 2 or 4)
+                {
+                    obj.StoreCompressed = true;
+                }
+            }
+
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotImplementedException($"There is no serializer for {SerializationType}");
+                stream.Write(obj.Buffer);
             }
-
-            if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 int totalBytes = obj.StoreCompressed switch
                 {
@@ -66,33 +85,3 @@ public class T3VertexBuffer
         }
     }
 }
-
-// Right, so D3DVertexBuffer changes to T3VertexBuffer (probably because the engine became cross-platform at the time).
-// Since most values are the same, I merged D3DVertexBuffer with T3VertexBuffer.
-
-// [DataSerializerGlobal(typeof(MetaClassSerializer<D3DVertexBuffer>))]
-// public class D3DVertexBuffer
-// {
-//     [MetaMember("mNumVerts")] public int NumVerts { get; set; }
-//     [MetaMember("mVertFormat")] public ulong VertFormat { get; set; }
-//     [MetaMember("mVertSize")] public int VertSize { get; set; }
-//     [MetaMember("mType")] public int Type { get; set; }
-//     [MetaMember("mbStoreCompressed")] public bool StoreCompressed { get; set; }
-//     public byte[] VertexBufferData = [];
-//
-//     [DataSerializerGlobal(typeof(D3DIndexBufferSerializer))]
-//     public class D3DIndexBufferSerializer : MetaSerializer<D3DIndexBuffer>
-//     {
-//         public override void Serialize(ref D3DIndexBuffer obj, MetaStream stream, MetaClass desc)
-//         {
-//             new MetaClassSerializer<D3DIndexBuffer>().Serialize(ref obj, stream, desc);
-//
-//             if (stream.Mode is MetaStreamMode.Write)
-//             {
-//             }
-//             else if (stream.Mode is MetaStreamMode.Read)
-//             {
-//             }
-//         }
-//     }
-// }

@@ -11,5 +11,5 @@ public enum T3SurfaceMultisample
     X2 = 1, // X2
     X4 = 2, // X4
     X8 = 3, // X8
-    X16 = 4, // X16
+    X16 = 4 // X16
 }

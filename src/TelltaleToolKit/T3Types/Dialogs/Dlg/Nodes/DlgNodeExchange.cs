@@ -44,7 +44,7 @@ public class DlgNodeExchange : IDlgNode
     {
         private static readonly MetaClassSerializer<DlgNodeExchange> s_metaClassSerializer = new();
 
-        public override void Serialize(ref DlgNodeExchange obj, MetaStream stream)
+        public override void Serialize(ref DlgNodeExchange obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

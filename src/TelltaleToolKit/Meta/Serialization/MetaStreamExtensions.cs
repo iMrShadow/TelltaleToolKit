@@ -472,4 +472,25 @@ public static class MetaStreamExtensions
         serializer.PreSerialize(ref obj, stream, type);
         serializer.Serialize(ref obj, stream);
     }
+
+    /// <summary>
+    /// Reads exactly <paramref name="destination"/>.<see cref="Span{T}.Length"/> bytes from the stream into the span.
+    /// </summary>
+    public static void ReadBytes(this MetaStream stream, Span<byte> destination)
+    {
+        // Fallback: use a temporary array (one allocation per call)
+        byte[] temp = new byte[destination.Length];
+        stream.Serialize(temp, 0, temp.Length);
+        temp.AsSpan().CopyTo(destination);
+    }
+
+    /// <summary>
+    /// Writes a read‑only span of bytes to the stream.
+    /// </summary>
+    public static void WriteBytes(this MetaStream stream, ReadOnlySpan<byte> values)
+    {
+        // Fallback: copy to array and write
+        byte[] temp = values.ToArray();
+        stream.Serialize(temp, 0, temp.Length);
+    }
 }

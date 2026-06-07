@@ -5,12 +5,11 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types;
 
 //.LDB FILES
-// TODO: Verify these values.
 [MetaSerializer(typeof(MetaClassSerializer<LocomotionDb>))]
 public class LocomotionDb
 {
     [MetaMember("maAnimInfoList")]
-    public Dictionary<string, AnimationInfo> AnimInfoList { get; set; }
+    public Dictionary<string, AnimationInfo> AnimInfoList { get; set; } = [];
 
     [MetaSerializer(typeof(MetaClassSerializer<AnimationInfo>))]
     public class AnimationInfo
@@ -19,7 +18,7 @@ public class LocomotionDb
         public ulong TimeStamp { get; set; }
 
         [MetaMember("mzName")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [MetaMember("meCategory")]
         public Category Category { get; set; }

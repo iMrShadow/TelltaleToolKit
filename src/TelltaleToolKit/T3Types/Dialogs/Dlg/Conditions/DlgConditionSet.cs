@@ -16,7 +16,7 @@ public class DlgConditionSet
         }
 
 
-        public override void Serialize(ref DlgConditionSet obj, MetaStream stream)
+        public override void Serialize(ref DlgConditionSet obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -29,15 +29,15 @@ public class DlgConditionSet
 
                 for (var i = 0; i < numChildren; i++)
                 {
-                    MetaClassType? type = stream.ReadMetaClassType();
-                    if (type == null)
+                    MetaClassType? typeS = stream.ReadMetaClassType();
+                    if (typeS == null)
                         throw new InvalidOperationException("[DlgConditionSet] Type is not registered.");
 
-                    MetaSerializer conditionSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
+                    MetaSerializer conditionSerializer = Toolkit.Instance.GetSerializer(typeS.LinkingType);
 
                     object? dlgConditionSet = null;
-                    conditionSerializer.PreSerialize(ref dlgConditionSet, stream);
-                    conditionSerializer.Serialize(ref dlgConditionSet, stream);
+                    conditionSerializer.PreSerialize(ref dlgConditionSet, stream, typeS);
+                    conditionSerializer.Serialize(ref dlgConditionSet, stream, typeS);
 
                     if (dlgConditionSet is IDlgCondition condition)
                         obj.Conditions.Add(condition);

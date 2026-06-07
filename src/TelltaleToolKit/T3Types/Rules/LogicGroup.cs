@@ -36,15 +36,20 @@ public class LogicGroup
         public string Name { get; set; } = string.Empty;
 
         [MetaMember("mKeyNegateList")]
-        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol
+        public Dictionary<Symbol, bool> GroupOperatorS { get; set; } = new();
+
+        // also a string/symbol
+
+        [MetaMember("mKeyNegateList")]
+        public Dictionary<string, bool> GroupOperator { get; set; } = new();
 
         [MetaMember("mKeyComparisonList")]
-        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol
+        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new();
 
         [MetaMember("mKeyActionList")]
-        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol
+        public Dictionary<Symbol, int> KeyActionList { get; set; } = new();
 
         [MetaMember("mReferenceKeyList")]
-        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol
+        public List<string> ReferenceKeyList { get; set; } = [];
     }
 }

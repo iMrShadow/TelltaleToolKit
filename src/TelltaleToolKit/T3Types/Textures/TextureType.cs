@@ -47,5 +47,5 @@ public enum TextureType
     NormalXyMap = 38,
     LightmapFlatAtlas = 39,
     LookupXy = 40,
-    ObjectNormalMap = 41,
+    ObjectNormalMap = 41
 }

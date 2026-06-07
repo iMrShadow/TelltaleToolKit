@@ -47,12 +47,19 @@ public class PropertySet
             }
         }
 
-        public override void Serialize(ref PropertySet obj, MetaStream stream)
+        public override void Serialize(ref PropertySet obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
+
+            // Attempt 1
+            if (obj.PropertyFlags.Has(0x4000000))
+            {
+                stream.EndBlock();
+                return;
+            }
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -102,7 +109,8 @@ public class PropertySet
                         groups[typeSymbol] = list;
                     }
 
-                    list.Add(new KeyValuePair<Symbol, PropertyEntry>(key, new PropertyEntry(entry.Value, typeSymbol)));
+                    list.Add(new KeyValuePair<Symbol, PropertyEntry>(key,
+                        new PropertyEntry(entry.Value, typeSymbol)));
                 }
 
                 // Write number of distinct meta types
@@ -157,7 +165,8 @@ public class PropertySet
                     }
                 }
 
-                if (obj.PropVersion == 1 && !stream.GetMetaClass(typeof(PropertySet))!.ContainsMember("mParentList"))
+                if (obj.PropVersion == 1 &&
+                    !stream.GetMetaClass(typeof(PropertySet))!.ContainsMember("mParentList"))
                 {
                     stream.EndBlock();
                     stream.BeginBlock();
@@ -168,6 +177,8 @@ public class PropertySet
                 {
                     // The type of the class
                     MetaClassType? typeSymbol = stream.ReadMetaClassType();
+                    if (typeSymbol?.Symbol.Crc64 == 0)
+                        continue;
                     // The number of times that type has been serialized
                     int numOfType = stream.ReadInt32();
 
@@ -184,7 +195,7 @@ public class PropertySet
                         object? propertyValue = null;
 
                         typeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
-                        typeSerializer.Serialize(ref propertyValue, stream);
+                        typeSerializer.Serialize(ref propertyValue, stream, typeSymbol);
                         obj.Properties[propertyKey] = new PropertyEntry(propertyValue, typeSymbol);
                     }
                 }
@@ -250,5 +261,9 @@ public class PropertySet
     public T? GetProperty<T>(Symbol symbol)
     {
         return GetProperty<T>(symbol.Crc64);
+    }
+
+    internal class KeyInfo
+    {
     }
 }

@@ -7,7 +7,9 @@ namespace TelltaleToolKit.T3Types.StyleGuides;
 [MetaSerializer(typeof(MetaClassSerializer<ResourceGroups>))]
 public class ResourceGroups
 {
-    // String and symbol at the same time
     [MetaMember("mGroups")]
-    public Dictionary<Symbol, float> Groups { get; set; } = new();
+    public Dictionary<Symbol, float> GroupsS { get; set; } = [];
+
+    [MetaMember("mGroups")]
+    public Dictionary<string, float> Groups { get; set; } = [];
 }
