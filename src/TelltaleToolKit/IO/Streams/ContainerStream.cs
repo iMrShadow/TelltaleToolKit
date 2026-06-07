@@ -56,7 +56,7 @@ public sealed class ContainerStream : Stream
     {
         _source = source ?? throw new ArgumentNullException(nameof(source));
         _blowfishKey = blowfishKey ?? throw new ArgumentNullException(nameof(blowfishKey));
-        _cache = cache ?? new SinglePageCache();
+        _cache = cache ?? new LruChunkCache();
 
         using BinaryReader reader = new(source, Encoding.UTF8, true);
 
