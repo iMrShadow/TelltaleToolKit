@@ -32240,7 +32240,7 @@
             },
             {
                 "name": "mVertexComponents",
-                "type": "SArray<T3VertexComponent,13>",
+                "type": "SArray<T3VertexComponent,12>",
                 "flags": 0
             }
         ]
@@ -43339,12 +43339,12 @@
         "crc32": 3098847224,
         "members": [
             {
-                "name": "mExtrapolationModeBefore",
-                "type": "int",
+                "name": "mName",
+                "type": "Symbol",
                 "flags": 0
             },
             {
-                "name": "mExtrapolationModeAfter",
+                "name": "mFlags",
                 "type": "int",
                 "flags": 0
             }
@@ -43619,7 +43619,7 @@
         "members": [
             {
                 "name": "mpChore",
-                "type": "Ptr<PtrBase>",
+                "type": "Ptr<Chore>",
                 "flags": 0
             },
             {
