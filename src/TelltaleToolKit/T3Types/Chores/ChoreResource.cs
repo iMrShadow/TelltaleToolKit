@@ -110,26 +110,38 @@ public class ChoreResource
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
-            MetaClass? description = stream.GetMetaClass(typeof(ChoreResource));
+            if (!obj.HasEmbedded)
+            {
+                return;
+            }
 
             if (stream.Mode is MetaStreamMode.Write)
             {
             }
             else
             {
-                if (description != null && description.ContainsMember("mbEmbedded") && obj.HasEmbedded)
+                MetaClassType? embeddedClassType = stream.ReadMetaClassType();
+                if (embeddedClassType is null)
+                    throw new InvalidOperationException("[ChoreResource] Embedded type is not registered.");
+
+                Symbol _ = stream.ReadSymbol(); // Same
+
+                object? embedded;
+                if ((stream.GetMetaClass(typeof(ChoreResource))!.ContainsMember("mVersion") && obj.Version >= 2) ||
+                    embeddedClassType.LinkingType != typeof(ProceduralLookAt))
                 {
-                    MetaClassType? embeddedClassType = stream.ReadMetaClassType();
-                    if (embeddedClassType is null)
-                        throw new InvalidOperationException("[ChoreResource] Embedded type is not registered.");
-
-                    Symbol _ = stream.ReadSymbol();
-
-                    object? embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
+                    embedded = Activator.CreateInstance(embeddedClassType.LinkingType);
                     Toolkit.Instance.GetSerializer(embeddedClassType.LinkingType).PreSerialize(ref embedded, stream);
                     Toolkit.Instance.GetSerializer(embeddedClassType.LinkingType).Serialize(ref embedded, stream);
-                    obj.Embedded = embedded;
                 }
+                else
+                {
+                    embedded = new Animation();
+                    Toolkit.Instance.GetSerializer(typeof(Animation)).PreSerialize(ref embedded, stream);
+                    Toolkit.Instance.GetSerializer(typeof(Animation)).Serialize(ref embedded, stream);
+                }
+
+                obj.Embedded = embedded;
             }
         }
     }

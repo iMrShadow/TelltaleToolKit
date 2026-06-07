@@ -157,12 +157,7 @@ public class ParticleProperties
                     }
                 }
 
-                if (obj.TextureCount <= 0)
-                {
-                    return;
-                }
-
-                for (int i = 0; i < enumCount; i++)
+                for (int i = 0; i < obj.TextureCount; i++)
                 {
                     if ((obj.TextureFlags & (1 << i)) != 0)
                     {

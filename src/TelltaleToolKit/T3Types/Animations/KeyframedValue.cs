@@ -56,6 +56,11 @@ public class KeyframedValue<T> : IAnimationValueInterface where T : notnull
     {
         private static readonly MetaClassSerializer<KeyframedValue<T>> s_metaClassSerializer = new();
 
+        public override void PreSerialize(ref KeyframedValue<T>? obj, MetaStream stream, MetaClassType? type = null)
+        {
+            obj ??= new KeyframedValue<T>();
+        }
+
         public override void Serialize(ref KeyframedValue<T> obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
