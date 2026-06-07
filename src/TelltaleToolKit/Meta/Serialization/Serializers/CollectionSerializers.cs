@@ -166,20 +166,21 @@ public sealed class ArraySerializer<T> : MetaSerializer<T[]>
 
     public override void PreSerialize(ref T[]? obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (obj is null && type is not null)
-        {
-            obj = new T[type.ArgNum];
-        }
-        else if (obj is not null && type is not null)
-        {
-            if (obj.Length <= type.ArgNum)
-            {
-                return;
-            }
+        if (type is null) return;
 
-            var temp = new T[type.ArgNum];
-            Array.Copy(obj, temp, type.ArgNum);
-            obj = temp;
+        int required = type.ArgNum;
+
+        if (obj is null)
+        {
+            obj = new T[required];
+        }
+        else if (obj.Length != required)
+        {
+            var newArray = new T[required];
+            // Copy as many as fit, preserving existing data when possible
+            int copyCount = Math.Min(obj.Length, required);
+            Array.Copy(obj, newArray, copyCount);
+            obj = newArray;
         }
     }
 
