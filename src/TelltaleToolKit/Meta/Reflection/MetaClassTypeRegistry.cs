@@ -238,7 +238,7 @@ public static class MetaClassTypeRegistry
         Register("SArray<T3VertexComponent,14>", typeof(T3VertexComponent[]), MetaFlags.None, 14);
         Register("SArray<int,14>", typeof(int[]), MetaFlags.None, 14);
         Register("SArray<unsignedint,2>", typeof(uint[]), MetaFlags.None, 2);
-        Register("SArray<unsignedshort,3>", typeof(ushort[]), MetaFlags.None, 2);
+        Register("SArray<unsignedshort,3>", typeof(ushort[]), MetaFlags.None, 3);
         Register("ScriptEnum:AIAgentState", typeof(ScriptEnum));
         Register("ScriptEnum:AIDummyPos", typeof(ScriptEnum));
         Register("ScriptEnum:AIPatrolType", typeof(ScriptEnum));
