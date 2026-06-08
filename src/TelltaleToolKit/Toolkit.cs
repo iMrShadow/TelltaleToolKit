@@ -505,8 +505,7 @@ public class Toolkit
     /// <summary>
     /// Returns the typed serializer for <typeparamref name="T"/>.
     /// </summary>
-    public MetaSerializer<T> GetSerializer<T>() where T : new()
-        => SerializerSelector.GetSerializer<T>();
+    public MetaSerializer<T> GetSerializer<T>() => SerializerSelector.GetSerializer<T>();
 
     /// <summary>
     /// Returns the serializer for the given runtime <paramref name="type"/>.
