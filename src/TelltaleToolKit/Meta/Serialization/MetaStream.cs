@@ -38,6 +38,8 @@ public abstract class MetaStream : IDisposable
 
     protected int DebugSectionDepth = 0;
 
+    public int DefaultSectionDepth = 0;
+
     /// <summary>
     ///     Gets the mode of this stream (read or write).
     /// </summary>
@@ -300,9 +302,9 @@ public abstract class MetaStream : IDisposable
             return false;
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 3; i += 2)
         {
-            //for each section (default,async,debug)
+            //for each section (default,debug,async)
             SectionInfo currentSect = Sections[i];
             if (currentSect.Stream == null)
             {
@@ -311,9 +313,19 @@ public abstract class MetaStream : IDisposable
 
             if (currentSect.Stream.Position != currentSect.Stream.Length)
             {
-                Toolkit.Instance.Logger.LogError(@"Unexpected end of stream. Position: " + currentSect.Stream.Position +
-                                                 @" Length: " + currentSect.Stream.Length);
-                return false;
+                if (i == 2)
+                {
+                    Toolkit.Instance.Logger.LogWarning(@"Unexpected end of debug section (non-critical). Position: " +
+                                                       currentSect.Stream.Position +
+                                                       @" Length: " + currentSect.Stream.Length);
+                }
+                else
+                {
+                    Toolkit.Instance.Logger.LogError(@"Unexpected end of stream. Position: " +
+                                                     currentSect.Stream.Position +
+                                                     @" Length: " + currentSect.Stream.Length);
+                    return false;
+                }
             }
         }
 

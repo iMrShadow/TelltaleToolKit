@@ -83,7 +83,6 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
     {
         MetaClass? description = stream.GetMetaClass(typeof(T));
 
-        Toolkit.Instance.Logger.LogInfo($"Reading {typeof(T).Name}.");
         if (description is null || !description.ClassType.IsSerialized())
         {
             if (description is null)
@@ -100,6 +99,8 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             stream.AddVersionInfo(description);
         }
 
+        stream.DefaultSectionDepth++;
+
         // Loop through the metaclass's properties/members
         foreach (MetaMember propDesc in description.Members.Where(propDesc => propDesc.IsSerialized()))
         {
@@ -109,6 +110,7 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
                 stream.BeginBlock();
 
             stream.Key(propDesc.MemberName);
+            string pad = new(' ',  stream.DefaultSectionDepth);
 
             if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
                                                           propDesc.Type.LinkingType == typeof(byte[]) ||
@@ -118,6 +120,7 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             else
             {
                 stream.BeginObject(propDesc.MemberName);
+                Toolkit.Instance.Logger.LogInfo($"{pad}{propDesc.MemberName} {propDesc.Type.LinkingType} - [");
             }
 
             object? value = cached?.Getter(ref obj);
@@ -127,7 +130,14 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             serializer.PreSerialize(ref value, stream, propDesc.Type);
             serializer.Serialize(ref value, stream, propDesc.Type);
 
-            Toolkit.Instance.Logger.LogInfo($"{propDesc.MemberName} - {value}");
+
+            if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
+                                                          propDesc.Type.LinkingType == typeof(byte[]) ||
+                                                          propDesc.Type.LinkingType == typeof(Symbol)))
+            {
+                Toolkit.Instance.Logger.LogInfo($"{pad}{propDesc.MemberName} {propDesc.Type.LinkingType} - {value}");
+            }
+
 
             if (stream.Mode is MetaStreamMode.Read)
                 cached?.Setter(ref obj, value);
@@ -140,6 +150,7 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             else
             {
                 stream.EndObject(propDesc.MemberName);
+                Toolkit.Instance.Logger.LogInfo($"{pad}]");
             }
 
             if (propDesc.Type.IsBlocked())
@@ -155,8 +166,8 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             }
         }
 
+        stream.DefaultSectionDepth--;
         stream.EndObject(typeof(T).Name);
-        Toolkit.Instance.Logger.LogInfo($"Ending {typeof(T).Name}.");
     }
 
     public override void PreSerialize(ref T? obj, MetaStream stream, MetaClassType? type = null)
