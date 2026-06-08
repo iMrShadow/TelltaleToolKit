@@ -286,12 +286,6 @@ public abstract class MetaStream : IDisposable
     public abstract void Serialize(ref sbyte value);
 
     /// <summary>
-    ///     Serializes the Symbol class.
-    /// </summary>
-    /// <param name="value">The value to serialize</param>
-    public abstract void Serialize(ref Symbol value);
-
-    /// <summary>
     ///     Serializes the specified byte array.
     /// </summary>
     /// <param name="values">The buffer to serialize.</param>
