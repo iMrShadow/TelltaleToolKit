@@ -101,7 +101,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
                 Sections[3].IsCompressed = true;
             }
         }
-        else
+        else if (magic is not MetaStreamMagic.Mbin and not MetaStreamMagic.Mtre)
         {
             Sections[(int)SectionType.Header].IsEnabled = true;
             Params.Encrypt = true;
@@ -227,7 +227,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         // Toolkit.Instance.Logger.LogWarning(
         //     $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
-      //  throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        //  throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
 
         currentSectionInfo.Stream.Position = expectedPosition;
         currentSectionInfo.CompressedSize -= (int)(currentPosition - expectedPosition);
@@ -264,7 +264,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
     {
         int strLength = Reader.ReadInt32();
 
-        if (strLength < 0)
+        if (strLength < 0 || strLength > 0x100000)
         {
             throw new ArgumentOutOfRangeException(nameof(strLength));
         }
