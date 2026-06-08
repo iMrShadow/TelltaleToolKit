@@ -52,7 +52,10 @@ public class T3Texture
     public uint NumMipLevels { get; set; } = 1;
 
     [MetaMember("mD3DFormat")]
-    public uint D3DFormat { get; set; } = 0;
+    public uint D3DFormatU { get; set; } = 0;
+
+    [MetaMember("mD3DFormat")]
+    public int D3DFormatI { get; set; } = 0;
 
     /// <summary>
     ///     The pixel width of the texture.
@@ -72,11 +75,38 @@ public class T3Texture
     [MetaMember("mTextureDataFormats")]
     public Flags TextureDataFormats { get; set; } = new();
 
+    [MetaMember("mFlags")]
+    public Flags Flags { get; set; } = new();
+
+    [MetaMember("mWiiTextureFormat")]
+    public int WiiTextureFormat { get; set; }
+
+    [MetaMember("mWiiForceWidth")]
+    public uint WiiForceWidth { get; set; }
+
+    [MetaMember("mWiiForceHeight")]
+    public uint WiiForceHeight { get; set; }
+
+    [MetaMember("mbWiiForceUncompressed")]
+    public bool WiiForceUncompressed { get; set; }
+
     [MetaMember("mTplTexutreDataSize")]
     public int TplTextureDataSize { get; set; }
 
+    [MetaMember("mTplAlphaDataSize")]
+    public int TplAlphaDataSize { get; set; }
+
+    [MetaMember("mJPEGTextureDataSize")]
+    public int JPEGTextureDataSize { get; set; }
+
     [MetaMember("mAlphaMode")]
     public int AlphaMode { get; set; } = 0;
+
+    [MetaMember("mExactAlphaMode")]
+    public int ExactAlphaMode { get; set; } = 0;
+
+    [MetaMember("mNormalMapFmt")]
+    public uint NormalMapFmt { get; set; } = 0;
 
     [MetaMember("mbAlphaHDR")]
     public bool AlphaHdr { get; set; } = false;
@@ -264,6 +294,11 @@ public class T3Texture
     private byte[] WiiColorData { get; set; } = []; // Wii color data.
     private byte[] WiiAlphaData { get; set; } = []; // Wii alpha data.
     private byte[] JpegData { get; set; } = []; // JPEG data. This is always nill.
+
+
+    public T3Texture? Texture0x8;
+    public T3Texture? Texture0x10;
+    public T3Texture? Texture0x20;
 
     // public ClassInstance? T3Texture { get; set; } // The main header of d3dtx.
     // public ClassInstance? StreamHeader { get; set; } // The stream header (appears after Poker Night 2).
@@ -495,21 +530,42 @@ public class T3Texture
                 }
                 else
                 {
-                    if (!obj.HasTextureData)
+                    if (obj.HasTextureData)
                     {
-                        return;
+                        int bufferSize = stream.ReadInt32();
+                        obj.DdsTextureData = stream.ReadBytes(bufferSize);
                     }
 
-                    int bufferSize = stream.ReadInt32();
-                    obj.DdsTextureData = stream.ReadBytes(bufferSize);
-
                     // TODO: Add suport Xbox, PS3, Wii, etc.
-                    if (obj.TplTextureDataSize > 0)
+                    // TODO: Verify if this is correct
+
+                    if (obj.TplTextureDataSize > 0 && obj.TextureDataFormats.Has(0x4))
                     {
                         obj.TplTextureData = new byte[obj.TplTextureDataSize];
 
                         obj.TplTextureData = stream.ReadBytes(obj.TplTextureDataSize);
                     }
+
+                    // what the fuck
+                    if (obj.TextureDataFormats.Has(0x8))
+                    {
+                        stream.Serialize(ref obj.Texture0x8);
+                    }
+                    if (obj.TextureDataFormats.Has(0x10))
+                    {
+                        stream.Serialize(ref obj.Texture0x10);
+                    }
+                    if (obj.TextureDataFormats.Has(0x20))
+                    {
+                        stream.Serialize(ref obj.Texture0x20);
+                    }
+
+                    if (obj.TextureDataFormats.Has(0x40))
+                    {
+                        obj.WiiColorData = new byte[obj.WiiForceHeight * obj.WiiForceWidth * 3];
+                        stream.ReadBytes(obj.WiiColorData);
+                    }
+                    // 0x40 is raw RGB data buffer
                 }
             }
         }

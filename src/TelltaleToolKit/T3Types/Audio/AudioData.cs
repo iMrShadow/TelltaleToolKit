@@ -61,7 +61,7 @@ public class AudioData
             }
             else if (stream.Mode is MetaStreamMode.Read)
             {
-                if (stream.Params.StreamVersion >= 4)
+                if (stream.Params.StreamVersion >= 3)
                 {
                     obj.NumChannels = stream.ReadInt16();
                     short bitDepth = stream.ReadInt16();

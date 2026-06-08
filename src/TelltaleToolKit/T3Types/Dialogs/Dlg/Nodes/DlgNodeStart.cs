@@ -13,4 +13,7 @@ public class DlgNodeStart : IDlgNode
 
     [MetaMember("mProdReportProps")]
     public PropertySet ProdReportProps { get; set; }
+
+    [MetaMember("m_outputIndex")]
+    public int OutputIndex { get; set; }
 }

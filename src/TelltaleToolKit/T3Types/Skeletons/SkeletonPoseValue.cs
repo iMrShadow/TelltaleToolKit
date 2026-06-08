@@ -14,6 +14,9 @@ public class SkeletonPoseValue : IAnimationValueInterface
     [MetaMember("mSamples")]
     public List<Sample> Samples { get; set; } = [];
 
+    [MetaMember("mFastBoneCount")]
+    public int FastBoneCount { get; set; }
+
     [MetaMember("Baseclass_AnimationValueInterfaceBase")]
     public AnimationValueInterfaceBase AnimationValueInterfaceBase { get; set; } = new();
 
@@ -29,8 +32,14 @@ public class SkeletonPoseValue : IAnimationValueInterface
         [MetaMember("mValues")]
         public List<Transform> Values { get; set; } = [];
 
+        [MetaMember("mFastValues")]
+        public List<Transform> FastValues { get; set; } = [];
+
         [MetaMember("mTangents")]
         public List<int> Tangents { get; set; } = [];
+
+        [MetaMember("mValues")]
+        public List<ValueEntry> ValuesS { get; set; } = [];
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<BoneEntry>))]

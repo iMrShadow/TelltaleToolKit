@@ -18,6 +18,9 @@ public class PhonemeTable
 
         [MetaMember("mTimeScalar")]
         public float TimeScalar { get; set; } = 1.0f;
+
+        [MetaMember("mRelativePriority")]
+        public int RelativePriority { get; set; }
     }
 
     [MetaMember("mName")]

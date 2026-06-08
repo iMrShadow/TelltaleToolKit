@@ -67,6 +67,11 @@ public class CompressedSkeletonPoseKeys : IAnimationValueInterface
                 // TODO: Try experimenting with Marshall.
                 obj.DataSize = stream.ReadInt32(); // this is the size of struct
 
+                if (obj.DataSize > 0x1000000)
+                {
+                    throw new InvalidOperationException("CompressedSkeletonPoseKeys data size is too big.");
+                }
+
                 obj.Data = stream.ReadBytes(obj.DataSize);
             }
         }

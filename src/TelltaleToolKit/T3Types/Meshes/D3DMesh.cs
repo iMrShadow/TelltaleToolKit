@@ -131,6 +131,15 @@ public class D3DMesh
     [MetaMember("mToolAnimatedVertexEntries")]
     public List<AnimatedVertexEntry> ToolAnimatedVertexEntries { get; set; } = [];
 
+    [MetaMember("mToonOutlineSize")]
+    public float ToonOutlineSize { get; set; }
+
+    [MetaMember("mToonMaxZConstOutlineSize")]
+    public float ToonMaxZConstOutlineSize { get; set; }
+
+    [MetaMember("mToonMinZConstOutlineSize")]
+    public float ToonMinZConstOutlineSize { get; set; }
+
     [MetaSerializer(typeof(MetaClassSerializer<AnimatedVertexEntry>))]
     public class AnimatedVertexEntry;
 
@@ -157,7 +166,7 @@ public class D3DMesh
     /// <summary>
     /// This is a combination of T3MeshBatch and others for old games ( from Texas Hold'em to unknown).
     /// </summary>
-    [MetaSerializer(typeof(MetaClassSerializer<TriangleSet>))]
+    [MetaSerializer(typeof(Serializer))]
     public class TriangleSet
     {
         [MetaMember("mFlags")]
@@ -304,8 +313,23 @@ public class D3DMesh
         [MetaMember("mSpecularPower")]
         public float SpecularPower { get; set; }
 
-        [MetaSerializer(typeof(TriangleSetSerializer))]
-        public class TriangleSetSerializer : MetaSerializer<TriangleSet>
+        [MetaMember("mBoneMatrix")]
+        public int BoneMatrix { get; set; }
+
+        [MetaMember("mToonNumShades")]
+        public int ToonNumShades { get; set; }
+
+        [MetaMember("mLocalTransform")]
+        public Transform LocalTransform { get; set; }
+
+        [MetaMember("mCameraFacingType")]
+        public int CameraFacingType { get; set; }
+
+        [MetaMember("mToonSphericalNormalBoneName")]
+        public Symbol ToonSphericalNormalBoneName { get; set; }
+
+
+        public class Serializer : MetaSerializer<TriangleSet>
         {
             private static readonly MetaClassSerializer<TriangleSet> s_metaClassSerializer = new();
 
@@ -342,7 +366,7 @@ public class D3DMesh
         public string BoneName { get; set; } = string.Empty;
 
         [MetaMember("mBoneName")]
-        public Symbol SymbolBoneName { get; set; }
+        public Symbol SymbolBoneName { get; set; } = Symbol.Empty;
 
         [MetaMember("mBoundingBox")]
         public BoundingBox BoundingBox { get; set; } = new();
@@ -710,7 +734,6 @@ public class D3DMesh
     [MetaSerializer(typeof(MetaClassSerializer<Texture>))]
     public class Texture
     {
-
         //'eFlagHasLightmap',0
         //  'eFlagHasNonLightmap',0
         // 'eFlagHasSpecular',0
