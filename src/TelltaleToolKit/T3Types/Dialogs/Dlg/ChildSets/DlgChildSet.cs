@@ -16,10 +16,7 @@ public class DlgChildSet
     {
         public override void PreSerialize(ref DlgChildSet? obj, MetaStream stream, MetaClassType? type = null)
         {
-            if (obj is null)
-            {
-                obj = new DlgChildSet();
-            }
+            obj ??= new DlgChildSet();
         }
 
         public override void Serialize(ref DlgChildSet obj, MetaStream stream, MetaClassType? type = null)

@@ -71,6 +71,7 @@ public class SaveGame
 
         public override void Serialize(ref SaveGame obj, MetaStream stream, MetaClassType? type = null)
         {
+            s_metaClassSaveGameSerializer.PreSerialize(ref obj, stream);
             s_metaClassSaveGameSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)

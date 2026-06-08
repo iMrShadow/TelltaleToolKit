@@ -9,4 +9,13 @@ public class ActorAgentBinding
 {
     [MetaMember("mActorName")]
     public string ActorName { get; set; } = string.Empty;
+
+    [MetaMember("mActorName")]
+    public Symbol ActorNameS { get; set; }
+
+    [MetaMember("mAgentName")]
+    public string AgentName { get; set; } = string.Empty;
+
+    [MetaMember("mAgentName")]
+    public Symbol mAgentNameS { get; set; }
 }

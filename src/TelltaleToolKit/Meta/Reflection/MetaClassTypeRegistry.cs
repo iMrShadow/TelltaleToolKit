@@ -443,7 +443,7 @@ public static class MetaClassTypeRegistry
         Register("class CinematicLightRig", typeof(CinematicLightRig));
         Register("class Color", typeof(Color), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class ColorHDR", typeof(ColorHDR));
-        Register("class CompressedKeys<bool>", typeof(CompressedKeys<bool>));
+        Register("class CompressedKeys<bool>", typeof(CompressedKeys<byte>)); // what the helly
         Register("class CompressedKeys<class AnimOrChore>", typeof(CompressedKeys<AnimOrChore>));
         Register("class CompressedKeys<class Color>", typeof(CompressedKeys<Color>));
         Register("class CompressedKeys<class Handle<class D3DMesh> >", typeof(CompressedKeys<Handle<D3DMesh>>));
@@ -484,6 +484,7 @@ public static class MetaClassTypeRegistry
         Register("class CompressedKeys<unsigned long long>", typeof(CompressedKeys<ulong>));
         Register("class CompressedPathBlockingValue", typeof(CompressedPathBlockingValue));
         Register("class CompressedPhonemeKeys", typeof(CompressedPhonemeKeys));
+        Register("class CompressedTimeKeys", typeof(CompressedTimeKeys));
         Register("class CompressedQuaternionKeys", typeof(CompressedQuaternionKeys));
         Register("class CompressedQuaternionKeys2", typeof(CompressedQuaternionKeys2));
         Register("class CompressedSkeletonPoseKeys", typeof(CompressedSkeletonPoseKeys));
@@ -1866,9 +1867,6 @@ public class ContainerInterface
 {
 }
 
-public class CompressedPhonemeKeys
-{
-}
 
 public class FilterArea
 {
@@ -1949,26 +1947,6 @@ public class CinematicLight
 {
 }
 
-public class CompressedTransformKeys
-{
-}
-
-public class CompressedVector3Keys2
-{
-}
-
-public class CompressedVertexPositionKeys
-{
-}
-
-public class CompressedVertexNormalKeys
-{
-}
-
-public class CompressedQuaternionKeys2
-{
-}
-
 public class CinematicLightRig
 {
 }
@@ -1995,9 +1973,7 @@ public class DateStamp
 {
 }
 
-public class SingleVector3Value
-{
-}
+
 
 public class T3RenderStateBlock
 {
@@ -2110,10 +2086,6 @@ public class SoundBusSnapshot
     }
 }
 
-public class SingleValue<T>
-{
-}
-
 public class RenderObject_Mesh
 {
     public class TextureInstance
@@ -2133,9 +2105,7 @@ public class RenderObject_Mesh
     }
 }
 
-public class CompressedKeys<T>
-{
-}
+
 
 public class PathTo
 {

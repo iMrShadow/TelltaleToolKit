@@ -2,6 +2,7 @@ using System.Numerics;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Scenes;
@@ -12,8 +13,53 @@ public class Scene
     [MetaMember("mbHidden")]
     public bool Hidden { get; set; }
 
+    [MetaMember("mbAfterEffectEnabled")]
+    public bool AfterEffectEnabled { get; set; }
+
+    [MetaMember("mb2DShadowEnabled")]
+    public bool _2DShadowEnabled { get; set; }
+
+    [MetaMember("m2DShadowSize")]
+    public float _2DShadowSize { get; set; }
+
+    [MetaMember("m2DShadowCIntensity")]
+    public float m2DShadowCIntensity { get; set; }
+
+    [MetaMember("m2DShadowBIntensity")]
+    public float m2DShadowBIntensity { get; set; }
+
+    [MetaMember("m2DShadowZMin")]
+    public float m2DShadowZMin { get; set; }
+
+    [MetaMember("m2DShadowZMax")]
+    public float m2DShadowZMax { get; set; }
+
+    [MetaMember("mFXColorActive")]
+    public bool FXColorActive { get; set; }
+
+    [MetaMember("mFXColor")]
+    public Color FXColor { get; set; } = new();
+
+    [MetaMember("mFXColorOpacity")]
+    public float FXColorOpacity { get; set; }
+
+    [MetaMember("mFXLevelsActive")]
+    public bool mFXLevelsActive { get; set; }
+
+    [MetaMember("mFXLevelsBlack")]
+    public float FXLevelsBlack { get; set; }
+
+    [MetaMember("mFXLevelsWhite")]
+    public float FXLevelsWhite { get; set; }
+
+    [MetaMember("mFXLevelsIntensity")]
+    public float FXLevelsIntensity { get; set; }
+
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
+
+    [MetaMember("mGlowClearColor")]
+    public Color GlowClearColor { get; set; } = new();
 
     [MetaMember("mReferencedScenes")]
     public List<Handle<Scene>> ReferencedScenes { get; set; } = [];

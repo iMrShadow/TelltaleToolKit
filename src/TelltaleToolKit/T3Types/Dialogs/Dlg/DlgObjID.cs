@@ -8,5 +8,5 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class DlgObjId
 {
     [MetaMember("mID")]
-    public Symbol Id { get; set; }
+    public Symbol Id { get; set; } = Symbol.Empty;
 }

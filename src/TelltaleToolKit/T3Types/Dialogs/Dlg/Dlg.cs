@@ -51,6 +51,9 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
     [MetaMember("mbHasToolOnlyData")]
     public bool HasToolOnlyData { get; set; }
 
+    [MetaMember("mResourcePath")]
+    public string ResourcePath { get; set; }
+
     public bool ToolFlag { get; set; }
 
     public List<DlgFolder> Folders { get; set; } = [];

@@ -10,6 +10,11 @@ public class MovieCaptureInfo
     [MetaSerializer(typeof(EnumSerializer<CompressorType>))]
     public enum CompressorType
     {
+        IV50 = 5,
+        MSVC = 4,
+        IV32 = 3,
+        CVID = 2,
+        Uncompressed = 1
     }
 
     [MetaMember("mFPS")]
@@ -17,7 +22,6 @@ public class MovieCaptureInfo
 
     [MetaMember("mCType")]
     public EnumCompressorType CType { get; set; } = new();
-
 
     [MetaSerializer(typeof(MetaClassSerializer<EnumCompressorType>))]
     public struct EnumCompressorType
