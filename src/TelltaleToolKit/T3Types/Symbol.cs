@@ -37,6 +37,11 @@ public sealed class Symbol : IEquatable<Symbol>
         Crc64 = crc64;
     }
 
+    public Symbol() : this(string.Empty)
+    {
+
+    }
+
     /// <summary>
     ///     Gets the empty symbol (CRC64 = 0, empty debug string).
     /// </summary>

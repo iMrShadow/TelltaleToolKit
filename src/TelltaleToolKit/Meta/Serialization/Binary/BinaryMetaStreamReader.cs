@@ -32,12 +32,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
                 currentSect.Stream = new SubStream(Sections[0].Stream, offset, currentSect.CompressedSize);
                 if (currentSect.IsCompressed)
                 {
-                    if (Params.Workspace is null)
-                    {
-                        throw new InvalidOperationException("[MetaStream] Workspace is not set for encrypted streams.");
-                    }
-
-                    ContainerStream cs = new(currentSect.Stream, Params.Workspace.BlowfishKey);
+                    ContainerStream cs = new(currentSect.Stream);
                     currentSect.Stream = cs;
                     SetSection((SectionType)i);
 
@@ -290,13 +285,6 @@ public sealed class BinaryMetaStreamReader : MetaStream
     public override void Serialize(ref byte value) => value = Reader.ReadByte();
 
     public override void Serialize(ref sbyte value) => value = Reader.ReadSByte();
-
-    public override void Serialize(ref Symbol value)
-    {
-        ulong crc64 = Reader.ReadUInt64();
-        value = Symbol.FromCrc64(crc64);
-        Params.SerializedSymbols.Add(value);
-    }
 
     public override void Serialize(byte[] values, int offset, int count) => Reader.Read(values, offset, count);
 
