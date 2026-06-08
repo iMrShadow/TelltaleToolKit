@@ -40971,6 +40971,11 @@
                 "flags": 0
             },
             {
+                "name": "mToolProps",
+                "type": "ToolProps",
+                "flags": 0
+            },
+            {
                 "name": "mbHasTextureData",
                 "type": "bool",
                 "flags": 0
@@ -41098,7 +41103,7 @@
             {
                 "name": "mbForcePreviewRebuild",
                 "type": "bool",
-                "flags": 0
+                "flags": 1
             }
         ]
     },
@@ -41394,11 +41399,6 @@
                 "name": "mFlags",
                 "type": "Flags",
                 "flags": 262144
-            },
-            {
-                "name": "mNameSymbol",
-                "type": "Symbol",
-                "flags": 0
             },
             {
                 "name": "mBoundingBox",
@@ -42780,7 +42780,7 @@
         "members": [
             {
                 "name": "mBoneName",
-                "type": "String",
+                "type": "Symbol",
                 "flags": 0
             }
         ]
@@ -44874,7 +44874,7 @@
             },
             {
                 "name": "mAttachedToNode",
-                "type": "String",
+                "type": "Symbol",
                 "flags": 0
             }
         ]
@@ -45515,7 +45515,7 @@
                 "flags": 0
             },
             {
-                "name": "mEnabledDynamicSets",
+                "name": "mAdditionalPropNames",
                 "type": "Set<String,less<String>>",
                 "flags": 0
             }
