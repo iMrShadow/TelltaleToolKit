@@ -214,11 +214,11 @@ public static class MetaStreamExtensions
         MetaClassType? value;
         if (stream.Params.StreamVersion >= 3) // mStreamVersion >= 3 uses hashed types
         {
-            ulong typeSymbolCrc = stream.ReadUInt64();
-            value = MetaClassTypeRegistry.GetByHash(typeSymbolCrc);
+            Symbol def = stream.ReadSymbol();
+            value = MetaClassTypeRegistry.GetByHash(def.Crc64);
 
             if (value == null)
-                Toolkit.Instance.Logger.LogWarning($"Unknown type symbol CRC64: {typeSymbolCrc}");
+                Toolkit.Instance.Logger.LogError($"Unknown type symbol CRC64: {def.Crc64}");
         }
         else
         {
@@ -465,7 +465,7 @@ public static class MetaStreamExtensions
     /// <param name="obj">The object to serialize or deserialize.</param>
     /// <param name="stream">The stream to serialize or deserialize to.</param>
     /// <param name="type"></param>
-    public static void Serialize<T>(this MetaStream stream, ref T obj, MetaClassType? type = null) where T : new()
+    public static void Serialize<T>(this MetaStream stream, ref T obj, MetaClassType? type = null)
     {
         var serializer = Toolkit.Instance.GetSerializer<T>();
 

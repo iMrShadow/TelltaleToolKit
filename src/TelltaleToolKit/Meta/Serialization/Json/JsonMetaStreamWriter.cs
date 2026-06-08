@@ -244,19 +244,6 @@ public sealed class JsonMetaStreamWriter : MetaStream
     }
 
     /// <summary>
-    ///     Symbols are written as strings. If a debug string is available it is used;
-    ///     otherwise the CRC is written as a hex string, matching C++ <c>serialize_Symbol</c>.
-    /// </summary>
-    public override void Serialize(ref Symbol value)
-    {
-        EnsureKey();
-        string display = value.DebugString ?? $"0x{value.Crc64:X16}";
-        _payload.WriteStringValue(display);
-        Params.SerializedSymbols.Add(value);
-        _keyPending = false;
-    }
-
-    /// <summary>
     ///     Binary blobs are Base64-encoded, matching C++ <c>WriteData</c>.
     /// </summary>
     public override void Serialize(byte[] values, int offset, int count)

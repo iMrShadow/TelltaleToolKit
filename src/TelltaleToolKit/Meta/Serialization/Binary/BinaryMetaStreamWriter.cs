@@ -221,10 +221,4 @@ public sealed class BinaryMetaStreamWriter : MetaStream
         _closed = true;
         Dispose(true);
     }
-
-    public override void Serialize(ref Symbol value)
-    {
-        Writer.Write(value.Crc64);
-        Params.SerializedSymbols.Add(value);
-    }
 }
