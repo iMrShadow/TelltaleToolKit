@@ -1,10 +1,9 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class BitSetBase
 {
     public uint[] Values { get; set; }
@@ -14,9 +13,9 @@ public class BitSetBase
         Values = new uint[numValues];
     }
 
-    public class Serializer : MetaClassSerializer<BitSetBase>
+    public class Serializer : MetaSerializer<BitSetBase>
     {
-        public override void PreSerialize(ref BitSetBase obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref BitSetBase? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (type is null)
             {

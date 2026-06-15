@@ -1,11 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Properties;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class PropertySet
 {
     // Starts appearing later
@@ -36,11 +35,11 @@ public class PropertySet
 
     public PropertySet ParentProperties;
 
-    public class Serializer : MetaClassSerializer<PropertySet>
+    public class Serializer : MetaSerializer<PropertySet>
     {
-        private static readonly DefaultClassSerializer<PropertySet> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<PropertySet> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref PropertySet obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref PropertySet? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (obj is null)
             {
@@ -50,8 +49,8 @@ public class PropertySet
 
         public override void Serialize(ref PropertySet obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
 
@@ -63,7 +62,7 @@ public class PropertySet
                     int parentCount = obj.ParentList.Count;
                     stream.Write(parentCount);
 
-                    MetaClassSerializer<Handle<PropertySet>> parentSerializer =
+                    MetaSerializer<Handle<PropertySet>> parentSerializer =
                         Toolkit.Instance.GetSerializer<Handle<PropertySet>>();
                     for (var i = 0; i < parentCount; i++)
                     {
@@ -127,7 +126,7 @@ public class PropertySet
                     stream.Write(typeSymbol);
                     stream.Write(entries.Count);
 
-                    MetaClassSerializer classTypeSerializer =
+                    MetaSerializer typeSerializer =
                         Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     foreach ((Symbol key, PropertyEntry value) in entries)
@@ -136,8 +135,8 @@ public class PropertySet
 
                         object? propertyValue = value.Value;
 
-                        classTypeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
-                        classTypeSerializer.Serialize(ref propertyValue, stream);
+                        typeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
+                        typeSerializer.Serialize(ref propertyValue, stream);
 
                         // Note: we intentionally don't mutate the stored PropertyEntry.Value here.
                         // If serializer changes the in-memory object and you want that persisted, set it before calling Serialize.
@@ -175,7 +174,7 @@ public class PropertySet
                     if (typeSymbol is null)
                         throw new InvalidOperationException("[PropertySet] Type symbol is null");
 
-                    MetaClassSerializer classTypeSerializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
+                    MetaSerializer typeSerializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
 
                     for (var j = 0; j < numOfType; j++)
                     {
@@ -184,8 +183,8 @@ public class PropertySet
 
                         object? propertyValue = null;
 
-                        classTypeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
-                        classTypeSerializer.Serialize(ref propertyValue, stream);
+                        typeSerializer.PreSerialize(ref propertyValue, stream, typeSymbol);
+                        typeSerializer.Serialize(ref propertyValue, stream);
                         obj.Properties[propertyKey] = new PropertyEntry(propertyValue, typeSymbol);
                     }
                 }

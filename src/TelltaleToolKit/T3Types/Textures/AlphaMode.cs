@@ -1,9 +1,9 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<AlphaMode>))]
+[MetaSerializer(typeof(EnumSerializer<AlphaMode>))]
 public enum AlphaMode
 {
     Unknown = -1,

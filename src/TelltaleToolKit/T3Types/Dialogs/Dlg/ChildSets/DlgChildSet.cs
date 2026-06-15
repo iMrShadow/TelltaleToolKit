@@ -1,10 +1,9 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DlgChildSet
 {
     [MetaMember("mChildren")]
@@ -13,9 +12,9 @@ public class DlgChildSet
     [MetaMember("mParent")]
     public DlgNodeLink Parent { get; set; }
 
-    public class Serializer : MetaClassSerializer<DlgChildSet>
+    public class Serializer : MetaSerializer<DlgChildSet>
     {
-        public override void PreSerialize(ref DlgChildSet obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref DlgChildSet? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (obj is null)
             {
@@ -40,7 +39,7 @@ public class DlgChildSet
                     if (type == null)
                         throw new InvalidOperationException("[DlgChildSet] Type is not registered.");
 
-                    MetaClassSerializer childSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
+                    MetaSerializer childSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
 
                     object? dlgChild = null;
                     childSerializer.PreSerialize(ref dlgChild, stream);

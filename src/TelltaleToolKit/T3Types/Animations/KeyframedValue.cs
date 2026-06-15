@@ -1,11 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(KeyframedValue<>.Serializer), typeof(KeyframedValue<>))]
+[MetaSerializer(typeof(KeyframedValue<>.Serializer), typeof(KeyframedValue<>))]
 public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
 {
     [MetaMember("Baseclass_AnimatedValueInterface<T>")]
@@ -26,7 +25,7 @@ public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
     [MetaMember("mSamples")]
     public List<Sample> Samples { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(KeyframedValue<>.Sample.Serializer), typeof(KeyframedValue<>.Sample))]
+    [MetaSerializer(typeof(KeyframedValue<>.Sample.Serializer), typeof(KeyframedValue<>.Sample))]
     public class Sample
     {
         [MetaMember("mTime")]
@@ -41,26 +40,26 @@ public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
         [MetaMember("mTangentMode")]
         public TangentMode TangentMode { get; set; }
 
-        public class Serializer : MetaClassSerializer<Sample>
+        public class Serializer : MetaSerializer<Sample>
         {
-            private static readonly DefaultClassSerializer<Sample> DefaultSerializer = new();
+            private static readonly MetaClassSerializer<Sample> s_metaClassSerializer = new();
 
             public override void Serialize(ref Sample obj, MetaStream stream)
             {
-                DefaultSerializer.PreSerialize(ref obj, stream);
-                DefaultSerializer.Serialize(ref obj, stream);
+                s_metaClassSerializer.PreSerialize(ref obj, stream);
+                s_metaClassSerializer.Serialize(ref obj, stream);
             }
         }
     }
 
-    public class Serializer : MetaClassSerializer<KeyframedValue<T>>
+    public class Serializer : MetaSerializer<KeyframedValue<T>>
     {
-        private static readonly DefaultClassSerializer<KeyframedValue<T>> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<KeyframedValue<T>> s_metaClassSerializer = new();
 
         public override void Serialize(ref KeyframedValue<T> obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -72,7 +71,7 @@ public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
     }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<TangentMode>))]
+[MetaSerializer(typeof(EnumSerializer<TangentMode>))]
 public enum TangentMode
 {
     // eTangent

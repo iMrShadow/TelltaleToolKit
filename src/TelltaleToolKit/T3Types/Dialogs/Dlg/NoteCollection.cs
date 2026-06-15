@@ -1,11 +1,10 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class NoteCollection : IGenerator
 {
     [MetaMember("Baseclass_UID::Generator")]
@@ -14,7 +13,7 @@ public class NoteCollection : IGenerator
     [MetaMember("mNotes")]
     public Dictionary<int, Note> Notes { get; set; } = new();
 
-    public class Serializer : MetaClassSerializer<NoteCollection>
+    public class Serializer : MetaSerializer<NoteCollection>
     {
         public override void Serialize(ref NoteCollection obj, MetaStream stream)
         {

@@ -1,12 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DlgObjectProps
 {
     public enum PropsType {
@@ -21,14 +20,14 @@ public class DlgObjectProps
     public PropertySet UserProperties { get; set; }
     public PropertySet ProductionProperties { get; set; }
     public PropertySet ToolProperties { get; set; }
-    public class Serializer : MetaClassSerializer<DlgObjectProps>
+    public class Serializer : MetaSerializer<DlgObjectProps>
     {
-        private static readonly DefaultClassSerializer<DlgObjectProps> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<DlgObjectProps> s_metaClassSerializer = new();
 
         public override void Serialize(ref DlgObjectProps obj, MetaStream stream)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

@@ -1,6 +1,5 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
@@ -22,10 +21,10 @@ public class HandleBase
     // public Symbol ObjectName;
     public HandleObjectInfo ObjectInfo = new();
 
-    [MetaClassSerializerGlobal(typeof(HandleBaseSerializer))]
-    public class HandleBaseSerializer : MetaClassSerializer<HandleBase>
+    [MetaSerializer(typeof(HandleBaseSerializer))]
+    public class HandleBaseSerializer : MetaSerializer<HandleBase>
     {
-        public override void PreSerialize(ref HandleBase obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref HandleBase? obj, MetaStream stream, MetaClassType? type = null)
         {
             if (obj is null)
             {
@@ -54,7 +53,7 @@ public class HandleBase
     }
 }
 
-[MetaClassSerializerGlobal(typeof(HandleSerializer<>), typeof(Handle<>))]
+[MetaSerializer(typeof(HandleSerializer<>), typeof(Handle<>))]
 public class Handle<T> : HandleBase
 {
 }
@@ -63,9 +62,9 @@ public class HandleLock<T> : Handle<T>
 {
 }
 
-public class HandleSerializer<T> : MetaClassSerializer<Handle<T>>
+public class HandleSerializer<T> : MetaSerializer<Handle<T>>
 {
-    public override void PreSerialize(ref Handle<T> obj, MetaStream stream, MetaClassType? type = null)
+    public override void PreSerialize(ref Handle<T>? obj, MetaStream stream, MetaClassType? type = null)
     {
         if (obj is null)
             obj = new Handle<T>();

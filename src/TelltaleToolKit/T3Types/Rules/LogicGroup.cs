@@ -1,11 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Rules;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LogicGroup>))]
+[MetaSerializer(typeof(MetaClassSerializer<LogicGroup>))]
 public class LogicGroup
 {
     [MetaMember("mOperator")]
@@ -26,7 +26,7 @@ public class LogicGroup
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<LogicItem>))]
+    [MetaSerializer(typeof(MetaClassSerializer<LogicItem>))]
     public class LogicItem
     {
         [MetaMember("Baseclass_PropertySet")]
@@ -36,15 +36,15 @@ public class LogicGroup
         public string Name { get; set; } = string.Empty;
 
         [MetaMember("mKeyNegateList")]
-        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol 
-        
+        public Dictionary<Symbol, bool> GroupOperator { get; set; } = new(); // also a string/symbol
+
         [MetaMember("mKeyComparisonList")]
-        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol 
+        public Dictionary<Symbol, int> KeyComparisonList { get; set; } = new(); // also a string/symbol
 
         [MetaMember("mKeyActionList")]
-        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol 
+        public Dictionary<Symbol, int> KeyActionList { get; set; } = new(); // also a string/symbol
 
         [MetaMember("mReferenceKeyList")]
-        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol 
+        public List<string> ReferenceKeyList { get; set; } = []; // also a string/symbol
     }
 }

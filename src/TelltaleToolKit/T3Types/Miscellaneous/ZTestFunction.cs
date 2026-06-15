@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ZTestFunction>))]
+[MetaSerializer(typeof(MetaClassSerializer<ZTestFunction>))]
 public struct ZTestFunction
 {
     [MetaMember("mZTestType")]
@@ -12,7 +12,7 @@ public struct ZTestFunction
     public FuncTypes ZTestType { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<FuncTypes>))]
+[MetaSerializer(typeof(EnumSerializer<FuncTypes>))]
 public enum FuncTypes
 {
     Never = 0x1,

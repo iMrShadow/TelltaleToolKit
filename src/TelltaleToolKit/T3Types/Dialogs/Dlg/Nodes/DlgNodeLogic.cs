@@ -1,11 +1,11 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeLogic>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeLogic>))]
 public class DlgNodeLogic : IDlgNode
 {
     [MetaMember("Baseclass_DlgNode")]

@@ -1,6 +1,6 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 // I am probably going to add SArrays (unfortunately)
 // Maybe check if the value contains "[...]"?
 // Or maybe leave it as it is.
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MaterialTransform2D>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MaterialTransform2D>))]
 public class T3MaterialTransform2D
 {
     [MetaMember("mParameterPrefix")]
@@ -21,14 +21,14 @@ public class T3MaterialTransform2D
     public int ScalarOffset0 { get; set; }
 
     [MetaMember("mScalarOffset1")]
-    public int ScalarOffset1 { get; set; } 
-    
+    public int ScalarOffset1 { get; set; }
+
     [MetaMember("mScalarOffset0[0]")]
     public int ScalarOffset00 { get; set; }
 
     [MetaMember("mScalarOffset1[0]")]
-    public int ScalarOffset10 { get; set; }  
-    
+    public int ScalarOffset10 { get; set; }
+
     [MetaMember("mScalarOffset0[1]")]
     public int ScalarOffset01 { get; set; }
     [MetaMember("mScalarOffset0[2]")]
@@ -36,7 +36,7 @@ public class T3MaterialTransform2D
     [MetaMember("mScalarOffset0[3]")]
     public int ScalarOffset03 { get; set; }
     [MetaMember("mScalarOffset1[1]")]
-    public int ScalarOffset11 { get; set; } 
+    public int ScalarOffset11 { get; set; }
     [MetaMember("mScalarOffset1[2]")]
     public int ScalarOffset12 { get; set; }
     [MetaMember("mScalarOffset1[3]")]

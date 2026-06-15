@@ -1,12 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Rules;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class Rules
 {
     [MetaMember("mFlags")]
@@ -20,14 +19,14 @@ public class Rules
     [MetaMember("mRuleMap")]
     public Dictionary<string, Rule> RuleMap { get; set; } = new();
 
-    public class Serializer : MetaClassSerializer<Rules>
+    public class Serializer : MetaSerializer<Rules>
     {
-        private static readonly DefaultClassSerializer<Rules> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<Rules> s_metaClassSerializer = new();
 
         public override void Serialize(ref Rules obj, MetaStream stream)
         {
             PreSerialize(ref obj, stream);
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
             stream.BeginBlock();
 
             if (stream.Mode is MetaStreamMode.Write)

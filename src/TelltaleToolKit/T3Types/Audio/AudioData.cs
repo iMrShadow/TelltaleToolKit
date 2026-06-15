@@ -1,7 +1,6 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Audio;
 
@@ -11,7 +10,7 @@ namespace TelltaleToolKit.T3Types.Audio;
 /// In MSV4+ games, only the filename and length are serialized (if these files are even found in the first place).
 /// Presumably replaced by FMOD.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class AudioData
 {
     [MetaMember("mFilename")]
@@ -39,7 +38,7 @@ public class AudioData
     public int NumChannels { get; set; }
     public int SampleSizeBytes { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Streamed>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Streamed>))]
     public struct Streamed
     {
         [MetaMember("mStreamRegionSize")]
@@ -49,13 +48,13 @@ public class AudioData
         public float StreamBufferSecs { get; set; }
     }
 
-    public class Serializer : MetaClassSerializer<AudioData>
+    public class Serializer : MetaSerializer<AudioData>
     {
-        private static readonly DefaultClassSerializer<AudioData> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<AudioData> s_metaClassSerializer = new();
 
         public override void Serialize(ref AudioData obj, MetaStream stream)
         {
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

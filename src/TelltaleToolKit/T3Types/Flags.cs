@@ -1,10 +1,10 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Flags>))]
+[MetaSerializer(typeof(MetaClassSerializer<Flags>))]
 public struct Flags
 {
     // TODO: Potentially migrate to C# enum flags.

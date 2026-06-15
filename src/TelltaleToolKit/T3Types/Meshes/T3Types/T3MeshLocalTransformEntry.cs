@@ -1,11 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Skeletons;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3MeshLocalTransformEntry>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3MeshLocalTransformEntry>))]
 public class T3MeshLocalTransformEntry
 {
     [MetaMember("mTransform")]
@@ -15,7 +15,7 @@ public class T3MeshLocalTransformEntry
     public T3CameraFacingType CameraFacingType { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3CameraFacingType>))]
+[MetaSerializer(typeof(EnumSerializer<T3CameraFacingType>))]
 public enum T3CameraFacingType {
     // eCameraFacing_
     None = 0,

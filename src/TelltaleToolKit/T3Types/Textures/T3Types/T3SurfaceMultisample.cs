@@ -1,9 +1,9 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3SurfaceMultisample>))]
+[MetaSerializer(typeof(EnumSerializer<T3SurfaceMultisample>))]
 public enum T3SurfaceMultisample
 {
     // eSurfaceMultisample

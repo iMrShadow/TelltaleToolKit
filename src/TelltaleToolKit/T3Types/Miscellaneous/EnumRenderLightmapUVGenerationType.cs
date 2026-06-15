@@ -1,15 +1,15 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumRenderLightmapUVGenerationType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumRenderLightmapUVGenerationType>))]
 public struct EnumRenderLightmapUVGenerationType
 {
     [MetaMember("mVal")]
     public RenderLightmapUVGenerationType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<RenderLightmapUVGenerationType>))]
+[MetaSerializer(typeof(EnumSerializer<RenderLightmapUVGenerationType>))]
 public enum RenderLightmapUVGenerationType
 {
     // TODO:

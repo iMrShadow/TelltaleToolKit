@@ -1,14 +1,14 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Chores;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeIdle>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeIdle>))]
 public class DlgNodeIdle : IDlgNode
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<OverrideOption>))]
+    [MetaSerializer(typeof(EnumSerializer<OverrideOption>))]
     public enum OverrideOption
     {
         UseDefaults = 1,
@@ -32,7 +32,7 @@ public class DlgNodeIdle : IDlgNode
 
     [MetaMember("mOverrideOptionStyle")]
     public OverrideOption OverrideOptionStyle { get; set; }
-    
+
     [MetaMember("Baseclass_DlgNode")]
     public DlgNode DlgNode { get; set; }
 }

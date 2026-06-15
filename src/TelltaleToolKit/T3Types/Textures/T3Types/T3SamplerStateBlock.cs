@@ -1,6 +1,6 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
@@ -14,10 +14,10 @@ namespace TelltaleToolKit.T3Types.Textures.T3Types;
 /// bit  13     : Gamma Correct (1 bit)
 /// bits 14..21 : Mip Bias (8 bits)
 /// Remaining bits unused/reserved.
-/// 
+///
 /// This class provides typed accessors and several utility functions.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3SamplerStateBlock>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3SamplerStateBlock>))]
 public class T3SamplerStateBlock
 {
     [MetaMember("mData")]
@@ -114,7 +114,7 @@ public class T3SamplerStateBlock
         WrapU = 0x0, // TextureWrapMode.
         WrapV = 0x1, // TextureWrapMode.
         Filtered = 0x2, // bool
-        BorderColor = 0x3, // TextureBorderColor 
+        BorderColor = 0x3, // TextureBorderColor
         GammaCorrect = 0x4, // bool
         MipBias = 0x5, // char
     }

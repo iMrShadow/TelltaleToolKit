@@ -1,14 +1,13 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3MeshTextureIndices
 {
     public int[] Index { get; set; } = [-1, -1]; // Usually 2 elements: for batch Default and for batch Shadow
 
-    public class Serializer : MetaClassSerializer<T3MeshTextureIndices>
+    public class Serializer : MetaSerializer<T3MeshTextureIndices>
     {
         public override void Serialize(ref T3MeshTextureIndices obj, MetaStream stream)
         {

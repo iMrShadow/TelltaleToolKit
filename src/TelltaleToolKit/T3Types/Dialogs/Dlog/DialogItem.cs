@@ -1,11 +1,12 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Dialogs.Dlog;
 using TelltaleToolKit.T3Types.Languages.Landb;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DialogItem>))]
+[MetaSerializer(typeof(MetaClassSerializer<DialogItem>))]
 public class DialogItem : IDialogBase
 {
     [MetaMember("Baseclass_DialogBase")]
@@ -56,14 +57,14 @@ public class DialogItem : IDialogBase
     [MetaMember("mbCutscene")]
     public bool Cutscene { get; set; }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumPlaybackMode>))]
+    [MetaSerializer(typeof(MetaClassSerializer<EnumPlaybackMode>))]
     public struct EnumPlaybackMode
     {
         [MetaMember("mVal")]
         public PlaybackModeEnum Value { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<PlaybackModeEnum>))]
+    [MetaSerializer(typeof(EnumSerializer<PlaybackModeEnum>))]
     public enum PlaybackModeEnum
     {
         sequential_looping = 0x0,

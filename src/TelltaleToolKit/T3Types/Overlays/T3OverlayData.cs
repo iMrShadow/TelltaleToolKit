@@ -1,13 +1,13 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
 /// <summary>
 /// Main class for .overlay files.
 /// </summary>
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<T3OverlayData>))]
+[MetaSerializer(typeof(MetaClassSerializer<T3OverlayData>))]
 public class T3OverlayData
 {
     [MetaMember("mName")]

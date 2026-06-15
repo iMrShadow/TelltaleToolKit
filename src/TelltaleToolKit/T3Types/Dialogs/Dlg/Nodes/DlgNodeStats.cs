@@ -1,15 +1,15 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Languages.Landb;
 using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg.Nodes;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeStats>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeStats>))]
 public class DlgNodeStats
 {
-    [MetaClassSerializerGlobal(typeof(EnumSerializer<StatsType>))]
+    [MetaSerializer(typeof(EnumSerializer<StatsType>))]
     public enum StatsType
     {
         Choices = 1,
@@ -29,9 +29,9 @@ public class DlgNodeStats
 
     [MetaMember("mDisplayText")]
     public LanguageResProxy DisplayText { get; set; }
-    
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Cohort>))]
+
+    [MetaSerializer(typeof(MetaClassSerializer<Cohort>))]
     public class Cohort : IDlgChild
     {
         [MetaMember("mhImage")]
@@ -53,7 +53,7 @@ public class DlgNodeStats
         public DlgChild DlgChild { get; set; }
     }
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgChildSetCohort>))]
+    [MetaSerializer(typeof(MetaClassSerializer<DlgChildSetCohort>))]
     public class DlgChildSetCohort : IDlgChildSet
     {
         [MetaMember("Baseclass_DlgChildSet")]

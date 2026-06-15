@@ -1,10 +1,10 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AnimationValueInterfaceBase>))]
+[MetaSerializer(typeof(MetaClassSerializer<AnimationValueInterfaceBase>))]
 public class AnimationValueInterfaceBase
 {
     // Both Symbol and a String

@@ -1,9 +1,9 @@
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3TextureLayout>))]
+[MetaSerializer(typeof(EnumSerializer<T3TextureLayout>))]
 
 public enum T3TextureLayout
 {

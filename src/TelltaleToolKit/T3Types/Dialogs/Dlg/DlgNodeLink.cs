@@ -1,10 +1,10 @@
-﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+﻿using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<DlgNodeLink>))]
+[MetaSerializer(typeof(MetaClassSerializer<DlgNodeLink>))]
 public class DlgNodeLink : IDlgObjIdOwner
 {
     [MetaMember("mRequiredCCType")]
@@ -14,7 +14,7 @@ public class DlgNodeLink : IDlgObjIdOwner
     public DlgObjIDOwner DlgObjIdOwner { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<ChainContextTypeID>))]
+[MetaSerializer(typeof(EnumSerializer<ChainContextTypeID>))]
 public enum ChainContextTypeID
 {
     // eCC

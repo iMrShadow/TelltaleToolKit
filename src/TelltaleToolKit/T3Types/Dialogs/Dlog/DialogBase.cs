@@ -1,15 +1,14 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Chores;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Rules;
 using TelltaleToolKit.T3Types.StyleGuides;
 
-namespace TelltaleToolKit.T3Types.Dialogs;
+namespace TelltaleToolKit.T3Types.Dialogs.Dlog;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class DialogBase
 {
     [MetaMember("mDialogElemType")]
@@ -42,11 +41,11 @@ public class DialogBase
     public int ActualId;
     public List<StyleGuideRef> StyleGuideRefs = [];
 
-    public class Serializer : MetaClassSerializer<DialogBase>
+    public class Serializer : MetaSerializer<DialogBase>
     {
         public override void Serialize(ref DialogBase obj, MetaStream stream)
         {
-            new DefaultClassSerializer<DialogBase>().Serialize(ref obj, stream);
+            new MetaClassSerializer<DialogBase>().Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumT3LightEnvShadowType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumT3LightEnvShadowType>))]
 public struct EnumT3LightEnvShadowType
 {
     [MetaMember("mVal")]
     public T3LightEnvShadowType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<T3LightEnvShadowType>))]
+[MetaSerializer(typeof(EnumSerializer<T3LightEnvShadowType>))]
 public enum T3LightEnvShadowType
 {
     //    eLightEnvShadowType_

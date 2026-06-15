@@ -1,15 +1,14 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class BinaryBuffer
 {
-    public class Serializer : MetaClassSerializer<BinaryBuffer>
+    public class Serializer : MetaSerializer<BinaryBuffer>
     {
-        public override void PreSerialize(ref BinaryBuffer obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref BinaryBuffer? obj, MetaStream stream, MetaClassType? type = null)
         {
             obj ??= new BinaryBuffer();
         }
@@ -29,5 +28,5 @@ public class BinaryBuffer
         }
     }
 
-    public byte[] Data { get; set; }
+    public byte[] Data { get; set; } = [];
 }

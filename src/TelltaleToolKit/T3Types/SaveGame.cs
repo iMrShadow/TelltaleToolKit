@@ -1,13 +1,12 @@
 ﻿using System.Numerics;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class SaveGame
 {
     [MetaMember("mLuaDoFile")]
@@ -22,7 +21,7 @@ public class SaveGame
     [MetaMember("mAdditionalPropNames")]
     public HashSet<string> AdditionalPropNames { get; set; } = [];
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<AgentInfo>))]
+    [MetaSerializer(typeof(MetaClassSerializer<AgentInfo>))]
     public class AgentInfo
     {
         [MetaMember("mAgentName")]
@@ -45,13 +44,13 @@ public class SaveGame
     }
 
 
-    public class Serializer : MetaClassSerializer<SaveGame>
+    public class Serializer : MetaSerializer<SaveGame>
     {
-        private static readonly DefaultClassSerializer<SaveGame> DefaultSaveGameSerializer = new();
+        private static readonly MetaClassSerializer<SaveGame> s_metaClassSaveGameSerializer = new();
 
         public override void Serialize(ref SaveGame obj, MetaStream stream)
         {
-            DefaultSaveGameSerializer.Serialize(ref obj, stream);
+            s_metaClassSaveGameSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

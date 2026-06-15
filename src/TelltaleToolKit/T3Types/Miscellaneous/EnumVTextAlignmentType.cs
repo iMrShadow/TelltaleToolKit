@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumVTextAlignmentType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumVTextAlignmentType>))]
 public struct EnumVTextAlignmentType
 {
     [MetaMember("mVal")]
     public VTextAlignmentType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<VTextAlignmentType>))]
+[MetaSerializer(typeof(EnumSerializer<VTextAlignmentType>))]
 public enum VTextAlignmentType
 {
     //  eVTextAlignment_

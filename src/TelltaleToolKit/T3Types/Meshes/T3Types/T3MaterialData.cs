@@ -1,12 +1,11 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Binary;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.LightMaps;
 
 namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 
-[MetaClassSerializerGlobal(typeof(Serializer))]
+[MetaSerializer(typeof(Serializer))]
 public class T3MaterialData
 {
     [MetaMember("mMaterialName")]
@@ -42,13 +41,12 @@ public class T3MaterialData
     [MetaMember("mCompiledData2")]
     public List<T3MaterialCompiledData> CompiledData2 { get; set; }
 
-    public class Serializer : MetaClassSerializer<T3MaterialData>
+    public class Serializer : MetaSerializer<T3MaterialData>
     {
-        private static readonly DefaultClassSerializer<T3MaterialData> DefaultSerializer = new();
+        private static readonly MetaClassSerializer<T3MaterialData> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref T3MaterialData obj, MetaStream stream, MetaClassType? type = null)
+        public override void PreSerialize(ref T3MaterialData? obj, MetaStream stream, MetaClassType? type = null)
         {
-            DefaultSerializer.PreSerialize(ref obj, stream);
             if (obj is null)
             {
                 obj = new T3MaterialData();
@@ -57,7 +55,7 @@ public class T3MaterialData
 
         public override void Serialize(ref T3MaterialData obj, MetaStream stream)
         {
-            DefaultSerializer.Serialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass? classDescription = stream.GetMetaClass(typeof(T3MaterialData));
 

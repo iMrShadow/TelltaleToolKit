@@ -1,13 +1,13 @@
 using System.Numerics;
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Properties;
 using TelltaleToolKit.T3Types.Rules;
 
 namespace TelltaleToolKit.T3Types.Chores;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<ChoreAgent>))]
+[MetaSerializer(typeof(MetaClassSerializer<ChoreAgent>))]
 public class ChoreAgent
 {
     [MetaMember("mAgentName")]
@@ -30,14 +30,14 @@ public class ChoreAgent
 
     [MetaMember("mAttachment")]
     public Attachment AttachmentWhat { get; set; } = new(); // ???????/
-    
+
     [MetaMember("mAABinding")]
-    public ActorAgentBinding AABinding { get; set; } 
-    
+    public ActorAgentBinding AABinding { get; set; }
+
     [MetaMember("mAgentEnabledRule")]
     public Rule AgentEnabledRule { get; set; } // Bone only
 
-    [MetaClassSerializerGlobal(typeof(DefaultClassSerializer<Attachment>))]
+    [MetaSerializer(typeof(MetaClassSerializer<Attachment>))]
     public class Attachment
     {
         [MetaMember("mbDoAttach")]

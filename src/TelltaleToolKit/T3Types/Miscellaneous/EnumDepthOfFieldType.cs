@@ -1,17 +1,17 @@
-using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization;
-using TelltaleToolKit.Serialization.Serializers;
+using TelltaleToolKit.Meta.Reflection;
+using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Miscellaneous;
 
-[MetaClassSerializerGlobal(typeof(DefaultClassSerializer<EnumDepthOfFieldType>))]
+[MetaSerializer(typeof(MetaClassSerializer<EnumDepthOfFieldType>))]
 public struct EnumDepthOfFieldType
 {
     [MetaMember("mVal")]
     public DepthOfFieldType Val { get; set; }
 }
 
-[MetaClassSerializerGlobal(typeof(EnumSerializer<DepthOfFieldType>))]
+[MetaSerializer(typeof(EnumSerializer<DepthOfFieldType>))]
 public enum DepthOfFieldType
 {
     // TODO:
