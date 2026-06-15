@@ -102,7 +102,7 @@ public class T3MeshData
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 uint uvTransformCount = 0;
                 // Referenced from Lucas Saragosa's serialization code
@@ -115,7 +115,7 @@ public class T3MeshData
                     }
                 }
 
-                streamWriter.Write(uvTransformCount);
+                stream.Write(uvTransformCount);
 
                 for (var i = 0; i < Math.Min(obj.TexCoordTransform.Length, 4); i++)
                 {
@@ -126,8 +126,7 @@ public class T3MeshData
                         continue;
                     }
 
-                    streamWriter.Write((uint)i);
-                    stream.PreSerialize(ref transform);
+                    stream.Write((uint)i);
                     stream.Serialize(ref transform);
                     obj.TexCoordTransform[i] = transform;
                 }
@@ -136,32 +135,29 @@ public class T3MeshData
                 if (hasCpuSkinning)
                 {
                     T3MeshCPUSkinningData cpuSkinning = obj.CPUSkinningData;
-                    stream.PreSerialize(ref cpuSkinning);
                     stream.Serialize(ref cpuSkinning);
                     obj.CPUSkinningData = cpuSkinning;
                 }
 
-                streamWriter.Write(obj.VertexStates.Count);
+                stream.Write(obj.VertexStates.Count);
 
                 for (var i = 0; i < obj.VertexStates.Count; i++)
                 {
                     T3GFXVertexState state = obj.VertexStates[i];
-                    stream.PreSerialize(ref state);
                     stream.Serialize(ref state);
                     obj.VertexStates[i] = state;
                 }
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                uint uvTransforms = streamReader.ReadUInt32();
+                uint uvTransforms = stream.ReadUInt32();
 
                 for (var i = 0; i < uvTransforms; i++)
                 {
-                    int uvLayer = streamReader.ReadInt32();
+                    int uvLayer = stream.ReadInt32();
 
                     // Experimenting with a helper function.
-                    stream.PreSerialize(ref obj.TexCoordTransform[uvLayer]);
                     stream.Serialize(ref obj.TexCoordTransform[uvLayer]);
                     // TTKContext.Instance().GetSerializer<T3MeshTexCoordTransform>().Serialize(ref obj.TexCoordTransform[vector], stream);
                 }
@@ -169,12 +165,11 @@ public class T3MeshData
                 if ((obj.Flags.Data & (int)MeshFlags.eHasCPUSkinning) != 0)
                 {
                     T3MeshCPUSkinningData t3MeshCpuSkinningData = obj.CPUSkinningData;
-                    stream.PreSerialize(ref t3MeshCpuSkinningData);
                     stream.Serialize(ref t3MeshCpuSkinningData);
                     obj.CPUSkinningData = t3MeshCpuSkinningData;
                 }
 
-                int vertexStates = streamReader.ReadInt32();
+                int vertexStates = stream.ReadInt32();
 
                 for (var i = 0; i < vertexStates; i++)
                 {

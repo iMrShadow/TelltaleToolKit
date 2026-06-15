@@ -30,28 +30,25 @@ public class Rules
             DefaultSerializer.Serialize(ref obj, stream);
             stream.BeginBlock();
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 HashSet<string> rulesSet = obj.RulesSet;
 
-                Toolkit.Instance.GetSerializer<HashSet<string>>()
-                    .Serialize(ref rulesSet, stream);
+                stream.Serialize(ref rulesSet);
 
                 ////
-
-                MetaClassSerializer<Rule> ruleSerializer = Toolkit.Instance.GetSerializer<Rule>();
 
                 obj.RuleMap = new Dictionary<string, Rule>();
 
                 foreach (string t in obj.RulesSet)
                 {
                     var rule = new Rule();
-                    ruleSerializer.Serialize(ref rule, stream);
+                    stream.Serialize(ref rule);
 
                     obj.RuleMap.Add(t, rule);
                 }

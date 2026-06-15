@@ -77,12 +77,12 @@ public class Rule
             }
 
             stream.BeginBlock();
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
-                // var numAgents = streamReader.ReadInt32();
+                // var numAgents = stream.ReadInt32();
 
                 List<AgentInfo> agents = obj.AgentInformation;
                 Toolkit.Instance.GetSerializer<List<AgentInfo>>().Serialize(ref agents, stream);
@@ -91,8 +91,8 @@ public class Rule
                 // {
                 //     var agent = new Rule.AgentInfo();
                 //     MetaClass? ruleDesc = stream.GetMetaClass(typeof(Rule));
-                //     
-                //     
+                //
+                //
                 // }
                 //
                 //

@@ -6,9 +6,11 @@ using System.Text.Json;
 using TelltaleToolKit;
 using TelltaleToolKit.GamesDatabase;
 using TelltaleToolKit.Reflection;
+using TelltaleToolKit.Serialization;
 using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.TelltaleArchives;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Lua;
 
 // !!!IMPORTANT!!!
 // This project creates ONLY the VERSION DATABASE for a specific game.
@@ -52,8 +54,7 @@ ConcurrentDictionary<(ulong typeHash, uint crc32), byte> unregisteredTypes = [];
 // The reason being is that when extracting a single entry directly from a ttarch, that entry is directly loaded in memory.
 // And sometimes...there are huge assets.
 // It takes a couple of minutes to scan TWD:DE with a stock Ryzen 5 2600.
-var areSymbolsHashed = false;
-var msv = MetaStreamVersion.Mbin;
+uint msv = 2;
 TTArchiveVersion ttarchVersion = 0;
 await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 {
@@ -70,10 +71,9 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 
             if (Toolkit.IsMetaFile(archive.GetAllEntries().First().Name))
             {
-                MetaStreamConfiguration config = new MetaStreamReader(firstFile).Configuration;
+                MetaStreamParams config = new BinaryMetaStreamReader(firstFile, null).Params;
 
-                areSymbolsHashed = config.AreSymbolsHashed;
-                msv = config.Version;
+                msv = config.StreamVersion;
             }
         }
 
@@ -86,27 +86,30 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
             if (!Toolkit.IsMetaFile(file))
                 continue;
 
-            MetaStreamConfiguration config = new MetaStreamReader(file).Configuration;
+            MetaStreamParams config = new BinaryMetaStreamReader(file).Params;
 
-            foreach (MetaClass desc in config.SerializedClasses)
+            foreach (MetaClass desc in config.GetRegisteredClasses())
                 serializedMetaClasses.TryAdd(desc, 0);
 
-            foreach ((ulong, uint) type in config.UnregisteredTypes)
+            var localUnregisteredTypes = config.GetUnregisteredTypes();
+            var localUnregisteredClasses = config.GetUnregisteredClasses();
+
+            foreach ((ulong, uint) type in localUnregisteredTypes)
                 unregisteredTypes.TryAdd(type, 0);
 
-            foreach ((MetaClassType, uint crc32) urDesc in config.UnregisteredClasses)
+            foreach ((MetaClassType, uint crc32) urDesc in localUnregisteredClasses)
                 unrecognizedMetaClassDescriptions.TryAdd(urDesc, 0);
 
-            if (config.UnregisteredTypes.Count > 0)
+            if (localUnregisteredTypes.Count > 0)
             {
                 Console.Error.WriteLine(
-                    $"File {entry.Name} has {config.UnregisteredTypes.Count} unregistered types in {Path.GetFileName(filePath)}.");
+                    $"File {entry.Name} has {localUnregisteredTypes.Count} unregistered types in {Path.GetFileName(filePath)}.");
             }
 
-            if (config.UnregisteredClasses.Count > 0)
+            if (localUnregisteredClasses.Count > 0)
             {
                 Console.Error.WriteLine(
-                    $"File {entry.Name} has {config.UnregisteredClasses.Count} unregistered classes in {Path.GetFileName(filePath)}.");
+                    $"File {entry.Name} has {localUnregisteredClasses.Count} unregistered classes in {Path.GetFileName(filePath)}.");
             }
         }
     }
@@ -139,7 +142,7 @@ await Parallel.ForEachAsync(archivePaths, async (filePath, _) =>
 //                 continue;
 //             }
 //
-//             MetaStreamConfiguration config = TTK.ExtractMetaStreamConfiguration(archive.ExtractFile(entry.Name));
+//             MetaStreamParams config = TTK.ExtractMetaStreamConfiguration(archive.ExtractFile(entry.Name));
 //
 //             // Use this if you want to debug which file has an unknown type.
 //             if (config.UnregisteredTypes.Count > 0)
@@ -230,12 +233,11 @@ if (!File.Exists(jsonFilePath))
     {
         Id = sluggedName,
         Name = sluggedName,
-        AreSymbolsHashed = areSymbolsHashed,
         BlowfishKey = blowfishKey.ToString(),
         EnableOodleCompression = false,
         IsTtarch2 = filter == "*.ttarch2",
         LuaVersion = LuaVersion.Lua502, // Determining lua versions is too much for me, sorry.
-        MetaStreamVersion = msv,
+        StreamVersion = msv,
         TtarchVersion = ttarchVersion,
     };
 

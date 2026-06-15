@@ -5,6 +5,6 @@
     "isTtarch2": false,
     "ttarchVersion": 0,
     "luaVersion": "5.0.2",
-    "metaStreamVersion": "MBIN",
+    "streamVersion": 1,
     "enableOodleCompression": false
 }

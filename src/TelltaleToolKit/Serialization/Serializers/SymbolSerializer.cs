@@ -1,5 +1,4 @@
 ﻿using TelltaleToolKit.Reflection;
-using TelltaleToolKit.Serialization.Binary;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Serialization.Serializers;
@@ -14,6 +13,18 @@ public class SymbolSerializer : MetaClassSerializer<Symbol>
 
     public override void Serialize(ref Symbol obj, MetaStream stream)
     {
+        MetaClass? description = stream.GetMetaClass(typeof(Symbol));
+
+        if (description is null)
+        {
+            throw new InvalidOperationException("Symbol description not found.");
+        }
+
+        if (stream.Mode == MetaStreamMode.Write)
+        {
+            stream.AddVersionInfo(description);
+        }
+
         stream.Serialize(ref obj);
     }
 }

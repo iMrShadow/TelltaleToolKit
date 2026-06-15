@@ -17,7 +17,7 @@ public sealed class ListSerializer<T> : MetaClassSerializer<List<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref List<T> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream.Mode is MetaStreamMode.Read)
         {
             if (obj is null)
                 obj = [];
@@ -29,18 +29,18 @@ public sealed class ListSerializer<T> : MetaClassSerializer<List<T>>
     /// <inheritdoc/>
     public override void Serialize(ref List<T> obj, MetaStream stream)
     {
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            streamWriter.Write(obj.Count);
+            stream.Write(obj.Count);
 
             foreach (T entry in obj)
             {
                 _itemDataClassSerializer.Serialize(entry, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            int count = streamReader.ReadInt32();
+            int count = stream.ReadInt32();
             obj.Capacity = count;
 
             for (var i = 0; i < count; i++)
@@ -68,7 +68,7 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
     /// <inheritdoc/>
     public override void PreSerialize(ref HashSet<T> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream.Mode is MetaStreamMode.Read)
         {
             if (obj is null)
                 obj = [];
@@ -77,22 +77,21 @@ public sealed class HashSetSerializer<T> : MetaClassSerializer<HashSet<T>>
         }
     }
 
-
     /// <inheritdoc/>
     public override void Serialize(ref HashSet<T> obj, MetaStream stream)
     {
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            streamWriter.Write(obj.Count);
+            stream.Write(obj.Count);
 
             foreach (T entry in obj)
             {
                 _itemDataClassSerializer.Serialize(entry, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            int count = streamReader.ReadInt32();
+            int count = stream.ReadInt32();
 
             for (var i = 0; i < count; i++)
             {
@@ -116,7 +115,7 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
     /// <inheritdoc/>
     public override void PreSerialize(ref Dictionary<TKey, TValue> obj, MetaStream stream, MetaClassType? type = null)
     {
-        if (stream is MetaStreamReader streamReader)
+        if (stream.Mode is MetaStreamMode.Read)
         {
             if (obj is null)
                 obj = new Dictionary<TKey, TValue>();
@@ -136,9 +135,9 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
     {
         PreSerialize(ref obj, stream);
 
-        if (stream is MetaStreamWriter streamWriter)
+        if (stream.Mode is MetaStreamMode.Write)
         {
-            streamWriter.Write(obj.Count);
+            stream.Write(obj.Count);
 
             foreach (KeyValuePair<TKey, TValue> item in obj)
             {
@@ -146,9 +145,9 @@ public sealed class DictionarySerializer<TKey, TValue> : MetaClassSerializer<Dic
                 _valueClassSerializer.Serialize(item.Value, stream);
             }
         }
-        else if (stream is MetaStreamReader streamReader)
+        else if (stream.Mode is MetaStreamMode.Read)
         {
-            int count = streamReader.ReadInt32();
+            int count = stream.ReadInt32();
 
             for (var i = 0; i < count; i++)
             {
@@ -173,7 +172,6 @@ public sealed class ArraySerializer<T> : MetaClassSerializer<T[]>
         _itemDataClassSerializer = selector.GetSerializer<T>();
     }
 
-    /// <inheritdoc/>
     public override void Serialize(ref T[] obj, MetaStream stream)
     {
         for (var i = 0; i < obj.Length; ++i)

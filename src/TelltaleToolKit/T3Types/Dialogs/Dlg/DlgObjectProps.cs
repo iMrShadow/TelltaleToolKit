@@ -14,10 +14,10 @@ public class DlgObjectProps
         ProductionProps = 2,
         ToolProps = 4
     }
-    
+
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
-    
+
     public PropertySet UserProperties { get; set; }
     public PropertySet ProductionProperties { get; set; }
     public PropertySet ToolProperties { get; set; }
@@ -30,33 +30,30 @@ public class DlgObjectProps
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 if ((obj.Flags.Data & (int)PropsType.UserProps) != 0)
                 {
                     var userProps = new PropertySet();
-                    stream.PreSerialize(ref userProps);
                     stream.Serialize(ref userProps);
                     obj.UserProperties = userProps;
                 }
-                
+
                 if ((obj.Flags.Data & (int)PropsType.ProductionProps) != 0)
                 {
                     var prodProps = new PropertySet();
-                    stream.PreSerialize(ref prodProps);
                     stream.Serialize(ref prodProps);
                     obj.ProductionProperties = prodProps;
                 }
-                
+
                 if ((obj.Flags.Data & (int)PropsType.ToolProps) != 0)
                 {
                     var toolProps = new PropertySet();
-                    stream.PreSerialize(ref toolProps);
                     stream.Serialize(ref toolProps);
                     obj.ToolProperties = toolProps;
                 }

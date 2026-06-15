@@ -62,10 +62,10 @@ public class KeyframedValue<T> : IAnimatedValueInterface where T : notnull
             DefaultSerializer.PreSerialize(ref obj, stream);
             DefaultSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
             }
-            else if (stream is MetaStreamReader streamReader)
+            else if (stream.Mode is MetaStreamMode.Read)
             {
             }
         }

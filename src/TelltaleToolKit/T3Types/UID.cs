@@ -15,6 +15,7 @@ namespace TelltaleToolKit.T3Types.Common
             [MetaMember("miNextUniqueID")]
             public int NextUniqueId { get; set; }
         }
+
         public interface IGenerator
         {
             public Generator Generator { get; set; }
@@ -68,15 +69,15 @@ namespace TelltaleToolKit.T3Types.Common
 
         public override void Serialize(ref ActingOverridablePropOwner obj, MetaStream stream)
         {
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotImplementedException();
             }
 
-            if (stream is MetaStreamReader streamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
-                long currPos = streamReader.GetCurrentPosition();
-                uint value = streamReader.ReadUInt32();
+                long currPos = stream.GetPosition();
+                uint value = stream.ReadUInt32();
 
                 if (value == ActingOverridablePropOwner.kHeader)
                 {
@@ -85,13 +86,12 @@ namespace TelltaleToolKit.T3Types.Common
                     return;
                 }
 
-                streamReader.SetCurrentPosition(currPos);
+                stream.SetPosition(currPos);
                 if ((obj.SerializationFlags.Data & 1) == 0)
                     return;
 
                 PropertySet propertySet = obj.OverridableValues;
-                Toolkit.Instance.GetSerializer<PropertySet>().PreSerialize(ref propertySet, stream);
-                Toolkit.Instance.GetSerializer<PropertySet>().Serialize(ref propertySet, stream);
+                stream.Serialize(ref propertySet);
             }
         }
     }

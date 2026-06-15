@@ -1,9 +1,11 @@
-﻿using System.Text;
-using TelltaleToolKit.TelltaleArchives.Caching;
-using TelltaleToolKit.TelltaleArchives.Formats;
+﻿using System.IO.Compression;
+using System.Text;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.Utility.Blowfish;
+using TelltaleToolKit.Utility.Caching;
+using TelltaleToolKit.Utility.Compression;
 
-namespace TelltaleToolKit.TelltaleArchives.IO;
+namespace TelltaleToolKit.Serialization;
 
 /// <summary>
 ///     A forward-readable, seekable <see cref="Stream" /> that decodes the outer
@@ -12,14 +14,9 @@ namespace TelltaleToolKit.TelltaleArchives.IO;
 /// <remarks>
 ///     <para>
 ///         <strong>Single responsibility:</strong> parse the container header and expose the
-///         inner TTA2/3/4 payload as a readable stream so <see cref="TTArchive2" /> can walk
+///         inner TTA2/3/4 payload as a readable stream so <see cref="TelltaleArchives.Formats.TTArchive2" /> can walk
 ///         the entry table and name-page stream. It is disposed immediately after that forward
 ///         pass — extraction never goes through it.
-///     </para>
-///     <para>
-///         <strong>No caching.</strong> Header parsing is a single sequential forward pass over
-///         a tiny fraction of the archive. Decoding a chunk once and discarding it is always
-///         enough. This avoids any heap accumulation for 2 GB+ archives.
 ///     </para>
 ///     <para>
 ///         <strong>O(1) chunk offset lookup.</strong> A prefix-sum table (<see cref="_chunkPrefixSums" />)
@@ -33,7 +30,7 @@ public sealed class ContainerStream : Stream
     private readonly IChunkCache _cache;
 
     // Prefix-sum table: _chunkPrefixSums[i] = sum of compressed sizes of chunks 0..i-1.
-    // Length = ChunkCount + 1 so _chunkPrefixSums[ChunkCount] = total compressed payload size.
+    // Length = NumPages + 1 so _chunkPrefixSums[NumPages] = total compressed payload size.
     // Built once during construction for O(1) chunk-offset lookup.
     private readonly ulong[] _chunkPrefixSums;
     // -------------------------------------------------------------------------
@@ -65,60 +62,37 @@ public sealed class ContainerStream : Stream
 
         // ---- Container magic ----
         ContainerMagic = (ContainerMagic)reader.ReadUInt32();
-        ArchiveFlags flags = ArchiveFlags.None;
-
-        switch (ContainerMagic)
+        if (!Enum.IsDefined(typeof(ContainerMagic), ContainerMagic))
         {
-            case ContainerMagic.TTCN:
-                // No encryption, no compression — nothing to add.
-                break;
-
-            case ContainerMagic.TTCE:
-                flags |= ArchiveFlags.IsEncrypted | ArchiveFlags.IsRawDeflateCompressed;
-                break;
-
-            case ContainerMagic.TTCZ:
-                flags |= ArchiveFlags.IsRawDeflateCompressed;
-                break;
-
-            case ContainerMagic.TTCe:
-            case ContainerMagic.TTCz:
-            {
-                if (ContainerMagic is ContainerMagic.TTCe)
-                {
-                    flags |= ArchiveFlags.IsEncrypted;
-                }
-
-                uint compressionType = reader.ReadUInt32();
-                flags |= compressionType switch
-                {
-                    0 => ArchiveFlags.IsRawDeflateCompressed,
-                    1 => ArchiveFlags.IsOodleCompressed,
-                    _ => throw new NotSupportedException(
-                        $"[ContainerStream] Unknown compression type {compressionType}.")
-                };
-                break;
-            }
-
-            default:
-                throw new NotSupportedException(
-                    $"[ContainerStream] Unknown container version 0x{(uint)ContainerMagic:X8}.");
+            throw new NotSupportedException($"[ContainerStream] Unknown container magic {ContainerMagic}.");
         }
 
-        Flags = flags;
-
-        if (flags.IsCompressed())
+        Compression algorithm = ContainerMagic switch
         {
-            ChunkSize = reader.ReadUInt32();
+            ContainerMagic.TTCN => Compression.None,
+            ContainerMagic.TTCe or ContainerMagic.TTCz => ReadCompressionType(reader),
+            _ => Compression.Deflate
+        };
 
-            ChunkCount = reader.ReadUInt32();
-            ChunkBlockSizes = new ulong[ChunkCount];
+        Params = new ContainerStreamParams
+        {
+            Encrypt = ContainerMagic is ContainerMagic.TTCE or ContainerMagic.TTCe,
+            BlowfishKey = blowfishKey,
+            Algorithm = algorithm
+        };
 
-            // The on-disk table stores ChunkCount + 1 cumulative absolute offsets.
+        if (Params.Algorithm != Compression.None)
+        {
+            WindowSize = reader.ReadUInt32();
+
+            NumPages = reader.ReadUInt32();
+            ChunkBlockSizes = new ulong[NumPages];
+
+            // The on-disk table stores NumPages + 1 cumulative absolute offsets.
             // Element 0 is the start of the first chunk (always 0 relative to payload start).
             // We derive per-chunk sizes from successive differences.
             ulong prev = reader.ReadUInt64(); // always 0
-            for (int i = 0; i < ChunkCount; i++)
+            for (int i = 0; i < NumPages; i++)
             {
                 ulong next = reader.ReadUInt64();
                 ChunkBlockSizes[i] = next - prev;
@@ -126,9 +100,9 @@ public sealed class ContainerStream : Stream
             }
 
             // Build prefix-sum table for O(1) chunk-offset lookup.
-            _chunkPrefixSums = BuildPrefixSums(ChunkBlockSizes, ChunkCount);
+            _chunkPrefixSums = BuildPrefixSums(ChunkBlockSizes, NumPages);
 
-            Length = ChunkCount * ChunkSize;
+            Length = NumPages * WindowSize;
         }
         else
         {
@@ -140,6 +114,18 @@ public sealed class ContainerStream : Stream
         PayloadStart = source.Position; // first byte of TTA2/3/4 payload
     }
 
+    private static Compression ReadCompressionType(BinaryReader reader)
+    {
+        uint compressionType = reader.ReadUInt32();
+        return compressionType switch
+        {
+            0 => Compression.Deflate,
+            1 => Compression.Oodle,
+            _ => throw new NotSupportedException(
+                $"[ContainerStream] Unknown compression type {compressionType}.")
+        };
+    }
+
     // -------------------------------------------------------------------------
     // Properties exposed to TTArchive2
     // -------------------------------------------------------------------------
@@ -148,13 +134,13 @@ public sealed class ContainerStream : Stream
     public ContainerMagic ContainerMagic { get; }
 
     /// <summary>Encryption and compression flags derived from the container magic.</summary>
-    public ArchiveFlags Flags { get; }
+    public ContainerStreamParams Params { get; }
 
     /// <summary>Decompressed size of each chunk in bytes. Zero for uncompressed containers.</summary>
-    public uint ChunkSize { get; }
+    public uint WindowSize { get; }
 
     /// <summary>Number of compressed chunks. Zero for uncompressed containers.</summary>
-    public uint ChunkCount { get; }
+    public uint NumPages { get; }
 
     /// <summary>Compressed byte-length of each chunk. Empty for uncompressed containers.</summary>
     public ulong[] ChunkBlockSizes { get; }
@@ -222,7 +208,7 @@ public sealed class ContainerStream : Stream
         }
 
         // ---- Uncompressed — backed by MemoryStream ----
-        if (!Flags.IsCompressed())
+        if (Params.Algorithm is Compression.None)
         {
             _source.Position = PayloadStart + _position;
             int bytesToRead = (int)Math.Min(buffer.Length, Length - _position);
@@ -238,7 +224,7 @@ public sealed class ContainerStream : Stream
                 return 0;
             }
 
-            if (Flags.IsEncrypted())
+            if (Params.Encrypt)
             {
                 Blowfish bf = new(_blowfishKey, 7);
                 bf.Decipher(temp, read);
@@ -256,8 +242,8 @@ public sealed class ContainerStream : Stream
 
         while (totalRead < buffer.Length)
         {
-            int chunkIndex = (int)(_position / ChunkSize);
-            if ((uint)chunkIndex >= ChunkCount)
+            int chunkIndex = (int)(_position / WindowSize);
+            if ((uint)chunkIndex >= NumPages)
             {
                 break; // past end of payload
             }
@@ -265,7 +251,7 @@ public sealed class ContainerStream : Stream
             // Use cache to get decoded chunk
             byte[] decoded = _cache.GetOrDecode(chunkIndex, DecodeChunk);
 
-            int inChunk = (int)(_position % ChunkSize);
+            int inChunk = (int)(_position % WindowSize);
             int avail = decoded.Length - inChunk;
             if (avail <= 0)
             {
@@ -290,8 +276,44 @@ public sealed class ContainerStream : Stream
         byte[] compressed = new byte[ChunkBlockSizes[chunkIndex]];
         ChunkDecoder.ReadExact(_source, compressed);
 
-        ArchiveInfo tempInfo = new() { Flags = Flags, BlowfishKey = _blowfishKey };
-        return ChunkDecoder.DecryptAndDecompress(compressed, ChunkSize, tempInfo);
+        if (Params.Encrypt)
+        {
+            Blowfish bf = new(Params.BlowfishKey, 7);
+            bf.Decipher(compressed.AsSpan(), compressed.Length);
+        }
+
+        return DecompressBlock(compressed, (int)WindowSize, Params.Algorithm);
+    }
+
+    public static byte[] DecompressBlock(byte[] compressedData, int expectedSize,
+        Compression compression)
+    {
+        // This is a hack? In TWD:DE, 401_txmesh, there's a page which is the same size as the expected size (65535)
+        // C#'s raw deflate fails.
+        // ttarchext returns the same data:
+        // https://github.com/infernokun/TelltaleGamesExtractionGUI/blob/fec9fc1a70b545bcc67062fedc3fe3f7cd0d3e1b/bin/Debug/net6.0-windows/ttarchext/ttarchext.c#L1512
+        if (compressedData.Length == expectedSize)
+        {
+            return compressedData;
+        }
+
+        return compression switch
+        {
+            Compression.Deflate => Decompress(ms => new DeflateStream(ms, CompressionMode.Decompress)),
+            Compression.Zlib => Decompress(ms => new InflaterInputStream(ms)),
+            Compression.Oodle => throw new NotSupportedException("Oodle compression is not supported yet."),
+            // No compression, return the original data
+            _ => compressedData
+        };
+
+        // Local function to handle decompression
+        byte[] Decompress(Func<Stream, Stream> streamFactory)
+        {
+            using MemoryStream outputStream = new(expectedSize);
+            using Stream decompressStream = streamFactory(new MemoryStream(compressedData));
+            decompressStream.CopyTo(outputStream);
+            return outputStream.ToArray();
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -332,6 +354,8 @@ public sealed class ContainerStream : Stream
         return sums;
     }
 
+
+
     /// <summary>
     ///     Writes a Telltale Tool Container (TTC*) around the given payload.
     ///     Automatically selects the magic number based on encryption and compression settings.
@@ -339,7 +363,7 @@ public sealed class ContainerStream : Stream
     /// <param name="destination">Stream to write the container to. Will be left open.</param>
     /// <param name="payload">Uncompressed, unencrypted inner data (TTA header + files).</param>
     /// <param name="options">Compression, encryption, chunk size, Blowfish key, etc.</param>
-    public static void Create(Stream destination, ReadOnlySpan<byte> payload, ArchiveWriteOptions options)
+    public static void Create(Stream destination, ReadOnlySpan<byte> payload, ContainerStreamParams options)
     {
         using MemoryStream ms = new(payload.ToArray());
         Create(destination, ms, options);
@@ -353,9 +377,9 @@ public sealed class ContainerStream : Stream
     ///     Stream containing the uncompressed inner payload. Must support seeking and provide a correct Length.
     /// </param>
     /// <param name="options">Archive options (compression, encryption, chunk size, key).</param>
-    public static void Create(Stream destination, Stream payloadStream, ArchiveWriteOptions options)
+    public static void Create(Stream destination, Stream payloadStream, ContainerStreamParams options)
     {
-        if (options.Algorithm == CompressionAlgorithm.Oodle)
+        if (options.Algorithm == Compression.Oodle)
         {
             throw new NotSupportedException("Oodle compression not yet implemented.");
         }
@@ -363,12 +387,12 @@ public sealed class ContainerStream : Stream
         // Choose magic automatically
         ContainerMagic magic = (options.Encrypt, options.Algorithm) switch
         {
-            (false, CompressionAlgorithm.None) => ContainerMagic.TTCN,
-            (true, CompressionAlgorithm.Deflate) => ContainerMagic.TTCE,
-            (false, CompressionAlgorithm.Deflate) => ContainerMagic.TTCZ,
-            (true, CompressionAlgorithm.Oodle) => ContainerMagic
+            (false, Compression.None) => ContainerMagic.TTCN,
+            (true, Compression.Deflate) => ContainerMagic.TTCE,
+            (false, Compression.Deflate) => ContainerMagic.TTCZ,
+            (true, Compression.Oodle) => ContainerMagic
                 .TTCe, // encryption without compression? Rare, but fallback
-            (false, CompressionAlgorithm.Oodle) => ContainerMagic
+            (false, Compression.Oodle) => ContainerMagic
                 .TTCz, // encryption without compression? Rare, but fallback
             _ => throw new NotSupportedException(
                 $"Unsupported combination: Encrypt={options.Encrypt}, Algorithm={options.Algorithm}")
@@ -379,11 +403,11 @@ public sealed class ContainerStream : Stream
 
         if (magic is ContainerMagic.TTCe or ContainerMagic.TTCz)
         {
-            uint comprType = options.Algorithm == CompressionAlgorithm.Deflate ? 0u : 1u; // 1 = Oodle
+            uint comprType = options.Algorithm == Compression.Deflate ? 0u : 1u; // 1 = Oodle
             writer.Write(comprType);
         }
 
-        bool compress = options.Algorithm != CompressionAlgorithm.None;
+        bool compress = options.Algorithm != Compression.None;
         Blowfish blowfish = new(options.BlowfishKey, 7);
 
         if (!compress)
@@ -429,7 +453,7 @@ public sealed class ContainerStream : Stream
                 throw new EndOfStreamException("Unexpected end of payload stream.");
             }
 
-            int compressedLen = TelltaleArchiveUtilities.CompressBlock(chunk, options.Algorithm, compressedBuffer);
+            int compressedLen = Utility.Compression.ChunkDecoder.CompressBlock(chunk, options.Algorithm, compressedBuffer);
             byte[] finalData = compressedBuffer.AsSpan(0, compressedLen).ToArray();
             if (options.Encrypt)
             {

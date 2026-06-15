@@ -50,19 +50,18 @@ public class StyleGuide
 
             if (classDescription is not null && classDescription.ContainsMember("mFlags"))
             {
-                if (stream is MetaStreamWriter streamWriter)
+                if (stream.Mode is MetaStreamMode.Write)
                 {
                     throw new NotImplementedException();
                 }
 
-                if (stream is MetaStreamReader streamReader)
+                if (stream.Mode is MetaStreamMode.Read)
                 {
-                    int values = streamReader.ReadInt32();
+                    int values = stream.ReadInt32();
 
                     for (var i = 0; i < values; i++)
                     {
                         var child = new ActingPaletteClass();
-                        stream.PreSerialize<ActingPaletteClass>(ref child);
                         stream.Serialize<ActingPaletteClass>(ref child);
                         obj.PaletteClassesPtrs.Add(child);
                     }

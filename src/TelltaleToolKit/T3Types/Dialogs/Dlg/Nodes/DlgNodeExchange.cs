@@ -50,17 +50,16 @@ public class DlgNodeExchange : IDlgNode
             DefaultClassSerializer.PreSerialize(ref obj, stream);
             DefaultClassSerializer.Serialize(ref obj, stream);
 
-            if (stream is MetaStreamWriter streamWriter)
+            if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
             }
 
-            if (stream is MetaStreamReader)
+            if (stream.Mode is MetaStreamMode.Read)
             {
                 if ((obj.DlgNode.Flags.Data & 1) != 0)
                 {
                     var notes = new NoteCollection();
-                    stream.PreSerialize(ref notes);
                     stream.Serialize(ref notes);
                     obj.Notes = notes;
                 }
@@ -68,7 +67,6 @@ public class DlgNodeExchange : IDlgNode
                 if ((obj.DlgNode.Flags.Data & 2) != 0)
                 {
                     var lines = new DlgLineCollection();
-                    stream.PreSerialize(ref lines);
                     stream.Serialize(ref lines);
                     obj.Lines = lines;
                 }

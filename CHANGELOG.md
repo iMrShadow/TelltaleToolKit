@@ -7,10 +7,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## Unreleased
 
 ### Added
+- `OpenWrite` and `OpenRead` static functions in `MetaStream`.
+- Experimental `JsonMetaStreamReader` and `JsonMetaStreamWriter` classes. You can export serialize objects to JSON files in `MetaStream`.
+- Support for encrypted meta stream files with `LegacyEncryptedStream` which matches with Telltale Tool in `MetaStream`. This requires a workspace. The user also has the option to encrypt/decrypt using the `LegacyEncryption` class provided with a Blowfish key and an archive version.
+- An abstract `Close` method.
+- Experimental support for compressed meta stream resources.
+- `ContainerStreamParams` class.
+- `StreamVersion` to `GameProfile`.
+- A constructor with a boolean argument in `Blowfish`.
+- `Workspace` parameter in deserialize methods in `Toolkit`.
+- Helper methods for `VersionInfo`.
 
 ### Changed
+- Rename the following MetaStream implementations: `MetaStreamReader`/`MetaStreamWriter` to  `BinaryMetaStreamReader`/`BinaryMetaStreamWriter`.
+- Rename `MetaStreamConfig` to `MetaStreamParams`.
+- Update database files with the new changes.
+- Exposed `GetClass(ulong, uint)` method from `MetaClassRegistry`.
+- Refactor `MetaStream` internally.
+- Refactor `MetaStreamParams` with new fields and methods to handle compression and encryption.
+- Reorganize some namespaces.
+- Make the default serializer not throw errors and use logger instead.
+- `Serialize` from `MetaStream` now automatically preserializes.
+
+### Fixed
+- A regression that did not allow files being copied to the output folder.
+- Blowfish encryption not working correctly.
 
 ### Removed
+- A csproj folder.
+- Redundant `MetaStreamVersion` from `GameProfile`.
+- `AreSymbolsHashed` from `GameProfile` as symbols are always hashed.
+- `PreSerialize` from `MetaStream`.
+- Redundant `Version` from `MetaStreamParams`.
 
 ## [0.2.0] - 2026-05-28
 
