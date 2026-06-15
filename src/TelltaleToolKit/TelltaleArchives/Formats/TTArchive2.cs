@@ -266,7 +266,9 @@ public class TTArchive2 : Archive
         try
         {
             using (FileStream inner = new(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 4096,
-                       FileOptions.DeleteOnClose | FileOptions.SequentialScan))
+                    //    FileOptions.DeleteOnClose 
+                    //    | 
+                       FileOptions.SequentialScan))
             using (BinaryWriter bw = new(inner, Encoding.UTF8, true))
             {
                 // Header
