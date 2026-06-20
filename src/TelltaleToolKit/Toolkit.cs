@@ -537,7 +537,11 @@ public class Toolkit
     {
         string profilesPath = Path.Combine(dataFolder, "game_profiles");
         if (!Directory.Exists(profilesPath))
+        {
+            ToolkitLogger.ConsoleLoggerInstance.LogError($"Game profiles directory not found: {profilesPath}, from config data folder: {dataFolder}");
+            
             return;
+        }
 
         foreach (string file in Directory.GetFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
         {
