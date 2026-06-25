@@ -38,6 +38,7 @@ public static class LegacyEncryption
 
         MetaStreamMagic magic = ReadMagic(stream);
         (int BlockSize, int CryptInterval, int CleanInterval) config = GetBlockConfig(magic);
+        stream.Seek(0, SeekOrigin.Begin);
         if (config.BlockSize == 0)
         {
             return; // not an encrypted magic
@@ -47,6 +48,7 @@ public static class LegacyEncryption
 
         // Patch magic to the readable plaintext equivalent
         WriteMagic(stream, GetPlaintextMagic(magic));
+        stream.Seek(0, SeekOrigin.Begin);
     }
 
     // -------------------------------------------------------------------------
