@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Reflection;

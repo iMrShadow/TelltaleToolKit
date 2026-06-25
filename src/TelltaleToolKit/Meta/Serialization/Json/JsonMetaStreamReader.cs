@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Json;

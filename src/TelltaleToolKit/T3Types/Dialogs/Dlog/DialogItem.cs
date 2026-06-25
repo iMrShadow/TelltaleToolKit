@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Dialogs.Dlog;
 using TelltaleToolKit.T3Types.Languages.Landb;
+using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 

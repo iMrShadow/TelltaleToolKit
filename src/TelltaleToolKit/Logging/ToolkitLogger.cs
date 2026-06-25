@@ -1,4 +1,7 @@
-﻿namespace TelltaleToolKit.Logging;
+﻿using System;
+using System.IO;
+
+namespace TelltaleToolKit.Logging;
 
 /// <summary>
 /// Provides ready-made <see cref="IToolkitLogger"/> implementations.

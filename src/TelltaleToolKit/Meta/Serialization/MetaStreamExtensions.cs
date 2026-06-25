@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.T3Types;
 

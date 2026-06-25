@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using TelltaleToolKit.Encryption;
@@ -538,7 +541,7 @@ public class Toolkit
         if (!Directory.Exists(profilesPath))
         {
             ToolkitLogger.ConsoleLoggerInstance.LogError($"Game profiles directory not found: {profilesPath}, from config data folder: {dataFolder}");
-            
+
             return;
         }
 

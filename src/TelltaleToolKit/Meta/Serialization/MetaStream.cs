@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization.Binary;
 using TelltaleToolKit.Meta.Serialization.Json;

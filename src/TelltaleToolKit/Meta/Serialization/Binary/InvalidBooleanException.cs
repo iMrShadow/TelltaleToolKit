@@ -1,4 +1,6 @@
-﻿namespace TelltaleToolKit.Meta.Serialization.Binary;
+﻿using System;
+
+namespace TelltaleToolKit.Meta.Serialization.Binary;
 
 public class InvalidBooleanException : Exception
 {

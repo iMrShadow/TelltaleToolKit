@@ -1,4 +1,6 @@
-﻿namespace TelltaleToolKit.Meta.Serialization;
+﻿using System;
+
+namespace TelltaleToolKit.Meta.Serialization;
 
 // TODO: Maybe use this only for custom serializers and automatically generate serializers.
 // The downside is (if it's true) that there will be serializers for types that aren't needed.

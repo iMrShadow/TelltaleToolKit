@@ -1,4 +1,6 @@
-﻿using TelltaleToolKit.Meta.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;

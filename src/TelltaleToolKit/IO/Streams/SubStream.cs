@@ -1,4 +1,7 @@
-﻿namespace TelltaleToolKit.IO.Streams;
+﻿using System;
+using System.IO;
+
+namespace TelltaleToolKit.IO.Streams;
 
 /// <summary>
 ///     Represents a substream of an underlying <see cref="Stream" />.

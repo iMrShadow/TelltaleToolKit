@@ -1,3 +1,5 @@
+using System;
+
 namespace TelltaleToolKit.Meta.Serialization;
 
 public static class MetaStreamMagicExtensions

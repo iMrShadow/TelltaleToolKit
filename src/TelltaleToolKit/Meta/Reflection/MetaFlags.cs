@@ -1,3 +1,5 @@
+using System;
+
 namespace TelltaleToolKit.Meta.Reflection;
 
 /// <summary>

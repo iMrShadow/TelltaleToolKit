@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Enumeration;
+using System.Linq;
 using TelltaleToolKit.Encryption;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives.Formats;

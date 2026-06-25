@@ -1,4 +1,6 @@
-﻿using System.IO.Compression;
+﻿using System;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using TelltaleToolKit.Encryption;

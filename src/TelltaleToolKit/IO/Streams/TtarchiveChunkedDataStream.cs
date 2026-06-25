@@ -1,4 +1,6 @@
-﻿using TelltaleToolKit.Encryption;
+﻿using System;
+using System.IO;
+using TelltaleToolKit.Encryption;
 using TelltaleToolKit.IO.Caching;
 
 namespace TelltaleToolKit.IO.Streams;

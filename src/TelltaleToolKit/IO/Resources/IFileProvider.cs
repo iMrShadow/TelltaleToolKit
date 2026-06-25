@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using TelltaleToolKit.IO.Archives;
 
 namespace TelltaleToolKit.IO.Resources;

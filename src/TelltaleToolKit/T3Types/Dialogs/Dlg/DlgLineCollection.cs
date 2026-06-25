@@ -1,4 +1,5 @@
-﻿using TelltaleToolKit.Meta.Reflection;
+﻿using System.Collections.Generic;
+using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;

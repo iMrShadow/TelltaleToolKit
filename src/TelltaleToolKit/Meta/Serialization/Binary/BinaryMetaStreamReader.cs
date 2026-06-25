@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Meta.Reflection;

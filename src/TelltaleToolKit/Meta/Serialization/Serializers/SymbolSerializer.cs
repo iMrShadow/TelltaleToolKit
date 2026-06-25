@@ -1,4 +1,5 @@
-﻿using TelltaleToolKit.Hashing;
+﻿using System;
+using TelltaleToolKit.Hashing;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.T3Types;
 

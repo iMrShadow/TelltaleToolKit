@@ -1,4 +1,6 @@
-﻿using TelltaleToolKit.Meta.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using TelltaleToolKit.Meta.Reflection;
 
 namespace TelltaleToolKit.Meta.Serialization.Serializers;
 

@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 

@@ -1,4 +1,6 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
+using System.IO;
 using TelltaleToolKit.Meta.Serialization;
 
 namespace TelltaleToolKit.Encryption;
