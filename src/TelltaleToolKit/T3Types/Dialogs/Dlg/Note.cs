@@ -1,4 +1,3 @@
-﻿using TelltaleToolKit.Meta.Reflection;
 ﻿using System.Collections.Generic;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
@@ -23,6 +22,7 @@ public class Note : IGenerator, IOwner
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
 
+    [MetaSerializer(typeof(MetaClassSerializer<Entry>))]
     public class Entry : IGenerator, IOwner
     {
         [MetaMember("Baseclass_UID::Generator")]

@@ -17,8 +17,13 @@ public class NoteCollection : IGenerator
 
     public class Serializer : MetaSerializer<NoteCollection>
     {
+        private static readonly MetaClassSerializer<NoteCollection> s_metaClassSerializer = new();
+
         public override void Serialize(ref NoteCollection obj, MetaStream stream, MetaClassType? type = null)
         {
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
+
             if (stream.Mode is MetaStreamMode.Write)
             {
                 stream.Write(obj.Notes.Count);

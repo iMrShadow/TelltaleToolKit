@@ -96,6 +96,31 @@ public class D3DMesh
     [MetaMember("mLocalTransformPalettes")]
     public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; } = [];
 
+
+    [MetaMember("mbMeshHasSmoothNormalsSupport")]
+    public bool mbMeshHasSmoothNormalsSupport { get; set; }
+
+    [MetaMember("mDiffuseTextureNames")]
+    public List<string> mDiffuseTextureNames { get; set; } = [];
+
+    [MetaMember("mDetailTextureNames")]
+    public List<string> mDetailTextureNames { get; set; } = [];
+
+    [MetaMember("mLightmapTextureNames")]
+    public List<string> mLightmapTextureNames { get; set; } = [];
+
+    [MetaMember("mBumpmapTextureNames")]
+    public List<string> mBumpmapTextureNames { get; set; } = [];
+
+    [MetaMember("mEnvironmentTextureNames")]
+    public List<string> mEnvironmentTextureNames { get; set; } = [];
+
+    [MetaMember("mbToonRendering")]
+    public bool mbToonRendering { get; set; }
+
+    [MetaMember("mbToonLighting")]
+    public bool mbToonLighting { get; set; }
+
     [MetaSerializer(typeof(MetaClassSerializer<LocalTransformEntry>))]
     public class LocalTransformEntry
     {
@@ -210,8 +235,17 @@ public class D3DMesh
         [MetaMember("mPixelShaderName")]
         public string PixelShaderName { get; set; } = string.Empty;
 
+        [MetaMember("mVertexShaderName")]
+        public Symbol VertexShaderNameS { get; set; } = Symbol.Empty;
+
+        [MetaMember("mPixelShaderName")]
+        public Symbol PixelShaderNameS { get; set; } = Symbol.Empty;
+
         [MetaMember("mLightingGroup")]
         public string LightingGroup { get; set; } = string.Empty;
+
+        [MetaMember("mLightingGroup")]
+        public Symbol LightingGroupS { get; set; } = Symbol.Empty;
 
         [MetaMember("mBoundingBox")]
         public BoundingBox BoundingBox { get; set; } = new();
@@ -328,8 +362,93 @@ public class D3DMesh
         public int CameraFacingType { get; set; }
 
         [MetaMember("mToonSphericalNormalBoneName")]
-        public Symbol ToonSphericalNormalBoneName { get; set; }
+        public Symbol ToonSphericalNormalBoneName { get; set; } = Symbol.Empty;
 
+
+        [MetaMember("mBoneMatrixIndex")]
+        public int BoneMatrixIndex { get; set; } = 0;
+
+        [MetaMember("mDiffuseTextureIndex")]
+        public int DiffuseTextureIndex { get; set; } = 0;
+
+        [MetaMember("mLightMapTextureIndex")]
+        public int LightMapTextureIndex { get; set; } = 0;
+
+        [MetaMember("mhSpecularColorMap")]
+        public Handle<T3Texture> SpecularColorMap { get; set; }
+
+        [MetaMember("mhAmbientMap")]
+        public Handle<T3Texture> AmbientMap { get; set; }
+
+        [MetaMember("mhOutlineDiscontinuityMap")]
+        public Handle<T3Texture> OutlineDiscontinuityMap { get; set; }
+
+        [MetaMember("mhToonLightQuantized")]
+        public Handle<T3Texture> ToonLightQuantized { get; set; }
+
+
+        [MetaMember("mbBumpAsNormalMap")]
+        public bool BumpAsNormalMap { get; set; }
+
+        [MetaMember("mToonMaterialColor")]
+        public Color ToonMaterialColor { get; set; }
+
+        [MetaMember("mToonOffset")]
+        public Vector2 ToonOffset { get; set; }
+
+        [MetaMember("mToonEnvLighting")]
+        public bool mToonEnvLighting { get; set; }
+
+        [MetaMember("mToonNoNormalDeform")]
+        public bool mToonNoNormalDeform { get; set; }
+
+        [MetaMember("mNeedSWSkinning")]
+        public bool mNeedSWSkinning { get; set; }
+
+        [MetaMember("mNeedComputeOutline")]
+        public bool mNeedComputeOutline { get; set; }
+
+        [MetaMember("mNeedRenderOutline")]
+        public bool mNeedRenderOutline { get; set; }
+
+        [MetaMember("mReceiveShadows")]
+        public bool mReceiveShadows { get; set; }
+
+        [MetaMember("mCastShadows")]
+        public bool mCastShadows { get; set; }
+
+        [MetaMember("mbToonRendering")]
+        public bool mbToonRendering { get; set; }
+
+        [MetaMember("mUVScreenSpaceZoom")]
+        public bool mUVScreenSpaceZoom { get; set; }
+
+        [MetaMember("mbHasOctree")]
+        public bool mbHasOctree { get; set; }
+
+        [MetaMember("mToonSphericalNormals")]
+        public bool mToonSphericalNormals { get; set; }
+
+        [MetaMember("mToonSphericalNormalBoneName")]
+        public string mToonSphericalNormalBoneName { get; set; }
+
+        [MetaMember("mbVertexAlpha")]
+        public bool mbVertexAlpha { get; set; }
+
+        [MetaMember("mbCameraFacing")]
+        public bool mbCameraFacing { get; set; }
+
+        [MetaMember("mhSubsurfaceScateringMap")]
+        public Handle<T3Texture> mhSubsurfaceScateringMap { get; set; }
+
+        [MetaMember("mbVertexAnimation")]
+        public bool mbVertexAnimation { get; set; }
+
+        [MetaMember("mbToonLighting")]
+        public bool mbToonLighting { get; set; }
+
+        [MetaMember("mOverride3DAlpha")]
+        public bool Override3DAlpha { get; set; }
 
         public class Serializer : MetaSerializer<TriangleSet>
         {
@@ -397,8 +516,9 @@ public class D3DMesh
                     (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
                     (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
                     (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
-                    (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),(MeshFlags.Unknown2, 12),
-                    (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),(MeshFlags.HasSoftwareSkinningStream, 15)
+                    (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
+                    (MeshFlags.Unknown2, 12), (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),
+                    (MeshFlags.HasSoftwareSkinningStream, 15)
                 };
 
                 if (obj.T3IndexBuffer != null)
@@ -513,8 +633,9 @@ public class D3DMesh
                 (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
                 (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
                 (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
-                (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),(MeshFlags.Unknown2, 12),
-                (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),(MeshFlags.HasSoftwareSkinningStream, 15)
+                (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
+                (MeshFlags.Unknown2, 12), (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),
+                (MeshFlags.HasSoftwareSkinningStream, 15)
             };
 
             if (stream.Mode is MetaStreamMode.Write)
@@ -714,7 +835,7 @@ public class D3DMesh
         HasBlendWeightStream = 0x10, // 3
         HasBlendIdxStream = 0x20, // 4
         HasUV1Stream = 0x40, // 5
-        HasUV2Stream = 0x80,// 6
+        HasUV2Stream = 0x80, // 6
         HasUV3Stream = 0x100, // 7
         HasUV4Stream = 0x200, // 8
         HasTangentStream = 0x400, // 9

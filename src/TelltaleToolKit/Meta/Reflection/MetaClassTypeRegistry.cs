@@ -217,9 +217,10 @@ public static class MetaClassTypeRegistry
         Register("Map<String,Rule*,less<String>>", typeof(Dictionary<string, Rule>));
         Register("Map<Symbol,D3DMesh::AnimatedVertexGroupEntry,less<Symbol>>", typeof(Dictionary<Symbol, D3DMesh.AnimatedVertexGroupEntry>));
         Register("D3DMesh::AnimatedVertexGroupEntry", typeof(D3DMesh.AnimatedVertexGroupEntry));
-        Register("Map<float,KeyframedValue<int>,less<float>>", typeof(NotImplementedException));
-        Register("Map<int,DCArray<unsignedint>,less<int>>", typeof(NotImplementedException));
-        Register("Map<int,unsignedint,less<int>>", typeof(NotImplementedException));
+        Register("Map<float,KeyframedValue<int>,less<float>>", typeof(Dictionary<float, KeyframedValue<int>>));
+        Register("Map<int,DCArray<unsignedint>,less<int>>", typeof(Dictionary<int,List<uint>>));
+        Register("Map<int,unsignedint,less<int>>", typeof(Dictionary<int, uint>));
+        Register("class Map<int,Ptr<Note>,less<int>>", typeof(Dictionary<int, Note>));
         Register("MergeInGuideInfo",typeof(NotImplementedException));
         Register("MergeInMoodInfo",typeof(NotImplementedException));
         Register("Note",typeof(Note));
@@ -1055,6 +1056,7 @@ public static class MetaClassTypeRegistry
         Register("class Ptr<struct PtrBase>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
         Register("class Ptr<struct Agent>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
         Register("class Ptr<struct Chore>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
+        Register("class Ptr<struct Animation>", typeof(NotImplementedException), MetaFlags.MetaSerializeDisable);
         Register("class Quaternion", typeof(Quaternion), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class Rect", typeof(Rect), MetaFlags.MetaSerializeBlockingDisabled);
         Register("class RenderObjectInterface", typeof(RenderObjectInterface));
@@ -1438,6 +1440,9 @@ public static class MetaClassTypeRegistry
         Register("EnumJumpTargetClass", typeof(DlgNodeJump.EnumJumpTargetClass));
         Register("EnumJumpBehaviour", typeof(DlgNodeJump.EnumJumpBehaviour));
         Register("EnumVisibilityBehaviour ", typeof(DlgNodeJump.EnumVisibilityBehaviour));
+        Register("DArray<DialogExchange::ExchangeElem>", typeof(List<DialogExchange.ExchangeElem>));
+        Register("DCArray<T3EffectBinaryDataCg::ConstAssignment>", typeof(List<T3EffectBinaryDataCg.ConstAssignment>));
+        Register("DCArray<T3EffectBinaryDataCg::Technique>", typeof(List<T3EffectBinaryDataCg.Technique>));
 
         // @formatter:on
     }
@@ -1719,6 +1724,10 @@ public class T3EffectBinaryDataCg
     public class Technique
     {
     }
+
+    public class ConstAssignment
+    {
+    }
 }
 
 public class T3EffectBinaryDataHlsl_D3D
@@ -1970,11 +1979,6 @@ public class SoundSystem
 public class KeyframedValueInterface
 {
 }
-
-public class DateStamp
-{
-}
-
 
 
 public class T3RenderStateBlock

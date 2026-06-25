@@ -22,9 +22,9 @@ public class SingleVector3Value : IAnimationValueInterface
             }
             else
             {
-                int compressedValue = stream.ReadInt32();
+                uint compressedValue = stream.ReadUInt32();
 
-                if (compressedValue == -1)
+                if ((int)compressedValue == -1)
                 {
                     Vector3 vector3 = new Vector3();
                     stream.Serialize(ref vector3);
@@ -32,30 +32,45 @@ public class SingleVector3Value : IAnimationValueInterface
                 }
                 else
                 {
-                    obj.DecompressedValue = DecompressSingleVector3(compressedValue);
+                    obj.DecompressedValue = DecompressVector3(compressedValue);
                 }
             }
         }
 
-        private static readonly float[] _maxBounds = { 1.0f, 1.5f, 2.0f };
+        private static readonly float[] s_maxBounds = { 1.0f, 1.5f, 2.0f };
 
-        private static Vector3 DecompressSingleVector3(int compressed)
+        /// <summary>
+        /// Decompresses a 32‑bit packed value into a Vector3.
+        /// </summary>
+        /// <param name="packed">The packed uint.</param>
+        /// <param name="s_maxBounds">Array of 4 bounds corresponding to the top 2 bits.</param>
+        /// <returns>The decompressed vector.</returns>
+        public static Vector3 DecompressVector3(uint packed)
         {
-            int idx = (int)(compressed >> 30);
-            float max = _maxBounds[idx];
-            float min = -max;
+            // Extract the 2‑bit index from bits 30‑31.
+            int boundIndex = (int)(packed >> 30);
+            float bound = s_maxBounds[boundIndex];
 
-            static float DecompressComponent(int bits, float min, float max)
-            {
-                const int maxVal = (1 << 10) - 1;
-                float t = (bits & maxVal) / (float)maxVal;
-                return min + t * (max - min);
-            }
+            // Extract each 10‑bit component.
+            int xVal = (int)(packed & 0x3FF);
+            int yVal = (int)((packed >> 10) & 0x3FF);
+            int zVal = (int)((packed >> 20) & 0x3FF);
 
-            float x = DecompressComponent(compressed, min, max);
-            float y = DecompressComponent(compressed >> 10, min, max);
-            float z = DecompressComponent(compressed >> 20, min, max);
+            float x = DecompressComponent(xVal, bound);
+            float y = DecompressComponent(yVal, bound);
+            float z = DecompressComponent(zVal, bound);
+
             return new Vector3(x, y, z);
+        }
+
+        /// <summary>
+        /// Maps a 10‑bit unsigned integer (0..1023) to a float in the range [-bound, bound].
+        /// </summary>
+        private static float DecompressComponent(int value, float bound)
+        {
+            const int maxVal = 1023;           // 2¹⁰ - 1
+            // Linear interpolation: -bound + (value / maxVal) * (2 * bound)
+            return (value / (float)maxVal) * 2f * bound - bound;
         }
     }
 

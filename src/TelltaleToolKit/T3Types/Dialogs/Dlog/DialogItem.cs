@@ -59,6 +59,15 @@ public class DialogItem : IDialogBase
     [MetaMember("mbCutscene")]
     public bool Cutscene { get; set; }
 
+    [MetaMember("mDispTextProxy")]
+    public LanguageResourceProxy  mDispTextProxy { get; set; }
+
+    [MetaMember("mhTexture")]
+    public Handle<T3Texture> mhTexture { get; set; }
+
+    [MetaMember("mUserData")]
+    public Symbol mUserData { get; set; }
+
     [MetaSerializer(typeof(MetaClassSerializer<EnumPlaybackMode>))]
     public struct EnumPlaybackMode
     {

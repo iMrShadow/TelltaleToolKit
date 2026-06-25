@@ -18,4 +18,7 @@ public class DialogText : IDialogBase
     [MetaMember("mLangResProxy")]
     public LanguageResProxy LangResProxy { get; set; } = new();
 
+    [MetaMember("mLangResProxy")]
+    public LanguageResourceProxy LangResourceProxy { get; set; } = new();
+
 }

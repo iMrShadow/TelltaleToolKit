@@ -18,7 +18,7 @@ public class VoiceData
     public float Length { get; set; } = 0.0f;
 
     [MetaMember("mAllPacketsSize")]
-    public int AllPacketsSize => VoiceDataBuffer.Length;
+    public int AllPacketsSize { get; set; }
 
     [MetaMember("mPacketSamples")]
     public int PacketSamples { get; set; } = 0;

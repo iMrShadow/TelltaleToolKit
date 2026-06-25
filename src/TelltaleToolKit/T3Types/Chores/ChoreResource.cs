@@ -126,7 +126,7 @@ public class ChoreResource
                 if (embeddedClassType is null)
                     throw new InvalidOperationException("[ChoreResource] Embedded type is not registered.");
 
-                Symbol _ = stream.ReadSymbol(); // Same
+                MetaClassType? _ = stream.ReadMetaClassType(); // same
 
                 object? embedded;
                 if ((stream.GetMetaClass(typeof(ChoreResource))!.ContainsMember("mVersion") && obj.Version >= 2) ||
@@ -139,8 +139,8 @@ public class ChoreResource
                 else
                 {
                     embedded = new Animation();
-                    Toolkit.Instance.GetSerializer(typeof(Animation)).PreSerialize(ref embedded, stream);
-                    Toolkit.Instance.GetSerializer(typeof(Animation)).Serialize(ref embedded, stream);
+                    Toolkit.Instance.GetSerializer<Animation>().PreSerialize(ref embedded, stream);
+                    Toolkit.Instance.GetSerializer<Animation>().Serialize(ref embedded, stream);
                 }
 
                 obj.Embedded = embedded;

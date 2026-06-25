@@ -19,6 +19,9 @@ public class DialogExchange : IDialogBase
     [MetaMember("mLines")]
     public List<int> Lines { get; set; } = [];
 
+    [MetaMember("mElems")]
+    public List<ExchangeElem> mElems { get; set; } = [];
+
     [MetaMember("mBranchLink")]
     public string BranchLink { get; set; } = string.Empty;
 
@@ -37,7 +40,23 @@ public class DialogExchange : IDialogBase
     [MetaMember("mhChore")]
     public Handle<Chore> Chore { get; set; } = new();
 
-    internal class ExchangeElem
+    [MetaMember("mDispTextProxy")]
+    public LanguageResourceProxy  mDispTextProxy { get; set; }
+
+
+    [MetaMember("mhTexture")]
+    public Handle<T3Texture> mhTexture { get; set; }
+
+    [MetaMember("mNotes")]
+    public NoteCollection mNotes { get; set; }
+
+    [MetaSerializer(typeof(MetaClassSerializer<ExchangeElem>))]
+    public class ExchangeElem
     {
+        [MetaMember("mID")]
+        public int ID { get; set; }
+
+        [MetaMember("mType")]
+        public int Type { get; set; }
     }
 }

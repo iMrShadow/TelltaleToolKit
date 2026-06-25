@@ -41,6 +41,10 @@ public class DialogResource
     [MetaMember("mProjectID")]
     public int ProjectId { get; set; }
 
+    [MetaMember("mTaskID")]
+    public uint mTaskID { get; set; }
+
+
     [MetaMember("mResourcePath")]
     public string ResourcePath { get; set; } = string.Empty;
 

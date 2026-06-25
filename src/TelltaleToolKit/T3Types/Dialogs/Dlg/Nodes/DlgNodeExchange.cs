@@ -54,9 +54,7 @@ public class DlgNodeExchange : IDlgNode
             if (stream.Mode is MetaStreamMode.Write)
             {
                 throw new NotSupportedException();
-            }
-
-            if (stream.Mode is MetaStreamMode.Read)
+            } else
             {
                 if ((obj.DlgNode.Flags.Data & 1) != 0)
                 {
