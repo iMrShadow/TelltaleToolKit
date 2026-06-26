@@ -37,6 +37,9 @@ public class T3VertexBuffer
     [MetaMember("mVertexComponents")]
     public T3VertexComponent[] VertexComponents { get; set; } = new T3VertexComponent[14];
 
+    [MetaMember("mComponents")]
+    public T3VertexComponent[] Components { get; set; } = new T3VertexComponent[12];
+
     [MetaMember("mbStoreCompressed")]
     public bool StoreCompressed { get; set; }
 
@@ -74,6 +77,11 @@ public class T3VertexBuffer
             }
             else
             {
+                if (obj.Flags.Has(1))
+                {
+                    return;
+                }
+
                 int totalBytes = obj.StoreCompressed switch
                 {
                     true when obj.Type is 2 or 4 => 2 * obj.NumVerts,

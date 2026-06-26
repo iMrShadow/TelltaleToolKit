@@ -93,9 +93,33 @@ public class D3DMesh
     [MetaMember("mBoneData")]
     public List<BoneEntry> BoneData { get; set; } = [];
 
+    [MetaMember("mDiffuseTextures")]
+    public List<D3DMesh.Texture> mDiffuseTextures { get; set; } = [];
+
+    [MetaMember("mDetailTextures")]
+    public List<D3DMesh.Texture> mDetailTextures { get; set; } = [];
+
+    [MetaMember("mDetailBumpTextures")]
+    public List<D3DMesh.Texture> mDetailBumpTextures { get; set; } = [];
+
+    [MetaMember("mLightmapTextures")]
+    public List<D3DMesh.Texture> mLightmapTextures { get; set; } = [];
+
+    [MetaMember("mBumpmapTextures")]
+    public List<D3DMesh.Texture> mBumpmapTextures { get; set; } = [];
+
+
+    [MetaMember("mEnvironmentTextures")]
+    public List<D3DMesh.Texture> mEnvironmentTextures { get; set; } = [];
+
+    [MetaMember("mSpecularTextures")]
+    public List<D3DMesh.Texture> mSpecularTextures { get; set; } = [];
+
+    [MetaMember("mSSSTextures")]
+    public List<D3DMesh.Texture> mSSSTextures { get; set; } = [];
+
     [MetaMember("mLocalTransformPalettes")]
     public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; } = [];
-
 
     [MetaMember("mbMeshHasSmoothNormalsSupport")]
     public bool mbMeshHasSmoothNormalsSupport { get; set; }
@@ -183,6 +207,9 @@ public class D3DMesh
     public T3VertexBuffer[]? T3VertexBuffers { get; set; }
 
     public T3OcclusionMeshData? OcclusionMeshData { get; set; }
+
+    [MetaMember("mbManualSort")]
+    public bool ManualSort { get; set; }
 
     /// <summary>
     /// The main mesh data for version above 22. It contains LODs, bone references
@@ -374,6 +401,24 @@ public class D3DMesh
         [MetaMember("mLightMapTextureIndex")]
         public int LightMapTextureIndex { get; set; } = 0;
 
+        [MetaMember("mDetailTextureIndex")]
+        public int DetailTextureIndex { get; set; } = 0;
+
+        [MetaMember("mDetailBumpTextureIndex")]
+        public int DetailBumpTextureIndex { get; set; } = 0;
+
+        [MetaMember("mNormalTextureIndex")]
+        public int NormalTextureIndex { get; set; } = 0;
+
+        [MetaMember("mEnvTextureIndex")]
+        public int EnvTextureIndex { get; set; } = 0;
+
+        [MetaMember("mSpecularTextureIndex")]
+        public int SpecularTextureIndex { get; set; } = 0;
+
+        [MetaMember("mSSSTextureIndex")]
+        public int SSSTextureIndex { get; set; } = 0;
+
         [MetaMember("mhSpecularColorMap")]
         public Handle<T3Texture> SpecularColorMap { get; set; }
 
@@ -450,6 +495,16 @@ public class D3DMesh
         [MetaMember("mOverride3DAlpha")]
         public bool Override3DAlpha { get; set; }
 
+        [MetaMember("mhDetailBumpMap")]
+        public Handle<T3Texture> mhDetailBumpMap { get; set; }
+
+        [MetaMember("mbHasLocalTransform")]
+        public bool HasLocalTransform { get; set; }
+
+        [MetaMember("mbDetailBumpAsNormalMap")]
+        public bool DetailBumpAsNormalMap { get; set; }
+
+
         public class Serializer : MetaSerializer<TriangleSet>
         {
             private static readonly MetaClassSerializer<TriangleSet> s_metaClassSerializer = new();
@@ -464,7 +519,7 @@ public class D3DMesh
                 }
                 else if (stream.Mode is MetaStreamMode.Read)
                 {
-                    if (stream.GetMetaClass(typeof(TriangleSet)).ContainsMember("mbHasPixelShader_RemoveMe"))
+                    if (stream.GetMetaClass(typeof(TriangleSet))!.ContainsMember("mbHasPixelShader_RemoveMe"))
                     {
                         string shaderName = stream.ReadString();
                         if (obj.HasPixelShaderRemoveMe)
@@ -526,9 +581,9 @@ public class D3DMesh
                     obj.Flags.Set((int)MeshFlags.HasIndexBuffer);
                 }
 
-                for (int i = 0; i < obj.T3VertexBuffers.Length; i++)
+                if (obj.T3VertexBuffers != null)
                 {
-                    if (obj.T3VertexBuffers[i] != null)
+                    for (int i = 0; i < obj.T3VertexBuffers.Length; i++)
                     {
                         obj.Flags.Set((int)vertexBufferSlots[i].Flag);
                     }
@@ -540,12 +595,17 @@ public class D3DMesh
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                if (obj.Version < 19)
+                if (obj.Version == 0)
                 {
                     SerializeOldD3DMesh(ref obj, stream);
                     return;
                 }
 
+                if (obj.Version < 19)
+                {
+                    SerializeOldMedD3DMesh(ref obj, stream);
+                    return;
+                }
 
                 if (obj.Version >= 22)
                 {
@@ -669,7 +729,31 @@ public class D3DMesh
                         var buffer = new T3VertexBuffer();
                         stream.Serialize(ref buffer);
                         obj.T3VertexBuffers[index] = buffer;
+
+                        // is compressed
+                        if (obj.T3VertexBuffers[index].Flags.Has(1))
+                        {
+                            // TODO: Decompress data
+                            if (flag is MeshFlags.HasPosStream)
+                            {
+
+                            }else if (flag is MeshFlags.HasNormStream)
+                            {
+
+                            } else if (flag is MeshFlags.HasBlendWeightStream)
+                            {
+
+                            }else if (flag is MeshFlags.HasBlendWeightStream)
+                            {
+
+                            }else if (flag is MeshFlags.HasBlendWeightStream)
+                            {
+
+                            }
+                        }
                     }
+
+
                 }
 
                 // Read Index Buffer
@@ -848,11 +932,24 @@ public class D3DMesh
         HasInterleavedStream = 0x200000, // 14
         HasSoftwareSkinningStream = 0x400000, // 16
         IsManualSort = 0x10000000, // Vector 3???!?!?
-        Deformable = 0x2000000, // It's a string - Interface // 15
+        Deformable = 0x2000000, // It's a string - Interface // 15 ACTUALLY NOT A BUFFER
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<VertexAnimation>))]
-    public class VertexAnimation;
+    public class VertexAnimation
+    {
+        [MetaMember("mName")]
+        public Symbol Name { get; set; }
+
+        [MetaMember("mResourceGroupMembership")]
+        public Dictionary<Symbol, float> ResourceGroupMembership { get; set; } = [];
+
+        [MetaMember("mStartIndex")]
+        public int StartIndex { get; set; }
+
+        [MetaMember("mNumVertices")]
+        public int NumVertices { get; set; }
+    }
 
     [MetaSerializer(typeof(MetaClassSerializer<Texture>))]
     public class Texture
@@ -880,6 +977,12 @@ public class D3DMesh
 
         [MetaMember("mAverageObjAreaPerUVArea")]
         public float AverageObjAreaPerUVArea { get; set; }
+
+        [MetaMember("mbHasLightmap")]
+        public bool mbHasLightmap { get; set; }
+
+        [MetaMember("mbHasNonLightmap")]
+        public bool mbHasNonLightmap { get; set; }
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<SkinningEntry>))]
