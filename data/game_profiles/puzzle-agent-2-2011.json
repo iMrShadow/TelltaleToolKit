@@ -1,0 +1,10 @@
+{
+    "name": "puzzle-agent-2-2011",
+    "description": "",
+    "blowfishKey": "Grickle201",
+    "isTtarch2": false,
+    "ttarchVersion": 9,
+    "luaVersion": "5.1.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
+}
