@@ -1,0 +1,10 @@
+{
+    "name": "back-to-the-future-105-2011",
+    "description": "",
+    "blowfishKey": "Bttf105",
+    "isTtarch2": false,
+    "ttarchVersion": 8,
+    "luaVersion": "5.0.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
+}
