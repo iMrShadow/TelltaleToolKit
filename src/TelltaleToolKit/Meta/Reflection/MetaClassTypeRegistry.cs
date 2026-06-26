@@ -157,7 +157,7 @@ public static class MetaClassTypeRegistry
         Register("DCArray<D3DMesh::SkinningEntry>", typeof(List<D3DMesh.SkinningEntry>));
         Register("DCArray<D3DMesh::Texture>", typeof(List<D3DMesh.Texture>));
         Register("DCArray<D3DMesh::VertexAnimation>", typeof(List<D3DMesh.VertexAnimation>));
-        Register("VertexAnimation", typeof(D3DMesh.VertexAnimation));
+        Register("D3DMesh::VertexAnimation", typeof(D3DMesh.VertexAnimation));
         Register("class SArray<int,11>", typeof(int[]), MetaFlags.None, 11);
         Register("DCArray<DCArray<D3DMesh::LocalTransformEntry>>", typeof(List<List<D3DMesh.LocalTransformEntry>>));
         Register("DCArray<DCArray<T3MeshBonePaletteEntry>>", typeof(List<List<T3MeshBonePaletteEntry>>));
@@ -1080,6 +1080,7 @@ public static class MetaClassTypeRegistry
         Register("class SArray<unsigned int,3>", typeof(uint[]), MetaFlags.None, 3);
         Register("class SArray<unsigned long,3>", typeof(uint[]), MetaFlags.None, 3);
         Register("class SArray<unsigned long,6>", typeof(uint[]), MetaFlags.None, 6);
+        Register("class SArray<unsigned long,7>", typeof(uint[]), MetaFlags.None, 7);
         Register("class SArray<unsigned long,8>", typeof(uint[]), MetaFlags.None, 8);
         Register("class SArray<DCArray<D3DMesh::Texture>,11>", typeof(List<D3DMesh.Texture>[]),MetaFlags.None,11);
         Register("class SaveGame", typeof(SaveGame));
