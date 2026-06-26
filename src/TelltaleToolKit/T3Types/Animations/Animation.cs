@@ -83,7 +83,14 @@ public class Animation
                 {
                     MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
                     if (typeSymbol is null)
-                        throw new InvalidOperationException("[Animation] Type symbol is not registered.");
+                    {
+                        // Graceful crash if the type is not registered.
+                        // This is extremely rare, only a handful of files have been identified to have unregistered types.
+                        // I assume those are leftovers from the editor, but somehow got into the main game.
+                        // Also, it's possible that the asset is not used at all.
+                        stream.EndBlock();
+                        return;
+                    }
 
                     int numOfType = stream.ReadInt16(); // The number of times that type has been serialized
                     // TODO: Verify what these versions actually represent.
