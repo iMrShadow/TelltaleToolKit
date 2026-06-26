@@ -126,6 +126,21 @@ public class BitReader
 
         return value;
     }
+
+    public bool ReadBit() => ReadBits(1) != 0;
+
+    public float ReadFloat()
+    {
+        int bits = ReadBits(32);
+        return BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
+    }
+
+    /// <summary>Advances the bit pointer without reading.</summary>
+    public void SkipBits(int numBits)
+    {
+        if (numBits < 0) throw new ArgumentOutOfRangeException(nameof(numBits));
+        _bitPos += numBits;
+    }
 }
 
 [MetaSerializer(typeof(MetaClassSerializer<T3VertexComponent>))]

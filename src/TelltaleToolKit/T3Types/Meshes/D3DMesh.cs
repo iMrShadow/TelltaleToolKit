@@ -726,6 +726,7 @@ public class D3DMesh
                 {
                     if (obj.Flags.Has((int)flag))
                     {
+                        var flags = (MeshFlags)obj.Flags.Data;
                         var buffer = new T3VertexBuffer();
                         stream.Serialize(ref buffer);
                         obj.T3VertexBuffers[index] = buffer;
@@ -736,24 +737,22 @@ public class D3DMesh
                             // TODO: Decompress data
                             if (flag is MeshFlags.HasPosStream)
                             {
-
-                            }else if (flag is MeshFlags.HasNormStream)
+                                buffer.DecompressPositions(stream);
+                            }
+                            else if (flag is MeshFlags.HasNormStream or MeshFlags.HasTangentStream)
                             {
-
-                            } else if (flag is MeshFlags.HasBlendWeightStream)
+                                buffer.DecompressNormals(stream);
+                            }
+                            else if (flag is MeshFlags.HasBlendWeightStream)
                             {
-
-                            }else if (flag is MeshFlags.HasBlendWeightStream)
+                                buffer.DecompressWeights(stream);
+                            }
+                            else if (flag is MeshFlags.HasUV1Stream or MeshFlags.HasUV2Stream or MeshFlags.HasUV3Stream or MeshFlags.HasUV4Stream)
                             {
-
-                            }else if (flag is MeshFlags.HasBlendWeightStream)
-                            {
-
+                                buffer.DecompressUV(stream);
                             }
                         }
                     }
-
-
                 }
 
                 // Read Index Buffer
