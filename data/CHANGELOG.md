@@ -1,5 +1,24 @@
 ## Database Changelog
 
+### 26th of June, 2026
+
+#### Game Profiles
+- Added initial game profiles for the following games:
+  - Tales of Monkey Island (2010) (PC) (All 5 Episodes)
+  - Back To The Future: The Game (2011) (All 5 Episodes)
+  - Jurassic Park: The Game (2011)
+  - Puzzle Agent 2 (2011)
+  - Lad & Order - Legacies (2012)
+  - Poker Night 2 (2013)
+- Fixed an encryption key for The Walking Dead: Season 2.
+
+#### Version Database
+- Added initial version databases for aforementoned games.
+- Updated the global database with the new meta class descriptions.
+- Implemented meta class descriptions for animations. 
+- Added a missing member in DlgChild for The Wolf Among Us and The Walking Dead: Season 2.
+- Removed some files that weren't used.
+
 ### 1st of June, 2026
 
 #### Game Profiles
