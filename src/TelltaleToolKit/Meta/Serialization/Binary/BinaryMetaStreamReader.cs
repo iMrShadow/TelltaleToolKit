@@ -21,7 +21,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (!isValid)
         {
-            throw new InvalidDataException("Invalid MetaStream.");
+            throw new InvalidDataException("[BinaryMetaStreamReader] Invalid MetaStream.");
         }
 
         long offset = Sections[0].CompressedSize;
@@ -55,21 +55,23 @@ public sealed class BinaryMetaStreamReader : MetaStream
     {
         if (BaseStream.Length < 4)
         {
-            Toolkit.Instance.Logger.LogError("Invalid MetaHeader: Stream too short.");
+            Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Invalid header: Stream too short.");
             return false;
         }
 
+        // Setup the header section
         Sections[(int)SectionType.Header].Stream = BaseStream;
         Reader = new BinaryReader(Sections[(int)SectionType.Header].Stream, Encoding.UTF8, true);
         SetSection(SectionType.Header);
 
+        // Read the FourCC
         MetaStreamMagic magic = (MetaStreamMagic)this.ReadUInt32();
         Params.StreamVersion = magic.GetMetaStreamVersion();
         uint streamVersion = Params.StreamVersion;
 
         if (Params.StreamVersion == 0)
         {
-            Toolkit.Instance.Logger.LogError($"Not a valid meta stream version: {magic}");
+            Toolkit.Instance.Logger.LogError($"[BinaryMetaStreamReader] Not a valid meta stream version: {magic}");
             return false;
         }
 
@@ -77,6 +79,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (streamVersion >= 4)
         {
+            // MSV5 + MSV6
             if (streamVersion >= 5)
             {
                 defaultSize = this.ReadUInt32();
@@ -124,13 +127,13 @@ public sealed class BinaryMetaStreamReader : MetaStream
                    */
                 }
 
-                Toolkit.Instance.Logger.LogError("[MetaStream] Mcom or EncryptedMcom is not supported.");
+                Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Mcom or EncryptedMcom is not supported.");
                 return false;
             }
 
             if (Params.Workspace is null)
             {
-                Toolkit.Instance.Logger.LogError("[MetaStream] Workspace is not set for encrypted streams.");
+                Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Workspace is not set for encrypted streams.");
                 return false;
             }
 
@@ -149,7 +152,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (numVers >= 1024)
         {
-            Toolkit.Instance.Logger.LogError("[MetaStream] Too many serialized classes.");
+            Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Too many serialized classes.");
             return false;
         }
 
@@ -158,7 +161,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         {
             MetaVersionInfo verInfo = new();
 
-            if (magic.GetMetaStreamVersion() >= 3) // mStreamVersion >= 3 uses hashed symbols
+            if (magic.GetMetaStreamVersion() >= 3) // uses hashed types
             {
                 verInfo.TypeSymbolCrc = this.ReadUInt64();
             }
@@ -227,8 +230,12 @@ public sealed class BinaryMetaStreamReader : MetaStream
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
 
-        // Toolkit.Instance.Logger.LogWarning(
-        //     $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        if (expectedPosition < currentPosition)
+        {
+            Toolkit.Instance.Logger.LogWarning(
+                $"[BinaryMetaStreamReader] Invalid data position! Current position ahead of expected position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        }
+
         //  throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
 
         currentSectionInfo.Stream.Position = expectedPosition;
@@ -243,7 +250,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         {
             '1' => true,
             '0' => false,
-            _ => throw new InvalidBooleanException($"Invalid boolean at position: {Reader.BaseStream.Position}!")
+            _ => throw new InvalidBooleanException($"[BinaryMetaStreamReader] Invalid boolean at position: {Reader.BaseStream.Position}!")
         };
 
     public override void Serialize(ref float value) => value = Reader.ReadSingle();
