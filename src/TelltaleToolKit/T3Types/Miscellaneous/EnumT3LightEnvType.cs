@@ -9,15 +9,14 @@ public struct EnumT3LightEnvType
 {
     [MetaMember("mVal")]
     public T3LightEnvType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<T3LightEnvType>))]
-public enum T3LightEnvType
-{
-    //    eLightEnvType_
-    Point = 0x0,
-    Spot = 0x1,
-    DirectionalKey = 0x2,
-    Ambient = 0x3,
-    DirectionalAmbient = 0x4,
+    [MetaSerializer(typeof(EnumSerializer<T3LightEnvType>))]
+    public enum T3LightEnvType
+    {
+        Point = 0x0,
+        Spot = 0x1,
+        DirectionalKey = 0x2,
+        Ambient = 0x3,
+        DirectionalAmbient = 0x4
+    }
 }

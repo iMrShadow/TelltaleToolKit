@@ -36,16 +36,30 @@ public class DialogBase
     public bool HasStyleGuides { get; set; }
 
     [MetaMember("mDependentVisBranch")]
-    public string DependentVisBranch { get; set; } = String.Empty;
+    public string DependentVisBranch { get; set; } = string.Empty;
+
+    [MetaMember("mDescriptiveName")]
+    public string DescriptiveName { get; set; }
+
+    [MetaMember("mFlags")]
+    public Flags mFlags { get; set; }
+
+    [MetaMember("mTaskID")]
+    public uint mTaskID { get; set; }
+
 
     public int ActualId;
     public List<StyleGuideRef> StyleGuideRefs = [];
 
     public class Serializer : MetaSerializer<DialogBase>
     {
-        public override void Serialize(ref DialogBase obj, MetaStream stream)
+
+        private static readonly MetaClassSerializer<DialogBase> s_metaClassSerializer = new();
+
+        public override void Serialize(ref DialogBase obj, MetaStream stream, MetaClassType? type = null)
         {
-            new MetaClassSerializer<DialogBase>().Serialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {

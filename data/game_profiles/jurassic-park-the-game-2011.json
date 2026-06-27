@@ -1,0 +1,10 @@
+{
+    "name": "jurassic-park-the-game-2011",
+    "description": "",
+    "blowfishKey": "JurassicPark",
+    "isTtarch2": false,
+    "ttarchVersion": 9,
+    "luaVersion": "5.0.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
+}

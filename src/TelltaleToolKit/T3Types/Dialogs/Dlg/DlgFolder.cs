@@ -9,22 +9,20 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class DlgFolder : IDlgObjIdOwner, IDlgObjectPropsOwner, IDlgChildSet, ITaskOwner
 {
     [MetaMember("Baseclass_DlgObjIDOwner")]
-    public DlgObjIDOwner DlgObjIdOwner { get; set; }
+    public DlgObjIDOwner DlgObjIdOwner { get; set; } = new();
 
     [MetaMember("Baseclass_DlgObjectPropsOwner")]
-    public DlgObjectPropsOwner DlgObjectPropsOwner { get; set; }
+    public DlgObjectPropsOwner DlgObjectPropsOwner { get; set; }= new();
 
     [MetaMember("Baseclass_DlgChildSet")]
-    public DlgChildSet DlgChildSet { get; set; }
+    public DlgChildSet DlgChildSet { get; set; }= new();
 
     [MetaMember("Baseclass_TaskOwner")]
-    public TaskOwner TaskOwner { get; set; }
+    public TaskOwner TaskOwner { get; set; }= new();
 
     [MetaMember("mName")]
-    public Symbol Name { get; set; }
+    public Symbol Name { get; set; } = Symbol.Empty;
 
     [MetaMember("mProdReportProps")]
-    public PropertySet ProdReportProps { get; set; }
-
-
+    public PropertySet ProdReportProps { get; set; }= new();
 }

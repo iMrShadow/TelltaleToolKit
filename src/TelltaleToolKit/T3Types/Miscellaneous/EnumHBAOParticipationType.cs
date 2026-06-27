@@ -9,10 +9,12 @@ public struct EnumHBAOParticipationType
 {
     [MetaMember("mVal")]
     public HBAOParticipationType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAOParticipationType>))]
-public enum HBAOParticipationType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<HBAOParticipationType>))]
+    public enum HBAOParticipationType
+    {
+        Auto = 0,
+        ForceOn = 1,
+        ForceOff = 2
+    }
 }

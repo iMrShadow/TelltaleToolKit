@@ -8,5 +8,5 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class DlgObjIDOwner
 {
     [MetaMember("mDlgObjID")]
-    public DlgObjId DlgObjID { get; set; }
+    public DlgObjId DlgObjID { get; set; } = new();
 }

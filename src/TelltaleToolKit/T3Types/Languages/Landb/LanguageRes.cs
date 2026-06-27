@@ -2,6 +2,7 @@
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Animations;
+using TelltaleToolKit.T3Types.Miscellaneous;
 
 namespace TelltaleToolKit.T3Types.Languages.Landb;
 
@@ -33,7 +34,7 @@ public class LanguageRes
     public LanguageResLocal ResolvedLocalData { get; set; }
 
     [MetaMember("mRecordingStatus")]
-    public RecordingUtils.EnumRecordingStatus RecordingStatus { get; set; }
+    public EnumRecordingStatus RecordingStatus { get; set; }
 
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }

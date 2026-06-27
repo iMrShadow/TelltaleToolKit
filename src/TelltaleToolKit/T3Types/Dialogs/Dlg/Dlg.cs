@@ -51,6 +51,9 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
     [MetaMember("mbHasToolOnlyData")]
     public bool HasToolOnlyData { get; set; }
 
+    [MetaMember("mResourcePath")]
+    public string ResourcePath { get; set; }
+
     public bool ToolFlag { get; set; }
 
     public List<DlgFolder> Folders { get; set; } = [];
@@ -60,24 +63,54 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
     public class Serializer : MetaSerializer<Dlg>
     {
         private static readonly MetaClassSerializer<Dlg> s_metaClassSerializer = new();
-        public override void Serialize(ref Dlg obj, MetaStream stream)
+
+        public override void Serialize(ref Dlg obj, MetaStream stream, MetaClassType? type = null)
         {
-            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             MetaClass metaClass = stream.GetMetaClass(typeof(Dlg))!;
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotImplementedException();
-            }
+                int folderCount = obj.Folders.Count;
+                stream.Write(folderCount);
 
-            if (stream.Mode is MetaStreamMode.Read)
+                foreach (var folder in obj.Folders)
+                {
+                    var folderRef = folder;
+                    stream.Serialize(ref folderRef);
+                }
+
+                int nodeCount = obj.Nodes.Count;
+                stream.Write(nodeCount);
+
+                foreach (var node in obj.Nodes)
+                {
+                    var nodeType = stream.GetMetaClass(node.GetType())
+                                   ?? throw new InvalidOperationException(
+                                       $"[Dlg] Type '{node.GetType()}' is not registered in params or workspace.");
+
+                    stream.Write(nodeType.ClassType);
+
+                    MetaSerializer metaSerializer = Toolkit.Instance.GetSerializer(nodeType.ClassType.LinkingType);
+
+                    object nodeObj = node;
+                    metaSerializer.PreSerialize(ref nodeObj!, stream, nodeType.ClassType);
+                    metaSerializer.Serialize(ref nodeObj, stream, nodeType.ClassType);
+                }
+
+                if (metaClass.ContainsMember("mbHasToolOnlyData"))
+                {
+                    stream.Write(obj.HasToolOnlyData);
+                }
+            }
+            else
             {
                 int folderCount = stream.ReadInt32();
                 obj.Folders.Capacity = folderCount;
 
-                for (var i = 0; i < folderCount; i++)
+                for (int i = 0; i < folderCount; i++)
                 {
                     var folder = new DlgFolder();
                     stream.Serialize(ref folder);
@@ -86,18 +119,18 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
 
                 int nodeCount = stream.ReadInt32();
                 obj.Nodes.Capacity = nodeCount;
-                for (var i = 0; i < nodeCount; i++)
+                for (int i = 0; i < nodeCount; i++)
                 {
-                    MetaClassType? type = stream.ReadMetaClassType();
+                    MetaClassType? typeS = stream.ReadMetaClassType();
 
-                    if (type == null)
+                    if (typeS == null)
                         throw new InvalidOperationException("[Dlg] Type is not registered.");
 
-                    MetaSerializer metaSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
+                    MetaSerializer metaSerializer = Toolkit.Instance.GetSerializer(typeS.LinkingType);
 
                     object node = null!;
-                    metaSerializer.PreSerialize(ref node, stream);
-                    metaSerializer.Serialize(ref node, stream);
+                    metaSerializer.PreSerialize(ref node, stream, typeS);
+                    metaSerializer.Serialize(ref node, stream, typeS);
 
                     if (node is IDlgNode dlgNode)
                     {
@@ -105,6 +138,7 @@ public class Dlg : IDlgObjIdOwner, ITaskOwner
                     }
                 }
 
+                // TODO: Verify if this is really true
                 if (metaClass.ContainsMember("mbHasToolOnlyData"))
                 {
                     // Read runtime boolean

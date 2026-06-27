@@ -81,8 +81,6 @@ public class T3MeshData
     // Batman
     [MetaMember("mBonePalettes")]
     public List<List<T3MeshBonePaletteEntry>> BonePalettes { get; set; }
-    // TODO:
-    // public List<T3MeshEffectPreload> MeshPreload { get; set; } = [];
 
     [MetaMember("mLocalTransformPalettes")]
     public List<List<T3MeshLocalTransformEntry>> LocalTransformPalettes { get; set; }
@@ -96,7 +94,7 @@ public class T3MeshData
         private static readonly MetaClassSerializer<T3MeshData> s_metaClassSerializer = new();
 
 
-        public override void Serialize(ref T3MeshData obj, MetaStream stream)
+        public override void Serialize(ref T3MeshData obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);

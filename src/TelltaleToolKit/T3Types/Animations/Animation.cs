@@ -38,7 +38,7 @@ public class Animation
 
     public List<InterfaceInfo> Descriptors { get; set; } = [];
 
-    public List<IAnimatedValueInterface> Values { get; set; } = [];
+    public List<IAnimationValueInterface> Values { get; set; } = [];
 
     public byte[] Buffer = [];
 
@@ -46,7 +46,7 @@ public class Animation
     {
         private static readonly MetaClassSerializer<Animation> s_metaClassSerializer = new();
 
-        public override void Serialize(ref Animation obj, MetaStream stream)
+        public override void Serialize(ref Animation obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
@@ -68,7 +68,7 @@ public class Animation
             if (stream.Mode is MetaStreamMode.Read)
             {
                 int numTotalValues = stream.ReadInt32();
-                obj.Values = new List<IAnimatedValueInterface>(numTotalValues);
+                obj.Values = new List<IAnimationValueInterface>(numTotalValues);
 
                 // Runtime buffer (not needed for now)
                 int dataBufferSize = stream.ReadInt32();
@@ -81,7 +81,14 @@ public class Animation
                 {
                     MetaClassType? typeSymbol = stream.ReadMetaClassType(); // The type of the class
                     if (typeSymbol is null)
-                        throw new InvalidOperationException("[Animation] Type symbol is not registered.");
+                    {
+                        // Graceful crash if the type is not registered.
+                        // This is extremely rare, only a handful of files have been identified to have unregistered types.
+                        // I assume those are leftovers from the editor, but somehow got into the main game.
+                        // Also, it's possible that the asset is not used at all.
+                        stream.EndBlock();
+                        return;
+                    }
 
                     int numOfType = stream.ReadInt16(); // The number of times that type has been serialized
                     // TODO: Verify what these versions actually represent.
@@ -105,18 +112,25 @@ public class Animation
                     {
                         object? propertyValue = null;
 
-                        serializer.PreSerialize(ref propertyValue, stream);
-                        serializer.Serialize(ref propertyValue, stream);
+                        serializer.PreSerialize(ref propertyValue, stream, desc.Type);
+                        serializer.Serialize(ref propertyValue, stream, desc.Type);
 
-                        if (propertyValue is IAnimatedValueInterface value)
+                        if (propertyValue is IAnimationValueInterface value)
+                        {
+
                             obj.Values.Add(value);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"[Animation] Expected {nameof(IAnimationValueInterface)} but got {propertyValue?.GetType().Name ?? "null"}");
+                        }
                     }
                 }
 
                 // These are very weird hacks by Telltale. What an...interesting system
                 // If for some reason the serializer for the baseclass of type `AnimationValueInterfaceBase` is not called,
                 // we read its values - the Symbol (CRC64 in this case) and the flags.
-                foreach (IAnimatedValueInterface value in obj.Values)
+                foreach (IAnimationValueInterface value in obj.Values)
                 {
                     // TODO: Set other flags?
                     value.AnimationValueInterfaceBase.Flags = stream.ReadInt32();
@@ -126,16 +140,16 @@ public class Animation
 
                 if (isNotInterface == 0)
                 {
-                    foreach (IAnimatedValueInterface value in obj.Values)
+                    // TODO: Symbol vs String
+                    foreach (IAnimationValueInterface value in obj.Values)
                     {
-                        value.AnimationValueInterfaceBase.Name = stream.ReadSymbol();
+                        value.AnimationValueInterfaceBase.NameS = stream.ReadSymbol();
                     }
                 }
             }
 
             stream.EndBlock();
         }
-
 
         public void SerializeOldAnimation(ref Animation obj, MetaStream stream)
         {
@@ -163,8 +177,8 @@ public class Animation
                     {
                         object? propertyValue = null;
 
-                        serializer.PreSerialize(ref propertyValue, stream);
-                        serializer.Serialize(ref propertyValue, stream);
+                        serializer.PreSerialize(ref propertyValue, stream, typeSymbol);
+                        serializer.Serialize(ref propertyValue, stream, typeSymbol);
                         numTotalValues++;
                     }
                 }

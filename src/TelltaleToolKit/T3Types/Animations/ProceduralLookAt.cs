@@ -5,8 +5,8 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 
 namespace TelltaleToolKit.T3Types.Animations;
 
-// TODO: .look Files
-[MetaSerializer(typeof(Serializer))]
+// .look Files
+[MetaSerializer(typeof(MetaClassSerializer<ProceduralLookAt>))]
 public class ProceduralLookAt
 {
     [MetaMember("Baseclass_Animation")]
@@ -49,19 +49,24 @@ public class ProceduralLookAt
     public float LastUdWeight { get; set; }
 
     [MetaMember("mLookAtComputeStage")]
-    public EnumLookAtComputeStage LookAtComputeStage { get; set; }
+    public EnumLookAtComputeStage LookAtComputeStageE { get; set; }
 
+    [MetaSerializer(typeof(MetaClassSerializer<EnumLookAtComputeStage>))]
     public struct EnumLookAtComputeStage
     {
         [MetaMember("mVal")]
-        public int Val { get; set; }
-        // 0 = idle look at
-        // 1 = dialog chore look at
-        // 2 = final look at
+        public LookAtComputeStage Val { get; set; }
+    }
+
+    [MetaSerializer(typeof(EnumSerializer<LookAtComputeStage>))]
+    public enum LookAtComputeStage
+    {
+        IdleLookAt = 0,
+        DialogChoreLookAt = 1,
+        FinalLookAt = 2
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<Constraint>))]
-
     public struct Constraint
     {
         [MetaMember("mMaxLeftRight")]
@@ -83,33 +88,18 @@ public class ProceduralLookAt
         public float UpDownFixedOffset { get; set; }
     }
 
-    public class Serializer : MetaSerializer<ProceduralLookAt>
-    {
-        public override void Serialize(ref ProceduralLookAt obj, MetaStream stream)
-        {
-            // TODO: Check with meta stream version.
-            if (stream.Mode is MetaStreamMode.Write)
-            {
-                if (stream.Params.StreamVersion >= 5)
-                {
-                    return;
-                }
-
-                Animation objAnimation = obj.Animation;
-                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref objAnimation, stream);
-            }
-            else if (stream.Mode is MetaStreamMode.Read)
-            {
-                if (stream.Params.StreamVersion >= 5)
-                {
-                    return;
-                }
-
-                var animation = new Animation();
-                Toolkit.Instance.GetSerializer<Animation>().Serialize(ref animation, stream);
-
-                obj.Animation = animation;
-            }
-        }
-    }
+    // public class Serializer : MetaSerializer<ProceduralLookAt>
+    // {
+    //     public override void Serialize(ref ProceduralLookAt obj, MetaStream stream, MetaClassType? type = null)
+    //     {
+    //         if (stream.Mode is MetaStreamMode.Write)
+    //         {
+    //
+    //         }
+    //         else if (stream.Mode is MetaStreamMode.Read)
+    //         {
+    //
+    //         }
+    //     }
+    // }
 }

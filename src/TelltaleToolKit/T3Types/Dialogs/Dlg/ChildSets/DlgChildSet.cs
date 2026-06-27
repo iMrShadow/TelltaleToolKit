@@ -16,13 +16,10 @@ public class DlgChildSet
     {
         public override void PreSerialize(ref DlgChildSet? obj, MetaStream stream, MetaClassType? type = null)
         {
-            if (obj is null)
-            {
-                obj = new DlgChildSet();
-            }
+            obj ??= new DlgChildSet();
         }
 
-        public override void Serialize(ref DlgChildSet obj, MetaStream stream)
+        public override void Serialize(ref DlgChildSet obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -35,15 +32,15 @@ public class DlgChildSet
 
                 for (var i = 0; i < numChildren; i++)
                 {
-                    MetaClassType? type = stream.ReadMetaClassType();
-                    if (type == null)
+                    MetaClassType? typeS = stream.ReadMetaClassType();
+                    if (typeS == null)
                         throw new InvalidOperationException("[DlgChildSet] Type is not registered.");
 
-                    MetaSerializer childSerializer = Toolkit.Instance.GetSerializer(type.LinkingType);
+                    MetaSerializer childSerializer = Toolkit.Instance.GetSerializer(typeS.LinkingType);
 
                     object? dlgChild = null;
-                    childSerializer.PreSerialize(ref dlgChild, stream);
-                    childSerializer.Serialize(ref dlgChild, stream);
+                    childSerializer.PreSerialize(ref dlgChild, stream, typeS);
+                    childSerializer.Serialize(ref dlgChild, stream, typeS);
 
                     if (dlgChild is IDlgChild child)
                         obj.Children.Add(child);

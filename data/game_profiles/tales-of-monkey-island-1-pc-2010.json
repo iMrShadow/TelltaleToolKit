@@ -1,0 +1,10 @@
+{
+    "name": "Tales of Monkey Island 1 (GOG, PC)",
+    "description": "",
+    "blowfishKey": "MonkeyIsland101",
+    "isTtarch2": false,
+    "ttarchVersion": 0,
+    "luaVersion": "5.1.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
+}

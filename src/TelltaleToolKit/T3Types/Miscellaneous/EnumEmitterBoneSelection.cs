@@ -7,10 +7,12 @@ public struct EnumEmitterBoneSelection
 {
     [MetaMember("mVal")]
     public EmitterBoneSelection Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmitterBoneSelection>))]
-public enum EmitterBoneSelection
-{
-    // TODO:
+
+    [MetaSerializer(typeof(EnumSerializer<EmitterBoneSelection>))]
+    public enum EmitterBoneSelection
+    {
+        All = 0x1,
+        Children = 0x2
+    }
 }

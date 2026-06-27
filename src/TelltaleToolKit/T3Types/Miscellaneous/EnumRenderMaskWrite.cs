@@ -9,13 +9,12 @@ public struct EnumRenderMaskWrite
 {
     [MetaMember("mVal")]
     public RenderMaskWrite Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<RenderMaskWrite>))]
-public enum RenderMaskWrite
-{
-    //       eRenderMaskWrite_
-    None = 0x1,
-    Set = 0x2,
-    Clear = 0x3,
+    [MetaSerializer(typeof(EnumSerializer<RenderMaskWrite>))]
+    public enum RenderMaskWrite
+    {
+        None = 0x1,
+        Set = 0x2,
+        Clear = 0x3
+    }
 }

@@ -1,10 +1,10 @@
 {
-    "name": "Poker Night 2",
+    "name": "poker-night-2-2011",
     "description": "",
-    "blowfishKey": "Batman",
+    "blowfishKey": "CelebrityPoker2",
     "isTtarch2": false,
-    "ttarchVersion": 9,
-    "luaVersion": "5.2.3",
-    "streamVersion": 6,
-    "enableOodleCompression": true
+    "ttarchVersion": 7,
+    "luaVersion": "5.1.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
 }

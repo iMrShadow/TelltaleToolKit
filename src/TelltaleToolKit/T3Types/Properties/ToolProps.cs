@@ -9,17 +9,16 @@ public class ToolProps
     [MetaMember("mbHasProps")]
     public bool HasProps { get; set; }
 
+    public PropertySet Properties { get; set; } = new();
+
     public class Serializer : MetaSerializer<ToolProps>
     {
         public override void PreSerialize(ref ToolProps? obj, MetaStream stream, MetaClassType? type = null)
         {
-            if (obj is null)
-            {
-                obj = new ToolProps();
-            }
+            obj ??= new ToolProps();
         }
 
-        public override void Serialize(ref ToolProps obj, MetaStream stream)
+        public override void Serialize(ref ToolProps obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
@@ -27,16 +26,16 @@ public class ToolProps
                 obj.HasProps = false;
                 stream.Write(obj.HasProps);
             }
-            else if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 obj.HasProps = stream.ReadBoolean();
 
                 if (!obj.HasProps)
                     return;
 
-                var runtimeProperties = new PropertySet();
-                Toolkit.Instance.GetSerializer<PropertySet>().Serialize(ref runtimeProperties, stream);
-                throw new InvalidDataException("This type has tool properties. Please report this to the author!");
+                var properties = new PropertySet();
+                stream.Serialize(ref properties);
+                obj.Properties = properties;
             }
         }
     }

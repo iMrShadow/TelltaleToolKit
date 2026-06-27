@@ -9,5 +9,5 @@ public enum T3SamplerStateValue
     BorderColor = 0x1E00, // 7680
     GammaCorrect = 0x2000, // 8192
     MipBias = 0x3FC000, // 4177920
-    Count = 0x6,
+    Count = 0x6
 }

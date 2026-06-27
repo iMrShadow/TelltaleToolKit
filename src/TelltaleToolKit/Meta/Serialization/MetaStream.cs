@@ -36,6 +36,10 @@ public abstract class MetaStream : IDisposable
 
     protected Stream BaseStream { get; set; } = null!;
 
+    protected int DebugSectionDepth = 0;
+
+    public int DefaultSectionDepth = 0;
+
     /// <summary>
     ///     Gets the mode of this stream (read or write).
     /// </summary>
@@ -87,44 +91,49 @@ public abstract class MetaStream : IDisposable
         => new JsonMetaStreamWriter(outputStream, configuration);
 
 
-    public virtual void BeginAsyncSection()
+    public virtual bool BeginAsyncSection()
     {
-        if (_currentSection is SectionType.Async || Params.StreamVersion < 4)
-        {
-            return;
-        }
-
-        SetSection(SectionType.Async);
+        return _currentSection == SectionType.Default && SetSection(SectionType.Async);
     }
 
     public virtual void EndAsyncSection()
     {
-        if (_currentSection is not SectionType.Async || Params.StreamVersion < 4)
+        if (_currentSection == SectionType.Async)
         {
-            return;
+            SetSection(SectionType.Default);
         }
-
-        SetSection(SectionType.Default);
     }
 
-    public virtual void BeginDebugSection()
+    public virtual bool BeginDebugSection()
     {
-        if (_currentSection is SectionType.Debug || Params.StreamVersion < 4)
+        if ((_currentSection is SectionType.Default && DebugSectionDepth == 0 && SetSection(SectionType.Debug))
+            || (_currentSection == SectionType.Debug && DebugSectionDepth >= 0))
         {
-            return;
+            if (Mode is MetaStreamMode.Read && Sections[2].Stream?.Length == 0)
+            {
+                SetSection(SectionType.Default);
+                return false;
+            }
+
+            DebugSectionDepth++;
+            return true;
         }
 
-        SetSection(SectionType.Debug);
+        return false;
     }
 
     public virtual void EndDebugSection()
     {
-        if (_currentSection is not SectionType.Debug || Params.StreamVersion < 4)
+        if (_currentSection != SectionType.Debug || DebugSectionDepth <= 0)
         {
             return;
         }
 
-        SetSection(SectionType.Default);
+        DebugSectionDepth--;
+        if (DebugSectionDepth == 0)
+        {
+            SetSection(SectionType.Default);
+        }
     }
 
     /// <summary>
@@ -132,26 +141,32 @@ public abstract class MetaStream : IDisposable
     ///     in JSON streams this labels the next value within an object container.
     /// </summary>
     /// <param name="name">The property/field name.</param>
-    public virtual void Key(string name) { }
+    public virtual void Key(string name)
+    {
+    }
 
     /// <summary>
     ///     Begins a named object or array container.
     ///     No-op in binary streams. In JSON streams emits the opening brace or bracket.
     /// </summary>
-    public virtual void BeginObject(string name, bool isArray = false) { }
+    public virtual void BeginObject(string name, bool isArray = false)
+    {
+    }
 
     /// <summary>
     ///     Ends the most recently opened named container.
     ///     No-op in binary streams. In JSON streams emits the closing brace or bracket.
     /// </summary>
-    public virtual void EndObject(string name) { }
+    public virtual void EndObject(string name)
+    {
+    }
 
     /// <summary>
     ///     Called when the current section changes. Implementations should set up their reader/writer
     ///     to point to the new section's stream.
     /// </summary>
     /// <param name="section">The section that is now active.</param>
-    protected abstract void SetSection(SectionType section);
+    protected abstract bool SetSection(SectionType section);
 
     public abstract void BeginBlock();
 
@@ -167,8 +182,17 @@ public abstract class MetaStream : IDisposable
     {
         if (!Params.CanModifySerializedClassesList)
         {
-            return Params.VersionInfo
-                .FirstOrDefault(versionInfo => versionInfo.GetMetaClassType()?.LinkingType == type)?.GetMetaClass();
+            var versionInfo = Params.VersionInfo
+                .FirstOrDefault(versionInfo => versionInfo.GetMetaClassType()?.LinkingType == type);
+
+            if (versionInfo == null)
+                Toolkit.Instance.Logger.LogError($"MetaClass not found for type: {type}");
+
+            var metaClass = versionInfo?.GetMetaClass();
+
+            if (metaClass == null)
+                Toolkit.Instance.Logger.LogError($"MetaClass not registered for type: {type}");
+            return metaClass;
         }
 
         return Params.Workspace?.GetMetaClassDescription(type);
@@ -264,12 +288,6 @@ public abstract class MetaStream : IDisposable
     public abstract void Serialize(ref sbyte value);
 
     /// <summary>
-    ///     Serializes the Symbol class.
-    /// </summary>
-    /// <param name="value">The value to serialize</param>
-    public abstract void Serialize(ref Symbol value);
-
-    /// <summary>
     ///     Serializes the specified byte array.
     /// </summary>
     /// <param name="values">The buffer to serialize.</param>
@@ -284,9 +302,9 @@ public abstract class MetaStream : IDisposable
             return false;
         }
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 3; i += 2)
         {
-            //for each section (default,async,debug)
+            //for each section (default,debug,async)
             SectionInfo currentSect = Sections[i];
             if (currentSect.Stream == null)
             {
@@ -295,7 +313,19 @@ public abstract class MetaStream : IDisposable
 
             if (currentSect.Stream.Position != currentSect.Stream.Length)
             {
-                return false;
+                if (i == 2)
+                {
+                    Toolkit.Instance.Logger.LogWarning(@"Unexpected end of debug section (non-critical). Position: " +
+                                                       currentSect.Stream.Position +
+                                                       @" Length: " + currentSect.Stream.Length);
+                }
+                else
+                {
+                    Toolkit.Instance.Logger.LogError(@"Unexpected end of stream. Position: " +
+                                                     currentSect.Stream.Position +
+                                                     @" Length: " + currentSect.Stream.Length);
+                    return false;
+                }
             }
         }
 
@@ -442,6 +472,8 @@ public abstract class MetaStream : IDisposable
 
         public long CompressedSize = 0;
         public bool IsCompressed = false;
+
+        public bool IsEnabled = true;
 
         // Section data stream
         public Stream? Stream = null;

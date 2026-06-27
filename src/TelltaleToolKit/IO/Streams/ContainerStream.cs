@@ -52,11 +52,10 @@ public sealed class ContainerStream : Stream
     /// </summary>
     /// <param name="source">Raw file stream, positioned at byte 0. Not disposed by this class.</param>
     /// <param name="blowfishKey">Blowfish key for this game's archives.</param>
-    public ContainerStream(Stream source, string blowfishKey, IChunkCache? cache = null)
+    public ContainerStream(Stream source, string? blowfishKey = null, IChunkCache? cache = null)
     {
         _source = source ?? throw new ArgumentNullException(nameof(source));
-        _blowfishKey = blowfishKey ?? throw new ArgumentNullException(nameof(blowfishKey));
-        _cache = cache ?? new SinglePageCache();
+        _cache = cache ?? new LruChunkCache();
 
         using BinaryReader reader = new(source, Encoding.UTF8, true);
 
@@ -74,10 +73,18 @@ public sealed class ContainerStream : Stream
             _ => Compression.Mode.Deflate
         };
 
+        bool isEncrypted = ContainerMagic is ContainerMagic.TTCE or ContainerMagic.TTCe;
+
+        if (isEncrypted && blowfishKey is null)
+        {
+            throw new ArgumentNullException(nameof(blowfishKey),
+                "Blowfish key is required for encrypted containers.");
+        }
+
         Params = new ContainerStreamParams
         {
-            Encrypt = ContainerMagic is ContainerMagic.TTCE or ContainerMagic.TTCe,
-            BlowfishKey = blowfishKey,
+            Encrypt = isEncrypted,
+            BlowfishKey = blowfishKey!,
             Algorithm = algorithm
         };
 

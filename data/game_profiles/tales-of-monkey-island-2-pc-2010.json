@@ -1,0 +1,10 @@
+{
+    "name": "tales-of-monkey-island-2-pc-2010",
+    "description": "",
+    "blowfishKey": "MonkeyIsland102",
+    "isTtarch2": false,
+    "ttarchVersion": 8,
+    "luaVersion": "5.1.2",
+    "streamVersion": 3,
+    "enableOodleCompression": false
+}

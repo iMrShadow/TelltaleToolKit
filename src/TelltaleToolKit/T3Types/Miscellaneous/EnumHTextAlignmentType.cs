@@ -9,14 +9,13 @@ public struct EnumHTextAlignmentType
 {
     [MetaMember("mVal")]
     public HTextAlignmentType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HTextAlignmentType>))]
-public enum HTextAlignmentType
-{
-    //    eHTextAlignment_
-    None = 0,
-    LeftJustified = 1,
-    Centered = 2,
-    RightJustified = 3,
+    [MetaSerializer(typeof(EnumSerializer<HTextAlignmentType>))]
+    public enum HTextAlignmentType
+    {
+        None = 0,
+        LeftJustified = 1,
+        Centered = 2,
+        RightJustified = 3
+    }
 }

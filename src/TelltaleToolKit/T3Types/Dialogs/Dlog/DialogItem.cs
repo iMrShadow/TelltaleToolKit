@@ -3,6 +3,7 @@ using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Dialogs.Dlog;
 using TelltaleToolKit.T3Types.Languages.Landb;
+using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Dialogs;
 
@@ -22,10 +23,10 @@ public class DialogItem : IDialogBase
     public LanguageResProxy DispTextProxy { get; set; } = new();
 
     [MetaMember("mPlaybackMode")]
-    public int PlaybackMode { get; set; } // TODO Change to PlayBackMode
+    public PlaybackMode PlaybackModeE { get; set; }
 
     [MetaMember("mPlaybackMode")]
-    public EnumPlaybackMode PlaybackModeStruct { get; set; } = new(); // TODO Change to PlayBackMode
+    public EnumPlaybackMode PlaybackModeStruct { get; set; } = new();
 
     [MetaMember("mEnterScript")]
     public string EnterScript { get; set; } = string.Empty;
@@ -57,15 +58,24 @@ public class DialogItem : IDialogBase
     [MetaMember("mbCutscene")]
     public bool Cutscene { get; set; }
 
+    [MetaMember("mDispTextProxy")]
+    public LanguageResourceProxy  mDispTextProxy { get; set; }
+
+    [MetaMember("mhTexture")]
+    public Handle<T3Texture> mhTexture { get; set; }
+
+    [MetaMember("mUserData")]
+    public Symbol mUserData { get; set; }
+
     [MetaSerializer(typeof(MetaClassSerializer<EnumPlaybackMode>))]
     public struct EnumPlaybackMode
     {
         [MetaMember("mVal")]
-        public PlaybackModeEnum Value { get; set; }
+        public PlaybackMode Value { get; set; }
     }
 
-    [MetaSerializer(typeof(EnumSerializer<PlaybackModeEnum>))]
-    public enum PlaybackModeEnum
+    [MetaSerializer(typeof(EnumSerializer<PlaybackMode>))]
+    public enum PlaybackMode
     {
         sequential_looping = 0x0,
         sequential_repeat_final = 0x1,

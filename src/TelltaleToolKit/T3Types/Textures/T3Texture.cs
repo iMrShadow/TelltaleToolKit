@@ -8,18 +8,21 @@ using TelltaleToolKit.T3Types.Textures.T3Types;
 
 namespace TelltaleToolKit.T3Types.Textures;
 
+/// <summary>
+///     Main class for .d3dtx textures. (It is merged with D3DTexture)
+/// </summary>
 [MetaSerializer(typeof(Serializer))]
 public class T3Texture
 {
     // Most members here are before Poker Night 2
     /// <summary>
-    /// The name of the texture.
+    ///     The name of the texture.
     /// </summary>
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// The import name of the texture. (The original file used for this texture.)
+    ///     The import name of the texture. (The original file used for this texture.)
     /// </summary>
     [MetaMember("mImportName")]
     public string ImportName { get; set; } = string.Empty;
@@ -43,22 +46,25 @@ public class T3Texture
     public bool EmbedMipMaps { get; set; } = false;
 
     /// <summary>
-    /// The number of mip map levels in the texture.
+    ///     The number of mip map levels in the texture.
     /// </summary>
     [MetaMember("mNumMipLevels")]
     public uint NumMipLevels { get; set; } = 1;
 
     [MetaMember("mD3DFormat")]
-    public uint D3DFormat { get; set; } = 0;
+    public uint D3DFormatU { get; set; } = 0;
+
+    [MetaMember("mD3DFormat")]
+    public int D3DFormatI { get; set; } = 0;
 
     /// <summary>
-    /// The pixel width of the texture.
+    ///     The pixel width of the texture.
     /// </summary>
     [MetaMember("mWidth")]
     public uint Width { get; set; } = 1;
 
     /// <summary>
-    /// The pixel height of the texture.
+    ///     The pixel height of the texture.
     /// </summary>
     [MetaMember("mHeight")]
     public uint Height { get; set; } = 1;
@@ -67,13 +73,40 @@ public class T3Texture
     public int Type { get; set; } = 0;
 
     [MetaMember("mTextureDataFormats")]
-    public Flags TextureDataFormats { get; set; } = new Flags();
+    public Flags TextureDataFormats { get; set; } = new();
+
+    [MetaMember("mFlags")]
+    public Flags Flags { get; set; } = new();
+
+    [MetaMember("mWiiTextureFormat")]
+    public int WiiTextureFormat { get; set; }
+
+    [MetaMember("mWiiForceWidth")]
+    public uint WiiForceWidth { get; set; }
+
+    [MetaMember("mWiiForceHeight")]
+    public uint WiiForceHeight { get; set; }
+
+    [MetaMember("mbWiiForceUncompressed")]
+    public bool WiiForceUncompressed { get; set; }
 
     [MetaMember("mTplTexutreDataSize")]
-    public int TplTextureDataSize { get; set; } = 0;
+    public int TplTextureDataSize { get; set; }
+
+    [MetaMember("mTplAlphaDataSize")]
+    public int TplAlphaDataSize { get; set; }
+
+    [MetaMember("mJPEGTextureDataSize")]
+    public int JPEGTextureDataSize { get; set; }
 
     [MetaMember("mAlphaMode")]
     public int AlphaMode { get; set; } = 0;
+
+    [MetaMember("mExactAlphaMode")]
+    public int ExactAlphaMode { get; set; } = 0;
+
+    [MetaMember("mNormalMapFmt")]
+    public uint NormalMapFmt { get; set; } = 0;
 
     [MetaMember("mbAlphaHDR")]
     public bool AlphaHdr { get; set; } = false;
@@ -99,164 +132,161 @@ public class T3Texture
     // ===================================================
 
     /// <summary>
-    /// The meta version of this texture.
+    ///     The meta version of this texture.
     /// </summary>
     [MetaMember("mVersion")]
     public int Version { get; set; }
 
     /// <summary>
-    /// The sampler state, bitflag value that contains values from T3SamplerStateValue.
+    ///     The sampler state, bitflag value that contains values from T3SamplerStateValue.
     /// </summary>
     [MetaMember("mSamplerState")]
     public T3SamplerStateBlock SamplerStateBlock { get; set; } = new();
 
     /// <summary>
-    /// The platform type for this texture.
+    ///     The platform type for this texture.
     /// </summary>
     [MetaMember("mPlatform")]
-    public EnumPlatformType PlatformType { get; set; } = new EnumPlatformType { Value = T3Types.PlatformType.None };
+    public EnumPlatformType PlatformType { get; set; } = new() { Value = T3Types.PlatformType.None };
 
     /// <summary>
-    /// The import scale of the texture file.
+    ///     The import scale of the texture file.
     /// </summary>
     [MetaMember("mImportScale")]
     public float ImportScale { get; set; } = 1.0f;
 
     /// <summary>
-    /// The import specular power of the texture;
+    ///     The import specular power of the texture;
     /// </summary>
     [MetaMember("mImportSpecularPower")]
     public float ImportSpecularPower { get; set; }
 
     /// <summary>
-    /// Whether or not the d3dtx texture contains properties. This was used for their runtime editor. (Always false)
+    ///     Whether or not the d3dtx texture contains properties. This was used for their runtime editor. (Always false)
     /// </summary>
     [MetaMember("mToolProps")]
     public ToolProps ToolProps { get; set; } = new();
 
     /// <summary>
-    /// The depth of a volume texture.
+    ///     The depth of a volume texture.
     /// </summary>
     [MetaMember("mDepth")]
     public uint Depth { get; set; } = 1;
 
     /// <summary>
-    /// The array size of this texture.
+    ///     The array size of this texture.
     /// </summary>
     [MetaMember("mArraySize")]
     public uint ArraySize { get; set; } = 1;
 
     /// <summary>
-    /// The pixel format for this texture.
+    ///     The pixel format for this texture.
     /// </summary>
     [MetaMember("mSurfaceFormat")]
     public T3SurfaceFormat SurfaceFormat { get; set; } = T3SurfaceFormat.Unknown;
 
     /// <summary>
-    /// The texture layout for this texture.
+    ///     The texture layout for this texture.
     /// </summary>
     [MetaMember("mTextureLayout")]
     public T3TextureLayout TextureLayout { get; set; } = T3TextureLayout.Texture2D;
 
     /// <summary>
-    /// The gamma of the texture.
+    ///     The gamma of the texture.
     /// </summary>
     [MetaMember("mSurfaceGamma")]
     public T3SurfaceGamma SurfaceGamma { get; set; } = T3SurfaceGamma.Unknown;
 
     /// <summary>
-    /// The multisample (anisotropic) level of the texture.
+    ///     The multisample (anisotropic) level of the texture.
     /// </summary>
     [MetaMember("mSurfaceMultisample")]
     public T3SurfaceMultisample SurfaceMultisample { get; set; } = T3SurfaceMultisample.None;
 
     /// <summary>
-    /// The resource usage of the texture.
+    ///     The resource usage of the texture.
     /// </summary>
     [MetaMember("mResourceUsage")]
     public T3ResourceUsage ResourceUsage { get; set; }
 
     /// <summary>
-    /// The type of the texture. The enum version is for modern games.
+    ///     The type of the texture. The enum version is for modern games.
     /// </summary>
     [MetaMember("mType")]
     public TextureType TypeEnum { get; set; } = TextureType.Standard;
 
     /// <summary>
-    /// [4 bytes] Defines the format of the normal map.
+    ///     [4 bytes] Defines the format of the normal map.
     /// </summary>
     [MetaMember("mNormalMapFormat")]
     public int NormalMapFormat { get; set; }
 
     /// <summary>
-    /// Describes if the color channels were switched. (Usually used for normal maps, console textures and others.)
+    ///     Describes if the color channels were switched. (Usually used for normal maps, console textures and others.)
     /// </summary>
     [MetaMember("mSwizzle")]
-    public RenderSwizzleParams Swizzle { get; set; } = new RenderSwizzleParams { Channel0 = 0, Channel1 = 1, Channel2 = 2, Channel3 = 3 };
+    public RenderSwizzleParams Swizzle { get; set; } = new() { Channel0 = 0, Channel1 = 1, Channel2 = 2, Channel3 = 3 };
 
     /// <summary>
-    /// The glossiness of the texture.
+    ///     The glossiness of the texture.
     /// </summary>
     [MetaMember("mSpecularGlossExponent")]
     public float SpecularGlossExponent { get; set; } = 8.0f;
 
     /// <summary>
-    /// The brightness scale of the texture. (used for lightmaps)
+    ///     The brightness scale of the texture. (used for lightmaps)
     /// </summary>
     [MetaMember("mHDRLightmapScale")]
     public float HdrLightmapScale { get; set; } = 6.0f;
 
     /// <summary>
-    /// The toon cutoff gradient of the texture.
+    ///     The toon cutoff gradient of the texture.
     /// </summary>
     [MetaMember("mToonGradientCutoff")]
     public float ToonGradientCutoff { get; set; } = -1.0f;
 
     /// <summary>
-    /// The alpha type of the texture. (or what will have).
+    ///     The alpha type of the texture. (or what will have).
     /// </summary>
     [MetaMember("mAlphaMode")]
     public AlphaMode AlphaModeEnum { get; set; } = Textures.AlphaMode.Unknown;
 
     /// <summary>
-    /// The color range of the texture.
+    ///     The color range of the texture.
     /// </summary>
     [MetaMember("mColorMode")]
-    public ColorMode ColorMode { get; set; } = ColorMode.eTxColorUnknown;
+    public ColorMode ColorMode { get; set; } = ColorMode.Unknown;
 
     /// <summary>
-    /// A vector, defines the UV offset values when the shader on a material samples the texture.
+    ///     A vector, defines the UV offset values when the shader on a material samples the texture.
     /// </summary>
     [MetaMember("mUVOffset")]
     public Vector2 UvOffset { get; set; } = Vector2.Zero;
 
     /// <summary>
-    /// A vector, defines the UV scale values when the shader on a material samples the texture.
+    ///     A vector, defines the UV scale values when the shader on a material samples the texture.
     /// </summary>
     [MetaMember("mUVScale")]
     public Vector2 UvScale { get; set; } = Vector2.One;
 
     /// <summary>
-    /// An array containing frame names. (Usually unused)
+    ///     An array containing frame names. (Usually unused)
     /// </summary>
     [MetaMember("mArrayFrameNames")]
     public List<Symbol> ArrayFrameNames { get; set; } = [];
 
     /// <summary>
-    /// An array containing a toon gradient region. (Usually unused)
+    ///     An array containing a toon gradient region. (Usually unused)
     /// </summary>
     [MetaMember("mToonRegions")]
     public List<T3ToonGradientRegion> ToonRegions { get; set; } = [];
 
-
     public StreamHeader RegionMainHeader { get; set; }
 
-
     /// <summary>
-    /// An array containing each pixel region in the texture.
+    ///     An array containing each pixel region in the texture.
     /// </summary>
     public List<RegionStreamHeader> RegionHeaders { get; set; } = [];
-
 
     public List<AuxiliaryData> AuxilaryData { get; set; } = [];
 
@@ -264,6 +294,11 @@ public class T3Texture
     private byte[] WiiColorData { get; set; } = []; // Wii color data.
     private byte[] WiiAlphaData { get; set; } = []; // Wii alpha data.
     private byte[] JpegData { get; set; } = []; // JPEG data. This is always nill.
+
+
+    public T3Texture? Texture0x8;
+    public T3Texture? Texture0x10;
+    public T3Texture? Texture0x20;
 
     // public ClassInstance? T3Texture { get; set; } // The main header of d3dtx.
     // public ClassInstance? StreamHeader { get; set; } // The stream header (appears after Poker Night 2).
@@ -275,7 +310,9 @@ public class T3Texture
     public void Decrypt(Blowfish blowfish)
     {
         if (!IsEncrypted)
+        {
             return;
+        }
 
         const int maxEncryptedTextureBufferSize = 2048;
         int bytesToDecipher = Math.Min(maxEncryptedTextureBufferSize, DdsTextureData.Length);
@@ -286,13 +323,44 @@ public class T3Texture
     public void Encrypt(Blowfish blowfish)
     {
         if (IsEncrypted)
+        {
             return;
+        }
 
         const int maxEncryptedTextureBufferSize = 2048;
         int bytesToDecipher = Math.Min(maxEncryptedTextureBufferSize, DdsTextureData.Length);
         blowfish.Encipher(DdsTextureData, bytesToDecipher);
         IsEncrypted = true;
     }
+
+    /// <summary>
+    ///     Determines if the texture layout represents a cubemap or a cubemap array.
+    /// </summary>
+    /// <returns>True if the texture is a cubemap or cubemap array; otherwise, false.</returns>
+    public bool IsCubemap()
+        => TextureLayout is T3TextureLayout.TextureCubemap or T3TextureLayout.TextureCubemapArray;
+
+    /// <summary>
+    ///     Determines if the texture layout represents a volumetric (3D) texture.
+    /// </summary>
+    /// <returns>True if the texture is a 3D volumemap; otherwise, false.</returns>
+    public bool IsVolumemap()
+        => TextureLayout == T3TextureLayout.Texture3D;
+
+    /// <summary>
+    ///     Determines if the texture layout represents an array texture (2D array or cubemap array).
+    /// </summary>
+    /// <returns>True if the texture is a 2D array or cubemap array; otherwise, false.</returns>
+    public bool IsArrayTexture()
+        => TextureLayout is T3TextureLayout.Texture2DArray or T3TextureLayout.TextureCubemapArray;
+
+    /// <summary>
+    ///     Indicates whether this texture uses the legacy D3DTX format.
+    ///     The first version to not use this format is version 3, assuming version 1 and 2 do not exist.
+    /// </summary>
+    /// <returns>True if the texture version is 2 or below; otherwise, false.</returns>
+    public bool IsLegacyD3DTX()
+        => Version <= 2;
 
     [MetaSerializer(typeof(MetaClassSerializer<StreamHeader>))]
     public struct StreamHeader
@@ -342,14 +410,16 @@ public class T3Texture
     {
         private static readonly MetaClassSerializer<T3Texture> s_metaClassT3TextureSerializer = new();
 
-        public override void PreSerialize(ref T3Texture? obj, MetaStream stream, MetaClassType? type = null)
-        {
+        public override void PreSerialize(ref T3Texture? obj, MetaStream stream, MetaClassType? type = null) =>
             obj ??= new T3Texture();
-        }
 
-        public override void Serialize(ref T3Texture obj, MetaStream stream)
+        public override void Serialize(ref T3Texture obj, MetaStream stream, MetaClassType? type = null)
         {
+            // Don't forget for other textures...
+            obj.TplTextureDataSize = obj.TplTextureData.Length;
+
             // Default Serializer
+            s_metaClassT3TextureSerializer.PreSerialize(ref obj!, stream);
             s_metaClassT3TextureSerializer.Serialize(ref obj, stream);
 
             // The default serializer will throw if there is no serialized T3Texture.
@@ -370,13 +440,12 @@ public class T3Texture
                     };
 
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    Toolkit.Instance.GetSerializer<StreamHeader>().Serialize(ref streamHeader, stream);
+                    stream.Serialize(ref streamHeader);
 
                     foreach (RegionStreamHeader region in obj.RegionHeaders)
                     {
                         RegionStreamHeader regionStreamHeader = region;
-                        Toolkit.Instance.GetSerializer<RegionStreamHeader>()
-                            .Serialize(ref regionStreamHeader, stream);
+                        stream.Serialize(ref regionStreamHeader);
                     }
 
                     // One would assume that we can combine the loops into one.
@@ -407,22 +476,21 @@ public class T3Texture
                     }
                 }
             }
-            else if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 // This is easier than checking for region stream headers. That can also work.
                 if (classDescription.ContainsMember("mVersion"))
                 {
                     StreamHeader streamHeader = obj.RegionMainHeader;
-                    Toolkit.Instance.GetSerializer<StreamHeader>()?.Serialize(ref streamHeader, stream);
+                    stream.Serialize(ref streamHeader);
                     obj.RegionMainHeader = streamHeader;
 
                     obj.RegionHeaders = new List<RegionStreamHeader>(streamHeader.RegionCount);
 
-                    for (var i = 0; i < streamHeader.RegionCount; i++)
+                    for (int i = 0; i < streamHeader.RegionCount; i++)
                     {
-                        var regionStreamHeader = new RegionStreamHeader();
-                        Toolkit.Instance.GetSerializer<RegionStreamHeader>()
-                            .Serialize(ref regionStreamHeader, stream);
+                        RegionStreamHeader regionStreamHeader = new();
+                        stream.Serialize(ref regionStreamHeader);
                         obj.RegionHeaders.Add(regionStreamHeader);
                     }
 
@@ -432,10 +500,10 @@ public class T3Texture
                         obj.AuxilaryData = new List<AuxiliaryData>(streamHeader.AuxDataCount);
 
                         stream.BeginBlock();
-                        for (var i = 0; i < obj.RegionMainHeader.AuxDataCount; i++)
+                        for (int i = 0; i < obj.RegionMainHeader.AuxDataCount; i++)
                         {
-                            var aux = new AuxiliaryData();
-                            Toolkit.Instance.GetSerializer<AuxiliaryData>().Serialize(ref aux, stream);
+                            AuxiliaryData aux = new();
+                            stream.Serialize(ref aux);
                             obj.AuxilaryData.Add(aux);
                         }
 
@@ -462,20 +530,42 @@ public class T3Texture
                 }
                 else
                 {
-                    if (!obj.HasTextureData)
+                    if (obj.HasTextureData)
                     {
-                        return;
+                        int bufferSize = stream.ReadInt32();
+                        obj.DdsTextureData = stream.ReadBytes(bufferSize);
                     }
 
-                    int bufferSize = stream.ReadInt32();
-                    obj.DdsTextureData = stream.ReadBytes(bufferSize);
+                    // TODO: Add suport Xbox, PS3, Wii, etc.
+                    // TODO: Verify if this is correct
 
-                    if (obj.TplTextureDataSize > 0)
+                    if (obj.TplTextureDataSize > 0 && obj.TextureDataFormats.Has(0x4))
                     {
                         obj.TplTextureData = new byte[obj.TplTextureDataSize];
 
                         obj.TplTextureData = stream.ReadBytes(obj.TplTextureDataSize);
                     }
+
+                    // what the fuck
+                    if (obj.TextureDataFormats.Has(0x8))
+                    {
+                        stream.Serialize(ref obj.Texture0x8);
+                    }
+                    if (obj.TextureDataFormats.Has(0x10))
+                    {
+                        stream.Serialize(ref obj.Texture0x10);
+                    }
+                    if (obj.TextureDataFormats.Has(0x20))
+                    {
+                        stream.Serialize(ref obj.Texture0x20);
+                    }
+
+                    if (obj.TextureDataFormats.Has(0x40))
+                    {
+                        obj.WiiColorData = new byte[obj.WiiForceHeight * obj.WiiForceWidth * 3];
+                        stream.ReadBytes(obj.WiiColorData);
+                    }
+                    // 0x40 is raw RGB data buffer
                 }
             }
         }
@@ -504,33 +594,4 @@ public class T3Texture
         [MetaMember("mData")]
         public BinaryBuffer Data { get; set; } = new();
     }
-
-    /// <summary>
-    /// Determines if the texture layout represents a cubemap or a cubemap array.
-    /// </summary>
-    /// <returns>True if the texture is a cubemap or cubemap array; otherwise, false.</returns>
-    public bool IsCubemap()
-        => TextureLayout is T3TextureLayout.TextureCubemap or T3TextureLayout.TextureCubemapArray;
-
-    /// <summary>
-    /// Determines if the texture layout represents a volumetric (3D) texture.
-    /// </summary>
-    /// <returns>True if the texture is a 3D volumemap; otherwise, false.</returns>
-    public bool IsVolumemap()
-        => TextureLayout == T3TextureLayout.Texture3D;
-
-    /// <summary>
-    /// Determines if the texture layout represents an array texture (2D array or cubemap array).
-    /// </summary>
-    /// <returns>True if the texture is a 2D array or cubemap array; otherwise, false.</returns>
-    public bool IsArrayTexture()
-        => TextureLayout is T3TextureLayout.Texture2DArray or T3TextureLayout.TextureCubemapArray;
-
-    /// <summary>
-    /// Indicates whether this texture uses the legacy D3DTX format.
-    /// The first version to not use this format is version 3, assuming version 1 and 2 do not exist.
-    /// </summary>
-    /// <returns>True if the texture version is 2 or below; otherwise, false.</returns>
-    public bool IsLegacyD3DTX()
-        => Version <= 2;
 }

@@ -8,16 +8,16 @@ namespace TelltaleToolKit.T3Types.Miscellaneous;
 public class T3LightEnvInternalData
 {
     [MetaMember("mEntryForQuality[0]")]
-    public QualityEntry EntryForQuality0 { get; set; }
+    public QualityEntry EntryForQuality0 { get; set; } = new();
 
     [MetaMember("mEntryForQuality[1]")]
-    public QualityEntry EntryForQuality1 { get; set; }
+    public QualityEntry EntryForQuality1 { get; set; } = new();
 
     [MetaMember("mEntryForQuality[2]")]
-    public QualityEntry EntryForQuality2 { get; set; }
+    public QualityEntry EntryForQuality2 { get; set; } = new();
 
     [MetaMember("mEntryForQuality[3]")]
-    public QualityEntry EntryForQuality3 { get; set; }
+    public QualityEntry EntryForQuality3 { get; set; } = new();
 
     [MetaMember("mStationaryLightIndex")]
     public int StationaryLightIndex { get; set; }

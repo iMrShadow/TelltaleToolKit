@@ -2,7 +2,6 @@
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Meta.Reflection;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Binary;
 
@@ -19,7 +18,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (!isValid)
         {
-            throw new InvalidDataException("Invalid MetaStream.");
+            throw new InvalidDataException("[BinaryMetaStreamReader] Invalid MetaStream.");
         }
 
         long offset = Sections[0].CompressedSize;
@@ -32,12 +31,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
                 currentSect.Stream = new SubStream(Sections[0].Stream, offset, currentSect.CompressedSize);
                 if (currentSect.IsCompressed)
                 {
-                    if (Params.Workspace is null)
-                    {
-                        throw new InvalidOperationException("[MetaStream] Workspace is not set for encrypted streams.");
-                    }
-
-                    ContainerStream cs = new(currentSect.Stream, Params.Workspace.BlowfishKey);
+                    ContainerStream cs = new(currentSect.Stream);
                     currentSect.Stream = cs;
                     SetSection((SectionType)i);
 
@@ -58,21 +52,23 @@ public sealed class BinaryMetaStreamReader : MetaStream
     {
         if (BaseStream.Length < 4)
         {
-            Toolkit.Instance.Logger.LogError("Invalid MetaHeader: Stream too short.");
+            Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Invalid header: Stream too short.");
             return false;
         }
 
+        // Setup the header section
         Sections[(int)SectionType.Header].Stream = BaseStream;
         Reader = new BinaryReader(Sections[(int)SectionType.Header].Stream, Encoding.UTF8, true);
         SetSection(SectionType.Header);
 
+        // Read the FourCC
         MetaStreamMagic magic = (MetaStreamMagic)this.ReadUInt32();
         Params.StreamVersion = magic.GetMetaStreamVersion();
         uint streamVersion = Params.StreamVersion;
 
         if (Params.StreamVersion == 0)
         {
-            Toolkit.Instance.Logger.LogError($"Not a valid meta stream version: {magic}");
+            Toolkit.Instance.Logger.LogError($"[BinaryMetaStreamReader] Not a valid meta stream version: {magic}");
             return false;
         }
 
@@ -80,6 +76,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (streamVersion >= 4)
         {
+            // MSV5 + MSV6
             if (streamVersion >= 5)
             {
                 defaultSize = this.ReadUInt32();
@@ -106,8 +103,9 @@ public sealed class BinaryMetaStreamReader : MetaStream
                 Sections[3].IsCompressed = true;
             }
         }
-        else
+        else if (magic is not MetaStreamMagic.Mbin and not MetaStreamMagic.Mtre)
         {
+            Sections[(int)SectionType.Header].IsEnabled = true;
             Params.Encrypt = true;
             // For MCOM, there is an extra 4-byte field to skip
             if (magic is MetaStreamMagic.Mcom or MetaStreamMagic.EncryptedMcom)
@@ -126,13 +124,13 @@ public sealed class BinaryMetaStreamReader : MetaStream
                    */
                 }
 
-                Toolkit.Instance.Logger.LogError("[MetaStream] Mcom or EncryptedMcom is not supported.");
+                Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Mcom or EncryptedMcom is not supported.");
                 return false;
             }
 
             if (Params.Workspace is null)
             {
-                Toolkit.Instance.Logger.LogError("[MetaStream] Workspace is not set for encrypted streams.");
+                Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Workspace is not set for encrypted streams.");
                 return false;
             }
 
@@ -151,7 +149,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
 
         if (numVers >= 1024)
         {
-            Toolkit.Instance.Logger.LogError("[MetaStream] Too many serialized classes.");
+            Toolkit.Instance.Logger.LogError("[BinaryMetaStreamReader] Too many serialized classes.");
             return false;
         }
 
@@ -160,7 +158,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         {
             MetaVersionInfo verInfo = new();
 
-            if (magic.GetMetaStreamVersion() >= 3) // mStreamVersion >= 3 uses hashed symbols
+            if (magic.GetMetaStreamVersion() >= 3) // uses hashed types
             {
                 verInfo.TypeSymbolCrc = this.ReadUInt64();
             }
@@ -194,15 +192,17 @@ public sealed class BinaryMetaStreamReader : MetaStream
         return true;
     }
 
-    protected override void SetSection(SectionType newSection)
+    protected override bool SetSection(SectionType newSection)
     {
-        if (_currentSection == newSection)
+        var section = Sections[(int)newSection];
+        if (section.Stream is null)
         {
-            return;
+            return false;
         }
 
+        Reader = new BinaryReader(section.Stream, Encoding.UTF8, true);
         _currentSection = newSection;
-        Reader = new BinaryReader(Sections[(int)_currentSection].Stream, Encoding.UTF8, true);
+        return true;
     }
 
     public override void BeginBlock()
@@ -226,9 +226,20 @@ public sealed class BinaryMetaStreamReader : MetaStream
         // I have no idea how they got there in the first place, but I saw one such file (ui_mainmenu_background.scene) which benefits from this.
         // Previously, I used to throw exceptions since I thought it was impossible, but this seems better for stability purposes.
         // This matches the implementation of the engine behaviour.
-        Toolkit.Instance.Logger.LogWarning(
-            $"[BinaryMetaStreamReader] Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+
+        if (expectedPosition < currentPosition)
+        {
+            Toolkit.Instance.Logger.LogWarning(
+                $"[BinaryMetaStreamReader] Invalid data position! Current position ahead of expected position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        }
+
+        //  throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+
         currentSectionInfo.Stream.Position = expectedPosition;
+        currentSectionInfo.CompressedSize -= (int)(currentPosition - expectedPosition);
+        // #if DEBUG
+        // throw new InvalidDataException($"Invalid data position! Current Position: {currentPosition}. Expected Position: {expectedPosition}.");
+        // #endif
     }
 
     public override void Serialize(ref bool value) =>
@@ -236,7 +247,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
         {
             '1' => true,
             '0' => false,
-            _ => throw new InvalidBooleanException($"Invalid boolean at position: {Reader.BaseStream.Position}!")
+            _ => throw new InvalidBooleanException($"[BinaryMetaStreamReader] Invalid boolean at position: {Reader.BaseStream.Position}!")
         };
 
     public override void Serialize(ref float value) => value = Reader.ReadSingle();
@@ -259,7 +270,7 @@ public sealed class BinaryMetaStreamReader : MetaStream
     {
         int strLength = Reader.ReadInt32();
 
-        if (strLength < 0)
+        if (strLength < 0 || strLength > 0x100000)
         {
             throw new ArgumentOutOfRangeException(nameof(strLength));
         }
@@ -280,13 +291,6 @@ public sealed class BinaryMetaStreamReader : MetaStream
     public override void Serialize(ref byte value) => value = Reader.ReadByte();
 
     public override void Serialize(ref sbyte value) => value = Reader.ReadSByte();
-
-    public override void Serialize(ref Symbol value)
-    {
-        ulong crc64 = Reader.ReadUInt64();
-        value = Symbol.FromCrc64(crc64);
-        Params.SerializedSymbols.Add(value);
-    }
 
     public override void Serialize(byte[] values, int offset, int count) => Reader.Read(values, offset, count);
 

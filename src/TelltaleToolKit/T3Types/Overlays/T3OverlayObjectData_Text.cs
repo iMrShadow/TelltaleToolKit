@@ -8,7 +8,7 @@ namespace TelltaleToolKit.T3Types.Overlays;
 public class T3OverlayObjectDataText
 {
     [MetaMember("mName")]
-    public Symbol Name { get; set; }
+    public Symbol Name { get; set; } = Symbol.Empty;
 
     [MetaMember("mParams")]
     public T3OverlayTextParams Parameters { get; set; } = new();

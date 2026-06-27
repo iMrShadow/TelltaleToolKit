@@ -1,5 +1,6 @@
 ﻿using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
+using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Common.UID;
 
 namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
@@ -8,29 +9,36 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 public class NoteCollection : IGenerator
 {
     [MetaMember("Baseclass_UID::Generator")]
-    public Generator Generator { get; set; }
+    public Generator Generator { get; set; } = new();
 
     [MetaMember("mNotes")]
     public Dictionary<int, Note> Notes { get; set; } = new();
 
     public class Serializer : MetaSerializer<NoteCollection>
     {
-        public override void Serialize(ref NoteCollection obj, MetaStream stream)
+        private static readonly MetaClassSerializer<NoteCollection> s_metaClassSerializer = new();
+
+        public override void Serialize(ref NoteCollection obj, MetaStream stream, MetaClassType? type = null)
         {
+            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSerializer.Serialize(ref obj, stream);
+
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotSupportedException();
-            }
-
-            if (stream.Mode is MetaStreamMode.Read)
-            {
-                // mEntries is not serialized.
-                int numNotes = stream.ReadInt32();
-                for (var i = 0; i < numNotes; i++)
+                stream.Write(obj.Notes.Count);
+                foreach (var note in obj.Notes.Values)
                 {
-                    Note? note = null;
+                    Note note1 = note;
+                    stream.Serialize(ref note1);
+                }
+            }
+            else
+            {
+                int numNotes = stream.ReadInt32();
+                for (int i = 0; i < numNotes; i++)
+                {
+                    Note note = new();
                     stream.Serialize(ref note);
-                    // TODO: Set the correct IDs. Not a priority, I haven't seen this serialized anywhere.
                     obj.Notes.Add(i, note);
                 }
             }

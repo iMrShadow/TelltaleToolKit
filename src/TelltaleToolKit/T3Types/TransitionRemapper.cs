@@ -9,5 +9,5 @@ namespace TelltaleToolKit.T3Types;
 public class TransitionRemapper
 {
     [MetaMember("mRemapKeys")]
-    public KeyframedValue<float> RemapKeys = new();
+    public KeyframedValue<float> RemapKeys { get; set; } = new();
 }

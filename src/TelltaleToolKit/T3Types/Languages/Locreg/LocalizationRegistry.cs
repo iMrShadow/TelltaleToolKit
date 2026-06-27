@@ -10,11 +10,17 @@ namespace TelltaleToolKit.T3Types.Languages.Locreg;
 public class LocalizationRegistry
 {
     [MetaMember("mFlagIndexMap")]
-    public Dictionary<Symbol, int> FlagIndexMap { get; set; }
+    public Dictionary<Symbol, int> FlagIndexMapS { get; set; } = [];
 
     [MetaMember("mFlagIndexMapReverse")]
-    public Dictionary<int, Symbol> FlagIndexMapReverse { get; set; }
+    public Dictionary<int, Symbol> FlagIndexMapReverseS { get; set; } = [];
+
+    [MetaMember("mFlagIndexMap")]
+    public Dictionary<string, int> FlagIndexMap { get; set; } = [];
+
+    [MetaMember("mFlagIndexMapReverse")]
+    public Dictionary<int, string> FlagIndexMapReverse { get; set; } = [];
 
     [MetaMember("mToolProps")]
-    public ToolProps ToolProps { get; set; }
+    public ToolProps ToolProps { get; set; } = new();
 }

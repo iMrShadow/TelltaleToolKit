@@ -9,10 +9,13 @@ public struct EnumEmitterConstraintType
 {
     [MetaMember("mVal")]
     public EmitterConstraintType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<EmitterConstraintType>))]
-public enum EmitterConstraintType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<EmitterConstraintType>))]
+    public enum EmitterConstraintType
+    {
+        _None = 0x1,
+        _0Point = 0x2,
+        _1Point = 0x3,
+        _2Point = 0x4
+    }
 }

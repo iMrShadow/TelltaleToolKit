@@ -9,10 +9,13 @@ public struct EnumRenderTAAJitterType
 {
     [MetaMember("mVal")]
     public RenderTAAJitterType Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<RenderTAAJitterType>))]
-public enum RenderTAAJitterType
-{
-    // TODO:
+    [MetaSerializer(typeof(EnumSerializer<RenderTAAJitterType>))]
+    public enum RenderTAAJitterType
+    {
+        None = 0x1,
+        Uniform2x = 0x2,
+        Hammersley4x = 0x3,
+        Hammersley8x = 0x4
+    }
 }

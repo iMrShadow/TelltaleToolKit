@@ -9,13 +9,12 @@ public struct EnumRenderMaskTest
 {
     [MetaMember("mVal")]
     public RenderMaskTest Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<RenderMaskTest>))]
-public enum RenderMaskTest
-{
-    //        eRenderMaskTest_
-    None = 0x1,
-    Set = 0x2,
-    Clear = 0x3,
+    [MetaSerializer(typeof(EnumSerializer<RenderMaskTest>))]
+    public enum RenderMaskTest
+    {
+        None = 0x1,
+        Set = 0x2,
+        Clear = 0x3
+    }
 }

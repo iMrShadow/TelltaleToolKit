@@ -40,6 +40,10 @@ public class DialogResource
     [MetaMember("mProjectID")]
     public int ProjectId { get; set; }
 
+    [MetaMember("mTaskID")]
+    public uint mTaskID { get; set; }
+
+
     [MetaMember("mResourcePath")]
     public string ResourcePath { get; set; } = string.Empty;
 
@@ -54,19 +58,34 @@ public class DialogResource
     {
         private static readonly MetaClassSerializer<DialogResource> s_metaClassSerializer = new();
 
-        public override void Serialize(ref DialogResource obj, MetaStream stream)
+        public override void PreSerialize(ref DialogResource? obj, MetaStream stream, MetaClassType? type = null)
         {
-            s_metaClassSerializer.PreSerialize(ref obj, stream);
+            obj ??= new DialogResource();
+        }
+
+        public override void Serialize(ref DialogResource obj, MetaStream stream, MetaClassType? type = null)
+        {
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotImplementedException($"Serializer is not implement for {SerializationType}");
-            }
+                stream.Write(obj.Dialogs.Count);
+                stream.Write(obj.Branches.Count);
+                stream.Write(obj.Items.Count);
+                stream.Write(obj.Exchanges.Count);
+                stream.Write(obj.Lines.Count);
+                stream.Write(obj.Texts.Count);
 
-            if (stream.Mode is MetaStreamMode.Read)
+                SerializeDialogBaseArray(obj.Dialogs, obj.Dialogs.Count, stream);
+                SerializeDialogBaseArray(obj.Branches, obj.Branches.Count, stream);
+                SerializeDialogBaseArray(obj.Items, obj.Items.Count, stream);
+                SerializeDialogBaseArray(obj.Exchanges, obj.Exchanges.Count, stream);
+                SerializeDialogBaseArray(obj.Lines, obj.Lines.Count, stream);
+                SerializeDialogBaseArray(obj.Texts, obj.Texts.Count, stream);
+            }
+            else
             {
-                // Console.WriteLine("Current position: " + stream.GetPosition());
                 int dialogsCount = stream.ReadInt32();
                 int branchesCount = stream.ReadInt32();
                 int itemsCount = stream.ReadInt32();
@@ -88,28 +107,33 @@ public class DialogResource
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
-            }
-            else if (stream.Mode is MetaStreamMode.Read)
-            {
-                // Console.WriteLine(count);
-                if (count <= 0)
+                foreach (var item in list)
                 {
-                    return;
+                    stream.Write(item.DialogBase.ActualId);
                 }
 
-                var ids = new int[count];
+                foreach (var item in list)
+                {
+                    T dialogBase = item;
+                    stream.Serialize(ref dialogBase);
+                }
+            }
+            else
+            {
+                if (count <= 0) return;
+
+                int[] ids = new int[count];
                 for (int i = 0; i < count; i++)
                 {
                     ids[i] = stream.ReadInt32();
                 }
 
-                var dialog = default(T);
-
-                for (var i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
-                    Toolkit.Instance.GetSerializer<T>().Serialize(ref dialog, stream);
-                    list.Add(dialog);
+                    T dialog = new();
+                    stream.Serialize(ref dialog);
                     dialog.DialogBase.ActualId = ids[i];
+                    list.Add(dialog);
                 }
             }
         }

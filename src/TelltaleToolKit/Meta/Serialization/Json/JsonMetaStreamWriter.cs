@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Json;
 
@@ -41,21 +40,24 @@ public sealed class JsonMetaStreamWriter : MetaStream
 
     public override MetaStreamMode Mode => MetaStreamMode.Write;
 
-    protected override void SetSection(SectionType section)
+    protected override bool SetSection(SectionType section)
     {
         // Intentional no-op: JSON folds all sections into the payload object via
         // BeginAsyncSection / BeginDebugSection named sub-objects.
         _currentSection = section;
+        return true;
     }
 
-    public override void BeginAsyncSection()
+    public override bool BeginAsyncSection()
     {
-        if (Params.StreamVersion < 4) return;
-        if (_currentSection is SectionType.Async) return;
+        if (Params.StreamVersion < 4) return false;
+        if (_currentSection is SectionType.Async) return false;
 
         _payload.WritePropertyName("Async Data");
         _payload.WriteStartObject();
         _currentSection = SectionType.Async;
+
+        return true;
     }
 
     public override void EndAsyncSection()
@@ -66,14 +68,16 @@ public sealed class JsonMetaStreamWriter : MetaStream
         _currentSection = SectionType.Default;
     }
 
-    public override void BeginDebugSection()
+    public override bool BeginDebugSection()
     {
-        if (Params.StreamVersion < 4) return;
-        if (_currentSection is SectionType.Debug) return;
+        if (Params.StreamVersion < 4) return false;
+        if (_currentSection is SectionType.Debug) return false;
 
         _payload.WritePropertyName("Debug Data");
         _payload.WriteStartObject();
         _currentSection = SectionType.Debug;
+
+        return true;
     }
 
     public override void EndDebugSection()
@@ -235,19 +239,6 @@ public sealed class JsonMetaStreamWriter : MetaStream
     {
         EnsureKey();
         _payload.WriteNumberValue(value);
-        _keyPending = false;
-    }
-
-    /// <summary>
-    ///     Symbols are written as strings. If a debug string is available it is used;
-    ///     otherwise the CRC is written as a hex string, matching C++ <c>serialize_Symbol</c>.
-    /// </summary>
-    public override void Serialize(ref Symbol value)
-    {
-        EnsureKey();
-        string display = value.DebugString ?? $"0x{value.Crc64:X16}";
-        _payload.WriteStringValue(display);
-        Params.SerializedSymbols.Add(value);
         _keyPending = false;
     }
 

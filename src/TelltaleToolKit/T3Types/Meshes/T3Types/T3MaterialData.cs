@@ -9,25 +9,25 @@ namespace TelltaleToolKit.T3Types.Meshes.T3Types;
 public class T3MaterialData
 {
     [MetaMember("mMaterialName")]
-    public Symbol MaterialName { get; set; }
+    public Symbol MaterialName { get; set; } = Symbol.Empty;
 
     [MetaMember("mRuntimePropertiesName")]
-    public Symbol RuntimePropertiesName { get; set; }
+    public Symbol RuntimePropertiesName { get; set; } = Symbol.Empty;
 
     [MetaMember("mLegacyRenderTextureProperty")]
-    public Symbol LegacyBlendModeTextureProperty { get; set; }
+    public Symbol LegacyBlendModeTextureProperty { get; set; } = Symbol.Empty;
 
     [MetaMember("mLegacyBlendModeRuntimeProperty")]
-    public Symbol LegacyBlendModeRuntimeProperty { get; set; }
+    public Symbol LegacyBlendModeRuntimeProperty { get; set; } = Symbol.Empty;
 
     [MetaMember("mDomain")]
-    public T3MaterialDomainType Domain { get; set; } //wd4+ TODO:
+    public T3MaterialDomainType Domain { get; set; } //wd4+
 
     [MetaMember("mLightType")]
     public LightType LightType { get; set; } //bat2 and below
 
     [MetaMember("mRuntimeProperties")]
-    public List<T3MaterialRuntimeProperty> RuntimeProperties { get; set; }
+    public List<T3MaterialRuntimeProperty> RuntimeProperties { get; set; } = [];
 
     [MetaMember("mFlags")]
     public Flags Flags { get; set; }
@@ -39,7 +39,7 @@ public class T3MaterialData
     public float MaxDistance { get; set; } //bat2 and below, not sure if its a float/int always 0
 
     [MetaMember("mCompiledData2")]
-    public List<T3MaterialCompiledData> CompiledData2 { get; set; }
+    public List<T3MaterialCompiledData> CompiledData2 { get; set; } = [];
 
     public class Serializer : MetaSerializer<T3MaterialData>
     {
@@ -47,13 +47,10 @@ public class T3MaterialData
 
         public override void PreSerialize(ref T3MaterialData? obj, MetaStream stream, MetaClassType? type = null)
         {
-            if (obj is null)
-            {
-                obj = new T3MaterialData();
-            }
+            obj ??= new T3MaterialData();
         }
 
-        public override void Serialize(ref T3MaterialData obj, MetaStream stream)
+        public override void Serialize(ref T3MaterialData obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.Serialize(ref obj, stream);
 
@@ -64,36 +61,28 @@ public class T3MaterialData
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                obj.CompiledData2 ??= [];
-
                 stream.Write(obj.CompiledData2.Count);
 
-                for (var i = 0; i < obj.CompiledData2.Count; i++)
+                for (int i = 0; i < obj.CompiledData2.Count; i++)
                 {
                     stream.Write(i);
 
                     T3MaterialCompiledData compiledData = obj.CompiledData2[i];
 
-                    Toolkit.Instance.GetSerializer<T3MaterialCompiledData>().PreSerialize(ref compiledData, stream);
-
-                    Toolkit.Instance.GetSerializer<T3MaterialCompiledData>().Serialize(ref compiledData, stream);
-
+                    stream.Serialize(ref compiledData);
                     obj.CompiledData2[i] = compiledData;
                 }
-
-                return;
             }
-
-            if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 int numCompiledData = stream.ReadInt32();
 
                 obj.CompiledData2 = new List<T3MaterialCompiledData>(numCompiledData);
 
-                for (var i = 0; i < numCompiledData; i++)
+                for (int i = 0; i < numCompiledData; i++)
                     obj.CompiledData2.Add(new T3MaterialCompiledData());
 
-                for (var i = 0; i < numCompiledData; i++)
+                for (int i = 0; i < numCompiledData; i++)
                 {
                     int materialIndex = stream.ReadInt32();
 
@@ -102,10 +91,7 @@ public class T3MaterialData
                             $"Material index {materialIndex} was outside the valid range 0..{numCompiledData - 1}.");
 
                     T3MaterialCompiledData compiledData = obj.CompiledData2[materialIndex];
-
-                    Toolkit.Instance.GetSerializer<T3MaterialCompiledData>().PreSerialize(ref compiledData, stream);
-
-                    Toolkit.Instance.GetSerializer<T3MaterialCompiledData>().Serialize(ref compiledData, stream);
+                    stream.Serialize(ref compiledData);
 
                     obj.CompiledData2[materialIndex] = compiledData;
                 }

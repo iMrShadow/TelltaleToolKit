@@ -35,7 +35,7 @@ public class T3IndexBuffer
     {
         private static readonly MetaClassSerializer<T3IndexBuffer> s_metaClassSerializer = new();
 
-        public override void Serialize(ref T3IndexBuffer obj, MetaStream stream)
+        public override void Serialize(ref T3IndexBuffer obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.Serialize(ref obj, stream);
 
@@ -56,9 +56,89 @@ public class T3IndexBuffer
                     obj.IndexByteSize = bufferBytes;
                 }
 
-                obj.Buffer = stream.ReadBytes(bufferBytes * obj.NumIndices);
+                if (obj.Flags.Has(1))
+                {
+                    // 1. Read the base value (first index)
+                    ushort baseValue = stream.ReadUInt16();
+                    uint[] indices = new uint[obj.NumIndices];
+                    indices[0] = baseValue;
+
+                    // 2. Read the compressed data size and raw bytes
+                    uint compressedSize = stream.ReadUInt32();
+                    byte[] compressedData = stream.ReadBytes((int)compressedSize);
+
+                    // 3. Bit reader over the compressed bytes
+                    var bitReader = new BitReader(compressedData);
+
+                    int idx = 1; // we already filled index 0
+
+                    // 4. Decompress each run of deltas
+                    while (idx < obj.NumIndices)
+                    {
+                        int numBits = bitReader.ReadBits(4); // magnitude bit width (0..15)
+                        int runLength = bitReader.ReadBits(7); // number of deltas in this run (0..127)
+
+                        for (int i = 0; i < runLength && idx < obj.NumIndices; i++)
+                        {
+                            int sign = bitReader.ReadBits(1);
+                            int magnitude = bitReader.ReadBits(numBits);
+                            int delta = sign == 1 ? -magnitude : magnitude;
+
+                            baseValue = (ushort)(baseValue + delta);
+                            indices[idx++] = baseValue;
+                        }
+                    }
+                }
+                else
+                {
+                    obj.Buffer = stream.ReadBytes(bufferBytes * obj.NumIndices);
+                }
             }
         }
+    }
+}
+
+public class BitReader
+{
+    private readonly byte[] _data;
+    private int _bitPos;
+
+    public BitReader(byte[] data)
+    {
+        _data = data;
+        _bitPos = 0;
+    }
+
+    public int ReadBits(int count)
+    {
+        if (count == 0) return 0;
+
+        int value = 0;
+        for (int i = 0; i < count; i++)
+        {
+            int byteIndex = _bitPos / 8;
+            int bitOffset = _bitPos % 8;
+            int bit = (_data[byteIndex] >> bitOffset) & 1;
+            value |= bit << i; // first bit read becomes LSB
+            _bitPos++;
+        }
+
+        return value;
+    }
+
+    public bool ReadBit() => ReadBits(1) != 0;
+
+    public float ReadFloat()
+    {
+        int bits = ReadBits(32);
+        return BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
+    }
+
+    /// <summary>Advances the bit pointer without reading.</summary>
+    public void SkipBits(int numBits)
+    {
+        if (numBits < 0) throw new ArgumentOutOfRangeException(nameof(numBits));
+        _bitPos += numBits;
     }
 }
 
@@ -75,16 +155,18 @@ public class T3VertexComponent
     public EnumType Type { get; set; }
 
     [MetaSerializer(typeof(EnumSerializer<EnumType>))]
-    public enum EnumType {
+    public enum EnumType
+    {
         VTypeNone = 0,
         VTypeFloat = 1,
-        VTypeS8N = 2,//N meaning normalised between -127 and 127 so when read cast to float and divide by 127
+        VTypeS8N = 2, //N meaning normalised between -127 and 127 so when read cast to float and divide by 127
         VTypeU8N = 3,
         VTypeS16N = 4,
         VTypeU16N = 5,
+
         //../
         VTypeS8NBones = 8,
-        VTypeSF16 = 11,//signed half float
+        VTypeSF16 = 11, //signed half float
     }
 }
 

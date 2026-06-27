@@ -6,18 +6,32 @@ namespace TelltaleToolKit.T3Types.Dialogs.Dlg;
 [MetaSerializer(typeof(Serializer))]
 public class DependencyLoader
 {
-    public List<string> ResourceNames { get; set; } = [];
+    public List<string>? ResourceNames { get; set; }
 
     public class Serializer : MetaSerializer<DependencyLoader>
     {
-        public override void Serialize(ref DependencyLoader obj, MetaStream stream)
+        public override void PreSerialize(ref DependencyLoader? obj, MetaStream stream, MetaClassType? type = null)
+        {
+            obj ??= new DependencyLoader();
+        }
+
+        public override void Serialize(ref DependencyLoader obj, MetaStream stream, MetaClassType? type = null)
         {
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotImplementedException();
-            }
+                bool hasResourceNames = obj.ResourceNames != null;
+                stream.Write(hasResourceNames);
 
-            if (stream.Mode is MetaStreamMode.Read)
+                if (!hasResourceNames)
+                    return;
+
+                var classType = MetaClassTypeRegistry.GetByName("DCArray<String>");
+                stream.Write(classType);
+
+                List<string>? objResourceNames = obj.ResourceNames;
+                stream.Serialize(ref objResourceNames);
+            }
+            else
             {
                 bool hasResourceNames = stream.ReadBoolean();
 
@@ -27,16 +41,18 @@ public class DependencyLoader
                 // This is a little bit weird.
                 // In the real serialization function, the object is base-casted to DCArray<String>. (base-casting is casting to a parent class).
                 // Which leads to the question - which type does inherit DCArray<String>? It does not make any sense.
-                MetaClassType? type = stream.ReadMetaClassType();
+                MetaClassType? typeS = stream.ReadMetaClassType();
 
-                if (type == null)
+                if (typeS == null)
                     throw new InvalidOperationException("[DependencyLoader] Type is not registered.");
 
-                if (type.Symbol.DebugString != null && !type.Symbol.DebugString.Equals("DCArray<String>"))
+                if (typeS.Symbol.DebugString != null && !typeS.Symbol.DebugString.Equals("DCArray<String>"))
                 {
-                    Toolkit.Instance.Logger.LogWarning($"[DependencyLoader] Unknown type `{type.Symbol.DebugString}`!");
+                    Toolkit.Instance.Logger.LogWarning(
+                        $"[DependencyLoader] Unknown type `{typeS.Symbol.DebugString}`!");
                 }
 
+                obj.ResourceNames = [];
                 List<string> objResourceNames = obj.ResourceNames;
                 stream.Serialize(ref objResourceNames);
             }

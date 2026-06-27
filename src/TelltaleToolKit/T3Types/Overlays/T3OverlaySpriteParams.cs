@@ -2,6 +2,7 @@
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Particles;
 
 namespace TelltaleToolKit.T3Types.Overlays;
 
@@ -9,7 +10,7 @@ namespace TelltaleToolKit.T3Types.Overlays;
 public class T3OverlaySpriteParams
 {
     [MetaMember("mhSprite")]
-    public Handle<ParticleSprite> Sprite { get; set; }
+    public Handle<ParticleSprite> Sprite { get; set; } = new();
 
     [MetaMember("mInitialPosition")]
     public Vector2 InitialPosition { get; set; }
@@ -18,7 +19,7 @@ public class T3OverlaySpriteParams
     public Vector2 Size { get; set; }
 
     [MetaMember("mAnimation")]
-    public Symbol Animation { get; set; }
+    public Symbol Animation { get; set; } = Symbol.Empty;
 
     [MetaMember("mAnimationSpeed")]
     public float AnimationSpeed { get; set; }

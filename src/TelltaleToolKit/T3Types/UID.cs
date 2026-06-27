@@ -33,7 +33,7 @@ namespace TelltaleToolKit.T3Types.Common
         }
     }
 
-
+    [MetaSerializer(typeof(Serializer))]
     public class ActingOverridablePropOwner
     {
         // I prefer chicken.
@@ -43,55 +43,78 @@ namespace TelltaleToolKit.T3Types.Common
         public Flags SerializationFlags { get; set; }
 
         [MetaMember("mpOverridableValues")]
-        public PropertySet OverridableValues { get; set; } = new();
+        public PropertySet? OverridableValues { get; set; } = new();
 
         [MetaMember("mhParent")]
         public Handle<PropertySet> Parent { get; set; } = new();
 
-        // TODO: Add helper functions
-        // TODO: Add a proper serializer
-    }
+        public uint Header { get; set; }
 
-    [MetaSerializer(typeof(ActingOverridablePropOwnerSerializer))]
-    public class ActingOverridablePropOwnerSerializer : MetaSerializer<ActingOverridablePropOwner>
-    {
-        private static readonly MetaClassSerializer<ActingOverridablePropOwner> s_metaClassSerializer = new();
-
-        public override void PreSerialize(ref ActingOverridablePropOwner? obj, MetaStream stream,
-            MetaClassType? type = null)
+        public class Serializer : MetaSerializer<ActingOverridablePropOwner>
         {
-            if (obj is null)
-            {
-                obj = new ActingOverridablePropOwner();
-            }
-        }
+            private static readonly MetaClassSerializer<ActingOverridablePropOwner> s_metaClassSerializer = new();
 
-        public override void Serialize(ref ActingOverridablePropOwner obj, MetaStream stream)
-        {
-            if (stream.Mode is MetaStreamMode.Write)
+            public override void PreSerialize(ref ActingOverridablePropOwner? obj, MetaStream stream,
+                MetaClassType? type = null)
             {
-                throw new NotImplementedException();
+                obj ??= new ActingOverridablePropOwner();
             }
 
-            if (stream.Mode is MetaStreamMode.Read)
+            public override void Serialize(ref ActingOverridablePropOwner obj, MetaStream stream,
+                MetaClassType? type = null)
             {
-                long currPos = stream.GetPosition();
-                uint value = stream.ReadUInt32();
-
-                if (value == ActingOverridablePropOwner.kHeader)
+                if (stream.Mode is MetaStreamMode.Write)
                 {
-                    s_metaClassSerializer.PreSerialize(ref obj, stream);
-                    s_metaClassSerializer.Serialize(ref obj, stream);
-                    return;
+                    bool hasValues = obj.OverridableValues is { Properties.Count: > 0 };
+                    if (hasValues)
+                        obj.SerializationFlags.Clear(1); // clear bit 0
+                    else
+                        obj.SerializationFlags.Set(1);
+
+                    if (obj.Header == kHeader)
+                    {
+                        stream.Write(kHeader);
+                        s_metaClassSerializer.PreSerialize(ref obj!, stream);
+                        s_metaClassSerializer.Serialize(ref obj, stream);
+                    }
+
+                    if (hasValues)
+                    {
+                        PropertySet? propertySet = obj.OverridableValues;
+                        stream.Serialize(ref propertySet);
+                    }
                 }
+                else
+                {
+                    long startPos = stream.GetPosition();
+                    uint header = stream.ReadUInt32();
 
-                stream.SetPosition(currPos);
-                if ((obj.SerializationFlags.Data & 1) == 0)
-                    return;
+                    if (header == kHeader)
+                    {
+                        s_metaClassSerializer.PreSerialize(ref obj!, stream);
+                        s_metaClassSerializer.Serialize(ref obj, stream);
 
-                PropertySet propertySet = obj.OverridableValues;
-                stream.Serialize(ref propertySet);
+                        if ((obj.SerializationFlags.Data & 1) == 0) // has values
+                        {
+                            PropertySet propertySet = new();
+                            stream.Serialize(ref propertySet);
+                            obj.OverridableValues = propertySet;
+                        }
+                        else
+                        {
+                            obj.OverridableValues = null; // or empty PropertySet, as needed
+                        }
+                    }
+                    else
+                    {
+                        stream.SetPosition(startPos);
+                        PropertySet propertySet = new();
+                        stream.Serialize(ref propertySet);
+                        obj.OverridableValues = propertySet;
+                    }
+                }
             }
         }
+        // TODO: Add helper functions
     }
 }

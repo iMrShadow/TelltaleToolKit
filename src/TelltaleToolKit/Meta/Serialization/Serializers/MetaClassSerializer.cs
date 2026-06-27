@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Numerics;
+using System.Reflection;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.T3Types;
 
@@ -35,20 +37,58 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
                     Setter = CreateSetterDelegate(p.Property),
                 }
             );
+
+        var fallbackEntries = new List<((string, Type), CachedMember)>();
+
+        foreach (var kvp in MemberCache)
+        {
+            var (name, propType) = kvp.Key;
+            var member = kvp.Value;
+
+            // Enum properties -> also register under int/uint
+            if (propType.IsEnum)
+            {
+                AddIfMissing((name, typeof(int)), member);
+                AddIfMissing((name, typeof(uint)), member);
+                // If Flags is a base type of this enum, register that too
+                if (typeof(Flags).IsAssignableFrom(propType))
+                    AddIfMissing((name, typeof(Flags)), member);
+            }
+            // Flags type -> register as int/uint
+            else if (propType == typeof(Flags))
+            {
+                AddIfMissing((name, typeof(int)), member);
+                AddIfMissing((name, typeof(uint)), member);
+            }
+            // int/uint -> optionally register enum/Flags lookups? You know your schema best.
+            // Also add any inheritance‑based matches you’d otherwise search for.
+        }
+
+        foreach (var entry in fallbackEntries)
+            if (!MemberCache.ContainsKey(entry.Item1))
+                MemberCache[entry.Item1] = entry.Item2;
+
+        foreach (var cached in MemberCache.Values)
+        {
+            cached.Serializer = new Lazy<MetaSerializer>(
+                () => Toolkit.Instance.GetSerializer(cached.Property.PropertyType),
+                LazyThreadSafetyMode.ExecutionAndPublication
+            );
+        }
+        void AddIfMissing((string, Type) key, CachedMember member)
+            => fallbackEntries.Add((key, member));
     }
 
-
     /// <inheritdoc/>
-    public override void Serialize(ref T obj, MetaStream stream)
+    public override void Serialize(ref T obj, MetaStream stream, MetaClassType? type = null)
     {
         MetaClass? description = stream.GetMetaClass(typeof(T));
 
-        Toolkit.Instance.Logger.LogInfo($"Reading {typeof(T).Name}.");
         if (description is null || !description.ClassType.IsSerialized())
         {
             if (description is null)
                 Toolkit.Instance.Logger.LogWarning(
-                    $"[DefaultClassSerializer] No description available for {typeof(T).Name}.");
+                    $"[DefaultClassSerializer] No description available for {type?.FullTypeName} / {typeof(T).Name}.");
 
             return;
         }
@@ -60,6 +100,8 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
             stream.AddVersionInfo(description);
         }
 
+        stream.DefaultSectionDepth++;
+
         // Loop through the metaclass's properties/members
         foreach (MetaMember propDesc in description.Members.Where(propDesc => propDesc.IsSerialized()))
         {
@@ -69,26 +111,34 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
                 stream.BeginBlock();
 
             stream.Key(propDesc.MemberName);
+            string pad = new(' ',  stream.DefaultSectionDepth);
 
             if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
                                                           propDesc.Type.LinkingType == typeof(byte[]) ||
                                                           propDesc.Type.LinkingType == typeof(Symbol)))
             {
-
             }
             else
             {
                 stream.BeginObject(propDesc.MemberName);
+                Toolkit.Instance.Logger.LogInfo($"{pad}{propDesc.MemberName} {propDesc.Type.LinkingType} - [");
             }
 
             object? value = cached?.Getter(ref obj);
 
-            MetaSerializer serializer =
-                Toolkit.Instance.GetSerializer(cached?.Property.PropertyType ?? propDesc.Type.LinkingType);
-            serializer.PreSerialize(ref value, stream, propDesc.Type);
-            serializer.Serialize(ref value, stream);
+            MetaSerializer serializer = cached?.Serializer.Value ?? Toolkit.Instance.GetSerializer(cached?.Property.PropertyType ?? propDesc.Type.LinkingType);
 
-            Toolkit.Instance.Logger.LogInfo($"{propDesc.MemberName} - {value}");
+            serializer.PreSerialize(ref value, stream, propDesc.Type);
+            serializer.Serialize(ref value, stream, propDesc.Type);
+
+
+            if (propDesc.Type.LinkingType.IsPrimitive || (propDesc.Type.LinkingType == typeof(string) ||
+                                                          propDesc.Type.LinkingType == typeof(byte[]) ||
+                                                          propDesc.Type.LinkingType == typeof(Symbol)))
+            {
+                Toolkit.Instance.Logger.LogInfo($"{pad}{propDesc.MemberName} {propDesc.Type.LinkingType} - {value}");
+            }
+
 
             if (stream.Mode is MetaStreamMode.Read)
                 cached?.Setter(ref obj, value);
@@ -97,19 +147,28 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
                 propDesc.Type.LinkingType == typeof(byte[]) ||
                 propDesc.Type.LinkingType == typeof(Symbol))
             {
-
             }
             else
             {
                 stream.EndObject(propDesc.MemberName);
+                Toolkit.Instance.Logger.LogInfo($"{pad}]");
             }
 
             if (propDesc.Type.IsBlocked())
-                stream.EndBlock();
+            {
+                try
+                {
+                    stream.EndBlock();
+                }
+                catch
+                {
+                    //throw;
+                }
+            }
         }
 
+        stream.DefaultSectionDepth--;
         stream.EndObject(typeof(T).Name);
-        Toolkit.Instance.Logger.LogInfo($"Ending {typeof(T).Name}.");
     }
 
     public override void PreSerialize(ref T? obj, MetaStream stream, MetaClassType? type = null)
@@ -132,32 +191,40 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
         if (MemberCache.TryGetValue((propDesc.MemberName, propDesc.Type.LinkingType), out CachedMember? cached))
             return cached;
 
-        // 2. Enum/flag fallback: the member's type is an int, but also an enum
-        if ((propDesc.IsEnumType() || propDesc.IsFlagType()) && propDesc.Type.LinkingType.IsPrimitive)
-        {
-            CachedMember? cachedAlt = MemberCache
-                .FirstOrDefault(kvp => kvp.Key.Item1 == propDesc.MemberName && kvp.Value.Property.PropertyType.IsEnum)
-                .Value;
-            if (cachedAlt != null)
-                return cachedAlt;
-        }
+        // // 2. Enum/flag fallback: the member's type is an int, but also an enum
+        // if ((propDesc.IsEnumType() || propDesc.IsFlagType()) && propDesc.Type.LinkingType.IsPrimitive)
+        // {
+        //     CachedMember? cachedAlt = MemberCache
+        //         .FirstOrDefault(kvp => kvp.Key.Item1 == propDesc.MemberName && kvp.Value.Property.PropertyType.IsEnum)
+        //         .Value;
+        //     if (cachedAlt != null)
+        //         return cachedAlt;
+        // }
+        //
+        // // 5. int<->Flags
+        // if (propDesc.Type.LinkingType == typeof(int))
+        // {
+        //     if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Flags)), out CachedMember? cachedAlt))
+        //         return cachedAlt;
+        // }
+        //
+        // // Final: First available
+        // if (propDesc.Type.LinkingType == typeof(int) || propDesc.Type.LinkingType == typeof(uint))
+        // {
+        //     CachedMember? cachedAltFinal = MemberCache
+        //         .FirstOrDefault(kvp => kvp.Key.Item1 == propDesc.MemberName)
+        //         .Value;
+        //     if (cachedAltFinal != null)
+        //         return cachedAltFinal;
+        // }
 
-        // 5. int<->Flags
-        if (propDesc.Type.LinkingType == typeof(int))
-        {
-            if (MemberCache.TryGetValue((propDesc.MemberName, typeof(Flags)), out CachedMember? cachedAlt))
-                return cachedAlt;
-        }
+        var inheritanceMatch = MemberCache
+            .FirstOrDefault(kvp =>
+                kvp.Key.Item1 == propDesc.MemberName && propDesc.Type.LinkingType.IsAssignableFrom(kvp.Value.Property.PropertyType)
+                );
 
-        // Final: First available
-        if (propDesc.Type.LinkingType == typeof(int) || propDesc.Type.LinkingType == typeof(uint))
-        {
-            CachedMember? cachedAltFinal = MemberCache
-                .FirstOrDefault(kvp => kvp.Key.Item1 == propDesc.MemberName)
-                .Value;
-            if (cachedAltFinal != null)
-                return cachedAltFinal;
-        }
+        if (inheritanceMatch.Value != null)
+            return inheritanceMatch.Value;
 
         Toolkit.Instance.Logger.LogError(
             $"Property {propDesc.MemberName} with type {propDesc.Type.LinkingType} not found in class {typeof(T)}");
@@ -172,28 +239,22 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
     // Getter delegate, uses ref for correct struct handling
     private static FuncRefGetter<T> CreateGetterDelegate(PropertyInfo prop)
     {
-        return (ref T instance) => prop.GetValue(instance);
+        var instance = Expression.Parameter(typeof(T).MakeByRefType(), "obj");
+        var propertyAccess = Expression.Property(instance, prop);
+        var convert = Expression.Convert(propertyAccess, typeof(object));
+        return Expression.Lambda<FuncRefGetter<T>>(convert, instance).Compile();
     }
 
-    // Setter delegate, uses ref for correct struct handling
     private static ActionRefSetter<T> CreateSetterDelegate(PropertyInfo prop)
     {
         if (!prop.CanWrite)
-            return (ref T instance, object? value) => { };
+            return (ref T obj, object? value) => { };
 
-        if (typeof(T).IsValueType)
-        {
-            // For structs, use boxing: unbox, set, re-assign
-            return (ref T instance, object? value) =>
-            {
-                object boxed = instance!;
-                prop.SetValue(boxed, value);
-                instance = (T)boxed;
-            };
-        }
-
-        // For classes, direct set
-        return (ref T instance, object? value) => { prop.SetValue(instance, value); };
+        var instance = Expression.Parameter(typeof(T).MakeByRefType(), "obj");
+        var value = Expression.Parameter(typeof(object), "val");
+        var castValue = Expression.Convert(value, prop.PropertyType);
+        var assign = Expression.Assign(Expression.Property(instance, prop), castValue);
+        return Expression.Lambda<ActionRefSetter<T>>(assign, instance, value).Compile();
     }
 
     private class CachedMember
@@ -201,5 +262,6 @@ public class MetaClassSerializer<T> : MetaSerializer<T> where T : new()
         public PropertyInfo Property = null!;
         public FuncRefGetter<T> Getter = null!;
         public ActionRefSetter<T> Setter = null!;
+        public Lazy<MetaSerializer> Serializer = null!;
     }
 }

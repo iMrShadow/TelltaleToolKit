@@ -2,6 +2,7 @@ using System.Numerics;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.Meta.Serialization.Serializers;
+using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Properties;
 
 namespace TelltaleToolKit.T3Types.Scenes;
@@ -12,8 +13,53 @@ public class Scene
     [MetaMember("mbHidden")]
     public bool Hidden { get; set; }
 
+    [MetaMember("mbAfterEffectEnabled")]
+    public bool AfterEffectEnabled { get; set; }
+
+    [MetaMember("mb2DShadowEnabled")]
+    public bool _2DShadowEnabled { get; set; }
+
+    [MetaMember("m2DShadowSize")]
+    public float _2DShadowSize { get; set; }
+
+    [MetaMember("m2DShadowCIntensity")]
+    public float m2DShadowCIntensity { get; set; }
+
+    [MetaMember("m2DShadowBIntensity")]
+    public float m2DShadowBIntensity { get; set; }
+
+    [MetaMember("m2DShadowZMin")]
+    public float m2DShadowZMin { get; set; }
+
+    [MetaMember("m2DShadowZMax")]
+    public float m2DShadowZMax { get; set; }
+
+    [MetaMember("mFXColorActive")]
+    public bool FXColorActive { get; set; }
+
+    [MetaMember("mFXColor")]
+    public Color FXColor { get; set; } = new();
+
+    [MetaMember("mFXColorOpacity")]
+    public float FXColorOpacity { get; set; }
+
+    [MetaMember("mFXLevelsActive")]
+    public bool mFXLevelsActive { get; set; }
+
+    [MetaMember("mFXLevelsBlack")]
+    public float FXLevelsBlack { get; set; }
+
+    [MetaMember("mFXLevelsWhite")]
+    public float FXLevelsWhite { get; set; }
+
+    [MetaMember("mFXLevelsIntensity")]
+    public float FXLevelsIntensity { get; set; }
+
     [MetaMember("mName")]
     public string Name { get; set; } = string.Empty;
+
+    [MetaMember("mGlowClearColor")]
+    public Color GlowClearColor { get; set; } = new();
 
     [MetaMember("mReferencedScenes")]
     public List<Handle<Scene>> ReferencedScenes { get; set; } = [];
@@ -24,16 +70,22 @@ public class Scene
     {
         private static readonly MetaClassSerializer<Scene> s_metaClassSceneSerializer = new();
 
-        public override void Serialize(ref Scene obj, MetaStream stream)
+        public override void Serialize(ref Scene obj, MetaStream stream, MetaClassType? type = null)
         {
-            s_metaClassSceneSerializer.PreSerialize(ref obj, stream);
+            s_metaClassSceneSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSceneSerializer.Serialize(ref obj, stream);
 
             stream.BeginBlock();
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotImplementedException();
+                stream.Write(obj.Agents.Count);
+
+                foreach (AgentInfo? agent in obj.Agents)
+                {
+                    AgentInfo agentInfo = agent;
+                    stream.Serialize(ref agentInfo);
+                }
             }
 
             if (stream.Mode is MetaStreamMode.Read)
@@ -41,10 +93,10 @@ public class Scene
                 int numAgents = stream.ReadInt32();
 
                 obj.Agents.Capacity = numAgents;
-                for (var i = 0; i < numAgents; i++)
+                for (int i = 0; i < numAgents; i++)
                 {
-                    var agentInfo = new AgentInfo();
-                    Toolkit.Instance.GetSerializer<AgentInfo>().Serialize(ref agentInfo, stream);
+                    AgentInfo agentInfo = new();
+                    stream.Serialize(ref agentInfo);
                     obj.Agents.Add(agentInfo);
                 }
             }
@@ -63,7 +115,7 @@ public class Scene
         public PropertySet AgentSceneProps { get; set; } = new();
 
         // Below the members are for the original games.
-        // In newer games, hey have been moved to the properties.
+        // In newer games, they have been moved to the properties.
 
         [MetaMember("mStartPos")]
         public Vector3 StartPos { get; set; } = new();
@@ -95,5 +147,9 @@ public class Scene
     {
         [MetaMember("mFlags")]
         public Flags Flags { get; set; }
+    }
+
+    internal class AddSceneInfo
+    {
     }
 }

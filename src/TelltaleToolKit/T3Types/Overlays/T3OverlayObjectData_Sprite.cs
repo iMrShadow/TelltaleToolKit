@@ -8,8 +8,8 @@ namespace TelltaleToolKit.T3Types.Overlays;
 public class T3OverlayObjectDataSprite
 {
     [MetaMember("mName")]
-    public Symbol Name { get; set; }
+    public Symbol Name { get; set; } = Symbol.Empty;
 
     [MetaMember("mParams")]
-    public T3OverlaySpriteParams Parameters { get; set; }
+    public T3OverlaySpriteParams Parameters { get; set; } = new();
 }

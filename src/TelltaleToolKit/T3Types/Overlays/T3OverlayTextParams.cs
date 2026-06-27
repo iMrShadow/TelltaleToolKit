@@ -17,7 +17,7 @@ public class T3OverlayTextParams
     public Handle<Dlg> Dlg { get; set; } = new();
 
     [MetaMember("mDlgNodeName")]
-    public Symbol DlgNodeName { get; set; }
+    public Symbol DlgNodeName { get; set; } = Symbol.Empty;
 
     [MetaMember("mText")]
     public string Text { get; set; } = string.Empty;

@@ -4,7 +4,6 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 namespace TelltaleToolKit.T3Types.Textures.T3Types;
 
 [MetaSerializer(typeof(EnumSerializer<T3TextureLayout>))]
-
 public enum T3TextureLayout
 {
     Unknown = -1,
@@ -13,5 +12,5 @@ public enum T3TextureLayout
     Texture3D = 2,
     Texture2DArray = 3,
     TextureCubemapArray = 4,
-    TextureCount = 5,
+    TextureCount = 5
 }

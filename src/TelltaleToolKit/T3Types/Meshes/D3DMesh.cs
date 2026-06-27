@@ -5,6 +5,7 @@ using TelltaleToolKit.Meta.Serialization.Serializers;
 using TelltaleToolKit.T3Types.Mathematics;
 using TelltaleToolKit.T3Types.Meshes.T3Types;
 using TelltaleToolKit.T3Types.Properties;
+using TelltaleToolKit.T3Types.Skeletons;
 using TelltaleToolKit.T3Types.Textures;
 
 namespace TelltaleToolKit.T3Types.Meshes;
@@ -85,17 +86,72 @@ public class D3DMesh
     public bool MeshHasVertexAlpha { get; set; }
 
     [MetaMember("mSkinningData")]
-    public List<SkinningEntry> SkinningData { get; set; }
+    public List<SkinningEntry> SkinningData { get; set; } = [];
 
     [MetaMember("mBoneData")]
-    public List<BoneEntry> BoneData { get; set; }
+    public List<BoneEntry> BoneData { get; set; } = [];
+
+    [MetaMember("mDiffuseTextures")]
+    public List<D3DMesh.Texture> mDiffuseTextures { get; set; } = [];
+
+    [MetaMember("mDetailTextures")]
+    public List<D3DMesh.Texture> mDetailTextures { get; set; } = [];
+
+    [MetaMember("mDetailBumpTextures")]
+    public List<D3DMesh.Texture> mDetailBumpTextures { get; set; } = [];
+
+    [MetaMember("mLightmapTextures")]
+    public List<D3DMesh.Texture> mLightmapTextures { get; set; } = [];
+
+    [MetaMember("mBumpmapTextures")]
+    public List<D3DMesh.Texture> mBumpmapTextures { get; set; } = [];
+
+
+    [MetaMember("mEnvironmentTextures")]
+    public List<D3DMesh.Texture> mEnvironmentTextures { get; set; } = [];
+
+    [MetaMember("mSpecularTextures")]
+    public List<D3DMesh.Texture> mSpecularTextures { get; set; } = [];
+
+    [MetaMember("mSSSTextures")]
+    public List<D3DMesh.Texture> mSSSTextures { get; set; } = [];
 
     [MetaMember("mLocalTransformPalettes")]
-    public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; }
+    public List<List<LocalTransformEntry>> LocalTransformPalettes { get; set; } = [];
+
+    [MetaMember("mbMeshHasSmoothNormalsSupport")]
+    public bool mbMeshHasSmoothNormalsSupport { get; set; }
+
+    [MetaMember("mDiffuseTextureNames")]
+    public List<string> mDiffuseTextureNames { get; set; } = [];
+
+    [MetaMember("mDetailTextureNames")]
+    public List<string> mDetailTextureNames { get; set; } = [];
+
+    [MetaMember("mLightmapTextureNames")]
+    public List<string> mLightmapTextureNames { get; set; } = [];
+
+    [MetaMember("mBumpmapTextureNames")]
+    public List<string> mBumpmapTextureNames { get; set; } = [];
+
+    [MetaMember("mEnvironmentTextureNames")]
+    public List<string> mEnvironmentTextureNames { get; set; } = [];
+
+    [MetaMember("mbToonRendering")]
+    public bool mbToonRendering { get; set; }
+
+    [MetaMember("mbToonLighting")]
+    public bool mbToonLighting { get; set; }
 
     [MetaSerializer(typeof(MetaClassSerializer<LocalTransformEntry>))]
-    public class LocalTransformEntry;
+    public class LocalTransformEntry
+    {
+        [MetaMember("mTransform")]
+        public Transform Transform { get; set; } = new();
 
+        [MetaMember("mCameraFacingType")]
+        public T3CameraFacingType FacingType { get; set; }
+    }
 
     [MetaMember("mTriangleStripState")]
     public int TriangleStripState { get; set; }
@@ -104,7 +160,7 @@ public class D3DMesh
     public int AnimatedVertexCount { get; set; }
 
     [MetaMember("mTextures")]
-    public List<Texture>[] Textures { get; set; } = new List<Texture>[11];
+    public List<Texture>[] Textures { get; set; }
 
     [MetaMember("mDiffuseScale")]
     public Vector2 DiffuseScale { get; set; }
@@ -124,6 +180,15 @@ public class D3DMesh
     [MetaMember("mToolAnimatedVertexEntries")]
     public List<AnimatedVertexEntry> ToolAnimatedVertexEntries { get; set; } = [];
 
+    [MetaMember("mToonOutlineSize")]
+    public float ToonOutlineSize { get; set; }
+
+    [MetaMember("mToonMaxZConstOutlineSize")]
+    public float ToonMaxZConstOutlineSize { get; set; }
+
+    [MetaMember("mToonMinZConstOutlineSize")]
+    public float ToonMinZConstOutlineSize { get; set; }
+
     [MetaSerializer(typeof(MetaClassSerializer<AnimatedVertexEntry>))]
     public class AnimatedVertexEntry;
 
@@ -136,10 +201,13 @@ public class D3DMesh
     [MetaMember("mInternalResources")]
     public List<HandleBase> InternalResources { get; set; } = new();
 
-    public T3IndexBuffer T3IndexBuffer { get; set; }
-    public T3VertexBuffer[] T3VertexBuffers { get; set; }
+    public T3IndexBuffer? T3IndexBuffer { get; set; }
+    public T3VertexBuffer[]? T3VertexBuffers { get; set; }
 
-    public T3OcclusionMeshData OcclusionMeshData { get; set; }
+    public T3OcclusionMeshData? OcclusionMeshData { get; set; }
+
+    [MetaMember("mbManualSort")]
+    public bool ManualSort { get; set; }
 
     /// <summary>
     /// The main mesh data for version above 22. It contains LODs, bone references
@@ -150,7 +218,7 @@ public class D3DMesh
     /// <summary>
     /// This is a combination of T3MeshBatch and others for old games ( from Texas Hold'em to unknown).
     /// </summary>
-    [MetaSerializer(typeof(MetaClassSerializer<TriangleSet>))]
+    [MetaSerializer(typeof(Serializer))]
     public class TriangleSet
     {
         [MetaMember("mFlags")]
@@ -192,8 +260,17 @@ public class D3DMesh
         [MetaMember("mPixelShaderName")]
         public string PixelShaderName { get; set; } = string.Empty;
 
+        [MetaMember("mVertexShaderName")]
+        public Symbol VertexShaderNameS { get; set; } = Symbol.Empty;
+
+        [MetaMember("mPixelShaderName")]
+        public Symbol PixelShaderNameS { get; set; } = Symbol.Empty;
+
         [MetaMember("mLightingGroup")]
         public string LightingGroup { get; set; } = string.Empty;
+
+        [MetaMember("mLightingGroup")]
+        public Symbol LightingGroupS { get; set; } = Symbol.Empty;
 
         [MetaMember("mBoundingBox")]
         public BoundingBox BoundingBox { get; set; } = new();
@@ -211,10 +288,13 @@ public class D3DMesh
         public bool HasPixelShaderRemoveMe { get; set; }
 
         [MetaMember("mTxIndex")]
-        public int[] TxIndex { get; set; } = new int[11];
+        public int[] TxIndex { get; set; }
 
         [MetaMember("mTriStrips")]
         public List<int> TriStrips { get; set; } = [];
+
+        [MetaMember("mTriStrips")]
+        public List<ushort> TriStripsS { get; set; } = [];
 
         [MetaMember("mNumTotalIndices")]
         public int NumTotalIndices { get; set; }
@@ -291,12 +371,143 @@ public class D3DMesh
         [MetaMember("mSubsurfaceScateringRadius")]
         public float SubsurfaceScateringRadius { get; set; }
 
-        [MetaSerializer(typeof(TriangleSetSerializer))]
-        public class TriangleSetSerializer : MetaSerializer<TriangleSet>
+        [MetaMember("mSpecularPower")]
+        public float SpecularPower { get; set; }
+
+        [MetaMember("mBoneMatrix")]
+        public int BoneMatrix { get; set; }
+
+        [MetaMember("mToonNumShades")]
+        public int ToonNumShades { get; set; }
+
+        [MetaMember("mLocalTransform")]
+        public Transform LocalTransform { get; set; }
+
+        [MetaMember("mCameraFacingType")]
+        public int CameraFacingType { get; set; }
+
+        [MetaMember("mToonSphericalNormalBoneName")]
+        public Symbol ToonSphericalNormalBoneName { get; set; } = Symbol.Empty;
+
+
+        [MetaMember("mBoneMatrixIndex")]
+        public int BoneMatrixIndex { get; set; } = 0;
+
+        [MetaMember("mDiffuseTextureIndex")]
+        public int DiffuseTextureIndex { get; set; } = 0;
+
+        [MetaMember("mLightMapTextureIndex")]
+        public int LightMapTextureIndex { get; set; } = 0;
+
+        [MetaMember("mDetailTextureIndex")]
+        public int DetailTextureIndex { get; set; } = 0;
+
+        [MetaMember("mDetailBumpTextureIndex")]
+        public int DetailBumpTextureIndex { get; set; } = 0;
+
+        [MetaMember("mNormalTextureIndex")]
+        public int NormalTextureIndex { get; set; } = 0;
+
+        [MetaMember("mEnvTextureIndex")]
+        public int EnvTextureIndex { get; set; } = 0;
+
+        [MetaMember("mSpecularTextureIndex")]
+        public int SpecularTextureIndex { get; set; } = 0;
+
+        [MetaMember("mSSSTextureIndex")]
+        public int SSSTextureIndex { get; set; } = 0;
+
+        [MetaMember("mhSpecularColorMap")]
+        public Handle<T3Texture> SpecularColorMap { get; set; }
+
+        [MetaMember("mhAmbientMap")]
+        public Handle<T3Texture> AmbientMap { get; set; }
+
+        [MetaMember("mhOutlineDiscontinuityMap")]
+        public Handle<T3Texture> OutlineDiscontinuityMap { get; set; }
+
+        [MetaMember("mhToonLightQuantized")]
+        public Handle<T3Texture> ToonLightQuantized { get; set; }
+
+
+        [MetaMember("mbBumpAsNormalMap")]
+        public bool BumpAsNormalMap { get; set; }
+
+        [MetaMember("mToonMaterialColor")]
+        public Color ToonMaterialColor { get; set; }
+
+        [MetaMember("mToonOffset")]
+        public Vector2 ToonOffset { get; set; }
+
+        [MetaMember("mToonEnvLighting")]
+        public bool mToonEnvLighting { get; set; }
+
+        [MetaMember("mToonNoNormalDeform")]
+        public bool mToonNoNormalDeform { get; set; }
+
+        [MetaMember("mNeedSWSkinning")]
+        public bool mNeedSWSkinning { get; set; }
+
+        [MetaMember("mNeedComputeOutline")]
+        public bool mNeedComputeOutline { get; set; }
+
+        [MetaMember("mNeedRenderOutline")]
+        public bool mNeedRenderOutline { get; set; }
+
+        [MetaMember("mReceiveShadows")]
+        public bool mReceiveShadows { get; set; }
+
+        [MetaMember("mCastShadows")]
+        public bool mCastShadows { get; set; }
+
+        [MetaMember("mbToonRendering")]
+        public bool mbToonRendering { get; set; }
+
+        [MetaMember("mUVScreenSpaceZoom")]
+        public bool mUVScreenSpaceZoom { get; set; }
+
+        [MetaMember("mbHasOctree")]
+        public bool mbHasOctree { get; set; }
+
+        [MetaMember("mToonSphericalNormals")]
+        public bool mToonSphericalNormals { get; set; }
+
+        [MetaMember("mToonSphericalNormalBoneName")]
+        public string mToonSphericalNormalBoneName { get; set; }
+
+        [MetaMember("mbVertexAlpha")]
+        public bool mbVertexAlpha { get; set; }
+
+        [MetaMember("mbCameraFacing")]
+        public bool mbCameraFacing { get; set; }
+
+        [MetaMember("mhSubsurfaceScateringMap")]
+        public Handle<T3Texture> mhSubsurfaceScateringMap { get; set; }
+
+        [MetaMember("mbVertexAnimation")]
+        public bool mbVertexAnimation { get; set; }
+
+        [MetaMember("mbToonLighting")]
+        public bool mbToonLighting { get; set; }
+
+        [MetaMember("mOverride3DAlpha")]
+        public bool Override3DAlpha { get; set; }
+
+        [MetaMember("mhDetailBumpMap")]
+        public Handle<T3Texture> mhDetailBumpMap { get; set; }
+
+        [MetaMember("mbHasLocalTransform")]
+        public bool HasLocalTransform { get; set; }
+
+        [MetaMember("mbDetailBumpAsNormalMap")]
+        public bool DetailBumpAsNormalMap { get; set; }
+
+
+        public class Serializer : MetaSerializer<TriangleSet>
         {
             private static readonly MetaClassSerializer<TriangleSet> s_metaClassSerializer = new();
 
-            public override void Serialize(ref TriangleSet obj, MetaStream stream)
+            public override void Serialize(ref TriangleSet obj, MetaStream stream, MetaClassType? type = null)
             {
                 s_metaClassSerializer.PreSerialize(ref obj, stream);
                 s_metaClassSerializer.Serialize(ref obj, stream);
@@ -306,7 +517,7 @@ public class D3DMesh
                 }
                 else if (stream.Mode is MetaStreamMode.Read)
                 {
-                    if (stream.GetMetaClass(typeof(TriangleSet)).ContainsMember("mbHasPixelShader_RemoveMe"))
+                    if (stream.GetMetaClass(typeof(TriangleSet))!.ContainsMember("mbHasPixelShader_RemoveMe"))
                     {
                         string shaderName = stream.ReadString();
                         if (obj.HasPixelShaderRemoveMe)
@@ -329,7 +540,7 @@ public class D3DMesh
         public string BoneName { get; set; } = string.Empty;
 
         [MetaMember("mBoneName")]
-        public Symbol SymbolBoneName { get; set; }
+        public Symbol SymbolBoneName { get; set; } = Symbol.Empty;
 
         [MetaMember("mBoundingBox")]
         public BoundingBox BoundingBox { get; set; } = new();
@@ -349,19 +560,50 @@ public class D3DMesh
     {
         private static readonly MetaClassSerializer<D3DMesh> s_metaClassSerializer = new();
 
-        public override void Serialize(ref D3DMesh obj, MetaStream stream)
+        public override void Serialize(ref D3DMesh obj, MetaStream stream, MetaClassType? type = null)
         {
+            if (stream.Mode is MetaStreamMode.Write)
+            {
+                var vertexBufferSlots = new (MeshFlags Flag, int Index)[]
+                {
+                    (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
+                    (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
+                    (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
+                    (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
+                    (MeshFlags.Unknown2, 12), (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),
+                    (MeshFlags.HasSoftwareSkinningStream, 15)
+                };
+
+                if (obj.T3IndexBuffer != null)
+                {
+                    obj.Flags.Set((int)MeshFlags.HasIndexBuffer);
+                }
+
+                if (obj.T3VertexBuffers != null)
+                {
+                    for (int i = 0; i < obj.T3VertexBuffers.Length; i++)
+                    {
+                        obj.Flags.Set((int)vertexBufferSlots[i].Flag);
+                    }
+                }
+            }
+
             s_metaClassSerializer.PreSerialize(ref obj, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (stream.Mode is MetaStreamMode.Write)
             {
-                if (obj.Version < 19)
+                if (obj.Version == 0)
                 {
                     SerializeOldD3DMesh(ref obj, stream);
                     return;
                 }
 
+                if (obj.Version < 19)
+                {
+                    SerializeOldMedD3DMesh(ref obj, stream);
+                    return;
+                }
 
                 if (obj.Version >= 22)
                 {
@@ -378,22 +620,18 @@ public class D3DMesh
 
                     if (hasOcclusionData)
                     {
-                        // TODO: Assign this.
                         stream.BeginBlock();
-                        T3OcclusionMeshData objOcclusionMeshData = obj.OcclusionMeshData;
-                        Toolkit.Instance.GetSerializer<T3OcclusionMeshData>()
-                            .Serialize(ref objOcclusionMeshData, stream);
+                        T3OcclusionMeshData? objOcclusionMeshData = obj.OcclusionMeshData;
+                        stream.Serialize(ref objOcclusionMeshData);
                         stream.EndBlock();
                     }
                 }
 
                 stream.BeginBlock();
                 T3MeshData objMeshData = obj.MeshData;
-                Toolkit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
-                Toolkit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
-                stream.EndBlock();
+                stream.Serialize(ref objMeshData);
             }
-            else if (stream.Mode is MetaStreamMode.Read)
+            else
             {
                 // According to Telltale, the new meshes start from version 20.
                 if (obj.Version == 0)
@@ -428,138 +666,93 @@ public class D3DMesh
                     bool hasOcclusionData = stream.ReadBoolean();
                     if (hasOcclusionData)
                     {
-                        // TODO: Assign this.
                         stream.BeginBlock();
-                        T3OcclusionMeshData objOcclusionMeshData = obj.OcclusionMeshData;
-                        Toolkit.Instance.GetSerializer<T3OcclusionMeshData>()
-                            .Serialize(ref objOcclusionMeshData, stream);
+                        T3OcclusionMeshData objOcclusionMeshData = new();
+                        stream.Serialize(ref objOcclusionMeshData);
+                        obj.OcclusionMeshData = objOcclusionMeshData;
                         stream.EndBlock();
                     }
                 }
 
                 stream.BeginBlock();
-                T3MeshData objMeshData = obj.MeshData;
-                Toolkit.Instance.GetSerializer<T3MeshData>().PreSerialize(ref objMeshData, stream);
-                Toolkit.Instance.GetSerializer<T3MeshData>().Serialize(ref objMeshData, stream);
-                stream.EndBlock();
+
+                T3MeshData objMeshData = new();
+                stream.Serialize(ref objMeshData);
+                obj.MeshData = objMeshData;
             }
+
+            stream.EndBlock();
         }
 
         private static void SerializeOldMedD3DMesh(ref D3DMesh obj, MetaStream stream)
         {
+            var vertexBufferSlots = new (MeshFlags Flag, int Index)[]
+            {
+                (MeshFlags.HasPosStream, 0), (MeshFlags.HasNormStream, 1), (MeshFlags.HasBlendWeightStream, 2),
+                (MeshFlags.HasBlendIdxStream, 3), (MeshFlags.HasUV1Stream, 4), (MeshFlags.HasUV2Stream, 5),
+                (MeshFlags.HasUV3Stream, 6), (MeshFlags.HasUV4Stream, 7), (MeshFlags.HasTangentStream, 8),
+                (MeshFlags.HasColorStream, 9), (MeshFlags.HasSmoothNormStream, 10), (MeshFlags.Unknown, 11),
+                (MeshFlags.Unknown2, 12), (MeshFlags.HasInterleavedStream, 13), (MeshFlags.Deformable, 14),
+                (MeshFlags.HasSoftwareSkinningStream, 15)
+            };
+
             if (stream.Mode is MetaStreamMode.Write)
             {
-                throw new NotSupportedException();
-            }
+                if (obj.Flags.Has((int)MeshFlags.HasIndexBuffer))
+                {
+                    T3IndexBuffer objT3IndexBuffer = obj.T3IndexBuffer;
+                    stream.Serialize(ref objT3IndexBuffer);
+                }
 
-            if (stream.Mode is MetaStreamMode.Read)
+                for (int i = 0; i < vertexBufferSlots.Length; i++)
+                {
+                    stream.Serialize(ref obj.T3VertexBuffers[i]);
+                }
+            }
+            else
             {
-                obj.T3VertexBuffers = new T3VertexBuffer[15];
+                obj.T3VertexBuffers = new T3VertexBuffer[16];
 
                 if (obj.Flags.Has((int)MeshFlags.HasIndexBuffer))
                 {
                     var buffer = new T3IndexBuffer();
-                    Toolkit.Instance.GetSerializer<T3IndexBuffer>().Serialize(ref buffer, stream);
+                    stream.Serialize(ref buffer);
                     obj.T3IndexBuffer = buffer;
                 }
 
-                if (obj.Flags.Has((int)MeshFlags.HasPosStream))
+                foreach ((MeshFlags flag, int index) in vertexBufferSlots)
                 {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[0] = buffer;
+                    if (obj.Flags.Has((int)flag))
+                    {
+                        var flags = (MeshFlags)obj.Flags.Data;
+                        var buffer = new T3VertexBuffer();
+                        stream.Serialize(ref buffer);
+                        obj.T3VertexBuffers[index] = buffer;
+
+                        // is compressed
+                        if (obj.T3VertexBuffers[index].Flags.Has(1))
+                        {
+                            // TODO: Decompress data
+                            if (flag is MeshFlags.HasPosStream)
+                            {
+                                buffer.DecompressPositions(stream);
+                            }
+                            else if (flag is MeshFlags.HasNormStream or MeshFlags.HasTangentStream)
+                            {
+                                buffer.DecompressNormals(stream);
+                            }
+                            else if (flag is MeshFlags.HasBlendWeightStream)
+                            {
+                                buffer.DecompressWeights(stream);
+                            }
+                            else if (flag is MeshFlags.HasUV1Stream or MeshFlags.HasUV2Stream or MeshFlags.HasUV3Stream or MeshFlags.HasUV4Stream)
+                            {
+                                buffer.DecompressUV(stream);
+                            }
+                        }
+                    }
                 }
 
-                if (obj.Flags.Has((int)MeshFlags.HasNormStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[1] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasSmoothNormStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[2] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasBlendWeightStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[3] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasBlendIdxStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[4] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasUV1Stream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[5] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasUV2Stream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[6] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasUV3Stream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[7] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasUV4Stream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[8] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasTangentStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[9] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasColorStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[10] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.Unknown))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[11] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasInterleavedStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[12] = buffer;
-                }
-
-                if (obj.Flags.Has((int)MeshFlags.HasSoftwareSkinningStream))
-                {
-                    var buffer = new T3VertexBuffer();
-                    Toolkit.Instance.GetSerializer<T3VertexBuffer>().Serialize(ref buffer, stream);
-                    obj.T3VertexBuffers[13] = buffer;
-                }
                 // Read Index Buffer
                 // bool hasIndexBuffer = stream.ReadBoolean();
                 //
@@ -612,7 +805,7 @@ public class D3DMesh
                 }
 
                 // Read Vertex Buffer
-                var maxVertexBufferCount = 9;
+                int maxVertexBufferCount = 9;
                 if (obj.VertexAlphaSupport)
                 {
                     maxVertexBufferCount++;
@@ -664,25 +857,20 @@ public class D3DMesh
 
                     MetaSerializer serializer = Toolkit.Instance.GetSerializer(typeSymbol.LinkingType);
                     serializer.PreSerialize(ref propertyValue, stream, typeSymbol);
-
-
                     serializer.Serialize(ref propertyValue, stream);
-
 
                     stream.EndBlock();
                 }
-
-                return;
             }
-
-            if (stream.Mode is MetaStreamMode.Read)
+            else
             {
+                // Broken for: adv_johnsHouseInteriorUpstairsFire103_meshesE.d3dmesh in M103, TWD:DE
                 obj.InternalResources = [];
 
                 // Part of DC Array
                 int numRes = stream.ReadInt32();
 
-                for (var i = 0; i < numRes; i++)
+                for (int i = 0; i < numRes; i++)
                 {
                     // Handle name?
                     Symbol symbol = stream.ReadSymbol();
@@ -692,7 +880,8 @@ public class D3DMesh
 
                     if (typeSymbol is null)
                     {
-                        Toolkit.Instance.Logger.LogError($"[D3DMesh] Internal resource '{symbol}' has no registered type.");
+                        Toolkit.Instance.Logger.LogError(
+                            $"[D3DMesh] Internal resource '{symbol}' has no registered type.");
                         stream.EndBlock();
                         continue;
                     }
@@ -702,16 +891,11 @@ public class D3DMesh
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
                         .PreSerialize(ref propertyValue!, stream, typeSymbol);
                     Toolkit.Instance.GetSerializer(typeSymbol.LinkingType)
-                        .Serialize(ref propertyValue, stream);
+                        .Serialize(ref propertyValue, stream, typeSymbol);
 
                     var objHandle = new HandleBase
                     {
-                        ObjectInfo =
-                        {
-                            ObjectName = symbol,
-                            Type = typeSymbol,
-                            HandleObject = propertyValue
-                        }
+                        ObjectInfo = { ObjectName = symbol, Type = typeSymbol, HandleObject = propertyValue }
                     };
 
                     obj.InternalResources.Add(objHandle);
@@ -726,34 +910,50 @@ public class D3DMesh
     public enum MeshFlags
     {
         HasIndexBuffer = 0x1,
-        HasPosStream = 0x2,
-        HasNormStream = 0x4,
-        HasSmoothNormStream = 0x8,
-        HasBlendWeightStream = 0x10,
-        HasBlendIdxStream = 0x20,
-        HasUV1Stream = 0x40,
-        HasUV2Stream = 0x80,
-        HasUV3Stream = 0x100,
-        HasUV4Stream = 0x200,
-        HasTangentStream = 0x400,
-        HasColorStream = 0x800,
-        Unknown = 0x1000,
+        HasPosStream = 0x2, // 1
+        HasNormStream = 0x4, // 2
+        HasSmoothNormStream = 0x8, // 11
+        HasBlendWeightStream = 0x10, // 3
+        HasBlendIdxStream = 0x20, // 4
+        HasUV1Stream = 0x40, // 5
+        HasUV2Stream = 0x80, // 6
+        HasUV3Stream = 0x100, // 7
+        HasUV4Stream = 0x200, // 8
+        HasTangentStream = 0x400, // 9
+        HasColorStream = 0x800, // 10
+        Unknown = 0x1000, // 12
+        Unknown2 = 0x2000, // 13
         HasVertexAnimation = 0x10000,
         TriangleSetsFixedUp = 0x40000,
         HasZeroVertexAlpha = 0x80000,
-        HasInterleavedStream = 0x200000,
-        HasSoftwareSkinningStream = 0x400000,
+        HasInterleavedStream = 0x200000, // 14
+        HasSoftwareSkinningStream = 0x400000, // 16
         IsManualSort = 0x10000000, // Vector 3???!?!?
-        Deformable = 0x20000000, // It's a string - Interface
+        Deformable = 0x2000000, // It's a string - Interface // 15 ACTUALLY NOT A BUFFER
     }
 
-
     [MetaSerializer(typeof(MetaClassSerializer<VertexAnimation>))]
-    public class VertexAnimation;
+    public class VertexAnimation
+    {
+        [MetaMember("mName")]
+        public Symbol Name { get; set; }
+
+        [MetaMember("mResourceGroupMembership")]
+        public Dictionary<Symbol, float> ResourceGroupMembership { get; set; } = [];
+
+        [MetaMember("mStartIndex")]
+        public int StartIndex { get; set; }
+
+        [MetaMember("mNumVertices")]
+        public int NumVertices { get; set; }
+    }
 
     [MetaSerializer(typeof(MetaClassSerializer<Texture>))]
     public class Texture
     {
+        //'eFlagHasLightmap',0
+        //  'eFlagHasNonLightmap',0
+        // 'eFlagHasSpecular',0
         [MetaMember("mName")]
         public Handle<T3Texture> Name { get; set; }
 
@@ -774,6 +974,12 @@ public class D3DMesh
 
         [MetaMember("mAverageObjAreaPerUVArea")]
         public float AverageObjAreaPerUVArea { get; set; }
+
+        [MetaMember("mbHasLightmap")]
+        public bool mbHasLightmap { get; set; }
+
+        [MetaMember("mbHasNonLightmap")]
+        public bool mbHasNonLightmap { get; set; }
     }
 
     [MetaSerializer(typeof(MetaClassSerializer<SkinningEntry>))]
@@ -784,7 +990,7 @@ public class D3DMesh
 
     public PropertySet? GetMaterialPropertySet(int index)
     {
-        var count = 0;
+        int count = 0;
         foreach (HandleBase? handle in InternalResources)
         {
             if (handle.ObjectInfo.HandleObject is not PropertySet pSet)

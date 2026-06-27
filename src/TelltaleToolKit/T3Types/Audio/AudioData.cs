@@ -52,7 +52,7 @@ public class AudioData
     {
         private static readonly MetaClassSerializer<AudioData> s_metaClassSerializer = new();
 
-        public override void Serialize(ref AudioData obj, MetaStream stream)
+        public override void Serialize(ref AudioData obj, MetaStream stream, MetaClassType? type = null)
         {
             s_metaClassSerializer.Serialize(ref obj, stream);
 
@@ -61,7 +61,7 @@ public class AudioData
             }
             else if (stream.Mode is MetaStreamMode.Read)
             {
-                if (stream.Params.StreamVersion >= 4)
+                if (stream.Params.StreamVersion >= 3)
                 {
                     obj.NumChannels = stream.ReadInt16();
                     short bitDepth = stream.ReadInt16();

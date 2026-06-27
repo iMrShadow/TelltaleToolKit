@@ -90,7 +90,7 @@ public struct AnimationConstraint
     {
         eTrafoMode = 0, /*pos and rot*/
         ePosMode = 1, /*pos*/
-        eOriMode = 2, /*rot*/
+        eOriMode = 2 /*rot*/
     }
 
     [MetaSerializer(typeof(EnumSerializer<Node>))]
@@ -152,6 +152,6 @@ public struct AnimationConstraint
         eLeg_R = 0x35,
         eKnee_R = 0x36,
         eAnkle_R = 0x37,
-        eNumNodes = 0x38,
+        eNumNodes = 0x38
     }
 }

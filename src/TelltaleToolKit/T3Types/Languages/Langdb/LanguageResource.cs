@@ -24,6 +24,10 @@ public class LanguageResource
     [MetaMember("mhVoiceData")]
     public Handle<VoiceData> VoiceData { get; set; } = new();
 
+
+    [MetaMember("mhVoiceData")]
+    public Handle<SoundData> VoiceSoundData { get; set; } = new();
+
     [MetaMember("mShared")]
     public bool Shared { get; set; }
 

@@ -6,7 +6,7 @@ using TelltaleToolKit.Meta.Serialization;
 namespace TelltaleToolKit.T3Types.Animations;
 
 [MetaSerializer(typeof(Serializer))]
-public class CompressedSkeletonPoseKeys : IAnimatedValueInterface
+public class CompressedSkeletonPoseKeys : IAnimationValueInterface
 {
     public AnimationValueInterfaceBase AnimationValueInterfaceBase { get; set; } = new();
 
@@ -48,15 +48,15 @@ public class CompressedSkeletonPoseKeys : IAnimatedValueInterface
 
     public byte[] Data { get; set; }
 
-    public class Serializer : MetaSerializer<CompressedSkeletonPoseKeys2>
+    public class Serializer : MetaSerializer<CompressedSkeletonPoseKeys>
     {
-        public override void PreSerialize(ref CompressedSkeletonPoseKeys2? obj, MetaStream stream,
+        public override void PreSerialize(ref CompressedSkeletonPoseKeys? obj, MetaStream stream,
             MetaClassType? type = null)
         {
-            obj ??= new CompressedSkeletonPoseKeys2();
+            obj ??= new CompressedSkeletonPoseKeys();
         }
 
-        public override void Serialize(ref CompressedSkeletonPoseKeys2 obj, MetaStream stream)
+        public override void Serialize(ref CompressedSkeletonPoseKeys obj, MetaStream stream, MetaClassType? type = null)
         {
             // TODO: Test this type.
             if (stream.Mode is MetaStreamMode.Write)
@@ -66,6 +66,11 @@ public class CompressedSkeletonPoseKeys : IAnimatedValueInterface
             {
                 // TODO: Try experimenting with Marshall.
                 obj.DataSize = stream.ReadInt32(); // this is the size of struct
+
+                if (obj.DataSize > 0x1000000)
+                {
+                    throw new InvalidOperationException("CompressedSkeletonPoseKeys data size is too big.");
+                }
 
                 obj.Data = stream.ReadBytes(obj.DataSize);
             }

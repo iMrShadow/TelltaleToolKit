@@ -14,4 +14,7 @@ public class DialogLine : IDialogBase
 
     [MetaMember("mLangResProxy")]
     public LanguageResProxy LangResProxy { get; set; } = new();
+
+    [MetaMember("mLangResProxy")]
+    public LanguageResourceProxy LanguageResourceProxy { get; set; } = new();
 }

@@ -57,17 +57,12 @@ public class Rule
     {
         private static readonly MetaClassSerializer<Rule> s_metaClassSerializer = new();
 
-        public override void PreSerialize(ref Rule? obj, MetaStream stream, MetaClassType? type = null)
-        {
-            if (obj is null)
-            {
-                obj = new Rule();
-            }
-        }
+        public override void PreSerialize(ref Rule? obj, MetaStream stream, MetaClassType? type = null) =>
+            obj ??= new Rule();
 
-        public override void Serialize(ref Rule obj, MetaStream stream)
+        public override void Serialize(ref Rule obj, MetaStream stream, MetaClassType? type = null)
         {
-            PreSerialize(ref obj, stream);
+            s_metaClassSerializer.PreSerialize(ref obj!, stream);
             s_metaClassSerializer.Serialize(ref obj, stream);
 
             if (!obj.VersionHasAgents)
@@ -75,28 +70,32 @@ public class Rule
                 return;
             }
 
+            if (!stream.GetMetaClass(typeof(Rule))!.ContainsMember("mbVersionHasAgents"))
+                return;
+
             stream.BeginBlock();
             if (stream.Mode is MetaStreamMode.Write)
             {
+                stream.Write(obj.AgentInformation.Count);
+
+                foreach (var agentInfo in obj.AgentInformation)
+                {
+                    AgentInfo info = agentInfo;
+                    stream.Serialize(ref info);
+                }
             }
-            else if (stream.Mode is MetaStreamMode.Read)
+            else
             {
-                // var numAgents = stream.ReadInt32();
+                int numAgents = stream.ReadInt32();
 
-                List<AgentInfo> agents = obj.AgentInformation;
-                Toolkit.Instance.GetSerializer<List<AgentInfo>>().Serialize(ref agents, stream);
-
-                // for (int i = 0; i < numAgents; i++)
-                // {
-                //     var agent = new Rule.AgentInfo();
-                //     MetaClass? ruleDesc = stream.GetMetaClass(typeof(Rule));
-                //
-                //
-                // }
-                //
-                //
-                //
-                // obj.RuleMap = rulesDic;
+                obj.AgentInformation = [];
+                obj.AgentInformation.Capacity = numAgents;
+                for (int i = 0; i < numAgents; i++)
+                {
+                    var agent = new AgentInfo();
+                    stream.Serialize(ref agent);
+                    obj.AgentInformation.Add(agent);
+                }
             }
 
             stream.EndBlock();

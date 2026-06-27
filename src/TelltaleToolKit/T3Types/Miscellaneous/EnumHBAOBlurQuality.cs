@@ -9,10 +9,15 @@ public struct EnumHBAOBlurQuality
 {
     [MetaMember("mVal")]
     public HBAOBlurQuality Val { get; set; }
-}
 
-[MetaSerializer(typeof(EnumSerializer<HBAOBlurQuality>))]
-public enum HBAOBlurQuality
-{
-    // TODO:
+
+    [MetaSerializer(typeof(EnumSerializer<HBAOBlurQuality>))]
+    public enum HBAOBlurQuality
+    {
+        None = 0x0,
+        Narrow = 0x1,
+        Medium = 0x2,
+        Wide = 0x3,
+        ExtraWide = 0x4
+    }
 }

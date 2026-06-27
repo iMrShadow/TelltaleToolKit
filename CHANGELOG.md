@@ -20,6 +20,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Helper version crc calculator method for `MetaClass`.
 - Better `TTArchive` compression detection.
 - A dedicated `Compression` class.
+- Support for many new types, including SArrays.
+- Missing enums.
+- Added missing members to support some older games.
+- Support for .ambience files.
+- SectionDepth in MetaStream.
+- API related to MetaStream to improve serialization support and parity.
+- Logging in MetaClassSerializer<T>.
+- Many serializers to handle support for old games and improve existing ones.
+- Logging when there's no profilesPath found.
 
 ### Changed
 - Rename the following MetaStream implementations: `MetaStreamReader`/`MetaStreamWriter` to  `BinaryMetaStreamReader`/`BinaryMetaStreamWriter`.
@@ -33,11 +42,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `Serialize` from `MetaStream` now automatically preserializes.
 - Namespaces organization. (#24)
 - Various class names. (#24)
+- Symbols now use their own serializers instead of the ones.
+- Use LRU caching by default for Containers.
+- Removed constraint for GetSerializer<T> - it should support all types.
+- Make Blowfish key optional in Containers.
+- Animation serializer to return rather than throw when there's an unregistered type.
 
 ### Fixed
 - A regression that did not allow files being copied to the output folder.
 - Blowfish encryption not working correctly.
-
+- Many serializers.
+- Zlib detection for TTArchive.
+- MBIN and MTRE stream support.
+- TTArchive2 creation.
+  
 ### Removed
 - A csproj folder.
 - Redundant `MetaStreamVersion` from `GameProfile`.
@@ -45,6 +63,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `PreSerialize` from `MetaStream`.
 - Redundant `Version` from `MetaStreamParams`.
 - Unused `ISymbolResolver` interface.
+- Symbol serializing from MetaStream. This does not affect anything except if you use `stream.Serialize(obj)` of type Symbol.
+
+## [0.2.1] - 2026-05-28
+### Fixed
+- Data files not being copied to output directory.
 
 ## [0.2.0] - 2026-05-28
 
@@ -116,7 +139,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Initial support for the following file formats: `.aam`, `.amap`, `.anm`, `.aud`, `.chore`, `.d3dmesh`, `.d3dtx`, `.dlg`, `.dlog`, `.dss`, `.font`, `.imap`, `.landb`, `.lanreg`, `.lang`, `.langdb`, `.langres`, `.ldb`, `.locreg`, `.look`, `.note`, `.overlay`, `.ptable`, `.prop`, `.rules`, `.save`, `.scene`, `.skl`, `.style`, `.tmap`, `.vox`, `.wbox`. Currently most serializers are **unfinished and unreliable, especially in writing mode**. Over time, they will get polished and refined.
 - Registration system for types, metaclasses, type serializers and game descriptors (game configurations).
 
-[unreleased]: https://github.com/iMrShadow/TelltaleToolKit/compare/0.2.0...HEAD
+[unreleased]: https://github.com/iMrShadow/TelltaleToolKit/compare/0.2.1...HEAD
+[0.2.1]: https://github.com/iMrShadow/TelltaleToolKit/releases/tag/0.2.1
 [0.2.0]: https://github.com/iMrShadow/TelltaleToolKit/releases/tag/0.2.0
 [0.1.0]: https://github.com/iMrShadow/TelltaleToolKit/releases/tag/0.1.0
   

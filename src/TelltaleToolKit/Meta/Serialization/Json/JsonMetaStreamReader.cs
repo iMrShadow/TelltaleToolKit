@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Json;
 
@@ -73,20 +72,23 @@ public sealed class JsonMetaStreamReader : MetaStream
 
     public override MetaStreamMode Mode => MetaStreamMode.Read;
 
-    protected override void SetSection(SectionType section)
+    protected override bool SetSection(SectionType section)
     {
+        return false;
     }
 
-    public override void BeginAsyncSection()
+    public override bool BeginAsyncSection()
     {
+        return false;
     }
 
     public override void EndAsyncSection()
     {
     }
 
-    public override void BeginDebugSection()
+    public override bool BeginDebugSection()
     {
+        return false;
     }
 
     public override void EndDebugSection()
@@ -264,24 +266,6 @@ public sealed class JsonMetaStreamReader : MetaStream
     {
         EnsureValue();
         value = GetCurrentValue().GetSByte();
-    }
-
-    public override void Serialize(ref Symbol value)
-    {
-        EnsureValue();
-        string str = GetCurrentValue().GetString() ?? "";
-        // Try to parse as hex CRC, otherwise treat as debug string
-        if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase) &&
-            ulong.TryParse(str.AsSpan(2), System.Globalization.NumberStyles.HexNumber, null, out ulong crc))
-        {
-            value = Symbol.FromCrc64(crc);
-        }
-        else
-        {
-            value = Symbol.FromName(str);
-        }
-
-        Params.SerializedSymbols.Add(value);
     }
 
     public override void Serialize(byte[] values, int offset, int count)
