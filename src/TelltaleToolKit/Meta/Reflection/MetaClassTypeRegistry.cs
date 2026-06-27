@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using TelltaleToolKit.Meta.Serialization;
@@ -91,6 +89,9 @@ public static class MetaClassTypeRegistry
         Register("AnimationMixer<class Handle<InputMapper>>", typeof(NotImplementedException));
         Register("AnimationMixer<class Handle<LanguageDatabase>>", typeof(NotImplementedException));
         Register("AnimationMixer<class Handle<LanguageResource>>", typeof(NotImplementedException));
+        Register("AnimationMixer<class Handle<LanguageRes>>", typeof(NotImplementedException));
+        Register("AnimationMixer<class Handle<T3EffectBinary>,0>", typeof(NotImplementedException));
+        Register("AnimationMixer<class Handle<T3EffectBinary>>", typeof(NotImplementedException));
         Register("AnimationMixer<class Handle<LightProbeData>>", typeof(NotImplementedException));
         Register("AnimationMixer<class Handle<LocomotionDB>>", typeof(NotImplementedException));
         Register("AnimationMixer<class Handle<ParticleProperties>>", typeof(NotImplementedException));
@@ -132,6 +133,8 @@ public static class MetaClassTypeRegistry
         Register("AnimationMixer<SoundEventName<2>>", typeof(NotImplementedException));
         Register("AnimationMixer<String>", typeof(NotImplementedException));
         Register("AnimationMixer<Symbol>", typeof(NotImplementedException));
+        Register("AnimationMixer<T3VertexBufferSample<T3PositionSampleData,T3HeapAllocator>>", typeof(NotImplementedException));
+        Register("AnimationMixer<T3VertexBufferSample<T3NormalSampleData,T3HeapAllocator>>", typeof(NotImplementedException));
         Register("AnimationMixer<T3NormalSampleData,T3HeapAllocator>", typeof(NotImplementedException));
         Register("AnimationMixer<T3PositionSampleData,T3HeapAllocator>", typeof(NotImplementedException));
         Register("AnimationMixer<Transform>", typeof(NotImplementedException));

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TelltaleToolKit.IO.Caching;
+﻿namespace TelltaleToolKit.IO.Caching;
 
 /// <summary>
 ///     Cache strategy that keeps exactly one decoded chunk in memory at a time.

@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Streams;
 using TelltaleToolKit.Meta.Reflection;
-using TelltaleToolKit.T3Types;
 
 namespace TelltaleToolKit.Meta.Serialization.Binary;
 

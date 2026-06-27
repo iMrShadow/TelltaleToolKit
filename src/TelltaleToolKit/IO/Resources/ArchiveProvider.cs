@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using TelltaleToolKit.Hashing;
 using TelltaleToolKit.IO.Archives;
 

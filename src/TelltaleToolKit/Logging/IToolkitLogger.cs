@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TelltaleToolKit.Logging;
+﻿namespace TelltaleToolKit.Logging;
 
 /// <summary>
 /// Defines the logging contract used internally by the library.

@@ -1,4 +1,3 @@
-using System.Numerics;
 using TelltaleToolKit.Meta.Reflection;
 using TelltaleToolKit.Meta.Serialization;
 using TelltaleToolKit.T3Types.Skeletons;

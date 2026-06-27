@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace TelltaleToolKit.IO.Archives.Formats;
 
 // TODO: PK2 for CSI.

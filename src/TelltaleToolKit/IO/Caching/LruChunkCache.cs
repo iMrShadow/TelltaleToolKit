@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TelltaleToolKit.IO.Caching;
+﻿namespace TelltaleToolKit.IO.Caching;
 
 /// <summary>
 ///     Cache strategy that retains the <em>N</em> most-recently-used decoded chunks.
